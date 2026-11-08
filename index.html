@@ -2086,7 +2086,7 @@ go(0,false);
  function sail(pathId,boatId,speed,scale){const p=root.querySelector('#'+pathId),b=root.querySelector('#'+boatId);if(!p||!b)return;const L=p.getTotalLength();let t0=null;function f(now){if(t0===null)t0=now;const k=((now-t0)/speed)%1,l=k*L,a=p.getPointAtLength(l),c=p.getPointAtLength(Math.min(L,l+2));b.setAttribute('transform',`translate(${a.x} ${a.y}) rotate(${Math.atan2(c.y-a.y,c.x-a.x)*180/Math.PI}) scale(${scale})`);requestAnimationFrame(f)}requestAnimationFrame(f)}
  setTimeout(()=>sail('rtPath','rtBoat',9000,1.15),900); (function(){const p=root.querySelector('#wvLine'),b=root.querySelector('#wvBoat');if(!p||!b)return;const svg=p.ownerSVGElement,L=p.getTotalLength();let t0=null;
  function f(now){if(t0===null)t0=now;const k=((now-t0)/22000)%1,l=k*L,a=p.getPointAtLength(l),c=p.getPointAtLength(Math.min(L,l+2));
-  if(window.innerWidth<=760){const r=svg.getBoundingClientRect(),sx=(r.width/1440)||1,sy=(r.height/72)||1,th=Math.atan2((c.y-a.y)*sy,(c.x-a.x)*sx)*180/Math.PI,S=(window.innerWidth<=430?2.6:2.2);
+  if(window.innerWidth<=760){const r=svg.getBoundingClientRect(),sx=(r.width/1440)||1,sy=(r.height/72)||1,th=Math.atan2((c.y-a.y)*sy,(c.x-a.x)*sx)*180/Math.PI,S=(window.innerWidth<=430?1.55:1.65);
    b.setAttribute('transform',`translate(${a.x} ${a.y}) scale(${1/sx} ${1/sy}) rotate(${th}) scale(${S})`)}
   else b.setAttribute('transform',`translate(${a.x} ${a.y}) rotate(${Math.atan2(c.y-a.y,c.x-a.x)*180/Math.PI}) scale(1.05)`);
   requestAnimationFrame(f)}requestAnimationFrame(f)})();
