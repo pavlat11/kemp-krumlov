@@ -1221,6 +1221,18 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
 }
 </style>
 
+
+<style id="mobile-title-up-v4">
+@media (max-width:760px){
+  #top.hero.kk2-part{padding-top:54px!important}
+  #top .season{margin-top:0!important;margin-bottom:5px!important}
+  #top h1{margin-top:0!important;margin-bottom:14px!important}
+}
+@media (max-width:430px){
+  #top.hero.kk2-part{padding-top:48px!important}
+}
+</style>
+
 </head>
 <body>
 <div class="done" id="loader"><svg viewBox="40 40 540 450" xmlns="http://www.w3.org/2000/svg"><g fill="#2d2d2d" opacity=".55" transform="translate(8 7)"><path d="M63 55H245L305 140L137 383H63Z"></path><path d="M265 55H358L312 125Z"></path><path d="M377 55H558V383H487L322 135Z"></path><path d="M63 402H205L312 242L420 402H558V472H63Z"></path></g><path d="M63 55H245L305 140L137 383H63Z" fill="#0b94d4"></path><path d="M265 55H358L312 125Z" fill="#0b94d4"></path><path d="M377 55H558V383H487L322 135Z" fill="#e5db35"></path><path d="M63 402H205L312 242L420 402H558V472H63Z" fill="#567d22"></path></svg></div>
@@ -1333,7 +1345,7 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
 </g>
 </g>
 <g id="confetti"></g>
-<g id="canoe" style="opacity: 0;" transform="translate(718.9860405676346 561.2305043239088) rotate(55.730854212286886) scale(1.55)">
+<g id="canoe" style="opacity: 0;" transform="translate(718.9860405676346 561.2305043239088) rotate(55.730854212286886) scale(2.05)">
 <ellipse cy="4" fill="#000" filter="url(#soft)" opacity=".25" rx="34" ry="14"></ellipse>
 <path d="M-30 0 Q-14 -10 0 -10 Q14 -10 30 0 Q14 10 0 10 Q-14 10 -30 0Z" fill="#f4a64a" stroke="#c97d24" stroke-width="2"></path>
 <path d="M-22 0 Q-10 -6 0 -6 Q10 -6 22 0 Q10 6 0 6 Q-10 6 -22 0Z" fill="#b9682f"></path>
@@ -1392,7 +1404,7 @@ const cg=document.getElementById('contours');cg.replaceChildren();
 for(let k=0;k<9;k++){let d=`M${-50} ${60+k*95}`;for(let x=0;x<=950;x+=90)d+=` Q${x+45} ${60+k*95+(R()-.5)*70} ${x+90} ${60+k*95+(R()-.5)*30}`;el('path',{d},cg)}
 trail.style.strokeDasharray=L;trail.style.strokeDashoffset=L;
 const place=(g,l,off=0)=>{const p=rv.getPointAtLength(Math.max(0,Math.min(L,l))),q=rv.getPointAtLength(Math.max(0,Math.min(L,l+1)));
-  const a=Math.atan2(q.y-p.y,q.x-p.x);g.setAttribute('transform',`translate(${p.x+Math.cos(a+Math.PI/2)*off} ${p.y+Math.sin(a+Math.PI/2)*off}) rotate(${a*180/Math.PI}) scale(${g.id==='canoe'?1.55:1.3})`)};
+  const a=Math.atan2(q.y-p.y,q.x-p.x);g.setAttribute('transform',`translate(${p.x+Math.cos(a+Math.PI/2)*off} ${p.y+Math.sin(a+Math.PI/2)*off}) rotate(${a*180/Math.PI}) scale(${g.id==='canoe'?2.05:1.3})`)};
 const easeIO=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
 const ease=t=>.12*t+.88*easeIO(t);
 const smooth=t=>t*t*(3-2*t);
