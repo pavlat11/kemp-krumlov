@@ -1176,6 +1176,57 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
 <style id="real-flags-v22">
 .lang-current{min-width:58px!important;padding:0 10px!important;gap:7px!important}.lang-current .sr-lang{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}.flag{display:inline-block!important;width:27px!important;height:18px!important;flex:0 0 27px!important;border-radius:3px!important;box-shadow:0 0 0 1px rgba(0,0,0,.13)!important;background-size:100% 100%!important;background-position:center!important}.flag-cz{background:linear-gradient(to bottom,#fff 0 50%,#d7141a 50% 100%)!important;position:relative}.flag-cz:after{content:'';position:absolute;inset:0 auto 0 0;width:50%;background:#11457e;clip-path:polygon(0 0,100% 50%,0 100%);border-radius:3px 0 0 3px}.flag-en{background:#012169!important;position:relative;background-image:linear-gradient(33deg,transparent 43%,#fff 43% 48%,#c8102e 48% 52%,#fff 52% 57%,transparent 57%),linear-gradient(-33deg,transparent 43%,#fff 43% 48%,#c8102e 48% 52%,#fff 52% 57%,transparent 57%),linear-gradient(to right,transparent 40%,#fff 40% 60%,transparent 60%),linear-gradient(to bottom,transparent 35%,#fff 35% 65%,transparent 65%)!important}.flag-en:after{content:'';position:absolute;left:0;right:0;top:42%;height:16%;background:#c8102e}.flag-en:before{content:'';position:absolute;top:0;bottom:0;left:44%;width:12%;background:#c8102e}.flag-de{background:linear-gradient(to bottom,#111 0 33.33%,#dd0000 33.33% 66.66%,#ffce00 66.66% 100%)!important}.lang-menu button .flag{width:25px!important;height:17px!important;flex-basis:25px!important}
 </style>
+
+<style id="mobile-hero-fix-v1">
+/* Mobilní oprava hero sekce: čitelný obsah a plně viditelná animovaná mapa */
+@media (max-width:760px){
+  html,body{max-width:100%;overflow-x:hidden}
+  #top.hero.kk2-part{
+    height:auto!important;min-height:100svh!important;
+    padding:92px 0 28px!important;align-items:flex-start!important;overflow:hidden!important;
+  }
+  #top .hero-img{object-position:52% center!important;transform:scale(1.02)}
+  #top .hero-in{display:block!important;width:min(100% - 28px,680px)!important;height:auto!important;margin:0 auto!important}
+  #top .hero-in>div{width:100%!important;padding-top:0!important;position:relative!important;z-index:4}
+  #top .season{display:flex!important;margin-bottom:14px!important;font-size:10px!important}
+  #top h1{font-size:clamp(40px,12.3vw,58px)!important;line-height:.98!important;margin:12px 0 14px!important}
+  #top h1 em{white-space:normal!important;font-size:.82em!important}
+  #top .sub{font-size:15px!important;line-height:1.5!important;margin:0 0 18px!important;max-width:34rem!important}
+  #top .cta{display:grid!important;grid-template-columns:1fr 1fr!important;gap:9px!important}
+  #top .cta .btn{width:100%!important;min-height:48px!important;height:auto!important;padding:10px 12px!important;justify-content:center!important;font-size:13px!important}
+  #top .hero-cd{position:relative!important;left:auto!important;top:auto!important;width:100%!important;max-width:none!important;margin:16px 0 0!important;padding:11px 12px 11px 17px!important;gap:8px!important;border-radius:17px!important}
+  #top .hero-cd::before{top:12px!important;bottom:12px!important}
+  #top .hcd-l>b{font-size:15px!important}
+  #top .hcd-k{font-size:9.5px!important}
+  #top .hcd-t{gap:5px!important}
+  #top .hcd-t>div{padding:7px 2px 6px!important;border-radius:10px!important}
+  #top .hcd-t b{font-size:21px!important}
+  #top .hcd-t small{font-size:8px!important}
+  #top .hero-chips{margin-top:12px!important;gap:8px!important}
+  #top .hero-chips span{font-size:9.5px!important;min-height:24px!important;padding:0 8px!important}
+  #top .index-route-transfer{
+    display:block!important;position:relative!important;inset:auto!important;transform:none!important;
+    width:calc(100% + 10px)!important;height:300px!important;margin:8px -5px 0!important;
+    opacity:1!important;visibility:visible!important;z-index:3!important;pointer-events:none!important;
+  }
+  #top .index-route-transfer .map-col,#top .index-route-transfer .map-wrap{display:block!important;width:100%!important;height:300px!important;min-height:300px!important;overflow:visible!important}
+  #top .index-route-transfer #rmap{display:block!important;width:100%!important;height:300px!important;max-height:none!important;opacity:1!important;visibility:visible!important;overflow:visible!important}
+  #top .scroll{display:none!important}
+}
+@media (max-width:430px){
+  #top.hero.kk2-part{padding-top:84px!important}
+  #top .cta{grid-template-columns:1fr!important}
+  #top .cta .btn{min-height:46px!important}
+  #top .index-route-transfer,#top .index-route-transfer .map-col,#top .index-route-transfer .map-wrap,#top .index-route-transfer #rmap{height:270px!important;min-height:270px!important}
+}
+@media (max-width:360px){
+  #top h1{font-size:38px!important}
+  #top .hero-in{width:calc(100% - 22px)!important}
+  #top .hcd-t b{font-size:19px!important}
+  #top .index-route-transfer,#top .index-route-transfer .map-col,#top .index-route-transfer .map-wrap,#top .index-route-transfer #rmap{height:245px!important;min-height:245px!important}
+}
+</style>
+
 </head>
 <body>
 <div class="done" id="loader"><svg viewBox="40 40 540 450" xmlns="http://www.w3.org/2000/svg"><g fill="#2d2d2d" opacity=".55" transform="translate(8 7)"><path d="M63 55H245L305 140L137 383H63Z"></path><path d="M265 55H358L312 125Z"></path><path d="M377 55H558V383H487L322 135Z"></path><path d="M63 402H205L312 242L420 402H558V472H63Z"></path></g><path d="M63 55H245L305 140L137 383H63Z" fill="#0b94d4"></path><path d="M265 55H358L312 125Z" fill="#0b94d4"></path><path d="M377 55H558V383H487L322 135Z" fill="#e5db35"></path><path d="M63 402H205L312 242L420 402H558V472H63Z" fill="#567d22"></path></svg></div>
