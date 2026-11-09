@@ -1176,6 +1176,24 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
 <style id="real-flags-v22">
 .lang-current{min-width:58px!important;padding:0 10px!important;gap:7px!important}.lang-current .sr-lang{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}.flag{display:inline-block!important;width:27px!important;height:18px!important;flex:0 0 27px!important;border-radius:3px!important;box-shadow:0 0 0 1px rgba(0,0,0,.13)!important;background-size:100% 100%!important;background-position:center!important}.flag-cz{background:linear-gradient(to bottom,#fff 0 50%,#d7141a 50% 100%)!important;position:relative}.flag-cz:after{content:'';position:absolute;inset:0 auto 0 0;width:50%;background:#11457e;clip-path:polygon(0 0,100% 50%,0 100%);border-radius:3px 0 0 3px}.flag-en{background:#012169!important;position:relative;background-image:linear-gradient(33deg,transparent 43%,#fff 43% 48%,#c8102e 48% 52%,#fff 52% 57%,transparent 57%),linear-gradient(-33deg,transparent 43%,#fff 43% 48%,#c8102e 48% 52%,#fff 52% 57%,transparent 57%),linear-gradient(to right,transparent 40%,#fff 40% 60%,transparent 60%),linear-gradient(to bottom,transparent 35%,#fff 35% 65%,transparent 65%)!important}.flag-en:after{content:'';position:absolute;left:0;right:0;top:42%;height:16%;background:#c8102e}.flag-en:before{content:'';position:absolute;top:0;bottom:0;left:44%;width:12%;background:#c8102e}.flag-de{background:linear-gradient(to bottom,#111 0 33.33%,#dd0000 33.33% 66.66%,#ffce00 66.66% 100%)!important}.lang-menu button .flag{width:25px!important;height:17px!important;flex-basis:25px!important}
 </style>
+<style id="hero-mobile-critical">@media(max-width:760px){.index-route-transfer,.kk2-scope #top .index-route-transfer,#top .route{display:none!important;visibility:hidden!important}}</style>
+<style id="hero-mobile-v24">
+/* Jen mobil: bez animace trasy, text hera přes celou šířku */
+@media(max-width:760px){
+.kk2-scope #top .index-route-transfer{display:none!important}
+.kk2-scope #top .hero-in{grid-template-columns:minmax(0,1fr)!important;width:calc(100% - 40px)!important}
+.kk2-scope #top .hero-in>div{max-width:none!important;width:100%!important}
+.kk2-scope #top h1{font-size:clamp(42px,11.5vw,58px)!important;max-width:none!important}
+.kk2-scope #top h1 em{white-space:nowrap!important}
+.kk2-scope #top .sub{max-width:none!important}
+.kk2-scope #top .sub br{display:none}
+.kk2-scope #top .hero-cd{width:100%!important;max-width:100%!important;box-sizing:border-box!important;margin-left:0!important;margin-right:0!important}
+.kk2-scope #top{height:auto!important;min-height:100svh!important}
+}
+/* Mobilní animace sekce O kempu */
+#o-kempu.vd-js .vd-head>div>*,#o-kempu.vd-js .vd-c,#o-kempu.vd-js .vd-route-title,#o-kempu.vd-js .vd-cta,#o-kempu.vd-js .vd-bar{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.75,.25,1)}
+#o-kempu.vd-js .kk-in{opacity:1!important;transform:none!important}
+</style>
 </head>
 <body>
 <div class="done" id="loader"><svg viewBox="40 40 540 450" xmlns="http://www.w3.org/2000/svg"><g fill="#2d2d2d" opacity=".55" transform="translate(8 7)"><path d="M63 55H245L305 140L137 383H63Z"></path><path d="M265 55H358L312 125Z"></path><path d="M377 55H558V383H487L322 135Z"></path><path d="M63 402H205L312 242L420 402H558V472H63Z"></path></g><path d="M63 55H245L305 140L137 383H63Z" fill="#0b94d4"></path><path d="M265 55H358L312 125Z" fill="#0b94d4"></path><path d="M377 55H558V383H487L322 135Z" fill="#e5db35"></path><path d="M63 402H205L312 242L420 402H558V472H63Z" fill="#567d22"></path></svg></div>
@@ -4669,23 +4687,7 @@ if(img&&!reduce){var tk=false;
 
 
 <script id="lang-switch-js-v22">(()=>{const w=document.querySelector('.lang-switch');if(!w)return;const t=w.querySelector('.lang-current'),flag=t.querySelector('.flag'),name=t.querySelector('.sr-lang'),menu=w.querySelector('.lang-menu');const names={CZ:'Čeština',EN:'English',DE:'Deutsch'};t.addEventListener('click',e=>{e.stopPropagation();const o=w.classList.toggle('open');t.setAttribute('aria-expanded',String(o))});menu.addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(!b)return;const l=b.dataset.lang;menu.querySelectorAll('[data-lang]').forEach(x=>x.classList.toggle('active',x===b));flag.className='flag flag-'+l.toLowerCase();name.textContent=names[l];w.classList.remove('open');t.setAttribute('aria-expanded','false');document.documentElement.lang=l.toLowerCase();});document.addEventListener('click',()=>{w.classList.remove('open');t.setAttribute('aria-expanded','false')});document.addEventListener('keydown',e=>{if(e.key==='Escape'){w.classList.remove('open');t.setAttribute('aria-expanded','false')}})})();</script>
-<style id="hero-mobile-v24">
-/* Jen mobil: bez animace trasy, text hera přes celou šířku */
-@media(max-width:760px){
-.kk2-scope #top .index-route-transfer{display:none!important}
-.kk2-scope #top .hero-in{grid-template-columns:minmax(0,1fr)!important;width:calc(100% - 40px)!important}
-.kk2-scope #top .hero-in>div{max-width:none!important;width:100%!important}
-.kk2-scope #top h1{font-size:clamp(42px,11.5vw,58px)!important;max-width:none!important}
-.kk2-scope #top h1 em{white-space:nowrap!important}
-.kk2-scope #top .sub{max-width:none!important}
-.kk2-scope #top .sub br{display:none}
-.kk2-scope #top .hero-cd{width:100%!important;max-width:100%!important;box-sizing:border-box!important;margin-left:0!important;margin-right:0!important}
-.kk2-scope #top{height:auto!important;min-height:100svh!important}
-}
-/* Mobilní animace sekce O kempu */
-#o-kempu.vd-js .vd-head>div>*,#o-kempu.vd-js .vd-c,#o-kempu.vd-js .vd-route-title,#o-kempu.vd-js .vd-cta,#o-kempu.vd-js .vd-bar{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.75,.25,1)}
-#o-kempu.vd-js .kk-in{opacity:1!important;transform:none!important}
-</style>
+
 <script id="mobile-reveal-v23">(function(){
 var sec=document.getElementById('o-kempu');if(!sec||!('IntersectionObserver' in window))return;
 sec.classList.add('vd-js');
