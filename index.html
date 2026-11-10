@@ -1332,6 +1332,19 @@ section#o-kempu.ok2::before,section#o-kempu.ok2::after{display:none!important}
 @media(max-width:1100px){.ok2-am ul{grid-template-columns:repeat(3,1fr)!important}}
 @media(max-width:600px){.ok2-am ul{grid-template-columns:repeat(2,1fr)!important;gap:10px!important}.ok2-am li{padding:18px 8px 14px!important;flex-wrap:nowrap!important}.ok2-am li b{display:block!important}}
 </style>
+<style id="ok2-tl-css">
+.ok2-why.tl{position:relative;padding-left:64px!important;gap:16px!important}
+.tl-track{position:absolute;left:21px;top:34px;bottom:34px;width:4px;border-radius:4px;background:repeating-linear-gradient(180deg,rgba(229,140,38,.45) 0 8px,transparent 8px 16px)}
+.tl-fill{position:absolute;left:0;top:0;width:4px;height:0;border-radius:4px;background:linear-gradient(180deg,#f4a64a,#e58c26);box-shadow:0 0 12px rgba(244,166,74,.55)}
+.tl-boat{position:absolute;left:50%;top:0;width:26px;height:56px;margin-left:-13px;transform:translateY(-50%);filter:drop-shadow(0 4px 5px rgba(11,36,25,.3));transition:opacity .3s}
+.tl-boat svg{display:block}
+.tl-i{position:relative;opacity:.45;transform:translateX(14px);transition:opacity .5s,transform .5s,box-shadow .25s,border-color .4s}
+.tl-i.on{opacity:1;transform:none}
+.tl-i .nd{position:absolute;left:-60px;top:22px;width:34px;height:34px;margin:0;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:15px;background:#f5f0e6;color:#9a5606;border:2px solid rgba(229,140,38,.5);transition:background .4s,color .4s,border-color .4s,transform .4s;z-index:2}
+.tl-i.on .nd{background:#f4a64a;color:#0b2419;border-color:#f4a64a;transform:scale(1.08)}
+.tl-i.on{border-color:rgba(229,140,38,.4)!important}
+@media(max-width:600px){.ok2-why.tl{padding-left:52px!important}.tl-track{left:15px}.tl-i .nd{left:-50px;width:30px;height:30px;font-size:14px}}
+</style>
 </head>
 <body>
 
@@ -1535,11 +1548,11 @@ section#o-kempu.ok2::before,section#o-kempu.ok2::after{display:none!important}
 <img src="img/kemp_reprezentativni.webp" alt="Kemp u Vltavy, stany a lodě na břehu" loading="lazy">
 <figcaption><span class="dot"></span>Přímo na levém břehu Vltavy</figcaption>
 </figure>
-<ul class="ok2-why">
-<li><span class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13" cy="4" r="2"/><path d="M9 21l2-6 3 3v3M7 11l3-3 3 1 2 3 3 1M10 8l-1 5"/></svg></span><div><b>Krumlov pěšky</b><p>Historické centrum je jen 500 m daleko. Auto nechte na parkovišti přímo v kempu.</p></div></li>
-<li><span class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8c2.5 0 2.5 2 5 2s2.5-2 5-2 2.5 2 5 2 2.5-2 5-2M2 14c2.5 0 2.5 2 5 2s2.5-2 5-2 2.5 2 5 2 2.5-2 5-2"/></svg></span><div><b>Voda přímo u stanu</b><p>Stanujete na břehu Vltavy. Loď necháte přímo u přístaviště na dohled.</p></div></li>
-<li><span class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 14h20l-3 5H5zM12 3v11M12 4l6 7h-6"/></svg></span><div><b>Všechno na jednom místě</b><p>Spaní, občerstvení i půjčovna lodí. Nemusíte nic domlouvat jinde.</p></div></li>
-<li><span class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect height="14" rx="2" width="12" x="6" y="7"/><path d="M9 7V4h6v3"/></svg></span><div><b>Bez starostí s bagáží</b><p>Úschovna za 50 Kč / batoh, nebo ji pro vás převezeme.</p></div></li>
+<ul class="ok2-why tl" id="okTl"><div class="tl-track" aria-hidden="true"><div class="tl-fill"></div><div class="tl-boat"><svg viewBox="0 0 26 56" width="26" height="56"><path d="M13 1 C23 12 24 40 13 55 C2 40 3 12 13 1Z" fill="#f4a64a" stroke="#c97d24" stroke-width="1.4"/><path d="M13 7 C19 16 19.5 38 13 49 C6.5 38 7 16 13 7Z" fill="#b9682f" opacity=".55"/><circle cx="13" cy="21" r="4" fill="#c0392b"/><circle cx="13" cy="21" r="2.2" fill="#f0c49a"/><circle cx="13" cy="35" r="4" fill="#f7f0e4"/><circle cx="13" cy="35" r="2.2" fill="#f0c49a"/><path d="M3 18 L23 24 M3 38 L23 32" stroke="#7a4a33" stroke-width="1.6" stroke-linecap="round"/></svg></div></div>
+<li class="tl-i"><i class="nd">1</i><span class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13" cy="4" r="2"/><path d="M9 21l2-6 3 3v3M7 11l3-3 3 1 2 3 3 1M10 8l-1 5"/></svg></span><div><b>Krumlov pěšky</b><p>Historické centrum je jen 500 m daleko. Auto nechte na parkovišti přímo v kempu.</p></div></li>
+<li class="tl-i"><i class="nd">2</i><span class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8c2.5 0 2.5 2 5 2s2.5-2 5-2 2.5 2 5 2 2.5-2 5-2M2 14c2.5 0 2.5 2 5 2s2.5-2 5-2 2.5 2 5 2 2.5-2 5-2"/></svg></span><div><b>Voda přímo u stanu</b><p>Stanujete na břehu Vltavy. Loď necháte přímo u přístaviště na dohled.</p></div></li>
+<li class="tl-i"><i class="nd">3</i><span class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 14h20l-3 5H5zM12 3v11M12 4l6 7h-6"/></svg></span><div><b>Všechno na jednom místě</b><p>Spaní, občerstvení i půjčovna lodí. Nemusíte nic domlouvat jinde.</p></div></li>
+<li class="tl-i"><i class="nd">4</i><span class="ic"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect height="14" rx="2" width="12" x="6" y="7"/><path d="M9 7V4h6v3"/></svg></span><div><b>Bez starostí s bagáží</b><p>Úschovna za 50 Kč / batoh, nebo ji pro vás převezeme.</p></div></li>
 </ul>
 </div>
 
@@ -4800,4 +4813,8 @@ setTimeout(()=>{const x0=t.getBoundingClientRect().left;setTimeout(()=>{
 if(Math.abs(t.getBoundingClientRect().left-x0)>1)return;
 t.style.animation='none';let x=0,last=performance.now();const w=t.scrollWidth/2;
 (function f(n){if(!window.__animPaused)x-=(n-last)*0.046;last=n;if(x<=-w)x+=w;t.style.transform='translate3d('+x+'px,0,0)';requestAnimationFrame(f)})(last)},1500)},800)})();</script>
+<script id="ok2-tl-js">(()=>{const ul=document.getElementById('okTl');if(!ul)return;const fill=ul.querySelector('.tl-fill'),boat=ul.querySelector('.tl-boat'),track=ul.querySelector('.tl-track'),items=[...ul.querySelectorAll('.tl-i')];
+function upd(){const r=ul.getBoundingClientRect(),vh=innerHeight,tr=track.getBoundingClientRect();const target=vh*.62;const first=items[0].getBoundingClientRect(),last=items[items.length-1].getBoundingClientRect();const y0=first.top+first.height/2,y1=last.top+last.height/2;let p=(target-y0)/(y1-y0);p=Math.max(0,Math.min(1,p));const H=track.clientHeight;const startOff=y0-tr.top,endOff=y1-tr.top;const px=startOff+(endOff-startOff)*p;const f=Math.max(0,Math.min(H,(target-tr.top)<startOff?0:px));fill.style.height=f+'px';boat.style.top=f+'px';boat.style.opacity=(target<y0-40)?0:1;items.forEach(li=>{const b=li.getBoundingClientRect();li.classList.toggle('on',target>=b.top+22)})}
+let t=false;function on(){if(t)return;t=true;requestAnimationFrame(()=>{t=false;upd()})}
+addEventListener('scroll',on,{passive:true});addEventListener('resize',on);upd();})();</script>
 </body></html>
