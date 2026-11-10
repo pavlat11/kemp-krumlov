@@ -1146,31 +1146,40 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
 .callbar .btn-dark{flex:1!important;background:#fff!important;color:#0f2a1c!important;border:1.5px solid rgba(15,42,28,.18)}
 .callbar .btn-sun{flex:1.4!important;background:#f4a64a!important;color:#0f2a1c!important}
 }</style>
-<style id="camp-scene-css">
-#top .camp-scene{width:min(520px,100%);margin:20px 0 0;padding:14px 16px 10px;border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.2);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#fff}
-#top .camp-scene .card{width:min(620px,100%);border-radius:26px;padding:18px 18px 14px;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(12px);box-shadow:0 20px 50px -20px #0008}#top .camp-scene .k{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#f4a64a;margin-bottom:6px}#top .camp-scene .k:before{content:"";width:28px;height:2px;background:#f4a64a}#top .camp-scene svg{display:block;width:100%;height:auto;overflow:visible}#top .camp-scene .o{fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}#top .camp-scene .s{stroke:#f4a64a}#top .camp-scene .f{fill:#f4a64a;stroke:none}#top .camp-scene .thin{stroke-width:1.6;opacity:.55}#top .camp-scene .lab{display:flex;justify-content:space-around;font-size:13px;font-weight:800;margin-top:4px}#top .camp-scene .lab small{display:block;font-weight:600;opacity:.75;font-size:12px}#top .camp-scene .lab div{text-align:center;opacity:0;animation:lb 9s infinite}#top .camp-scene .lab div:nth-child(1){animation-delay:0s}#top .camp-scene .lab div:nth-child(2){--d:1}
-@keyframes lb{0%,30%{opacity:0;transform:translateY(6px)}40%,92%{opacity:1;transform:none}100%{opacity:0}}
-/* jízda */
-#top .camp-scene .rig{animation:drive 9s cubic-bezier(.3,.6,.25,1) infinite}
-@keyframes drive{0%{transform:translateX(-330px);opacity:0}4%{opacity:1}36%{transform:translateX(0)}90%{transform:translateX(0);opacity:1}100%{transform:translateX(0);opacity:0}}#top .camp-scene .rig{--o:1}#top .camp-scene .wh{transform-box:fill-box;transform-origin:center;animation:spin 9s linear infinite}
-@keyframes spin{0%{transform:rotate(0)}36%{transform:rotate(900deg)}100%{transform:rotate(900deg)}}#top .camp-scene .bump{animation:bump 9s infinite}
-@keyframes bump{0%{transform:translateY(0)}2%{transform:translateY(-1.2px)}4%{transform:translateY(0)}6%{transform:translateY(-1.2px)}8%{transform:translateY(0)}10%{transform:translateY(-1.2px)}12%{transform:translateY(0)}14%{transform:translateY(-1.2px)}16%{transform:translateY(0)}18%{transform:translateY(-1.2px)}20%{transform:translateY(0)}22%{transform:translateY(-1.2px)}24%{transform:translateY(0)}26%{transform:translateY(-1.2px)}28%{transform:translateY(0)}30%{transform:translateY(-1.2px)}32%{transform:translateY(0)}36%,100%{transform:translateY(0)}}#top .camp-scene .dust circle{fill:#fff;opacity:0;animation:dust 9s infinite}
-@keyframes dust{0%{opacity:0;transform:translateX(0)}8%{opacity:.4}34%{opacity:0;transform:translateX(-26px) translateY(-8px)}100%{opacity:0}}#top .camp-scene .flame{transform-box:fill-box;transform-origin:50% 100%;animation:fl .6s ease-in-out infinite alternate}
-@keyframes fl{to{transform:scale(.8,1.15)}}#top .camp-scene .smoke{animation:sm 3s ease-out infinite;opacity:0}
-@keyframes sm{0%{opacity:.5;transform:translate(0,0)}100%{opacity:0;transform:translate(8px,-22px)}}#top .camp-scene .tent{animation:tent 9s infinite;transform-box:fill-box;transform-origin:50% 100%}
-@keyframes tent{0%{transform:scale(1)}38%{transform:scale(1)}41%{transform:scale(1.04)}44%,100%{transform:scale(1)}}#top .camp-scene .hand{display:none}
-@keyframes wave{0%,40%{opacity:0}42%{opacity:1;transform:rotate(0)}48%{transform:rotate(-24deg)}54%{transform:rotate(8deg)}60%{transform:rotate(-24deg)}66%,88%{opacity:1;transform:rotate(0)}95%,100%{opacity:0}}
-@media not all{#top .camp-scene *{animation:none!important}#top .camp-scene .rig{transform:none}#top .camp-scene .lab div{opacity:1}#top .camp-scene .hand{opacity:0}}
-
-#top .camp-scene .k{margin:0 0 4px;font-family:inherit}
-#top .camp-scene svg{width:100%;height:auto;overflow:hidden!important}
-@media(max-height:760px) and (min-width:901px){#top .camp-scene{margin-top:12px;padding:10px 14px 8px;width:min(440px,100%)}}
-@media(max-width:760px){#top .hero-in>div{padding-top:16px!important}#top .camp-scene{width:100%}}
-</style>
 <style id="hide-from-rezervace">/* dočasně skryto: Rezervace a vše dolů (kromě patičky). Smazat tento blok = vrátit zpět */
 #rezervace,#areal,#doprava,#pela,#okoli,#kontakt{display:none!important}
 </style>
 <style id="hero-order-css">#top .camp-scene{margin:18px 0 0}#top .hero-in .cta{margin-top:18px!important}#top .hero-chips{display:none!important}</style>
+<style id="camp-a-css">
+#top .camp-a{width:min(540px,100%);margin:22px 0 0;font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#fff}
+#top .camp-a .k{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#f4a64a;margin:0 0 10px}
+#top .camp-a .k:before{content:"";width:26px;height:2px;background:#f4a64a}
+/* ===== A: ilustrace bez rámečku ===== */
+#top .camp-a .stage{position:relative;height:118px;overflow:hidden;border-bottom:2px solid rgba(255,255,255,.18)}#top .camp-a svg{position:absolute;bottom:0;height:100%;overflow:visible}#top .camp-a .row{display:grid;grid-template-columns:repeat(3,1fr);margin-top:12px}#top .camp-a .row a{color:#fff;text-decoration:none;display:block;padding:6px 0;border-radius:10px;transition:.2s}#top .camp-a .row a:hover{background:rgba(255,255,255,.06)}#top .camp-a .row b{display:block;font-size:16px}#top .camp-a .row small{font-size:13px;color:#ffc978;font-weight:700}#top .camp-a .rig{animation:aDrive 8s cubic-bezier(.25,.7,.3,1) infinite}
+@keyframes aDrive{0%{transform:translateX(-260px);opacity:1}35%,88%{transform:translateX(-22px);opacity:1}100%{transform:translateX(-22px);opacity:0}}#top .camp-a .wh{transform-box:fill-box;transform-origin:center;animation:aSpin 8s linear infinite}
+@keyframes aSpin{0%{transform:rotate(0)}35%,100%{transform:rotate(720deg)}}#top .camp-a .flag{transform-box:fill-box;transform-origin:0 50%;animation:flag 1.4s ease-in-out infinite alternate}
+@keyframes flag{to{transform:scaleX(.7) skewY(8deg)}}#top .camp-a .smk{animation:smk 3.2s ease-out infinite;opacity:0}
+@keyframes smk{0%{opacity:.6;transform:none}100%{opacity:0;transform:translate(10px,-26px) scale(1.8)}}#top .camp-a .glow{animation:glow 1.8s ease-in-out infinite alternate}
+@keyframes glow{to{opacity:.35}}
+
+
+#top .camp-a .stage svg{left:0;width:100%}
+#top .camp-a .row a:focus-visible{outline:3px solid #f4a64a;outline-offset:2px}
+#top .camp-a .row b{font-size:16px}
+@media(max-height:760px) and (min-width:901px){#top .camp-a{margin-top:14px}#top .camp-a .stage{height:96px}#top .camp-a .row{margin-top:8px}}
+@media(max-width:760px){#top .camp-a{width:100%}#top .camp-a .stage{height:auto;aspect-ratio:560/118}#top .camp-a .row b{font-size:15px}#top .camp-a .row small{font-size:12px}}
+</style>
+<style id="camp-a-fix">
+#top .camp-a .stage{height:auto!important;aspect-ratio:560/118;border-bottom:2px solid rgba(255,255,255,.28)!important}
+#top .camp-a .stage svg{position:absolute;inset:0;width:100%!important;height:100%!important;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+#top .camp-a .row{margin-top:10px!important}
+#top .camp-a .row a{padding:4px 0!important;text-shadow:0 2px 10px rgba(0,0,0,.5)}
+#top .camp-a .row b{display:block;font-size:17px!important;font-weight:800;line-height:1.25}
+#top .camp-a .row small{display:block;font-size:14px!important;font-weight:700;color:#ffc978!important;line-height:1.4}
+#top .hero-in .cta{margin-top:22px!important}
+@media(max-height:760px) and (min-width:901px){#top .camp-a{width:min(470px,100%)}}
+@media(max-width:760px){#top .camp-a .row b{font-size:15px!important}#top .camp-a .row small{font-size:12.5px!important}}
+</style>
 </head>
 <body>
 <div class="done" id="loader"><svg viewBox="40 40 540 450" xmlns="http://www.w3.org/2000/svg"><g fill="#2d2d2d" opacity=".55" transform="translate(8 7)"><path d="M63 55H245L305 140L137 383H63Z"></path><path d="M265 55H358L312 125Z"></path><path d="M377 55H558V383H487L322 135Z"></path><path d="M63 402H205L312 242L420 402H558V472H63Z"></path></g><path d="M63 55H245L305 140L137 383H63Z" fill="#0b94d4"></path><path d="M265 55H358L312 125Z" fill="#0b94d4"></path><path d="M377 55H558V383H487L322 135Z" fill="#e5db35"></path><path d="M63 402H205L312 242L420 402H558V472H63Z" fill="#567d22"></path></svg></div>
@@ -1206,69 +1215,50 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
 <div class="season">Kemp Krumlov · sezóna 1. 5. – 1. 10.</div>
 <h1 id="h1"><span class="w"><span style="animation-delay: 0.3s;">Krumlov</span></span> <span class="w"><span style="animation-delay: 0.39s;">na</span></span> <span class="w"><span style="animation-delay: 0.48s;">dosah.</span></span><em><span class="w"><span style="animation-delay: 0.57s;">Vltava</span></span> <span class="w"><span style="animation-delay: 0.66s;">přímo</span></span> <span class="w"><span style="animation-delay: 0.75s;">u</span></span> <span class="w"><span style="animation-delay: 0.84s;">stanu.</span></span></em></h1>
 <p class="sub">Přijeďte po vodě nebo po silnici. <br>Chatky, teepee a stany jen 500 m od centra.</p>
-<div class="camp-scene" role="group" aria-label="Na co se v kempu zaměřujeme"><p class="k">Specializujeme se na</p><svg viewBox="0 0 600 156" role="img" aria-label="Karavan přijíždí ke stanu a chatce v kempu">
-
- <!-- pozadí: věž zámku a řeka -->
- <g class="thin o" style="opacity:.28">
-  <path d="M20 128V64h12v64M18 64l8-16 8 16M22 54v-8h8v8M24 40l2-10 2 10"/>
-  <path d="M32 100h60v28M92 100l8-10v38"/>
- </g>
- <path class="o thin" d="M0 146q20-6 40 0t40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0" style="stroke:#7ec7e0;opacity:.5"/>
- <!-- zem -->
- <path class="o thin" d="M0 128h600"/>
- <path class="o thin" d="M20 136h60M130 136h90M380 136h120M540 136h50"/>
- <!-- slunce -->
- <circle class="f" cx="548" cy="26" r="9" opacity=".9"/>
- <!-- chatka -->
- <g transform="translate(470 0)">
-  <path class="o" d="M4 128V84l50-34 50 34v44z"/>
-  <path class="o" d="M-4 88 54 46l58 42"/>
-  <path class="o s" d="M42 128v-26h24v26"/>
-  <rect class="o" x="76" y="92" width="18" height="16" rx="2"/>
-  <path class="o thin" d="M85 92v16M76 100h18"/>
-  <path class="o" d="M82 44V30h12v22"/>
-  <g class="smoke"><circle class="f" cx="88" cy="24" r="4"/></g>
-  <g class="smoke" style="animation-delay:1.4s"><circle class="f" cx="90" cy="24" r="3"/></g>
- </g>
- <!-- stan -->
- <g class="tent">
-  <path class="o s" d="M300 128 350 54l50 74z"/>
-  <path class="o" d="M334 128l16-30 16 30"/>
-  <path class="o thin" d="M350 54v-12"/>
-  <path class="f" d="M350 42l12 5-12 5z"/>
-  <path class="o thin" d="M300 128l-14 6M400 128l14 6"/>
- </g>
- <!-- ohniště -->
- <g transform="translate(424 0)">
-  <path class="o" d="M-12 128h24"/>
-  <path class="f flame" d="M0 126c-8-6-6-14 0-22 2 6 8 8 8 16 0 4-4 6-8 6z"/>
- </g>
- <!-- auto + karavan -->
- <g class="rig"><g class="bump">
-  <!-- karavan -->
-  <path class="o" d="M30 112V92c0-12 8-20 22-20h66c10 0 18 8 18 20v20c0 4-2 6-6 6H36c-4 0-6-2-6-6z"/>
-  <path class="o thin" d="M30 100h106"/>
-  <rect class="o s" x="48" y="82" width="28" height="14" rx="4"/>
-  <path class="o s" d="M96 118V90h20v28"/>
-  <path class="o thin" d="M86 78h40"/>
-  <path class="o" d="M136 110h24"/><circle class="f" cx="136" cy="110" r="2.4"/>
-  <!-- auto (předek vpravo) -->
-  <path class="o" d="M160 120V94c0-6 4-10 10-10h40c6 0 10 2 14 6l12 10h28c10 1 17 6 18 14v6c0 2-2 2-4 2H162c-2 0-2-1-2-2z"/>
-  <path class="o thin" d="M170 90h36v13h-36zM210 90h10l14 13h-24z"/>
-  <path class="o thin" d="M208 90v32M244 106h28"/>
-  <circle class="f" cx="278" cy="108" r="3.2"/>
-  <path class="o s" d="M284 112l5 0" opacity=".8"/>
-  <!-- kola -->
-  <g transform="translate(66 124)"><g class="wh"><circle class="o" r="12" fill="#0b2419"/><path class="o thin" d="M-9 0h18M0-9v18"/></g></g>
-  <g transform="translate(112 124)"><g class="wh"><circle class="o" r="12" fill="#0b2419"/><path class="o thin" d="M-9 0h18M0-9v18"/></g></g>
-  <g transform="translate(188 124)"><g class="wh"><circle class="o" r="13" fill="#0b2419"/><path class="o thin" d="M-9 0h18M0-9v18"/></g></g>
-  <g transform="translate(256 124)"><g class="wh"><circle class="o" r="13" fill="#0b2419"/><path class="o thin" d="M-9 0h18M0-9v18"/></g></g>
-  <!-- ruka z okna -->
-  <path class="o s hand" d="M214 90l14-8" />
- </g>
- <g class="dust" transform="translate(40 122)"><circle cx="0" cy="0" r="4"/><circle cx="-10" cy="-2" r="3" style="animation-delay:.2s"/><circle cx="-18" cy="0" r="2.5" style="animation-delay:.4s"/></g>
- </g>
-</svg><div class="lab"><div style="animation-delay:0s">Karavany<small>od 300 Kč / noc</small></div><div style="animation-delay:.15s">Stany<small>od 190 Kč / stan</small></div><div style="animation-delay:.3s">Chatky<small>od 890 Kč / noc</small></div></div>
+<div class="camp-scene camp-a" role="group" aria-label="Na co se v kempu zaměřujeme">
+ <div class="k">Specializujeme se na</div>
+ <div class="stage">
+  <svg viewBox="0 0 560 118" width="100%" preserveAspectRatio="xMidYMax meet">
+   <!-- karavan + auto -->
+   <g class="rig">
+    <rect x="22" y="44" width="112" height="56" rx="18" fill="#f3ead8"/>
+    <rect x="22" y="80" width="112" height="7" fill="#f4a64a"/>
+    <rect x="38" y="54" width="34" height="18" rx="5" fill="#0f2a1c"/>
+    <rect x="96" y="56" width="22" height="40" rx="4" fill="#d9ccb2"/>
+    <path d="M134 92h22" stroke="#f3ead8" stroke-width="4" stroke-linecap="round"/>
+    <path d="M156 100V74c0-6 4-10 10-10h34l16 14h22c8 0 14 6 14 14v8z" fill="#f4a64a"/>
+    <path d="M172 69h24l12 11h-36z" fill="#0f2a1c" opacity=".85"/>
+    <circle cx="246" cy="86" r="3" fill="#fff6"/>
+    <g transform="translate(56 102)"><g class="wh"><circle r="11" fill="#1b2b22"/><circle r="4" fill="#cfc4ae"/><path d="M0-8v16" stroke="#cfc4ae" stroke-width="2"/></g></g>
+    <g transform="translate(104 102)"><g class="wh"><circle r="11" fill="#1b2b22"/><circle r="4" fill="#cfc4ae"/><path d="M0-8v16" stroke="#cfc4ae" stroke-width="2"/></g></g>
+    <g transform="translate(180 102)"><g class="wh"><circle r="11" fill="#1b2b22"/><circle r="4" fill="#cfc4ae"/><path d="M0-8v16" stroke="#cfc4ae" stroke-width="2"/></g></g>
+    <g transform="translate(226 102)"><g class="wh"><circle r="11" fill="#1b2b22"/><circle r="4" fill="#cfc4ae"/><path d="M0-8v16" stroke="#cfc4ae" stroke-width="2"/></g></g>
+   </g>
+   <!-- stan -->
+   <path d="M232 114 280 34l48 80z" fill="#f4a64a"/>
+   <path d="M280 34 304 114h24z" fill="#d98a34"/>
+   <path d="M266 114l14-30 14 30z" fill="#0f2a1c"/>
+   <path d="M280 34V18" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+   <path class="flag" d="M280 18l14 5-14 5z" fill="#ffc978"/>
+   <!-- ohen -->
+   <circle class="glow" cx="350" cy="108" r="14" fill="#f4a64a" opacity=".18"/>
+   <path d="M350 112c-8-5-6-14 0-22 2 6 8 8 8 15 0 4-4 7-8 7z" fill="#ffc978"/>
+   <!-- chatka -->
+   <path d="M396 114V68l58-38 58 38v46z" fill="#c98a52"/>
+   <path d="M384 72 454 22l70 50" stroke="#f3ead8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+   <path d="M396 80h116M396 94h116" stroke="#a96e3c" stroke-width="2"/>
+   <rect x="440" y="84" width="28" height="30" rx="3" fill="#0f2a1c"/>
+   <rect x="482" y="76" width="20" height="16" rx="3" fill="#ffc978"/>
+   <rect x="488" y="20" width="10" height="22" fill="#a96e3c"/>
+   <circle class="smk" cx="493" cy="14" r="5" fill="#fff"/>
+   <circle class="smk" cx="495" cy="14" r="4" fill="#fff" style="animation-delay:1.5s"/>
+  </svg>
+ </div>
+ <div class="row">
+  <a href="#ubytovani"><b>Karavany</b><small>od 300 Kč / noc</small></a>
+  <a href="#ubytovani" style="text-align:center"><b>Stany</b><small>od 190 Kč / stan</small></a>
+  <a href="#ubytovani" style="text-align:right"><b>Chatky</b><small>od 890 Kč / noc</small></a>
+ </div>
 </div>
 <div class="cta">
 <a class="btn btn-sun" href="#rezervace">Poptat pobyt <svg class="arr" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
