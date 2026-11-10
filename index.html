@@ -1170,6 +1170,7 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
 <style id="hide-from-rezervace">/* dočasně skryto: Rezervace a vše dolů (kromě patičky). Smazat tento blok = vrátit zpět */
 #rezervace,#areal,#doprava,#pela,#okoli,#kontakt{display:none!important}
 </style>
+<style id="hero-order-css">#top .camp-scene{margin:18px 0 0}#top .hero-in .cta{margin-top:18px!important}#top .hero-chips{display:none!important}</style>
 </head>
 <body>
 <div class="done" id="loader"><svg viewBox="40 40 540 450" xmlns="http://www.w3.org/2000/svg"><g fill="#2d2d2d" opacity=".55" transform="translate(8 7)"><path d="M63 55H245L305 140L137 383H63Z"></path><path d="M265 55H358L312 125Z"></path><path d="M377 55H558V383H487L322 135Z"></path><path d="M63 402H205L312 242L420 402H558V472H63Z"></path></g><path d="M63 55H245L305 140L137 383H63Z" fill="#0b94d4"></path><path d="M265 55H358L312 125Z" fill="#0b94d4"></path><path d="M377 55H558V383H487L322 135Z" fill="#e5db35"></path><path d="M63 402H205L312 242L420 402H558V472H63Z" fill="#567d22"></path></svg></div>
@@ -1205,10 +1206,7 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
 <div class="season">Kemp Krumlov · sezóna 1. 5. – 1. 10.</div>
 <h1 id="h1"><span class="w"><span style="animation-delay: 0.3s;">Krumlov</span></span> <span class="w"><span style="animation-delay: 0.39s;">na</span></span> <span class="w"><span style="animation-delay: 0.48s;">dosah.</span></span><em><span class="w"><span style="animation-delay: 0.57s;">Vltava</span></span> <span class="w"><span style="animation-delay: 0.66s;">přímo</span></span> <span class="w"><span style="animation-delay: 0.75s;">u</span></span> <span class="w"><span style="animation-delay: 0.84s;">stanu.</span></span></em></h1>
 <p class="sub">Přijeďte po vodě nebo po silnici. <br>Chatky, teepee a stany jen 500 m od centra.</p>
-<div class="cta">
-<a class="btn btn-sun" href="#rezervace">Poptat pobyt <svg class="arr" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
-<a class="btn btn-ghost" href="tel:+420720514943"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"></path></svg>720 514 943</a>
-</div><div class="camp-scene" role="group" aria-label="Na co se v kempu zaměřujeme"><p class="k">Specializujeme se na</p><svg viewBox="0 0 600 156" role="img" aria-label="Karavan přijíždí ke stanu a chatce v kempu">
+<div class="camp-scene" role="group" aria-label="Na co se v kempu zaměřujeme"><p class="k">Specializujeme se na</p><svg viewBox="0 0 600 156" role="img" aria-label="Karavan přijíždí ke stanu a chatce v kempu">
 
  <!-- pozadí: věž zámku a řeka -->
  <g class="thin o" style="opacity:.28">
@@ -1272,8 +1270,11 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
  </g>
 </svg><div class="lab"><div style="animation-delay:0s">Karavany<small>od 300 Kč / noc</small></div><div style="animation-delay:.15s">Stany<small>od 190 Kč / stan</small></div><div style="animation-delay:.3s">Chatky<small>od 890 Kč / noc</small></div></div>
 </div>
+<div class="cta">
+<a class="btn btn-sun" href="#rezervace">Poptat pobyt <svg class="arr" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+<a class="btn btn-ghost" href="tel:+420720514943"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"></path></svg>720 514 943</a>
+</div>
 
-<div class="hero-chips"><span>500 m od centra</span><span>ř. km 280,9 · levý břeh</span></div>
 </div>
 </div>
 <a class="scroll" href="#kemp-v-cislech"><i></i>Objevte kemp <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewBox="0 0 24 24" width="14"><path d="M6 9l6 6 6-6"></path></svg></a>
