@@ -1235,6 +1235,26 @@ html.anim-paused *,html.anim-paused *::before,html.anim-paused *::after{animatio
 @media(max-width:760px){#top h1{margin:20px 0 16px!important}#top .camp-a{margin-top:30px!important}#top .hero-in .cta{margin-top:30px!important}}
 .nav-r{display:flex;align-items:center;gap:10px}
 </style>
+<style id="hero-tidy-css">
+/* popisky přesně pod objekty ilustrace */
+#top .camp-a .row{position:relative!important;display:block!important;height:46px}
+#top .camp-a .row a{position:absolute!important;top:0;left:var(--x);transform:translateX(-50%);width:34%;max-width:190px;text-align:center!important;padding:4px 0!important;white-space:nowrap}
+#top .camp-a .row a:nth-child(1){--x:20%}
+#top .camp-a .row a:nth-child(2){--x:50%}
+#top .camp-a .row a:nth-child(3){--x:81%}
+@media(max-width:480px){#top .camp-a .row{height:44px}#top .camp-a .row a{width:33%}}
+/* hlavička a hero na užších noteboocích / okně */
+@media(min-width:901px) and (max-width:1240px){
+ .kk2-scope .menu,.menu{gap:14px!important}
+ .kk2-scope .menu a,.menu a{font-size:13.5px!important;white-space:nowrap}
+ .nav-r{gap:6px}
+ #animToggle{width:40px;height:40px}
+ .nav-r .btn{padding:0 14px!important;font-size:13.5px!important;white-space:nowrap}
+ .lang-current{padding-left:8px;padding-right:8px}
+ .index-route-transfer,#top .scroll{display:none!important}
+ #top .hero-in>div{width:100%!important;max-width:none!important}
+}
+</style>
 </head>
 <body>
 
