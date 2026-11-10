@@ -1346,30 +1346,12 @@ section#o-kempu.ok2::before,section#o-kempu.ok2::after{display:none!important}
 .tl-i.on{border-color:rgba(229,140,38,.4)!important}
 @media(max-width:600px){.ok2-why.tl{padding-left:52px!important}.tl-track{left:19px}.tl-i .nd{left:-49px;width:34px;height:34px;font-size:14px}}
 </style>
-<style id="ub-detail-css">
-#ubytovani .ub-card{cursor:pointer}
-#ubytovani .ub-card:focus-visible{outline:3px solid #f4a64a;outline-offset:3px}
-#ubytovani .ub-price small::after{content:" + os.";font-weight:700}
-#ubytovani .ub-cta{pointer-events:none}
-dialog#ubDlg{position:fixed;inset:0;margin:auto;height:fit-content;border:0;padding:0;border-radius:26px;width:min(560px,calc(100% - 32px));max-height:calc(100dvh - 48px);overflow:auto;background:#fff;color:#0b2419;box-shadow:0 40px 90px -20px rgba(0,0,0,.6);font-family:inherit}
-dialog#ubDlg::backdrop{background:rgba(5,20,13,.62);backdrop-filter:blur(3px)}
-dialog#ubDlg[open]{animation:ubIn .28s cubic-bezier(.2,.8,.2,1)}
-@keyframes ubIn{from{opacity:0;transform:translateY(24px) scale(.98)}to{opacity:1;transform:none}}
-#ubDlg .ph{position:relative;aspect-ratio:16/10}#ubDlg .ph img{width:100%;height:100%;object-fit:cover;display:block}
-#ubDlg .tg{position:absolute;left:16px;top:16px;background:rgba(255,255,255,.94);border-radius:999px;padding:6px 12px;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
-#ubDlg .x{position:absolute;right:14px;top:14px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.94);font-size:22px;line-height:1;cursor:pointer;color:#0b2419}
-#ubDlg .bd{padding:22px 24px 24px}
-#ubDlg h3{margin:0 0 8px;font-size:28px;letter-spacing:-.025em}
-#ubDlg .ds{margin:0 0 16px;color:#4d5a53;line-height:1.55}
-#ubDlg ul{list-style:none;margin:0 0 20px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
-#ubDlg li{background:#fdf1df;color:#7a4a0c;border-radius:999px;padding:7px 13px;font-weight:700;font-size:13.5px}
-#ubDlg .ft{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid #eee6d6;padding-top:18px}
-#ubDlg .pr b{font-size:28px;letter-spacing:-.02em}#ubDlg .pr span{color:#6b776f}
-#ubDlg .pr i{display:block;font-style:normal;color:#b8680f;font-weight:700;font-size:13.5px;margin-top:2px}
-#ubDlg .bt{display:flex;gap:10px}
-#ubDlg .bt a{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 20px;border-radius:999px;font-weight:800;text-decoration:none;font-size:15px}
-#ubDlg .b1{background:#f4a64a;color:#0b2419}
-@media(max-width:640px){dialog#ubDlg{width:100%;max-width:none;margin:auto 0 0;top:auto;bottom:0;border-radius:24px 24px 0 0;max-height:88dvh}dialog#ubDlg[open]{animation:ubUp .3s cubic-bezier(.2,.8,.2,1)}@keyframes ubUp{from{transform:translateY(100%)}to{transform:none}}#ubDlg .bt,#ubDlg .bt a{width:100%;justify-content:center}}
+<style id="ub-arrow-css">
+#ubytovani .ub-card .ub-cta,#ubytovani .ub-card:hover .ub-cta{background:#f4a64a!important;color:#0b2419!important;width:48px!important;height:48px!important;display:grid!important;place-items:center!important;transition:transform .25s,background .25s!important}
+#ubytovani .ub-card:hover .ub-cta{transform:translateX(3px)!important;background:#ffb45a!important}
+#ubytovani .ub-cta svg{display:block;width:20px;height:20px}
+#ubytovani .ub-foot{border-top-color:transparent!important}
+#ubytovani .ub-foot::before,#ubytovani .ub-foot::after{display:none!important}
 </style>
 </head>
 <body>
@@ -1656,7 +1638,7 @@ dialog#ubDlg[open]{animation:ubIn .28s cubic-bezier(.2,.8,.2,1)}
 <h3>Chatka pro 7</h3>
 <p>Dřevěná chatka s kapacitou 7 osob včetně lůžkovin.</p>
 <ul class="ub-facts"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>7 osob</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20V8M2 17h20v3M22 17v-4a3 3 0 0 0-3-3h-8v7"/><circle cx="7" cy="12" r="2"/></svg>lůžkoviny</li></ul>
-<div class="ub-foot"><span class="ub-note">+ poplatek za osobu</span><a class="ub-cta" href="#rezervace" data-kc="Chatka">Spočítat <i>cenu</i> <span aria-hidden="true">→</span></a></div>
+<div class="ub-foot"><span class="ub-note">+ poplatek za osobu</span><a class="ub-cta" href="#rezervace" data-kc="Chatka"><span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Spočítat cenu</span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
 </div>
 </article>
 <article class="ub-card ub-b" style="--d:90ms">
@@ -1667,7 +1649,7 @@ dialog#ubDlg[open]{animation:ubIn .28s cubic-bezier(.2,.8,.2,1)}
 <h3>Teepee</h3>
 <p>Indiánský stan na louce — zážitek hlavně pro rodiny s dětmi.</p>
 <ul class="ub-facts"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>na louce</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>pro rodiny</li></ul>
-<div class="ub-foot"><span class="ub-note">+ poplatek za osobu</span><a class="ub-cta" href="#rezervace" data-kc="Teepee">Spočítat <i>cenu</i> <span aria-hidden="true">→</span></a></div>
+<div class="ub-foot"><span class="ub-note">+ poplatek za osobu</span><a class="ub-cta" href="#rezervace" data-kc="Teepee"><span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Spočítat cenu</span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
 </div>
 </article>
 <article class="ub-card ub-c" style="--d:180ms">
@@ -1678,7 +1660,7 @@ dialog#ubDlg[open]{animation:ubIn .28s cubic-bezier(.2,.8,.2,1)}
 <h3>Podsadový stan</h3>
 <p>Už postavený. Přijedete, hodíte batoh dovnitř a jdete do města.</p>
 <ul class="ub-facts"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>už postavený</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 14H5z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>jen batoh</li></ul>
-<div class="ub-foot"><span class="ub-note">+ poplatek za osobu</span><a class="ub-cta" href="#rezervace" data-kc="Podsadový stan">Spočítat <i>cenu</i> <span aria-hidden="true">→</span></a></div>
+<div class="ub-foot"><span class="ub-note">+ poplatek za osobu</span><a class="ub-cta" href="#rezervace" data-kc="Podsadový stan"><span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Spočítat cenu</span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
 </div>
 </article>
 <article class="ub-card ub-d" style="--d:270ms">
@@ -1689,7 +1671,7 @@ dialog#ubDlg[open]{animation:ubIn .28s cubic-bezier(.2,.8,.2,1)}
 <h3>Stan</h3>
 <p>Velká louka u řeky. Rezervace nutná až pro skupiny 15 a více stanů.</p>
 <ul class="ub-facts"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20 12 6l9 14zM12 6v14"/></svg>louka</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0M2 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg>u řeky</li></ul>
-<div class="ub-foot"><span class="ub-note">+ poplatek za osobu</span><a class="ub-cta" href="#rezervace" data-kc="Vlastní stan">Spočítat <i>cenu</i> <span aria-hidden="true">→</span></a></div>
+<div class="ub-foot"><span class="ub-note">+ poplatek za osobu</span><a class="ub-cta" href="#rezervace" data-kc="Vlastní stan"><span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Spočítat cenu</span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
 </div>
 </article>
 <article class="ub-card ub-e" style="--d:360ms">
@@ -1700,7 +1682,7 @@ dialog#ubDlg[open]{animation:ubIn .28s cubic-bezier(.2,.8,.2,1)}
 <h3>Karavan</h3>
 <p>Místo pro karavan u řeky, elektřinu si přiobjednáte.</p>
 <ul class="ub-facts"><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>elektřina</li><li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>volejte předem</li></ul>
-<div class="ub-foot"><span class="ub-note">+ poplatek za osobu</span><a class="ub-cta" href="#rezervace" data-kc="Karavan">Spočítat <i>cenu</i> <span aria-hidden="true">→</span></a></div>
+<div class="ub-foot"><span class="ub-note">+ poplatek za osobu</span><a class="ub-cta" href="#rezervace" data-kc="Karavan"><span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Spočítat cenu</span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
 </div>
 </article>
 
@@ -3510,7 +3492,7 @@ drawCal();render();go(0,false);
 #ubytovani .ub-price b{color:#0b2419!important}
 #ubytovani .ub-price small{color:rgba(11,36,25,.75)!important}
 #ubytovani .ub-cta{background:#f4a64a!important;color:#0b2419!important}
-#ubytovani .ub-card:hover .ub-cta{background:#fff!important}
+
 </style><style id="rezervace-wizard">
 #rezervace .rz-d.busy{color:#c4472b!important;text-decoration:line-through;text-decoration-color:rgba(196,71,43,.6)}
 #rezervace .rz-d.busy span{background:#fdeeea}
@@ -4843,11 +4825,4 @@ t.style.animation='none';let x=0,last=performance.now();const w=t.scrollWidth/2;
 function upd(){const r=ul.getBoundingClientRect(),vh=innerHeight,tr=track.getBoundingClientRect();const target=vh*.62;const first=items[0].getBoundingClientRect(),last=items[items.length-1].getBoundingClientRect();const y0=first.top+first.height/2,y1=last.top+last.height/2;let p=(target-y0)/(y1-y0);p=Math.max(0,Math.min(1,p));const H=track.clientHeight;const startOff=y0-tr.top,endOff=y1-tr.top;const px=startOff+(endOff-startOff)*p;const f=Math.max(0,Math.min(H,(target-tr.top)<startOff?0:px));fill.style.height=f+'px';boat.style.top=f+'px';boat.style.opacity=(target<y0-40)?0:1;items.forEach(li=>{const b=li.getBoundingClientRect();li.classList.toggle('on',target>=b.top+22)})}
 let t=false;function on(){if(t)return;t=true;requestAnimationFrame(()=>{t=false;upd()})}
 addEventListener('scroll',on,{passive:true});addEventListener('resize',on);upd();})();</script>
-<dialog id="ubDlg" aria-labelledby="ubDlgT"><div class="ph"><img alt=""><span class="tg"></span><button class="x" type="button" aria-label="Zavřít">×</button></div><div class="bd"><h3 id="ubDlgT"></h3><p class="ds"></p><ul></ul><div class="ft"><div class="pr"></div><div class="bt"><a class="b1" href="tel:+420720514943"></a></div></div></div></dialog>
-<script id="ub-detail-js">(()=>{const d=document.getElementById('ubDlg');if(!d)return;const q=s=>d.querySelector(s);
-function open(c){const t=c.querySelector('h3').textContent.trim(),img=c.querySelector('.ub-media img');q('.ph img').src=img.src;q('.ph img').alt=img.alt;q('.tg').textContent=(c.querySelector('.ub-label')||{}).textContent||'';q('h3').textContent=t;q('.ds').textContent=(c.querySelector('.ub-body p')||{}).textContent||'';q('ul').innerHTML=[...c.querySelectorAll('.ub-facts li')].map(l=>'<li>'+l.textContent.trim()+'</li>').join('');
-const pr=c.querySelector('.ub-price');const b=pr.querySelector('b').textContent,sm=(pr.querySelector('small')||{}).textContent||'';const od=/^\s*od/.test(pr.textContent)?'od ':'';q('.pr').innerHTML='<span>'+od+'</span><b>'+b+'</b> <span>'+sm+'</span><i>+ poplatek za osobu podle ceníku</i>';
-q('.b1').innerHTML='Zavolat a poptat <span aria-hidden="true">→</span>';d.showModal?d.showModal():d.setAttribute('open','')}
-document.querySelectorAll('#ubytovani .ub-card').forEach(c=>{c.tabIndex=0;c.setAttribute('role','button');c.setAttribute('aria-label','Detail: '+c.querySelector('h3').textContent.trim());c.addEventListener('click',e=>{e.preventDefault();open(c)});c.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open(c)}})});
-q('.x').onclick=()=>d.close();d.addEventListener('click',e=>{if(e.target===d)d.close()});})();</script>
 </body></html>
