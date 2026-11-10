@@ -1181,8 +1181,29 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
 @media(max-width:760px){#top .camp-a .row b{font-size:15px!important}#top .camp-a .row small{font-size:12.5px!important}}
 </style>
 <style id="marquee-fix">@keyframes marq{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}.marquee-track{will-change:transform;backface-visibility:hidden;animation:marq 34s linear infinite!important;animation-play-state:running!important}</style>
+<style id="a11y-pause-css">
+/* kontrasty a cíle klepnutí (kontrolní seznam ui-ux-pro-max) */
+:root,.kk2-scope{--muted:#56625b}
+.eyebrow{color:#9a5606}
+.callbar a{height:44px!important;min-height:44px!important}
+@media(min-width:901px){.kk2-scope .menu a{display:inline-flex;align-items:center;min-height:44px}}
+.lang-current{min-height:44px}
+/* tlačítko pro pozastavení animací */
+#animToggle{position:fixed;top:88px;right:14px;z-index:140;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(11,36,25,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 20px -8px rgba(0,0,0,.5);transition:background .2s,transform .2s;padding:0}
+#animToggle:hover{background:rgba(11,36,25,.9);transform:scale(1.06)}
+#animToggle:focus-visible{outline:3px solid #f4a64a;outline-offset:3px}
+#animToggle svg{width:18px;height:18px;fill:currentColor}
+#animToggle .ic-play{display:none}
+html.anim-paused #animToggle .ic-play{display:block}
+html.anim-paused #animToggle .ic-pause{display:none}
+html.anim-paused #animToggle{background:#f4a64a;color:#0b2419;border-color:#f4a64a}
+html.anim-paused *,html.anim-paused *::before,html.anim-paused *::after{animation-play-state:paused!important;transition:none!important;scroll-behavior:auto!important}
+@media(min-width:901px){#animToggle{top:96px;right:24px}}
+</style>
 </head>
 <body>
+<button type="button" id="animToggle" aria-pressed="false" aria-label="Pozastavit animace" title="Pozastavit animace"><svg class="ic-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg><svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button>
+
 <div class="done" id="loader"><svg viewBox="40 40 540 450" xmlns="http://www.w3.org/2000/svg"><g fill="#2d2d2d" opacity=".55" transform="translate(8 7)"><path d="M63 55H245L305 140L137 383H63Z"></path><path d="M265 55H358L312 125Z"></path><path d="M377 55H558V383H487L322 135Z"></path><path d="M63 402H205L312 242L420 402H558V472H63Z"></path></g><path d="M63 55H245L305 140L137 383H63Z" fill="#0b94d4"></path><path d="M265 55H358L312 125Z" fill="#0b94d4"></path><path d="M377 55H558V383H487L322 135Z" fill="#e5db35"></path><path d="M63 402H205L312 242L420 402H558V472H63Z" fill="#567d22"></path></svg></div>
 <div class="kk2-scope"><header class="kk2-part scrolled" id="hd">
 <div class="wrap nav">
@@ -4628,5 +4649,9 @@ if(img&&!reduce){var tk=false;
 setTimeout(()=>{const x0=t.getBoundingClientRect().left;setTimeout(()=>{
 if(Math.abs(t.getBoundingClientRect().left-x0)>1)return;
 t.style.animation='none';let x=0,last=performance.now();const w=t.scrollWidth/2;
-(function f(n){x-=(n-last)*0.046;last=n;if(x<=-w)x+=w;t.style.transform='translate3d('+x+'px,0,0)';requestAnimationFrame(f)})(last)},1500)},800)})();</script>
+(function f(n){if(!window.__animPaused)x-=(n-last)*0.046;last=n;if(x<=-w)x+=w;t.style.transform='translate3d('+x+'px,0,0)';requestAnimationFrame(f)})(last)},1500)},800)})();</script>
+<script id="a11y-pause-js">(()=>{const b=document.getElementById('animToggle'),h=document.documentElement;
+const set=p=>{h.classList.toggle('anim-paused',p);window.__animPaused=p;b.setAttribute('aria-pressed',p);const t=p?'Spustit animace':'Pozastavit animace';b.setAttribute('aria-label',t);b.title=t;try{localStorage.setItem('kk-anim-paused',p?'1':'0')}catch(e){}};
+b.addEventListener('click',()=>set(!h.classList.contains('anim-paused')));
+try{if(localStorage.getItem('kk-anim-paused')==='1')set(true)}catch(e){}})();</script>
 </body></html>
