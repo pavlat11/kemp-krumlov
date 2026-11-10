@@ -1402,76 +1402,90 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
    <!-- nebe -->
    <rect width="960" height="540" fill="url(#jf-sky)"/>
    <rect id="jf-night" width="960" height="540" fill="url(#jf-nsky)" opacity="0"/>
-   <circle id="jf-sun" cx="640" cy="96" r="38" fill="#f4a64a"/>
-   <circle id="jf-moon" cx="560" cy="80" r="22" fill="#f3ead8" opacity="0"/>
+   <circle id="jf-sun" cx="560" cy="90" r="38" fill="#f4a64a"/>
+   <circle id="jf-moon" cx="500" cy="80" r="22" fill="#f3ead8" opacity="0"/>
    <g id="jf-stars" opacity="0" fill="#fff">
-    <circle class="twk" cx="260" cy="60" r="2"/><circle class="twk" cx="380" cy="110" r="1.6" style="animation-delay:.6s"/><circle class="twk" cx="520" cy="50" r="2.2" style="animation-delay:1.2s"/>
-    <circle class="twk" cx="640" cy="120" r="1.5" style="animation-delay:.3s"/><circle class="twk" cx="720" cy="40" r="1.8" style="animation-delay:.9s"/><circle class="twk" cx="90" cy="160" r="1.6" style="animation-delay:1.5s"/>
+    <circle class="twk" cx="260" cy="60" r="2"/><circle class="twk" cx="380" cy="110" r="1.6" style="animation-delay:.6s"/><circle class="twk" cx="680" cy="50" r="2.2" style="animation-delay:1.2s"/>
+    <circle class="twk" cx="640" cy="130" r="1.5" style="animation-delay:.3s"/><circle class="twk" cx="760" cy="40" r="1.8" style="animation-delay:.9s"/><circle class="twk" cx="90" cy="130" r="1.6" style="animation-delay:1.5s"/>
    </g>
-
-   <!-- kopec se zámkem -->
-   <path id="jf-hill" d="M560 330C640 210 760 180 960 200V380H560z" fill="#7f9a5c"/>
-   <g id="jf-castle" fill="#e9dcc2">
-    <rect x="800" y="180" width="110" height="50"/>
-    <path d="M796 182h118l-10-18H806z" fill="#c4583f"/>
-    <rect x="852" y="108" width="26" height="76"/>
-    <path d="M848 110h34l-17-30z" fill="#4e7a52"/>
-    <rect id="jf-towerWin" x="860" y="126" width="10" height="14" rx="2" fill="#6b5b45"/>
+   <!-- kopec za kempem + zámek -->
+   <path id="jf-hill" d="M520 340C620 250 780 220 960 236V380H520z" fill="#7f9a5c"/>
+   <g fill="#e9dcc2">
+    <rect x="860" y="190" width="90" height="42"/><path d="M856 192h98l-8-15H864z" fill="#c4583f"/>
+    <rect x="896" y="128" width="22" height="66"/><path d="M892 130h30l-15-26z" fill="#4e7a52"/>
+    <rect id="jf-towerWin" x="903" y="144" width="8" height="12" rx="2" fill="#6b5b45"/>
    </g>
-   <path d="M0 330C120 300 260 310 400 330S640 350 960 320V400H0z" fill="#9db56b"/>
-
-   <!-- zem + cesta -->
-   <rect y="380" width="960" height="44" fill="#6f9152"/>
-   <rect y="398" width="960" height="12" fill="#c9b48a" opacity=".7"/>
-
-   <!-- recepce -->
-   <g id="jf-rec">
-    <rect x="120" y="300" width="130" height="82" rx="6" fill="#c98a52"/>
-    <path d="M108 306 185 262l77 44" stroke="#f3ead8" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    <rect x="140" y="318" width="90" height="22" rx="4" fill="#0f2a1c"/>
-    <text x="185" y="334" text-anchor="middle" font-size="12" font-weight="800" fill="#ffc978" letter-spacing="1.5">RECEPCE</text>
-    <rect x="170" y="348" width="30" height="34" rx="3" fill="#0f2a1c"/>
-    <rect class="win" x="208" y="350" width="26" height="18" rx="3" fill="#f3ead8"/>
+   <path d="M0 340C120 316 260 322 400 338S640 352 960 330V400H0z" fill="#9db56b"/>
+   <!-- silnice + louka -->
+   <rect y="382" width="960" height="40" fill="#8aa866"/>
+   <rect x="0" y="398" width="560" height="14" fill="#c9b48a" opacity=".85"/>
+   <rect x="560" y="382" width="270" height="40" fill="#6f9152"/>
+   <!-- Půjčovna lodí PE-LA (vlevo) -->
+   <g id="jf-pela">
+    <rect x="30" y="306" width="120" height="76" rx="5" fill="#c4583f"/>
+    <path d="M22 310 90 268l68 42" stroke="#f3ead8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <rect x="46" y="322" width="88" height="20" rx="4" fill="#0f2a1c"/>
+    <text x="90" y="337" text-anchor="middle" font-size="11" font-weight="800" fill="#ffc978" letter-spacing="1.4">PE-LA</text>
+    <rect x="70" y="350" width="26" height="32" rx="3" fill="#0f2a1c"/>
+    <path d="M156 378q14-12 28 0z" fill="#3b8aa8"/><path d="M160 370q14-12 28 0z" fill="#f4a64a"/>
    </g>
-
-   <!-- stan -->
-   <g id="jf-tent">
-    <path d="M590 382 640 302l50 80z" fill="#f4a64a"/>
-    <path d="M640 302l26 80h24z" fill="#d98a34"/>
-    <path d="M626 382l14-30 14 30z" fill="#0f2a1c"/>
-    <path d="M640 302v-18" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
-    <path class="flag" d="M640 284l15 5-15 5z" fill="#ffc978"/>
+   <!-- Parkoviště -->
+   <g id="jf-park">
+    <rect x="190" y="384" width="160" height="26" rx="3" fill="#9a968a"/>
+    <path d="M214 386v22M246 386v22M278 386v22M310 386v22M342 386v22" stroke="#fff" stroke-width="2" opacity=".7"/>
+    <rect x="288" y="392" width="24" height="12" rx="4" fill="#3b8aa8"/><rect x="320" y="392" width="24" height="12" rx="4" fill="#c4583f"/>
    </g>
-
-   <!-- chatka -->
-   <g id="jf-cabin">
-    <path d="M730 382V330l60-40 60 40v52z" fill="#c98a52"/>
-    <path d="M718 334 790 284l72 50" stroke="#f3ead8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    <path d="M730 346h120M730 362h120" stroke="#a96e3c" stroke-width="2"/>
-    <rect x="776" y="350" width="28" height="32" rx="3" fill="#0f2a1c"/>
-    <rect class="win" x="816" y="340" width="22" height="16" rx="3" fill="#f3ead8"/>
-    <rect x="822" y="276" width="10" height="26" fill="#a96e3c"/>
-    <circle class="smk" cx="827" cy="268" r="6" fill="#fff"/>
-    <circle class="smk" cx="829" cy="268" r="5" fill="#fff" style="animation-delay:1.6s"/>
+   <!-- Kiosek -->
+   <g id="jf-kiosk">
+    <rect x="372" y="338" width="62" height="44" rx="4" fill="#e9dcc2"/>
+    <path d="M366 340h74l-6-18H372z" fill="#f4a64a"/><path d="M380 322v18M396 322v18M412 322v18M428 322v18" stroke="#fff" stroke-width="3" opacity=".55"/>
+    <rect x="384" y="350" width="38" height="14" rx="3" fill="#0f2a1c"/>
+    <path d="M396 372h14" stroke="#c98a52" stroke-width="4" stroke-linecap="round"/>
    </g>
-
+   <!-- WC -->
+   <g id="jf-wc"><rect x="446" y="344" width="34" height="38" rx="4" fill="#6b79b8"/><text x="463" y="368" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">WC</text></g>
+   <!-- Dětské hřiště -->
+   <g id="jf-play">
+    <path d="M498 382 512 346l14 36M512 346h38M550 346l14 36" stroke="#d6528a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M522 350v22" stroke="#7c5130" stroke-width="2"/><rect x="518" y="372" width="10" height="4" rx="1" fill="#7c5130"/>
+   </g>
+   <!-- podsadové stany (zadní řada) -->
+   <g id="jf-podsad">
+    <path d="M590 358 606 336l16 22z" fill="#3b8aa8"/><path d="M628 358 644 336l16 22z" fill="#3b8aa8"/><path d="M666 358 682 336l16 22z" fill="#3b8aa8"/>
+    <path d="M590 358h108" stroke="#0f2a1c" stroke-opacity=".25" stroke-width="2"/>
+   </g>
+   <!-- louka pro stany (přední řada) -->
+   <g id="jf-meadow">
+    <path d="M586 382 612 342l26 40z" fill="#5fa86a"/><path d="M612 342l12 40h14z" fill="#4a8f56"/>
+    <path d="M644 382 670 346l26 36z" fill="#f4a64a"/><path d="M670 346l12 36h14z" fill="#d98a34"/><path d="M660 382l10-18 10 18z" fill="#0f2a1c"/>
+   </g>
+   <!-- teepee -->
+   <g id="jf-teepee">
+    <path d="M706 382 734 322l28 60z" fill="#e9c27a"/><path d="M734 322 748 382h14z" fill="#c9a05a"/>
+    <path d="M734 322l-10-18M734 322l10-18M734 322l0-22" stroke="#7c5130" stroke-width="3" stroke-linecap="round"/>
+    <path d="M726 382l8-20 8 20z" fill="#0f2a1c"/>
+   </g>
+   <!-- chatky (zadní řada vpravo) -->
+   <g id="jf-cabins">
+    <g transform="translate(770 0)"><path d="M0 360V338l26-16 26 16v22z" fill="#c98a52"/><path d="M-6 340 26 318l32 22" stroke="#c4583f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect x="20" y="344" width="12" height="16" rx="2" fill="#0f2a1c"/><rect class="win" x="38" y="342" width="10" height="9" rx="2" fill="#f3ead8"/></g>
+    <g transform="translate(832 0)"><path d="M0 360V338l26-16 26 16v22z" fill="#c98a52"/><path d="M-6 340 26 318l32 22" stroke="#c4583f" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect x="20" y="344" width="12" height="16" rx="2" fill="#0f2a1c"/><rect class="win" x="38" y="342" width="10" height="9" rx="2" fill="#f3ead8"/>
+     <rect x="38" y="308" width="6" height="14" fill="#a96e3c"/><circle class="smk" cx="41" cy="304" r="4" fill="#fff"/><circle class="smk" cx="43" cy="304" r="3" fill="#fff" style="animation-delay:1.6s"/></g>
+   </g>
    <!-- ohniště -->
-   <g id="jf-fire" transform="translate(712 390)">
-    <circle id="jf-fireGlow" r="26" fill="url(#jf-fireG)" opacity=".5"/>
-    <path d="M-12 6h24" stroke="#6b4a2f" stroke-width="5" stroke-linecap="round"/>
-    <path id="jf-flame" d="M0 4c-9-6-7-16 0-26 3 7 9 9 9 17 0 5-4 9-9 9z" fill="#ffc978"/>
+   <g id="jf-fire" transform="translate(566 394)">
+    <circle id="jf-fireGlow" r="24" fill="url(#jf-fireG)" opacity=".5"/>
+    <path d="M-11 6h22" stroke="#6b4a2f" stroke-width="5" stroke-linecap="round"/>
+    <path id="jf-flame" d="M0 4c-8-5-6-14 0-23 3 6 8 8 8 15 0 4-3 8-8 8z" fill="#ffc978"/>
    </g>
-
-   <!-- řeka -->
+   <!-- řeka (teče zleva doprava) -->
    <rect y="424" width="960" height="116" fill="url(#jf-riv)"/>
    <g class="wave" stroke="#fff" stroke-opacity=".35" stroke-width="3" fill="none" stroke-linecap="round">
     <path d="M0 450q20-8 40 0t40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0"/>
-    <path d="M40 490q20-8 40 0t40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0"/>
+    <path d="M40 490q20-8 40 0t40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0 40 0"/>
    </g>
-
-   <!-- molo -->
-   <g id="jf-pier"><rect x="470" y="416" width="110" height="10" rx="2" fill="#a96e3c"/><rect x="480" y="424" width="8" height="30" fill="#7c5130"/><rect x="560" y="424" width="8" height="30" fill="#7c5130"/></g>
-
+   <path d="M890 452h42m-10-6 10 6-10 6" stroke="#fff" stroke-opacity=".55" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+   <!-- přístaviště -->
+   <g id="jf-pier"><rect x="820" y="416" width="110" height="10" rx="2" fill="#a96e3c"/><rect x="830" y="424" width="8" height="30" fill="#7c5130"/><rect x="910" y="424" width="8" height="30" fill="#7c5130"/></g>
    <!-- kajak -->
    <g id="jf-kayak">
     <path d="M-62 0Q0 18 62 0Q0 -10 -62 0z" fill="#f4a64a"/>
@@ -1479,9 +1493,8 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
     <rect x="-7" y="-10" width="14" height="12" rx="4" fill="#0f2a1c"/>
     <g id="jf-paddle"><path d="M-34 -22 34 4" stroke="#3b2a1a" stroke-width="3" stroke-linecap="round"/><path d="M-40 -24l10 2-2 8z" fill="#0f2a1c"/><path d="M40 6l-10-2 2-8z" fill="#0f2a1c"/></g>
    </g>
-
-   <!-- auto + karavan -->
-   <g id="jf-rig">
+   <!-- auto + karavan (zmenšené) -->
+   <g id="jf-rig"><g transform="scale(.62)">
     <rect x="0" y="-60" width="120" height="58" rx="18" fill="#f3ead8"/>
     <rect x="0" y="-22" width="120" height="7" fill="#f4a64a"/>
     <rect x="16" y="-50" width="36" height="18" rx="5" fill="#0f2a1c"/>
@@ -1494,39 +1507,43 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
     <g class="whl" transform="translate(86 2)"><g><circle r="12" fill="#1b2b22"/><circle r="4.5" fill="#cfc4ae"/><path d="M0-9v18" stroke="#cfc4ae" stroke-width="2.2"/></g></g>
     <g class="whl" transform="translate(166 2)"><g><circle r="12" fill="#1b2b22"/><circle r="4.5" fill="#cfc4ae"/><path d="M0-9v18" stroke="#cfc4ae" stroke-width="2.2"/></g></g>
     <g class="whl" transform="translate(214 2)"><g><circle r="12" fill="#1b2b22"/><circle r="4.5" fill="#cfc4ae"/><path d="M0-9v18" stroke="#cfc4ae" stroke-width="2.2"/></g></g>
-   </g>
-
-   <!-- bublina recepce -->
+   </g></g>
+   <!-- bublina: kiosek, WC, hřiště -->
    <g id="jf-bub" opacity="0">
-    <rect x="96" y="196" width="190" height="56" rx="16" fill="#fff"/>
-    <path d="M170 250l14 16 6-16z" fill="#fff"/>
-    <circle cx="124" cy="224" r="13" fill="#f4a64a"/>
-    <path d="M118 224l4 4 8-8" stroke="#0f2a1c" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="146" y="220" font-size="15" font-weight="800" fill="#0f2a1c">Vítejte!</text>
-    <text x="146" y="238" font-size="11.5" font-weight="700" fill="#5a6a60">check-in za 2 minuty</text>
+    <rect x="300" y="236" width="230" height="56" rx="16" fill="#fff"/>
+    <path d="M410 290l12 16 8-16z" fill="#fff"/>
+    <circle cx="328" cy="264" r="13" fill="#f4a64a"/><path d="M322 264l4 4 8-8" stroke="#0f2a1c" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="350" y="260" font-size="15" font-weight="800" fill="#0f2a1c">Kiosek · WC · hřiště</text>
+    <text x="350" y="278" font-size="11.5" font-weight="700" fill="#5a6a60">vše hned u parkoviště</text>
    </g>
-
-   <!-- piny míst -->
+   <!-- piny ubytování -->
    <g id="jf-pins">
-    <g class="pin" data-x="420" data-y="250"><path d="M0 0c-14 0-24 10-24 23 0 17 24 37 24 37s24-20 24-37C24 10 14 0 0 0z" fill="#0f2a1c"/><circle cy="23" r="10" fill="#f4a64a"/><text y="-10" text-anchor="middle" font-size="14" font-weight="800" fill="#0f2a1c">Karavan</text></g>
-    <g class="pin" data-x="640" data-y="218"><path d="M0 0c-14 0-24 10-24 23 0 17 24 37 24 37s24-20 24-37C24 10 14 0 0 0z" fill="#0f2a1c"/><circle cy="23" r="10" fill="#f4a64a"/><text y="-10" text-anchor="middle" font-size="14" font-weight="800" fill="#0f2a1c">Stan</text></g>
-    <g class="pin" data-x="790" data-y="200"><path d="M0 0c-14 0-24 10-24 23 0 17 24 37 24 37s24-20 24-37C24 10 14 0 0 0z" fill="#0f2a1c"/><circle cy="23" r="10" fill="#f4a64a"/><text y="-10" text-anchor="middle" font-size="14" font-weight="800" fill="#0f2a1c">Chatka</text></g>
+    <g class="pin" data-x="612" data-y="292"><path d="M0 0c-14 0-24 10-24 23 0 17 24 37 24 37s24-20 24-37C24 10 14 0 0 0z" fill="#0f2a1c"/><circle cy="23" r="10" fill="#5fa86a"/><text y="-24" text-anchor="middle" font-size="13" font-weight="800" fill="#0f2a1c">Louka</text><text y="-9" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f2a1c">od 190 Kč</text></g>
+    <g class="pin" data-x="664" data-y="222"><path d="M0 0c-14 0-24 10-24 23 0 17 24 37 24 37s24-20 24-37C24 10 14 0 0 0z" fill="#0f2a1c"/><circle cy="23" r="10" fill="#3b8aa8"/><text y="-24" text-anchor="middle" font-size="13" font-weight="800" fill="#0f2a1c">Podsadové</text><text y="-9" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f2a1c">300 Kč</text></g>
+    <g class="pin" data-x="742" data-y="262"><path d="M0 0c-14 0-24 10-24 23 0 17 24 37 24 37s24-20 24-37C24 10 14 0 0 0z" fill="#0f2a1c"/><circle cy="23" r="10" fill="#e9c27a"/><text y="-24" text-anchor="middle" font-size="13" font-weight="800" fill="#0f2a1c">Teepee</text><text y="-9" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f2a1c">od 700 Kč</text></g>
+    <g class="pin" data-x="838" data-y="236"><path d="M0 0c-14 0-24 10-24 23 0 17 24 37 24 37s24-20 24-37C24 10 14 0 0 0z" fill="#0f2a1c"/><circle cy="23" r="10" fill="#c4583f"/><text y="-24" text-anchor="middle" font-size="13" font-weight="800" fill="#0f2a1c">Chatky</text><text y="-9" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f2a1c">od 890 Kč</text></g>
    </g>
-
-   <!-- bublina úschova -->
+   <!-- bublina: půjčovna PE-LA -->
+   <g id="jf-bubp" opacity="0">
+    <rect x="30" y="196" width="200" height="50" rx="16" fill="#fff"/>
+    <path d="M70 244l10 14 10-14z" fill="#fff"/>
+    <rect x="44" y="208" width="26" height="26" rx="8" fill="#3b8aa8"/><path d="M50 226l14-12M50 214l14 12" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+    <text x="80" y="218" font-size="14" font-weight="800" fill="#0f2a1c">Půjčovna lodí PE-LA</text>
+    <text x="80" y="234" font-size="11.5" font-weight="700" fill="#5a6a60">přímo v areálu</text>
+   </g>
+   <!-- bublina: přístaviště -->
    <g id="jf-bub2" opacity="0">
-    <rect x="600" y="436" width="210" height="56" rx="16" fill="#fff"/>
-    <path d="M602 456l-18 8 18 8z" fill="#fff"/>
-    <rect x="616" y="450" width="22" height="28" rx="6" fill="#f4a64a"/><path d="M621 450v-4h12v4" stroke="#0f2a1c" stroke-width="2.4" fill="none"/>
-    <text x="648" y="461" font-size="15" font-weight="800" fill="#0f2a1c">Loď u břehu</text>
-    <text x="648" y="479" font-size="11.5" font-weight="700" fill="#5a6a60">úschova batohu 50 Kč</text>
+    <rect x="580" y="436" width="210" height="56" rx="16" fill="#fff"/>
+    <path d="M790 456l18 8-18 8z" fill="#fff"/>
+    <rect x="596" y="450" width="22" height="28" rx="6" fill="#f4a64a"/><path d="M601 450v-4h12v4" stroke="#0f2a1c" stroke-width="2.4" fill="none"/>
+    <text x="628" y="461" font-size="15" font-weight="800" fill="#0f2a1c">Přístaviště</text>
+    <text x="628" y="479" font-size="11.5" font-weight="700" fill="#5a6a60">batoh v úschově 50 Kč</text>
    </g>
-
    <!-- cedule do centra -->
    <g id="jf-sign" opacity="0">
-    <rect x="740" y="250" width="6" height="40" fill="#7c5130"/>
-    <path d="M690 232h100l14 13-14 13H690z" fill="#f3ead8"/>
-    <text x="742" y="250" text-anchor="middle" font-size="12.5" font-weight="800" fill="#0f2a1c">Centrum 500 m</text>
+    <rect x="354" y="322" width="6" height="60" fill="#7c5130"/>
+    <path d="M254 308h104v28H254l-14-14z" fill="#f3ead8"/>
+    <text x="312" y="326" text-anchor="middle" font-size="12" font-weight="800" fill="#0f2a1c">Centrum 500 m</text>
    </g>
   </svg>
 
@@ -4825,9 +4842,9 @@ if(img&&!reduce){var tk=false;
 const D=20;
 const STEPS=[
  {t:0, b:'Přijeďte autem, nebo po Vltavě', s:'Kemp je přímo na řece, ř. km 280,9', l:'Příjezd'},
- {t:4, b:'Ohlaste se na recepci', s:'Bez front, check-in za pár minut', l:'Recepce'},
- {t:8, b:'Vyberte si místo', s:'Karavan od 300 Kč · stan od 190 Kč · chatka od 890 Kč', l:'Ubytování'},
- {t:12,b:'Vodáci přistanou u mola', s:'Loď necháte na dohled, batoh v úschově', l:'Vodáci'},
+ {t:4, b:'Zaparkujte u vjezdu', s:'Kiosek, WC a dětské hřiště máte hned vedle', l:'Parkoviště'},
+ {t:8, b:'Vyberte si ubytování', s:'Louka od 190 Kč · podsadové stany 300 Kč · teepee od 700 Kč · chatky od 890 Kč', l:'Ubytování'},
+ {t:12,b:'Vodáci přistanou u přístaviště', s:'Půjčovna lodí PE-LA je přímo v areálu', l:'Vodáci'},
  {t:16,b:'Večer u ohně, ráno do Krumlova', s:'Centrum je jen 500 m pěšky', l:'Večer'}
 ];
 const $=id=>document.getElementById(id);
@@ -4849,20 +4866,18 @@ const sb=[...sw.children];
 function render(){
  // auto + karavan
  let x;
- if(t<3.6)x=lerp(-300,40,eo(seg(t,.2,3.6)));
- else if(t<8.4)x=40;
- else if(t<11)x=lerp(40,300,eo(seg(t,8.4,11)));
- else x=300;
- const by=(t<3.6||(t>8.4&&t<11))?Math.sin(t*28)*1.2:0;
- rig.setAttribute('transform',`translate(${x} ${392+by})`);
- whl.forEach(w=>w.setAttribute('transform',`rotate(${x*2.2})`));
+ if(t<3.6)x=lerp(-170,196,eo(seg(t,.2,3.6)));
+ else x=196;
+ const by=(t<3.6)?Math.sin(t*28)*1.2:0;
+ rig.setAttribute('transform',`translate(${x} ${396+by})`);
+ whl.forEach(w=>w.setAttribute('transform',`rotate(${x*3.5})`));
 
  // kajak
  let kx,ky=462;
- if(t<3.8)kx=lerp(-120,190,eo(seg(t,0,3.8)));
- else if(t<12)kx=lerp(190,230,seg(t,3.8,12));
- else if(t<15)kx=lerp(230,525,eo(seg(t,12,15)));
- else{kx=525;ky=lerp(462,446,eo(seg(t,15,15.6)))}
+ if(t<3.8)kx=lerp(-120,260,eo(seg(t,0,3.8)));
+ else if(t<12)kx=lerp(260,420,seg(t,3.8,12));
+ else if(t<15)kx=lerp(420,872,eo(seg(t,12,15)));
+ else{kx=872;ky=lerp(462,448,eo(seg(t,15,15.6)))}
  const bob=Math.sin(t*3)*2.2;
  kay.setAttribute('transform',`translate(${kx} ${ky+bob}) rotate(${Math.sin(t*2)*2})`);
  const paddling=(t<3.8||(t>12&&t<15));
@@ -4870,11 +4885,12 @@ function render(){
 
  // bubliny
  $('jf-bub').setAttribute('opacity',cl(seg(t,4.2,4.6))*(1-seg(t,7.6,8)));
- $('jf-bub2').setAttribute('opacity',cl(seg(t,14.6,15))*(1-seg(t,16.2,16.6)));
+ $('jf-bubp').setAttribute('opacity',cl(seg(t,12.2,12.6))*(1-seg(t,14.2,14.6)));
+ $('jf-bub2').setAttribute('opacity',cl(seg(t,14.8,15.2))*(1-seg(t,16.4,16.8)));
 
  // piny
  pins.forEach((p,i)=>{
-  const a=8.7+i*.8, k=seg(t,a,a+.6), out=seg(t,11.6,12);
+  const a=8.4+i*.65, k=seg(t,a,a+.55), out=seg(t,11.7,12.1);
   const y=+p.dataset.y-60*(1-eb(k));
   p.setAttribute('transform',`translate(${p.dataset.x} ${y})`);
   p.setAttribute('opacity',(k>0?1:0)*(1-out));
@@ -4885,7 +4901,7 @@ function render(){
  $('jf-night').setAttribute('opacity',n*.92);
  $('jf-stars').setAttribute('opacity',n);
  $('jf-moon').setAttribute('opacity',n);
- $('jf-sun').setAttribute('cy',96+n*240);
+ $('jf-sun').setAttribute('cy',90+n*300);$('jf-sun').setAttribute('opacity',1-n);
  $('jf-hill').setAttribute('fill',n>.5?'#3d5536':'#7f9a5c');
  document.querySelectorAll('#jak-funguje .win').forEach(w=>w.setAttribute('fill',n>.4?'#ffc978':'#f3ead8'));
  $('jf-towerWin').setAttribute('fill',n>.4?'#ffc978':'#6b5b45');
