@@ -1265,6 +1265,11 @@ html.anim-paused *,html.anim-paused *::before,html.anim-paused *::after{animatio
 #top .hero-in .cta{margin-top:clamp(14px,3.2vh,40px)!important}
 @media(max-height:640px){#top .camp-a .k{display:none}#top .sub br{display:none}}
 </style>
+<style id="hero-gap-css">
+/* stejná mezera pod logem/hlavičkou a pod tlačítky; obsah vystředěn */
+#top.hero{--hdr:66px;--gap:clamp(28px,6vh,64px);padding:calc(var(--hdr) + var(--gap)) 0 var(--gap)!important;align-items:center!important}
+@media(max-width:760px){#top.hero{--hdr:80px}}
+</style>
 </head>
 <body>
 
