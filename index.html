@@ -3424,7 +3424,7 @@ body.rz-inview #callbar{transform:translateY(140px)!important}
 #rezervace .rz-row .pr i{font-style:normal}#rezervace .rz-row .pr strong{display:block;font-size:19px;color:#173b2a}
 #rezervace .rz-row .add{border:1.5px solid #173b2a;background:#fff;color:#173b2a;border-radius:30px;padding:8px 16px;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer}
 #rezervace .rz-row .add:hover{background:#173b2a;color:#fff}
-#rezervace .rz-units[hidden]{display:none!important}
+#rezervace .rz-units[hidden],#rezervace #rzTNote[hidden]{display:none!important}
 #rezervace .rz-row .add[hidden],#rezervace .rz-row .rz-st[hidden]{display:none}
 #rezervace .rz-cap{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
 #rezervace .rz-cap .dots{display:flex;flex-wrap:wrap;gap:4px}
@@ -3459,7 +3459,7 @@ const TYPES=[
 const UNIT={stan:['Počet stanů','stan','stany','stanů'],karavan:['Počet karavanů','karavan','karavany','karavanů'],chatka:['Počet chatek','chatka','chatky','chatek'],teepee:['Počet teepee','teepee','teepee','teepee'],podsad:['Počet podsadových stanů','podsadový stan','podsadové stany','podsadových stanů']};
 const EXTRAS=[{k:'auto',n:'Auto',s:'200 Kč / noc'},{k:'moto',n:'Motorka',s:'100 Kč / noc'},{k:'elek',n:'Elektřina',s:'200 Kč / noc'},{k:'pes',n:'Pes',s:'50 Kč / noc'}];
 const PEOPLE=[{k:'dosp',n:'Dospělí',s:'od 15 let',min:1},{k:'dite',n:'Děti',s:'do 15 let',min:0},{k:'zak',n:'Žáci a studenti',s:'zvýhodněně jen ve vlastním stanu',min:0}];
-const S={type:'stan',q:{stan:1,karavan:0,chatka:0,teepee:0,podsad:0},dosp:2,dite:0,zak:0,units:1,auto:0,moto:0,elek:0,pes:0,from:null,to:null};
+const S={type:'stan',q:{stan:0,karavan:0,chatka:0,teepee:0,podsad:0},dosp:2,dite:0,zak:0,units:1,auto:0,moto:0,elek:0,pes:0,from:null,to:null};
 const fmt=n=>Math.round(n).toLocaleString('cs-CZ')+'\u00a0Kč';
 const plural=(n,a,b,c)=>n===1?a:n>=2&&n<=4?b:c;
 const T=()=>TYPES.find(t=>t.k===S.type);
@@ -3543,9 +3543,8 @@ PEOPLE.forEach(r=>{const c=document.createElement('div');c.className='rz-pc';
 
 /* ---------- ubytování ---------- */
 TYPES.forEach(t=>{const b=document.createElement('div');b.className='rz-row';b.style.setProperty('--c',t.c);
- b.innerHTML=`<span class="ph" style="background-image:url(${t.img})"><i class="n"></i></span><span class="tx"><b>${t.n}</b><small>${t.s}</small><span class="tg"><em>${t.bed}</em><em class="bd ${t.bc||''}">${t.bd}</em></span></span><span class="rt"><span class="pr">${t.per}<strong>${t.pr.replace(/<\/?strong>/g,'')}</strong></span><button type="button" class="add">+ Přidat</button></span>`;
- const st=stepper(()=>S.q[t.k],v=>{S.q[t.k]=v;if(t.k==='karavan'&&v&&!S.elek)S.elek=1},()=>0,20);b.querySelector('.rt').append(st);t.st=st;
- b.querySelector('.add').addEventListener('click',()=>{if(!freeK(t.k)){warn(t.n+' je ve vybraném termínu obsazená, zkuste jiné ubytování.');return}S.q[t.k]=t.cap&&!ownBed()&&beds()<persons()?Math.max(1,Math.ceil((persons()-beds())/t.cap)):1;if(t.k==='karavan'&&!S.elek)S.elek=1;render();pop(st.querySelector('output'))});
+ b.innerHTML=`<span class="ph" style="background-image:url(${t.img})"><i class="n"></i></span><span class="tx"><b>${t.n}</b><small>${t.s}</small><span class="tg"><em>${t.bed}</em><em class="bd ${t.bc||''}">${t.bd}</em></span></span><span class="rt"><span class="pr">${t.per}<strong>${t.pr.replace(/<\/?strong>/g,'')}</strong></span></span>`;
+ const st=stepper(()=>S.q[t.k],v=>{if(v>S.q[t.k]&&!freeK(t.k)){warn(t.n+' je ve vybraném termínu obsazená, zkuste jiné ubytování.');return}S.q[t.k]=v;if(t.k==='karavan'&&v&&!S.elek)S.elek=1},()=>0,20);b.querySelector('.rt').append(st);t.st=st;
  $('rzTypes').append(b);t.el=b});
 function setType(k){TYPES.forEach(t=>S.q[t.k]=0);const t=TYPES.find(x=>x.k===k);S.q[k]=t.cap?Math.max(1,Math.ceil(persons()/t.cap)):1;if(k==='karavan'&&!S.elek)S.elek=1;render()}
 const uWrap=$('rzUnits');uWrap.hidden=true;
@@ -3589,10 +3588,8 @@ function render(){R=compute();const pending=S.from&&!S.to;if(S.to&&!$('rzWarn').
  $('rzN').textContent=R.n;$('rzNl').textContent=plural(R.n,'noc','noci','nocí');
  root.querySelectorAll('#rzQuick button').forEach(b=>b.classList.toggle('on',!!S.to&&+b.dataset.n===R.n));
  PEOPLE.forEach(r=>{r.st.upd();r.el.classList.toggle('has',S[r.k]>0)});
- TYPES.forEach(x=>{const q=S.q[x.k],fr=freeK(x.k);x.el.classList.toggle('on',q>0);x.el.classList.toggle('busy',!fr);x.el.querySelector('.n').textContent=q?q+'×':'';x.st.upd();x.st.hidden=!q;const ad=x.el.querySelector('.add');ad.hidden=!!q;ad.textContent=fr?'+ Přidat':'Obsazeno'});
- {const n=persons(),b=beds(),own=ownBed(),cov=own?n:Math.min(n,b),tn=$('rzTNote'),dots=Array.from({length:Math.min(n,30)},(_,i)=>`<i class="${i<cov?'f':''}"></i>`).join('');
-  tn.className='rz-tnote rz-cap '+(SEL().length&&cov>=n?'ok':'lim');
-  tn.innerHTML=`<span class="dots">${dots}</span><span>${!SEL().length?'Vyberte aspoň jedno ubytování.':cov>=n?(own&&!b?`Spaní máte vlastní, místo je pro všech ${n}.`:`Všech ${n} ${plural(n,'osoba má','osoby mají','osob má')} kde spát`):`Ještě ${n-cov} ${plural(n-cov,'osoba nemá','osoby nemají','osob nemá')} kde spát – přidejte ubytování`}</span>`+(S.q.karavan?'<small>U karavanu prosím předem zavolejte na <a href="tel:+420720514943">+420 720 514 943</a>.</small>':'')}
+ TYPES.forEach(x=>{const q=S.q[x.k],fr=freeK(x.k);x.el.classList.toggle('on',q>0);x.el.classList.toggle('busy',!fr);x.el.querySelector('.n').textContent=q?q+'×':'';x.st.upd()});
+ $('rzTNote').hidden=true;
  EXTRAS.forEach(x=>{x.el.classList.toggle('on',S[x.k]>0);x.el.setAttribute('aria-checked',S[x.k]>0);x.st.upd()});
  /* souhrn */
  const hiN=R.nights.filter(isHi).length,se=$('rzSeason');
