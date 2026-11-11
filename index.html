@@ -1768,27 +1768,15 @@ section#o-kempu.ok2::before,section#o-kempu.ok2::after{display:none!important}
 <form id="rzForm" class="rz-app" data-endpoint="" novalidate>
 <div class="rz-main">
 <nav class="rz-prog" aria-label="Kroky rezervace">
-<button type="button" data-s="0" class="on"><i>1</i><span>Kdo jede</span></button>
-<button type="button" data-s="1"><i>2</i><span>Ubytování</span></button>
-<button type="button" data-s="2"><i>3</i><span>Termín</span></button>
+<button type="button" data-s="0" class="on"><i>1</i><span>Termín</span></button>
+<button type="button" data-s="1"><i>2</i><span>Kdo jede</span></button>
+<button type="button" data-s="2"><i>3</i><span>Ubytování</span></button>
 <button type="button" data-s="3"><i>4</i><span>Doplňky</span></button>
 <button type="button" data-s="4"><i>5</i><span>Kontakt</span></button>
 </nav>
 
 <div role="group" class="rz-step on" data-s="0">
-<div class="rz-sh"><span class="rz-num">1</span><span><b>Kolik vás jede?</b><small>Místní poplatek je už v ceně za osobu.</small></span></div>
-<div class="rz-people" id="rzPeople"></div>
-</div>
-
-<div role="group" class="rz-step" data-s="1">
-<div class="rz-sh"><span class="rz-num">2</span><span><b>Jak chcete spát?</b><small>Ceny jsou za noc, k nim se připočítá poplatek za osoby.</small></span></div>
-<div class="rz-types" id="rzTypes" role="radiogroup" aria-label="Typ ubytování"></div>
-<div class="rz-units" id="rzUnits"></div>
-<div class="rz-tnote" id="rzTNote" aria-live="polite"></div>
-</div>
-
-<div role="group" class="rz-step" data-s="2">
-<div class="rz-sh"><span class="rz-num">3</span><span><b>Kdy přijedete?</b><small>Klikněte na den příjezdu a pak na den odjezdu.</small></span></div>
+<div class="rz-sh"><span class="rz-num">1</span><span><b>Kdy přijedete?</b><small>Klikněte na den příjezdu a pak na den odjezdu.</small></span></div>
 <div class="rz-cal" id="rzCal"></div>
 <div class="rz-calinfo">
 <div class="rz-dates" aria-live="polite">
@@ -1802,6 +1790,18 @@ section#o-kempu.ok2::before,section#o-kempu.ok2::after{display:none!important}
 </div>
 <p class="rz-hint"><span class="rz-lg hi"></span>hlavní sezóna (červen–srpen)<span class="rz-busy-lg"><span class="rz-lg bz"></span>obsazeno</span> <span class="rz-sep"></span><span class="rz-disc-hint">Sleva: 2 noci −10 %, 3 noci −15 %, 4+ nocí −20 %</span></p>
 <p class="rz-warn" id="rzWarn" hidden></p>
+</div>
+
+<div role="group" class="rz-step" data-s="1">
+<div class="rz-sh"><span class="rz-num">2</span><span><b>Kolik vás jede?</b><small>Místní poplatek je už v ceně za osobu.</small></span></div>
+<div class="rz-people" id="rzPeople"></div>
+</div>
+
+<div role="group" class="rz-step" data-s="2">
+<div class="rz-sh"><span class="rz-num">3</span><span><b>Jak chcete spát?</b><small>Ceny jsou za noc, k nim se připočítá poplatek za osoby.</small></span></div>
+<div class="rz-types" id="rzTypes" role="radiogroup" aria-label="Typ ubytování"></div>
+<div class="rz-units" id="rzUnits"></div>
+<div class="rz-tnote" id="rzTNote" aria-live="polite"></div>
 </div>
 
 <div role="group" class="rz-step" data-s="3">
@@ -1838,9 +1838,9 @@ section#o-kempu.ok2::before,section#o-kempu.ok2::after{display:none!important}
 <div class="rz-disc" id="rzDisc" hidden></div>
 </div>
 <dl class="rz-sum">
-<div data-go="0"><dt>Osoby</dt><dd id="rzSumPeople">–</dd></div>
-<div data-go="1"><dt>Ubytování</dt><dd id="rzSumType">–</dd></div>
-<div data-go="2"><dt>Termín</dt><dd id="rzSumDate">–</dd></div>
+<div data-go="1"><dt>Osoby</dt><dd id="rzSumPeople">–</dd></div>
+<div data-go="2"><dt>Ubytování</dt><dd id="rzSumType">–</dd></div>
+<div data-go="0"><dt>Termín</dt><dd id="rzSumDate">–</dd></div>
 <div data-go="3"><dt>Doplňky</dt><dd id="rzSumExtras">žádné</dd></div>
 </dl>
 <details class="rz-lines-wrap"><summary>Rozpis ceny</summary><ul class="rz-lines" id="rzLines"></ul></details>
@@ -3583,7 +3583,7 @@ function summaryText(){return `Termín: ${fDY(S.from)} – ${fDY(S.to)} (${R.n} 
 
 /* ---------- kroky / průvodce ---------- */
 const steps=[...root.querySelectorAll('.rz-step')],prog=[...root.querySelectorAll('.rz-prog button')],LAST=steps.length-1;
-const NEXT=['Ubytování','Termín','Doplňky','Kontakt','Odeslat poptávku'];
+const NEXT=['Kdo jede','Ubytování','Doplňky','Kontakt','Odeslat poptávku'];
 const mq=matchMedia('(max-width:900px)');let step=0;
 const wiz=()=>true;
 function navState(){
@@ -3592,7 +3592,7 @@ function navState(){
  steps.forEach((s,i)=>s.classList.toggle('on',i===step));
  $('rzBack').hidden=step===0;
  $('rzNext').innerHTML=step===LAST?(innerWidth>900?'Odeslat poptávku →':'Odeslat →'):(innerWidth>900?'Pokračovat: '+NEXT[step]+' →':'Další →');$('rzNext').setAttribute('aria-label',step===LAST?'Odeslat poptávku':'Další krok: '+NEXT[step])}
-function stepOk(i){if(i===2&&!S.to){warn(S.from?'Vyberte v kalendáři den odjezdu.':'Vyberte v kalendáři den příjezdu a odjezdu.');const c=$('rzCal');c.classList.remove('nudge');void c.offsetWidth;c.classList.add('nudge');return false}return true}
+function stepOk(i){if(i===0&&!S.to){warn(S.from?'Vyberte v kalendáři den odjezdu.':'Vyberte v kalendáři den příjezdu a odjezdu.');const c=$('rzCal');c.classList.remove('nudge');void c.offsetWidth;c.classList.add('nudge');return false}return true}
 function go(n,scroll=true){
  if(n>step)for(let i=step;i<n;i++)if(!stepOk(i)){n=i;break}
  step=Math.max(0,Math.min(LAST,n));navState();
@@ -3615,7 +3615,7 @@ function fieldErr(name,msg){const inp=form.elements[name],lab=inp.closest('.rz-f
  if(msg){if(!em){em=document.createElement('em');lab.append(em)}em.textContent=msg;lab.classList.add('err')}else{if(em)em.remove();lab.classList.remove('err')}}
 ['jmeno','telefon','email'].forEach(n=>form.elements[n].addEventListener('input',()=>fieldErr(n,'')));
 function submit(){
- if(!S.to){go(2);warn('Vyberte v kalendáři termín pobytu.');return}
+ if(!S.to){go(0);warn('Vyberte v kalendáři termín pobytu.');return}
  const f=form.elements;let bad=null;
  if(!f.jmeno.value.trim()){fieldErr('jmeno','Vyplňte prosím jméno.');bad=bad||f.jmeno}
  if(f.telefon.value.replace(/\D/g,'').length<9){fieldErr('telefon','Zadejte telefon, ať vás můžeme zastihnout.');bad=bad||f.telefon}
@@ -3639,8 +3639,8 @@ $('rzAgain').addEventListener('click',()=>{$('rzDone').hidden=true;form.hidden=f
 /* ---------- napojení z karet Ubytování ---------- */
 const NAMES={'Vlastní stan':'stan','Karavan':'karavan','Chatka':'chatka','Teepee':'teepee','Podsadový stan':'podsad'};
 document.querySelectorAll('[data-kc]').forEach(a=>a.addEventListener('click',e=>{const k=NAMES[a.dataset.kc];if(!k)return;e.preventDefault();
- setType(k);if(wiz()){step=1;navState()}
- (wiz()?root.querySelector('.rz-main'):steps[1]).scrollIntoView({behavior:'smooth',block:'start'})}));
+ setType(k);if(wiz()){step=0;navState()}
+ (wiz()?root.querySelector('.rz-main'):steps[0]).scrollIntoView({behavior:"smooth",block:"start"})}));
 window.RZ={setType,go};
 const dlg=$('rzPrice'),openP=()=>{dlg.showModal?dlg.showModal():dlg.setAttribute('open','')};
 $('rzPriceBtn').addEventListener('click',openP);$('rzPriceBtn2').addEventListener('click',openP);
