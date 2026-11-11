@@ -2207,6 +2207,7 @@ const IC={
  wc:'<path d="M2 7l2.2 10L7 10l2.8 7L12 7M21.5 9.2A4 4 0 0 0 14.5 12a4 4 0 0 0 7 2.8"/>',
  parking:'<rect x="4" y="3" width="16" height="18" rx="3"/><path d="M10 17V8h3a2.5 2.5 0 0 1 0 5h-3"/>',
  lode:'<path d="M2 14h20l-3 5H5zM12 3v11M12 4l6 7h-6"/>',
+ kotva:'<circle cx="12" cy="5" r="2.2"/><path d="M12 7.2V21M8 11h8M5 14c0 4 3 7 7 7s7-3 7-7M3 15.5l2-2 2 2M17 15.5l2-2 2 2"/>',
  hriste:'<path d="M3 21 7 4h10l4 17M7 4h10M10 4v9M14 4v9M9 13h6"/>',
  pujcovna:'<path d="M3.5 20.5 13.5 10.5M20.5 20.5 10.5 10.5M2.5 18.5l3 3M21.5 18.5l-3 3"/><ellipse cx="16.6" cy="7.4" rx="2.3" ry="4.4" transform="rotate(45 16.6 7.4)"/><ellipse cx="7.4" cy="7.4" rx="2.3" ry="4.4" transform="rotate(-45 7.4 7.4)"/>'
 };
@@ -2223,12 +2224,15 @@ const D=[
  {k:'wc',f:{x:850,y:270,w:280,h:190},n:'WC',c:'#5d6fb8',m:[976,330],
   d:'Nové sociální zařízení s WC a sprchami, pár kroků od louky i chatek.',
   li:['Nové sprchy a WC','Sprcha na mince: 20 Kč / 4 minuty']},
- {k:'pujcovna',f:{x:-220,y:380,w:540,h:760},n:'Půjčovna lodí PE-LA',c:'#1f6f9a',m:[-14,1040],
+ {k:'pujcovna',f:{x:-200,y:380,w:640,h:760},n:'Půjčovna lodí PE-LA',c:'#1f6f9a',m:[344,862],
   d:'Půjčovna lodí a raftů PE-LA hned za parkovištěm. Zapůjčíte si kánoe nebo raft a zajistí i přepravu osob a bagáže.',
   li:['Kánoe a rafty','Přeprava osob a bagáže','Hned vedle parkoviště']},
  {k:'lode',f:{x:940,y:680,w:1600,h:200},n:'Přístaviště',c:'#2a8bb0',m:[1880,750],
   d:'Přistát můžete kdekoli podél břehu kempu. Lodě necháte na trávě u vody, pár kroků od stanu i kiosku.',
   li:['Přistání po celé délce břehu','Lodě necháte na břehu u kempu','Vltava, ř. km 280,9']},
+ {k:'kotva',f:{x:1930,y:700,w:320,h:200},n:'Kotviště',c:'#2f6fb0',m:[2060,826],
+  d:'Kotviště u přístaviště, kde můžete zakotvit loď přímo u kempu.',
+  li:['Zakotvení u přístaviště','Hned u břehu kempu']},
  {k:'hriste',f:{x:1170,y:720,w:230,h:150},n:'Dětské hřiště',c:'#d6457a',m:[1284,768],
   d:'Hřiště pro děti u břehu hned vedle kiosku. Rodiče mají děti na očích z posezení.',
   li:['Hned u kiosku','Výhled na řeku']},
@@ -2427,6 +2431,12 @@ const DOCKS=[760,905,1010,1160];
  for(let i=0;i<34;i++){const x=480+i*23+R()*8;if(x>604&&x<672)continue;if(DOCKS.some(d=>Math.abs(x-d)<16))continue;boat(g,x,bank(x)-5+R()*3,-8+R()*16,bc[i%5])}
  raft(g,700,432,'#e8b23a',-8);raft(g,880,412,'#d64545',-6);raft(g,1110,385,'#e8b23a',-4);boat(g,620,447,-10,'#3a8fb7');
  dl(1800,820,'Přístaviště po celém břehu',14,-4)}
+// kotviště
+{const g=zone(Z.kotva);hl(g,'rect',{x:1004,y:366,width:52,height:54,rx:9});
+ E('rect',{x:1026,y:374,width:8,height:38,rx:1.5,fill:'#b8864f',stroke:'rgba(0,0,0,.3)','stroke-width':.6,filter:'url(#amSh)'},g);
+ for(let i=0;i<5;i++)E('line',{x1:1026,y1:378+i*8,x2:1034,y2:378+i*8,stroke:'rgba(70,45,20,.45)','stroke-width':.8},g);
+ [[1025,376],[1035,376],[1025,410],[1035,410]].forEach(([x,y])=>E('circle',{cx:x,cy:y,r:1.8,fill:'#4a3a2a'},g));
+ boat(g,1017,386,90,'#e8b23a');boat(g,1017,402,90,'#d64545');boat(g,1043,390,90,'#3a8fb7');boat(g,1043,405,90,'#4b8a5a');}
 // louka pro stany
 {const g=zone(Z.stany);hl(g,'path',{d:'M600 140 L965 128 L1010 165 L1010 300 L960 330 L870 352 L700 372 L615 380 L598 300Z'});
  van(g,632,212,-80,24,10);van(g,786,178,-80,20,10);van(g,826,193,0,30,9);van(g,752,190,0,12,7);van(g,1003,195,0,14,8);van(g,710,220,0,10,7);
@@ -2536,7 +2546,7 @@ function zoomBy(f,cx,cy){const {W}=size();cx??=vb.x+vb.w/2;cy??=vb.y+vb.h/2;cons
   const minW=W/6;if(w<minW&&f>1)return;go(clamp({x:cx-(cx-vb.x)/f,y:cy-(cy-vb.y)/f,w,h}),400)}
 
 /* ===== UI ===== */
-const GRPS=[['Ubytování',['chatky','podsad','teepee','stany']],['Na vodě',['lode','pujcovna']],['Služby',['kiosek','wc','parking','hriste']]];
+const GRPS=[['Ubytování',['chatky','podsad','teepee','stany']],['Na vodě',['lode','kotva','pujcovna']],['Služby',['kiosek','wc','parking','hriste']]];
 const PR={chatky:'od 890 Kč',podsad:'300 Kč',teepee:'od 700 Kč',stany:'od 190 Kč'};
 list.replaceChildren();GRPS.forEach(([t,ks])=>{const h=document.createElement('div');h.className='am-grp';h.textContent=t;list.append(h);
   ks.forEach(k=>{const o=Z[k];const b=document.createElement('button');b.type='button';b.className='am-f';b.style.setProperty('--c',o.c);
