@@ -2427,8 +2427,6 @@ const DOCKS=[760,905,1010,1160];
 {const g=zone(Z.kiosek);hl(g,'path',{d:'M438 255 H592 V352 H438Z'});
  roofB(g,446,262,80,52,'#c23b4a');roofB(g,505,276,48,40,'#c23b4a',0,undefined,true);roofB(g,446,300,60,46,'#c23b4a');
  E('rect',{x:478,y:318,width:42,height:24,fill:'#3c9aa0',filter:'url(#amSh)'},g);E('rect',{x:520,y:312,width:36,height:30,fill:'#d9dbd6',filter:'url(#amSh)'},g);
- E('rect',{x:555,y:296,width:34,height:44,fill:'#e7ddc6'},g);
- [[566,312,'#d64545'],[580,330,'#f4f4f4'],[566,330,'#d64545']].forEach(([x,y,c])=>{E('circle',{cx:x+1.5,cy:y+1.5,r:6,fill:'rgba(0,0,0,.25)'},g);E('circle',{cx:x,cy:y,r:6,fill:c},g)});
  // posezení u stromů: lavička – stůl – lavička (otočeno o 90°)
  [[468,372],[507,372],[546,372]].forEach(([x,y])=>{
   const s=G(g,{transform:`translate(0 14) rotate(90 ${x+13} ${y+11.5})`});
