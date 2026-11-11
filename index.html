@@ -2674,36 +2674,40 @@ const legH=()=>sec.style.setProperty('--legH',mob()&&!sec.classList.contains('co
 function setCol(v){sec.classList.toggle('collapsed',v);opn.hidden=!v;tog.setAttribute('aria-expanded',!v);legH();if(cur)select(cur);else go(cover(),500)}
 tog.onclick=()=>setCol(true);opn.onclick=()=>setCol(false);
 legH();
-/* ===== ŽIVÁ SCÉNA: raft připluje ke kotvišti, lidé nastoupí do dodávky, raft se naloží na střechu a dodávka odjede doleva ===== */
+/* ===== ŽIVÁ SCÉNA 1: raft z půjčovny připluje ke kotvišti a po chvilce zmizí ===== */
+/* ===== ŽIVÁ SCÉNA 2: dodávka s raftem na střeše přijede ke kotvišti, nastoupí lidé a odjede doleva ===== */
 {const act=G(S2,{'pointer-events':'none'});
- const vg=G(act,{});van(vg,0,0,0,26,11);
- const rg=G(act,{});raft(rg,0,0,'#e8b23a',0);
- const PC=['#3a8fb7','#d64545','#4b8a5a','#f4f4f4'],PO=[[-4.5,-1.6],[-1.5,1.6],[1.5,-1.6],[4.5,1.6]];
- const rd=PO.map(([x,y],i)=>E('circle',{cx:x,cy:y,r:1.5,fill:PC[i],stroke:'rgba(0,0,0,.3)','stroke-width':.3},rg));
- const wk=PC.map(c=>E('circle',{r:2.1,fill:c,stroke:'rgba(0,0,0,.35)','stroke-width':.4},act));
  const ln=(a,b,k)=>a+(b-a)*k,eo=k=>1-Math.pow(1-k,3),ei=k=>k*k*(3-2*k),cl=k=>Math.max(0,Math.min(1,k));
  const path=(P,k)=>{const n=P.length-1,f=Math.min(n-.0001,Math.max(0,k*n)),i=Math.floor(f),u=f-i;return [ln(P[i][0],P[i+1][0],u),ln(P[i][1],P[i+1][1],u)]};
- const IN=[[-70,672],[100,612],[257,564]],DP=[[-70,548],[60,535],[160,522],[300,508]],DOCK=IN[2],VAN=DP[3],ROT=-17,LOOP=30000;
- let clock=0,last=null,vis=true;
- new IntersectionObserver(e=>{vis=e[0].isIntersecting}).observe(sec);
  const place=(g,x,y,r,sx,sy)=>g.setAttribute('transform',`translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${r}) scale(${sx} ${sy})`);
- (function tick(t){requestAnimationFrame(tick);if(last===null)last=t;const dt=Math.min(100,t-last);last=t;if(!vis)return;clock=(clock+dt)%LOOP;
-  const s=clock/1000;
-  /* dodávka: čeká na kotvišti čelem doleva, 14–22 s odjíždí */
-  let vx=VAN[0],vy=VAN[1],vo=1,vv=true;
-  if(s<1)vo=s;else if(s>=14&&s<23){const k=ei(cl((s-14)/8)),p=path(DP,1-k);vx=p[0];vy=p[1]}else if(s>=23)vv=false;
-  vg.style.display=vv?'':'none';vg.style.opacity=vo;if(vv)place(vg,vx,vy,ROT,-1.5,1.5);
-  /* raft: 0–6 s připlouvá, stojí, 11–13 se zvedne na střechu, pak jede s dodávkou */
-  let rx,ry,rr=ROT,rs=1.7,rv=true;
-  if(s<6){const k=eo(s/6),p=path(IN,k);rx=p[0];ry=p[1]+Math.sin(s*2)*.5;rr=ROT+(1-k)*4}
-  else if(s<11){rx=DOCK[0];ry=DOCK[1]+Math.sin(s*2)*.4}
-  else if(s<13){const k=ei((s-11)/2);rx=ln(DOCK[0],VAN[0],k);ry=ln(DOCK[1],VAN[1]-5,k)-Math.sin(k*Math.PI)*6;rs=1.7*ln(1,.72,k)}
-  else if(s<23){rx=vx;ry=vy-5;rs=1.7*.72}else rv=false;
-  rg.style.display=rv?'':'none';if(rv)place(rg,rx,ry,rr,rs,rs);
-  rd.forEach(c=>c.style.display=s<7?'':'none');
-  /* lidé: z raftu k dodávce a dovnitř */
-  wk.forEach((c,i)=>{const a=7+i*.7,k=cl((s-a)/2.6),show=s>=a&&k<1;c.style.display=show?'':'none';
-   if(show){const x0=DOCK[0]+PO[i][0]*1.7,y0=DOCK[1]+PO[i][1]*1.7,x1=VAN[0]+8,y1=VAN[1]+7;c.setAttribute('cx',(ln(x0,x1,ei(k))).toFixed(2));c.setAttribute('cy',(ln(y0,y1,ei(k))-Math.sin(k*Math.PI)*1.2).toFixed(2))}})
+ const PC=['#3a8fb7','#d64545','#4b8a5a','#f4f4f4'],PO=[[-4.5,-1.6],[-1.5,1.6],[1.5,-1.6],[4.5,1.6]];
+ /* 1: raft na vodě */
+ const rg=G(act,{});raft(rg,0,0,'#e8b23a',0);PO.forEach(([x,y],i)=>E('circle',{cx:x,cy:y,r:1.5,fill:PC[i],stroke:'rgba(0,0,0,.3)','stroke-width':.3},rg));
+ const IN=[[28,652],[110,614],[257,564]],ROT=-17;
+ /* 2: dodávka s raftem na střeše + lidé */
+ const vg=G(act,{});van(vg,0,0,0,26,11);
+ const rr=G(act,{});raft(rr,0,0,'#d64545',0);E('rect',{x:-6,y:-1,width:12,height:2,fill:'rgba(0,0,0,.18)'},rr);
+ const wk=PC.map(c=>E('circle',{r:2.1,fill:c,stroke:'rgba(0,0,0,.35)','stroke-width':.4},act));
+ const DP=[[-70,548],[60,535],[160,522],[300,508]],VAN=DP[3];
+ let cA=0,cB=0,last=null,vis=true;
+ new IntersectionObserver(e=>{vis=e[0].isIntersecting}).observe(sec);
+ (function tick(t){requestAnimationFrame(tick);if(last===null)last=t;const dt=Math.min(100,t-last);last=t;if(!vis)return;
+  cA=(cA+dt)%18000;cB=(cB+dt)%28000;
+  /* raft na vodě */
+  {const s=cA/1000;let x,y,r=ROT,op=1,show=true;
+   if(s<6){const k=eo(s/6),p=path(IN,k);x=p[0];y=p[1]+Math.sin(s*2)*.5;r=ROT+(1-k)*6;op=cl(s/.8)}
+   else{x=IN[2][0];y=IN[2][1]+Math.sin(s*2)*.4;if(s>=12)op=Math.max(0,1-(s-12)/1.2);if(s>=13.2)show=false}
+   rg.style.display=show?'':'none';rg.style.opacity=op;if(show)place(rg,x,y,r,1.7,1.7)}
+  /* dodávka */
+  {const s=cB/1000;let x=VAN[0],y=VAN[1],f=1,show=true;
+   if(s<4){const k=eo(s/4),p=path(DP,k);x=p[0];y=p[1]}
+   else if(s<10){}
+   else if(s<18){f=-1;const k=ei((s-10)/8),p=path(DP,1-k);x=p[0];y=p[1]}
+   else show=false;
+   vg.style.display=rr.style.display=show?'':'none';
+   if(show){place(vg,x,y,ROT,f*1.5,1.5);place(rr,x,y-5,ROT,1.2,1.2)}
+   wk.forEach((c,i)=>{const a=5+i*.8,k=cl((s-a)/2.6),sh=s>=a&&k<1;c.style.display=sh?'':'none';
+    if(sh){const x0=VAN[0]+14+i*7,y0=VAN[1]-30-i*2,x1=VAN[0]+8,y1=VAN[1]+7;c.setAttribute('cx',ln(x0,x1,ei(k)).toFixed(2));c.setAttribute('cy',(ln(y0,y1,ei(k))-Math.sin(k*Math.PI)*1.2).toFixed(2))}})}
  })(performance.now())}
 apply(cover());
 window.__am={Z:Z,icon:icon,select:select};
