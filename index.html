@@ -1387,6 +1387,25 @@ section#o-kempu.ok2::before,section#o-kempu.ok2::after{display:none!important}
 #ubytovani .ubp-c p{font-size:14px}
 }
 </style>
+<style id="am-card-polish">
+.am-card{padding:26px 24px 20px;overflow:hidden auto;border:1px solid rgba(255,255,255,.08)}
+.am-card::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--c)}
+.am-card .t{margin-bottom:14px;padding-right:44px}
+.am-card .t i{box-shadow:0 8px 18px -8px var(--c)}
+.am-card h3{line-height:1.12;letter-spacing:-.02em}
+.am-card p{line-height:1.55;margin-bottom:16px}
+.am-card ul{gap:9px;margin-bottom:6px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)}
+.am-card li{align-items:center;line-height:1.4;color:rgba(255,255,255,.92)}
+.am-card li::before{width:16px;height:16px;margin-top:0;border-radius:50%;background:var(--c) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center/10px no-repeat}
+.am-card .row2{margin-top:14px}
+.am-x{display:grid;place-items:center;padding:0;line-height:0;top:16px;right:16px;width:32px;height:32px}
+.am-x svg{display:block}
+.am-nav{margin-top:16px}
+.am-nav button{display:flex;align-items:center;justify-content:center;gap:6px;min-width:0;padding:10px 8px;transition:background .2s,transform .2s}
+.am-nav button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.am-nav button svg{flex:none;opacity:.8}
+.am-nav button:hover{transform:translateY(-1px)}
+</style>
 </head>
 <body>
 
@@ -2572,9 +2591,9 @@ D.forEach(o=>{
 function render(o){if(!o){card.hidden=true;return}
   const i=D.indexOf(o),prev=D[(i+D.length-1)%D.length],next=D[(i+1)%D.length];
   card.hidden=false;card.style.setProperty('--c',o.c);card.style.animation='none';void card.offsetWidth;card.style.animation='';
-  card.innerHTML=`<button type="button" class="am-x" aria-label="Zavřít">×</button><div class="t"><i>${icon(o.k,24)}</i><h3>${o.n}</h3></div><p>${o.d}</p><ul>${o.li.map(t=>`<li>${t}</li>`).join('')}</ul>
-   <div class="row2">${o.price?`<span class="price">${o.price}<small>${o.unit}</small></span>`:'<span></span>'}<a href="#rezervace" class="btn btn-sun">Poptat pobyt →</a></div>
-   <div class="am-nav"><button type="button" data-d="-1">← ${prev.n}</button><button type="button" data-d="1">${next.n} →</button></div>`;
+  card.innerHTML=`<button type="button" class="am-x" aria-label="Zavřít"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button><div class="t"><i>${icon(o.k,24)}</i><h3>${o.n}</h3></div><p>${o.d}</p><ul>${o.li.map(t=>`<li>${t}</li>`).join('')}</ul>
+   ${o.price?`<div class="row2"><span class="price">${o.price}<small>${o.unit}</small></span><a href="#rezervace" class="btn btn-sun">Poptat pobyt →</a></div>`:''}
+   <div class="am-nav"><button type="button" data-d="-1"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg><span>${prev.n}</span></button><button type="button" data-d="1"><span>${next.n}</span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>`;
   card.querySelector('.am-x').onclick=()=>select(null);
   card.querySelectorAll('.am-nav button').forEach(b=>b.onclick=()=>select(+b.dataset.d<0?prev:next))}
 function select(o){cur=o;sec.classList.toggle('focus',!!o);
