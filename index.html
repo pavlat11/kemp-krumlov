@@ -2544,8 +2544,11 @@ dl(-640,600,'Nový potok',13,30,'#4a4a4a');dl(-900,520,'Na Svahu',12,62,'#4a4a4a
    const pts=lane.filter(p=>p[0]<x-70);const last=pts[pts.length-1];
    const p=E('path',{d:toD(pts)+` Q${x-20} ${last[1]} ${x} ${by}`,fill:'none',stroke:'none'},lay);
    const g=G(lay);E('ellipse',{rx:16,ry:5,fill:'rgba(255,255,255,.35)',class:'wake'},g);
-   const b=G(g,{transform:'scale(1.5)'});E('path',{d:'M-12 0 Q-5 -4 0 -4 Q5 -4 12 0 Q5 4 0 4 Q-5 4 -12 0Z',fill:cols[i],stroke:'rgba(0,0,0,.3)','stroke-width':.6},b);
-   E('circle',{cx:-4,cy:0,r:1.9,fill:'#c0392b'},b);E('circle',{cx:4,cy:0,r:1.9,fill:'#f2f2f2'},b);
+   const b=G(g,{transform:'scale(1.5)'});
+   if(i%3===1){E('rect',{x:-11,y:-5.5,width:22,height:11,rx:5.5,fill:cols[i%cols.length],stroke:'rgba(0,0,0,.3)','stroke-width':.6},b);E('rect',{x:-7.5,y:-3,width:15,height:6,rx:3,fill:'rgba(0,0,0,.16)'},b);
+    [[-5.5,-2,'#3a8fb7'],[-2,2,'#f4f4f4'],[2,-2,'#d64545'],[5.5,2,'#4b8a5a']].forEach(([x,y,c])=>E('circle',{cx:x,cy:y,r:1.7,fill:c,stroke:'rgba(0,0,0,.3)','stroke-width':.3},b))}
+   else{E('path',{d:'M-12 0 Q-5 -4 0 -4 Q5 -4 12 0 Q5 4 0 4 Q-5 4 -12 0Z',fill:cols[i],stroke:'rgba(0,0,0,.3)','stroke-width':.6},b);
+   E('circle',{cx:-4,cy:0,r:1.9,fill:'#c0392b'},b);E('circle',{cx:4,cy:0,r:1.9,fill:'#f2f2f2'},b)}
    return{p,g,L:p.getTotalLength(),off:i*3600}});
  const T=14400,TRAV=9000;let on=true;
  new IntersectionObserver(es=>{on=es[0].isIntersecting;if(on)requestAnimationFrame(tick)}).observe(sec);
