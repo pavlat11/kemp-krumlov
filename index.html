@@ -2265,7 +2265,7 @@ const D=[
  {k:'podsad',f:{x:1260,y:170,w:340,h:70},n:'Podsadové stany',c:'#2a7c86',m:[1430,200],
   d:'Řada postavených stanů na dřevěné podsadě podél cesty. Přijedete a rovnou se ubytujete.',
   li:['Stan je postavený, nic nestavíte','Hned u cesty k sociálkám'],price:'300 Kč',unit:'stan / noc + osoby'},
- {k:'teepee',f:{x:1720,y:360,w:140,h:100},n:'Teepee',c:'#d58a2c',m:[1786,400],
+ {k:'teepee',f:{x:1720,y:360,w:140,h:100},n:'Teepee',c:'#d58a2c',m:[1786,330],
   d:'Velké indiánské teepee na louce pod chatkami. Zážitek hlavně pro rodiny s dětmi a party.',
   li:['Stojí volně na louce','Kousek od chatek i sociálek'],price:'800 Kč',unit:'noc + osoby · mimo sezónu 700 Kč'},
  {k:'chatky',f:{x:540,y:0,w:1400,h:310},n:'Chatky',c:'#b6513e',m:[1780,120],
@@ -2483,11 +2483,25 @@ const DOCKS=[760,905,1010,1160];
 // podsadové stany
 {const g=zone(Z.podsad);hl(g,'rect',{x:636,y:92,width:160,height:24,rx:6});
  for(let i=0;i<12;i++)ptent(g,646+i*12.5,104)}
-// teepee
-{const g=zone(Z.teepee);hl(g,'circle',{cx:893,cy:208,r:26});
- E('circle',{cx:897,cy:212,r:14,fill:'rgba(23,58,34,.3)'},g);E('circle',{cx:893,cy:208,r:13,fill:'#efe6cf'},g);
- for(let i=0;i<8;i++){const a=i/8*Math.PI*2;E('line',{x1:893,y1:208,x2:893+Math.cos(a)*13,y2:208+Math.sin(a)*13,stroke:'#cdbf9f','stroke-width':.8},g)}
- E('circle',{cx:893,cy:208,r:3,fill:'#7a5a3a'},g);E('path',{d:'M893 208 L903 215 L899 219Z',fill:'#6a4a32'},g)}
+// teepee (podle skutečnosti: bílé plátno, dřevěné tyče nahoře, vchod)
+{const g=zone(Z.teepee);hl(g,'circle',{cx:893,cy:208,r:30});
+ const cx=893,by=216,rx=19,ry=7,ay=178;
+ // stín na trávě
+ E('ellipse',{cx:cx+14,cy:by+3,rx:rx+10,ry:ry+1,fill:'rgba(23,58,34,.32)',filter:'url(#amSoft)'},g);
+ // kolíky a lana
+ [[-30,4],[-12,11],[12,11],[30,4]].forEach(([dx,dy])=>{E('line',{x1:cx+dx*.62,y1:by-4,x2:cx+dx,y2:by+dy,stroke:'rgba(90,70,40,.55)','stroke-width':.5},g);E('circle',{cx:cx+dx,cy:by+dy,r:1,fill:'#7a5a3a'},g)});
+ // tělo (kužel)
+ E('path',{d:`M${cx-rx} ${by} Q${cx} ${by+ry*2} ${cx+rx} ${by} L${cx+2} ${ay} L${cx-2} ${ay}Z`,fill:'#f3ecdb',stroke:'#cfc3a4','stroke-width':.6},g);
+ // stínovaná pravá polovina
+ E('path',{d:`M${cx+3} ${ay} L${cx+rx} ${by} Q${cx+8} ${by+ry*1.8} ${cx+2} ${by+ry*1.7}Z`,fill:'rgba(120,100,70,.22)'},g);
+ // švy
+ [-12,-6,6,12].forEach(dx=>E('path',{d:`M${cx+dx*.1} ${ay+2} L${cx+dx*1.4} ${by+2}`,stroke:'rgba(160,140,105,.55)','stroke-width':.5,fill:'none'},g));
+ // vchod
+ E('path',{d:`M${cx-5} ${by+ry*1.6} L${cx-2.5} ${by-13} Q${cx} ${by-16} ${cx+2.5} ${by-13} L${cx+5} ${by+ry*1.6}Z`,fill:'#6b4a2b'},g);
+ E('path',{d:`M${cx-5} ${by+ry*1.6} L${cx-2.5} ${by-13} L${cx-8} ${by+ry*1.5}Z`,fill:'#e6dcc2',stroke:'#cfc3a4','stroke-width':.4},g);
+ // tyče nad vrcholem
+ [-9,-5,-2,2,5,9].forEach(dx=>E('line',{x1:cx+dx*.15,y1:ay+2,x2:cx+dx,y2:ay-11-Math.abs(dx)*-.3,stroke:'#c79a5a','stroke-width':1.1,'stroke-linecap':'round'},g));
+ E('circle',{cx,cy:ay,r:1.6,fill:'#9a7040'},g)}
 // chatky
 {const g=zone(Z.chatky);hl(g,'path',{d:'M274 98 L546 33 L558 66 L288 128Z M600 110 H632 V142 H600Z M814 2 H960 V42 H814Z M814 76 H960 V116 H814Z'});
  for(let i=0;i<10;i++)cabin(g,290+i*27.5,108-i*6.3,-13);
