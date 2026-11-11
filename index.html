@@ -1406,6 +1406,28 @@ section#o-kempu.ok2::before,section#o-kempu.ok2::after{display:none!important}
 .am-nav button svg{flex:none;opacity:.8}
 .am-nav button:hover{transform:translateY(-1px)}
 </style>
+<style id="am-card-v3">
+.am-card{padding:0}
+.am-card .bd{padding:24px 24px 18px}
+.am-card.hasph::before{display:none}
+.am-card .ph{height:150px;background-size:cover;background-position:center;position:relative;border-radius:23px 23px 0 0}
+.am-card .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,38,27,.25),transparent 40%,rgba(16,38,27,.35))}
+.am-card .bdg{position:absolute;left:14px;top:14px;z-index:1;background:rgba(16,38,27,.85);color:#fff;font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px}
+.am-card.hasph .am-x{background:rgba(16,38,27,.8);z-index:2}
+.am-card.hasph .bd{padding-top:18px}
+.am-card ul.chips{display:flex;flex-wrap:wrap;gap:7px;border-top:0;padding-top:0;margin-bottom:4px}
+.am-card ul.chips li{border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:5px 11px;font-size:12.5px;gap:0}
+.am-card ul.chips li::before{display:none}
+.am-card .row2{background:rgba(240,161,74,.12);border:0;border-radius:16px;padding:13px 16px;margin-top:14px;flex-wrap:nowrap}
+.am-card .pb{display:flex;flex-direction:column;gap:1px;min-width:0}
+.am-card .pb .price{font-size:26px;line-height:1.1;letter-spacing:-.03em}
+.am-card .pb small{display:block;font-size:12px;color:rgba(255,255,255,.62);letter-spacing:0;line-height:1.35}
+.am-card .row2 .btn{white-space:nowrap;flex:none}
+.am-card .am-nav{margin-top:14px;gap:10px;justify-content:space-between}
+.am-card .am-nav button{flex:none;border:0;background:none;color:rgba(255,255,255,.7);font-size:12.5px;font-weight:600;padding:6px 2px;max-width:48%}
+.am-card .am-nav button:hover{background:none;color:#fff;transform:none}
+@media (max-width:700px){.am-card .ph{display:none}}
+</style>
 </head>
 <body>
 
@@ -2604,12 +2626,19 @@ list.replaceChildren();GRPS.forEach(([t,ks])=>{const h=document.createElement('d
     b.innerHTML=`<span class="n">${icon(o.k,16)}</span>${o.n}${PR[k]?`<span class="pr">${PR[k]}</span>`:''}`;b.addEventListener('click',()=>select(cur===o?null:o));list.append(b);o.btn=b})});
 D.forEach(o=>{
   [o.g,o.mk].forEach(el=>{el.addEventListener('click',e=>{if(moved)return;e.stopPropagation();select(o)})})});
+const PH={stany:'img/stan.webp',podsad:'img/podsadovy.webp',teepee:'img/teepee.webp',chatky:'img/chatky_nova.webp',kiosek:'img/posezeni_u_vody.webp'},BDG={teepee:'Zážitek pro rodiny'};
 function render(o){if(!o){card.hidden=true;return}
   const i=D.indexOf(o),prev=D[(i+D.length-1)%D.length],next=D[(i+1)%D.length];
   card.hidden=false;card.style.setProperty('--c',o.c);card.style.animation='none';void card.offsetWidth;card.style.animation='';
-  card.innerHTML=`<button type="button" class="am-x" aria-label="Zavřít"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button><div class="t"><i>${icon(o.k,24)}</i><h3>${o.n}</h3></div><p>${o.d}</p><ul>${o.li.map(t=>`<li>${t}</li>`).join('')}</ul>
-   ${o.price?`<div class="row2"><span class="price">${o.price}<small>${o.unit}</small></span><a href="#rezervace" class="btn btn-sun">Poptat pobyt →</a></div>`:''}
-   <div class="am-nav"><button type="button" data-d="-1"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg><span>${prev.n}</span></button><button type="button" data-d="1"><span>${next.n}</span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div>`;
+  card.classList.toggle('hasph',!!PH[o.k]);
+  const chips=o.li.every(x=>x.length<=34),ar=d=>`<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
+  const un=o.price?o.unit.split(' · ').map(u=>`<small>${u}</small>`).join(''):'';
+  card.innerHTML=`<button type="button" class="am-x" aria-label="Zavřít"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+   ${PH[o.k]?`<div class="ph" style="background-image:url(${PH[o.k]})">${BDG[o.k]?`<span class="bdg">${BDG[o.k]}</span>`:''}</div>`:''}
+   <div class="bd"><div class="t"><i>${icon(o.k,24)}</i><h3>${o.n}</h3></div><p>${o.d}</p>
+   <ul class="${chips?'chips':''}">${o.li.map(t=>`<li>${t}</li>`).join('')}</ul>
+   ${o.price?`<div class="row2"><div class="pb"><span class="price">${o.price}</span>${un}</div><a href="#rezervace" class="btn btn-sun">Poptat pobyt</a></div>`:''}
+   <div class="am-nav"><button type="button" data-d="-1">${ar('M15 6l-6 6 6 6')}<span>${prev.n}</span></button><button type="button" data-d="1"><span>${next.n}</span>${ar('M9 6l6 6-6 6')}</button></div></div>`;
   card.querySelector('.am-x').onclick=()=>select(null);
   card.querySelectorAll('.am-nav button').forEach(b=>b.onclick=()=>select(+b.dataset.d<0?prev:next))}
 function select(o){cur=o;sec.classList.toggle('focus',!!o);
