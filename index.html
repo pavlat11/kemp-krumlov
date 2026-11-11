@@ -3459,7 +3459,7 @@ const TYPES=[
 const UNIT={stan:['Počet stanů','stan','stany','stanů'],karavan:['Počet karavanů','karavan','karavany','karavanů'],chatka:['Počet chatek','chatka','chatky','chatek'],teepee:['Počet teepee','teepee','teepee','teepee'],podsad:['Počet podsadových stanů','podsadový stan','podsadové stany','podsadových stanů']};
 const EXTRAS=[{k:'auto',n:'Auto',s:'200 Kč / noc'},{k:'moto',n:'Motorka',s:'100 Kč / noc'},{k:'elek',n:'Elektřina',s:'200 Kč / noc'},{k:'pes',n:'Pes',s:'50 Kč / noc'}];
 const PEOPLE=[{k:'dosp',n:'Dospělí',s:'od 15 let',min:1},{k:'dite',n:'Děti',s:'do 15 let',min:0},{k:'zak',n:'Žáci a studenti',s:'zvýhodněně jen ve vlastním stanu',min:0}];
-const S={type:'stan',q:{stan:0,karavan:0,chatka:0,teepee:0,podsad:0},dosp:2,dite:0,zak:0,units:1,auto:0,moto:0,elek:0,pes:0,from:null,to:null};
+const S={type:'stan',q:{stan:0,karavan:0,chatka:0,teepee:0,podsad:0},dosp:1,dite:0,zak:0,units:1,auto:0,moto:0,elek:0,pes:0,from:null,to:null};
 const fmt=n=>Math.round(n).toLocaleString('cs-CZ')+'\u00a0Kč';
 const plural=(n,a,b,c)=>n===1?a:n>=2&&n<=4?b:c;
 const T=()=>TYPES.find(t=>t.k===S.type);
