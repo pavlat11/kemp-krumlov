@@ -2460,8 +2460,8 @@ const DOCKS=[760,905,1010,1160];
 // přístaviště podél celého břehu
 {const g=zone(Z.lode);hl(g,'path',{d:'M470 452 L560 430 L660 410 L800 394 L950 375 L1050 360 L1270 342 L1270 372 L1050 388 L950 402 L800 420 L660 440 L560 462 L470 486Z'});
  const bc=['#e8b23a','#d64545','#3a8fb7','#f2f2f2','#4b8a5a'];
- for(let i=0;i<34;i++){const x=480+i*23+R()*8;if(x>604&&x<672)continue;if(DOCKS.some(d=>Math.abs(x-d)<16))continue;boat(g,x,bank(x)-5+R()*3,-8+R()*16,bc[i%5])}
- raft(g,700,432,'#e8b23a',-8);raft(g,880,412,'#d64545',-6);raft(g,1110,385,'#e8b23a',-4);boat(g,620,447,-10,'#3a8fb7');
+ for(let i=0;i<34;i++){const x=480+i*23+R()*8;if(x<672)continue;if(DOCKS.some(d=>Math.abs(x-d)<16))continue;boat(g,x,bank(x)-5+R()*3,-8+R()*16,bc[i%5])}
+ raft(g,700,432,'#e8b23a',-8);raft(g,880,412,'#d64545',-6);raft(g,1110,385,'#e8b23a',-4);
  dl(1800,820,'Přístaviště po celém břehu',14,-4)}
 // kotviště (pláž pod parkovištěm)
 {const g=zone(Z.kotva);hl(g,'path',{d:'M150 508 L229 490 L271 478 L319 461 L334 515 L288 535 L248 550 L160 568Z'});
