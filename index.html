@@ -2677,7 +2677,7 @@ legH();
  const pad=[[-4.5,-1.6,'#3a8fb7'],[-1.5,1.6,'#d64545'],[1.5,-1.6,'#4b8a5a'],[4.5,1.6,'#f4f4f4']].forEach(([x,y,c])=>E('circle',{cx:x,cy:y,r:1.5,fill:c,stroke:'rgba(0,0,0,.3)','stroke-width':.3},rg));
  const ln=(a,b,k)=>a+(b-a)*k,eo=k=>1-Math.pow(1-k,3),ei=k=>k*k*(3-2*k);
  const path=(P,k)=>{const n=P.length-1,f=Math.min(n-.0001,Math.max(0,k*n)),i=Math.floor(f),u=f-i;return [ln(P[i][0],P[i+1][0],u),ln(P[i][1],P[i+1][1],u)]};
- const IN=[[-70,672],[100,612],[262,579]],OUT=[[262,579],[380,516],[494,470],[600,440]],ROT=-17,LOOP=22000;
+ const IN=[[-70,672],[100,612],[257,564]],OUT=[[257,564],[380,516],[494,470],[600,440]],ROT=-17,LOOP=22000;
  let clock=0,last=null,vis=true;
  new IntersectionObserver(e=>{vis=e[0].isIntersecting}).observe(sec);
  (function tick(t){requestAnimationFrame(tick);if(last===null)last=t;const dt=Math.min(100,t-last);last=t;if(!vis)return;clock=(clock+dt)%LOOP;
