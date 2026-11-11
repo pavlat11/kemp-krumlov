@@ -2230,7 +2230,7 @@ const D=[
  {k:'lode',f:{x:940,y:680,w:1600,h:200},n:'Přístaviště',c:'#2a8bb0',m:[1880,750],
   d:'Přistát můžete kdekoli podél břehu kempu. Lodě necháte na trávě u vody, pár kroků od stanu i kiosku.',
   li:['Přistání po celé délce břehu','Lodě necháte na břehu u kempu','Vltava, ř. km 280,9']},
- {k:'kotva',f:{x:520,y:830,w:480,h:300},n:'Kotviště',c:'#2f6fb0',m:[790,1014],
+ {k:'kotva',f:{x:270,y:850,w:480,h:300},n:'Kotviště',c:'#2f6fb0',m:[470,1040],
   d:'Kotviště je pláž u řeky hned pod parkovištěm. Zakotvíte loď a máte to kousek do kempu.',
   li:['Pláž pod parkovištěm','Bez mola, bez vyznačení bójemi']},
  {k:'hriste',f:{x:1170,y:720,w:230,h:150},n:'Dětské hřiště',c:'#d6457a',m:[1284,768],
@@ -2417,7 +2417,7 @@ const DOCKS=[760,905,1010,1160];
  const rc=['#e8b23a','#d64545','#3a6ea5','#f2f2f2','#4b8a5a'];
  for(let i=0;i<8;i++){boat(g,-19,352+i*21,90,rc[i%5]);boat(g,5,352+i*21,90,rc[(i+2)%5])}
  // malá dřevěná bouda půjčovny (stejný náklon jako ostatní budovy)
- roofB(g,142,471,26,18,'#a8713a',0,11,true);
+ roofB(g,180,471,40,18,'#a8713a',0,12);
  dl(-14,1098,'Půjčovna lodí PE-LA',14)}
 // dětské hřiště
 {const g=zone(Z.hriste);hl(g,'rect',{x:614,y:378,width:56,height:44,rx:6,transform:'rotate(-5 642 400)'});
@@ -2434,8 +2434,8 @@ const DOCKS=[760,905,1010,1160];
  raft(g,700,432,'#e8b23a',-8);raft(g,880,412,'#d64545',-6);raft(g,1110,385,'#e8b23a',-4);boat(g,620,447,-10,'#3a8fb7');
  dl(1800,820,'Přístaviště po celém břehu',14,-4)}
 // kotviště (pláž pod parkovištěm)
-{const g=zone(Z.kotva);hl(g,'rect',{x:300,y:460,width:130,height:36,rx:12});
- dl(790,1110,'Kotviště',15)}
+{const g=zone(Z.kotva);hl(g,'rect',{x:176,y:468,width:130,height:36,rx:12,transform:'rotate(-8 240 486)'});
+ dl(480,1130,'Kotviště',15)}
 // louka pro stany
 {const g=zone(Z.stany);hl(g,'path',{d:'M600 140 L965 128 L1010 165 L1010 300 L960 330 L870 352 L700 372 L615 380 L598 300Z'});
  van(g,632,212,-80,24,10);van(g,786,178,-80,20,10);van(g,826,193,0,30,9);van(g,752,190,0,12,7);van(g,1003,195,0,14,8);van(g,710,220,0,10,7);
