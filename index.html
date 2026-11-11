@@ -2429,13 +2429,14 @@ const DOCKS=[760,905,1010,1160];
  E('rect',{x:478,y:318,width:42,height:24,fill:'#3c9aa0',filter:'url(#amSh)'},g);E('rect',{x:520,y:312,width:36,height:30,fill:'#d9dbd6',filter:'url(#amSh)'},g);
  E('rect',{x:555,y:296,width:34,height:44,fill:'#e7ddc6'},g);
  [[566,312,'#d64545'],[580,330,'#f4f4f4'],[566,330,'#d64545']].forEach(([x,y,c])=>{E('circle',{cx:x+1.5,cy:y+1.5,r:6,fill:'rgba(0,0,0,.25)'},g);E('circle',{cx:x,cy:y,r:6,fill:c},g)});
- // posezení u stromů: lavička – stůl – lavička
+ // posezení u stromů: lavička – stůl – lavička (otočeno o 90°)
  [[468,372],[507,372],[546,372]].forEach(([x,y])=>{
-  E('rect',{x:x+1,y:y+1,width:26,height:22,rx:2,fill:'rgba(15,40,22,.25)'},g);
-  const bn=yy=>{E('rect',{x:x+1,y:yy,width:24,height:4,rx:1,fill:'#a8713a',stroke:'#6b4423','stroke-width':.5},g)};
+  const s=G(g,{transform:`translate(0 14) rotate(90 ${x+13} ${y+11.5})`});
+  E('rect',{x:x+1,y:y+1,width:26,height:22,rx:2,fill:'rgba(15,40,22,.25)'},s);
+  const bn=yy=>{E('rect',{x:x+1,y:yy,width:24,height:4,rx:1,fill:'#a8713a',stroke:'#6b4423','stroke-width':.5},s)};
   bn(y);
-  E('rect',{x,y:y+6.5,width:26,height:9,rx:1.5,fill:'#c9955c',stroke:'#6b4423','stroke-width':.6,filter:'url(#amSh)'},g);
-  E('line',{x1:x+1,y1:y+11,x2:x+25,y2:y+11,stroke:'rgba(70,40,15,.35)','stroke-width':.5},g);
+  E('rect',{x,y:y+6.5,width:26,height:9,rx:1.5,fill:'#c9955c',stroke:'#6b4423','stroke-width':.6,filter:'url(#amSh)'},s);
+  E('line',{x1:x+1,y1:y+11,x2:x+25,y2:y+11,stroke:'rgba(70,40,15,.35)','stroke-width':.5},s);
   bn(y+18)});
  dl(1030,724,'Kiosek a občerstvení',15)}
 // půjčovna lodí PE-LA
