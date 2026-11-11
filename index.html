@@ -2683,7 +2683,7 @@ legH();
  const PC=['#3a8fb7','#d64545','#4b8a5a','#f4f4f4'],PO=[[-4.5,-1.6],[-1.5,1.6],[1.5,-1.6],[4.5,1.6]];
  /* 1: raft na vodě */
  const rg=G(act,{});raft(rg,0,0,'#e8b23a',0);PO.forEach(([x,y],i)=>E('circle',{cx:x,cy:y,r:1.5,fill:PC[i],stroke:'rgba(0,0,0,.3)','stroke-width':.3},rg));
- const IN=[[28,652],[110,614],[257,564]],ROT=-17;
+ const IN=[[-70,672],[100,612],[257,564]],RET=[[257,564],[195,583],[132,603]],ROT=-17;
  /* 2: dodávka s raftem na střeše + lidé */
  const vg=G(act,{});van(vg,0,0,0,26,11);
  const rr=G(act,{});raft(rr,0,0,'#d64545',0);E('rect',{x:-6,y:-1,width:12,height:2,fill:'rgba(0,0,0,.18)'},rr);
@@ -2692,11 +2692,13 @@ legH();
  let cA=0,cB=0,last=null,vis=true;
  new IntersectionObserver(e=>{vis=e[0].isIntersecting}).observe(sec);
  (function tick(t){requestAnimationFrame(tick);if(last===null)last=t;const dt=Math.min(100,t-last);last=t;if(!vis)return;
-  cA=(cA+dt)%18000;cB=(cB+dt)%28000;
-  /* raft na vodě */
+  cA=(cA+dt)%24000;cB=(cB+dt)%28000;
+  /* raft na vodě: připlouvá, stojí, lidé ho vrací do půjčovny */
   {const s=cA/1000;let x,y,r=ROT,op=1,show=true;
    if(s<6){const k=eo(s/6),p=path(IN,k);x=p[0];y=p[1]+Math.sin(s*2)*.5;r=ROT+(1-k)*6;op=cl(s/.8)}
-   else{x=IN[2][0];y=IN[2][1]+Math.sin(s*2)*.4;if(s>=12)op=Math.max(0,1-(s-12)/1.2);if(s>=13.2)show=false}
+   else if(s<10){x=IN[2][0];y=IN[2][1]+Math.sin(s*2)*.4}
+   else if(s<17){const k=ei((s-10)/7),p=path(RET,k);x=p[0];y=p[1]+Math.sin(s*2)*.4;r=ROT+3;if(s>=16)op=Math.max(0,1-(s-16))}
+   else show=false;
    rg.style.display=show?'':'none';rg.style.opacity=op;if(show)place(rg,x,y,r,1.7,1.7)}
   /* dodávka */
   {const s=cB/1000;let x=VAN[0],y=VAN[1],f=1,show=true;
