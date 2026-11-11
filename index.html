@@ -2234,7 +2234,7 @@ const D=[
  {k:'kotva',f:{x:270,y:910,w:480,h:300},n:'Kotviště',c:'#2f6fb0',m:[470,1100],
   d:'Kotviště je pláž u řeky hned pod parkovištěm. Zakotvíte loď a máte to kousek do kempu.',
   li:['Pláž pod parkovištěm','Bez mola, bez vyznačení bójemi']},
- {k:'recepce',f:{x:780,y:600,w:260,h:200},n:'Recepce',c:'#b6513e',m:[836,712],
+ {k:'recepce',f:{x:780,y:600,w:260,h:200},n:'Recepce',c:'#b6513e',m:[902,652],
   d:'Recepce kempu u vjezdu s malou budkou a závorou. Tady se ubytujete a vyřídíte pobyt.',
   li:['Příjezd a ubytování','Informace o kempu']},
  {k:'hriste',f:{x:1170,y:720,w:230,h:150},n:'Dětské hřiště',c:'#d6457a',m:[1284,768],
@@ -2441,12 +2441,12 @@ const DOCKS=[760,905,1010,1160];
 {const g=zone(Z.kotva);hl(g,'rect',{x:176,y:484,width:130,height:36,rx:12,transform:'rotate(-8 240 502)'});
  dl(480,1190,'Kotviště',15)}
 // recepce (budka + závora na začátku budovy)
-{const g=zone(Z.recepce);hl(g,'rect',{x:432,y:322,width:56,height:36,rx:8});
+{const g=zone(Z.recepce);hl(g,'rect',{x:430,y:326,width:44,height:72,rx:8});
  roofB(g,440,334,22,15,'#b6513e',0,9);
- E('rect',{x:464,y:344,width:4,height:10,rx:1,fill:'#4a4a4a',filter:'url(#amSh)'},g);
- const bar=G(g,{transform:'rotate(6 466 347)'});
- E('rect',{x:466,y:345,width:16,height:3,rx:1,fill:'#f4f4f4',stroke:'rgba(0,0,0,.35)','stroke-width':.4},bar);
- [468,473.5,479].forEach(x=>E('rect',{x,y:345,width:2.5,height:3,fill:'#d64545'},bar));
+ // závora: sloupek u budky a rameno směrem dolů k cestě
+ E('rect',{x:440,y:349,width:7,height:4,rx:1,fill:'#4a4a4a',filter:'url(#amSh)'},g);
+ E('rect',{x:441,y:352,width:5,height:40,rx:1,fill:'#f4f4f4',stroke:'rgba(0,0,0,.35)','stroke-width':.4},g);
+ [355,363,371,379].forEach(y=>E('rect',{x:441,y,width:5,height:3.5,fill:'#d64545'},g));
  dl(900,776,'Recepce',13)}
 // louka pro stany
 {const g=zone(Z.stany);hl(g,'path',{d:'M600 140 L965 128 L1010 165 L1010 300 L960 330 L870 352 L700 372 L615 380 L598 300Z'});
