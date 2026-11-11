@@ -2698,7 +2698,7 @@ legH();
  const BO=[[-12,-5],[12,5]],R2=Math.PI/180;
  const ang=(P,k)=>{const a=path(P,cl(k)),b=path(P,cl(k)+.01);let d=Math.atan2(b[1]-a[1],b[0]-a[0])/R2;return d};
  const loc=(vx,vy,h,lx,ly)=>{lx*=1.6;ly*=1.6;return [vx+lx*Math.cos(h*R2)-ly*Math.sin(h*R2),vy+lx*Math.sin(h*R2)+ly*Math.cos(h*R2)]};
- const IN=[[-70,672],[100,612],[257,564]],CARRY=[[257,564],[222,566],[188,540],[184,496],[196,462]],ROT=-17,RC=-117;
+ const IN=[[-70,672],[100,612],[257,564]],CARRY=[[257,564],[274,545],[274,508],[258,482],[228,472],[198,464]],ROT=-17,RC=-117;
  let c=0,last=null,vis=true;
  new IntersectionObserver(e=>{vis=e[0].isIntersecting}).observe(sec);
  (function tick(t){requestAnimationFrame(tick);if(last===null)last=t;const dt=Math.min(100,t-last);last=t;if(!vis)return;
