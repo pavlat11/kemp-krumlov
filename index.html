@@ -2694,7 +2694,7 @@ legH();
  const W2=['#3a8fb7','#d64545','#4b8a5a','#f4f4f4','#8e5bb5','#e07b2e'].map(c=>E('circle',{r:3,fill:c,stroke:'rgba(0,0,0,.4)','stroke-width':.5},act));
  [rg2,bg2].forEach(g=>g.style.display='none');W2.forEach(d=>d.style.display='none');
  const P0=[172,526],OUT=[[172,526],[150,531],[125,545],[95,556],[40,558],[-40,558],[-110,562]],INV=OUT.slice().reverse();
- const CR=[[196,462],[184,494],[177,511]],CB=[[214,458],[208,492],[205,510]];
+ const CR=[[198,462],[197,490],[194,511]],CB=[[186,458],[179,492],[174,511]];
  const BO=[[-12,-5],[12,5]],R2=Math.PI/180;
  const ang=(P,k)=>{const a=path(P,cl(k)),b=path(P,cl(k)+.01);let d=Math.atan2(b[1]-a[1],b[0]-a[0])/R2;return d};
  const loc=(vx,vy,h,lx,ly)=>{lx*=1.6;ly*=1.6;return [vx+lx*Math.cos(h*R2)-ly*Math.sin(h*R2),vy+lx*Math.sin(h*R2)+ly*Math.cos(h*R2)]};
