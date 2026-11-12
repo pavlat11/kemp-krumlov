@@ -5224,8 +5224,6 @@ var sx=null;lb.addEventListener('touchstart',function(e){sx=e.touches[0].clientX
 r.querySelectorAll('.gl-f button').forEach(function(b){b.addEventListener('click',function(){r.querySelectorAll('.gl-f button').forEach(function(x){x.classList.toggle('on',x===b)});var f=b.dataset.f;grid.classList.toggle('all',f==='all');if(f!=='all'){grid.classList.remove('lim')}else if(mw&&!mw.hidden){grid.classList.add('lim')}if(mw)mw.style.display=(f==='all'&&grid.classList.contains('lim'))?'':'none';it.forEach(function(x){x.classList.toggle('hide',f!=='all'&&x.dataset.c!==f)})})})})();</script>
 
 <script id="a11y-js">(function(){
- /* respektovat nastavení „omezit pohyb“ – animace se rovnou pozastaví */
- try{if(matchMedia('(prefers-reduced-motion: reduce)').matches&&window.__setAnimPaused){var go=function(){window.__setAnimPaused(true)};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go()}}catch(e){}
  var sk=document.querySelector('.skip-link'),ob=document.getElementById('obsah');if(sk&&ob)sk.addEventListener('click',function(e){e.preventDefault();ob.focus();ob.scrollIntoView()});
  /* galerie: fokus zůstane uvnitř otevřeného prohlížeče */
  var lb=document.getElementById('glLb');if(lb)lb.addEventListener('keydown',function(e){if(e.key!=='Tab')return;var f=[].slice.call(lb.querySelectorAll('button'));var i=f.indexOf(document.activeElement);if(e.shiftKey&&i<=0){e.preventDefault();f[f.length-1].focus()}else if(!e.shiftKey&&i===f.length-1){e.preventDefault();f[0].focus()}});
