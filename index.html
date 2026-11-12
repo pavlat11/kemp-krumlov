@@ -1442,11 +1442,12 @@ section#o-kempu.ok2::before,section#o-kempu.ok2::after{display:none!important}
 <li><a class="" href="#rezervace">Rezervace</a></li>
 <li><a href="#areal">Mapa kempu</a></li>
 <li><a href="#vodaci">Pro vodáky</a></li>
+<li class="pela"><a href="#pela">Půjčovna lodí<sup>PE-LA</sup></a></li>
 <li><a href="#okoli">Okolí</a></li>
 <li><a href="#kontakt">Kontakt</a></li>
 </ul>
 <div class="nav-r">
-<button type="button" id="animToggle" aria-pressed="false" aria-label="Pozastavit animace" title="Pozastavit animace"><svg class="ic-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg><svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button>
+
 <div class="lang-switch" aria-label="Výběr jazyka">
 <button type="button" class="lang-current" aria-expanded="false" aria-haspopup="true"><span class="flag flag-cz" aria-hidden="true"></span><span class="sr-lang">Čeština</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 7.5 10 12l5-4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 <div class="lang-menu" role="menu">
@@ -1455,6 +1456,7 @@ section#o-kempu.ok2::before,section#o-kempu.ok2::after{display:none!important}
 <button type="button" role="menuitem" data-lang="DE"><span class="flag flag-de" aria-hidden="true"></span><span>Deutsch</span></button>
 </div></div>
 <a class="btn btn-sun" href="#rezervace"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><rect height="16" rx="2" width="18" x="3" y="5"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Rezervovat</a>
+<button type="button" id="animToggle" aria-pressed="false" aria-label="Pozastavit animace" title="Pozastavit animace"><svg class="ic-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg><svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button>
 <button aria-expanded="false" aria-label="Menu" class="burger" id="burger" onclick="const m=document.getElementById('menu');m.classList.toggle('open');this.setAttribute('aria-expanded',m.classList.contains('open'))" type="button"><svg fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewBox="0 0 24 24" width="22"><path d="M4 8h16M4 16h16"></path></svg></button>
 </div>
 </div>
@@ -3405,7 +3407,8 @@ body.rz-inview #callbar{transform:translateY(140px)!important}
 @media not all{#rezervace *{animation:none!important;transition:none!important}}
 
 @media(max-width:900px){#rezervace .rz-pc .rz-st button{width:34px;height:34px;font-size:18px}#rezervace .rz-pc .rz-st output{min-width:28px;font-size:20px}}
-</style><style id="rz-rows">
+</style><style id="menu-pela">#menu a{white-space:nowrap}#menu .pela a{font-weight:800}#menu .pela sup{background:#f4c430;color:#0f2219;font-size:9px;font-weight:800;line-height:1;padding:3px 5px;border-radius:6px;margin-left:5px;vertical-align:6px;letter-spacing:.04em}</style>
+<style id="rz-rows">
 #rezervace .rz-types{display:flex!important;flex-direction:column;gap:10px}
 #rezervace .rz-row{display:grid;grid-template-columns:132px minmax(0,1fr) auto;gap:16px;align-items:center;padding:9px;border:1.5px solid #ece5d7;border-radius:20px;background:#fff;transition:border-color .2s,box-shadow .2s,background .2s}
 #rezervace .rz-row.on{border-color:#173b2a;background:#fbf8f2;box-shadow:0 10px 24px -16px #173b2a99}
