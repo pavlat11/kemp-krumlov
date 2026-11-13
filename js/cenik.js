@@ -107,18 +107,25 @@ if(tb){
   var th=HZ&&document.querySelector('#rzPrice thead th small');var MZ=function(m){return JZ!=='cs'&&window.KKL?KKL.mesic(m-1):KKC.mesic[m-1]};if(th)th.textContent=MZ(C.sezona.hlavniOd)+'–'+MZ(C.sezona.hlavniDo);
   var no=document.querySelector('#rzPrice .note');if(no)no.textContent=L('Ceny za noc.')+((C.slevy||[]).length?' '+L('Sleva:')+' '+KKC.slevyText()+'.':'');
 }
-/* ---- 3) přepínač Kč / € v ceníku ---- */
-var dlgH=document.querySelector('#rzPrice .rz-dlg-h'),P=window.KKP;
-if(dlgH&&P&&P.euraPovolena&&!P.EDIT){
+/* ---- 3) přepínač Kč / € – v ceníku, v kalkulačce rezervace a u dopravy ---- */
+var P=window.KKP;
+if(P&&P.euraPovolena&&!P.EDIT){
   var EN=P.jazyk==='en',DE=P.jazyk==='de';
-  var sw=document.createElement('div');sw.className='kk-mena';sw.setAttribute('role','group');sw.setAttribute('aria-label',EN?'Currency':DE?'Währung':'Měna');sw.setAttribute('data-bez-meny','');
-  sw.innerHTML='<button type="button" data-m="CZK">Kč</button><button type="button" data-m="EUR">€</button>';
-  dlgH.insertBefore(sw,dlgH.querySelector('.rz-dlg-x'));
+  var prepinac=function(kam,pred,trida){if(!kam)return;
+    var sw=document.createElement('div');sw.className='kk-mena'+(trida?' '+trida:'');sw.setAttribute('role','group');sw.setAttribute('aria-label',EN?'Currency':DE?'Währung':'Měna');sw.setAttribute('data-bez-meny','');
+    sw.innerHTML='<button type="button" data-m="CZK">Kč</button><button type="button" data-m="EUR">€</button>';
+    kam.insertBefore(sw,pred||null);
+    sw.addEventListener('click',function(e){var b=e.target.closest('button');if(b){P.nastavMenu(b.dataset.m);stavM()}});
+  };
+  var dlgH=document.querySelector('#rzPrice .rz-dlg-h');
+  prepinac(dlgH,dlgH&&dlgH.querySelector('.rz-dlg-x'));
+  var kh=document.querySelector('.rz-card-h');prepinac(kh,document.getElementById('rzSeason'),'kk-mena--tmavy');
+  var dr=document.querySelector('#doprava .dp-res-p');prepinac(dr,null,'kk-mena--tmavy');
+  var rb=document.querySelector('.rz-bar-sum');prepinac(rb,null,'kk-mena--tmavy kk-mena--bar');
   var poz=document.createElement('p');poz.className='kk-mena-pozn';poz.setAttribute('data-bez-meny','');
   poz.textContent=EN?'Euro prices are approximate (1 € = '+P.kurz+' CZK). Payment is in CZK.':DE?'Preise in Euro sind ungefähr (1 € = '+P.kurz+' CZK). Bezahlt wird in CZK.':'Ceny v eurech jsou orientační (1 € = '+P.kurz+' Kč). Platí se v korunách.';
   var tab=document.querySelector('#rzPrice table');if(tab&&tab.parentNode)tab.parentNode.insertBefore(poz,tab);
-  var stavM=function(){var m=P.mena();[].forEach.call(sw.children,function(b){b.setAttribute('aria-pressed',String(b.dataset.m===m))});poz.hidden=m!=='EUR'};
-  sw.addEventListener('click',function(e){var b=e.target.closest('button');if(b){P.nastavMenu(b.dataset.m);stavM()}});
+  var stavM=function(){var m=P.mena();[].forEach.call(document.querySelectorAll('.kk-mena button'),function(b){b.setAttribute('aria-pressed',String(b.dataset.m===m))});poz.hidden=m!=='EUR'};
   document.addEventListener('kk-mena',stavM);stavM();
 }
 var dh=document.querySelector('.rz-disc-hint');if(dh)dh.textContent=(C.slevy||[]).length?L('Sleva:')+' '+KKC.slevyText():'';

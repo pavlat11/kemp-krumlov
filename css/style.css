@@ -3020,3 +3020,12 @@ span.tw{color:inherit!important;font:inherit!important;letter-spacing:inherit!im
 .kk-bez-animaci *,.kk-bez-animaci *::before,.kk-bez-animaci *::after{animation-duration:0s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:0s!important;transition-delay:0s!important}
 .kk-bez-animaci .reveal,.kk-bez-animaci .pp-r{opacity:1!important;transform:none!important}
 footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-width:100%}
+/* přepínač měny v kalkulačkách */
+.rz-card-h .kk-mena{margin-left:auto;margin-right:8px}
+.kk-mena--tmavy{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.28)}
+.kk-mena--tmavy button{color:#fff;padding:6px 11px;min-height:30px;font-size:13px}
+.kk-mena--tmavy button[aria-pressed=true]{background:#fff;color:#0b2419}
+.kk-mena--tmavy button:focus-visible{outline-color:#f4a64a}
+.dp-res-p .kk-mena{margin-top:10px;align-self:flex-end}
+.rz-bar-sum .kk-mena{display:none}
+@media(max-width:900px){.rz-bar-sum .kk-mena{display:inline-flex;align-self:flex-start;margin-top:5px;padding:2px}.rz-bar-sum .kk-mena button{padding:4px 10px;min-height:26px;min-width:36px;font-size:12px}}
