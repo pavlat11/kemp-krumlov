@@ -88,9 +88,9 @@ const isHi=d=>KC.hlavni(d.getMonth());
 const BUSY=window.RZ_OBSAZENO||{};
 const isBusyK=(k,d)=>(BUSY[k]||[]).includes(iso(d));
 /* KONKRÉTNÍ MÍSTA: chatky a podsadové stany mají čísla, host si vybere které. Obsazenost jednoho místa: RZ_OBSAZENO['chatka-4']=[noci]
-   Rozložení (skupiny podle polohy v kempu) jde přepsat v ceníku: KKC.data.mista={chatka:[['Název skupiny',od,do,'sloupec'],…]} – skupiny se stejným sloupcem jsou pod sebou */
-const MISTA=Object.assign({chatka:[['Vlevo – řada 1–10',1,10,'vlevo'],['Vpravo – horní řada',11,15,'vpravo'],['Vpravo – dolní řada',16,20,'vpravo']],podsad:[['Řada 1–11',1,11]]},KC.data.mista||{});
-const CNT={};Object.keys(MISTA).forEach(k=>{CNT[k]=MISTA[k].reduce((a,g)=>Math.max(a,g[2]),0);S.c[k]=[]});
+   Rozložení (skupiny podle polohy v kempu) jde přepsat v ceníku: KKC.data.mista={chatka:[['Název skupiny',od,do,'sloupec'] (od>do = čísla pozpátku),…]} – skupiny se stejným sloupcem jsou pod sebou */
+const MISTA=Object.assign({chatka:[['Vlevo nahoře',1,5,'vlevo'],['Vlevo dole',6,10,'vlevo'],['Nad sociálkami',20,11,'vpravo']],podsad:[['Řada 1–11',1,11]]},KC.data.mista||{});
+const CNT={};Object.keys(MISTA).forEach(k=>{CNT[k]=MISTA[k].reduce((a,g)=>Math.max(a,g[1],g[2]),0);S.c[k]=[]});
 const MAXQ=Object.assign({teepee:1},CNT);
 const isBusyU=(k,n,d)=>isBusyK(k,d)||(BUSY[k+'-'+n]||[]).includes(iso(d));
 const freeU=(k,n)=>{if(!S.from||!S.to)return true;for(let d=S.from;d<S.to;d=addD(d,1))if(isBusyU(k,n,d))return false;return true};
@@ -163,8 +163,8 @@ TYPES.forEach(t=>{if(!MISTA[t.k])return;const b=t.el,ch=t.k==='chatka';b.classLi
  const tg=document.createElement('button');tg.type='button';tg.className='rz-pick-t';tg.setAttribute('aria-expanded','false');b.querySelector('.tx').append(tg);t.tg=tg;
  const p=document.createElement('div');p.className='rz-pick';p.hidden=true;
  p.innerHTML=`<div class="rz-pick-h"><b>${KL.t(ch?'Vyberte si číslo chatky':'Vyberte si číslo stanu')}</b><small>${KL.t('Přeškrtnutá čísla jsou ve vašem termínu obsazená.')}</small></div><div class="rz-pick-g">`+
-  (()=>{const cols=[];MISTA[t.k].forEach((g,i)=>{const id=g[3]||i;let c=cols.find(x=>x.id===id);if(!c)cols.push(c={id,g:[],w:0});c.g.push(g);c.w=Math.max(c.w,g[2]-g[1]+1)});
-   return cols.map(c=>`<div class="rz-pick-c" style="--n:${c.w}">`+c.g.map(g=>{let h='';for(let n=g[1];n<=g[2];n++)h+=`<button type="button" class="rz-cn" data-n="${n}" aria-pressed="false">${n}</button>`;return `<div class="rz-pick-s" style="--n:${g[2]-g[1]+1}"><span>${KL.t(g[0])}</span><div>${h}</div></div>`}).join('')+'</div>').join('')})()+'</div>';
+  (()=>{const cols=[];MISTA[t.k].forEach((g,i)=>{const id=g[3]||i;let c=cols.find(x=>x.id===id);if(!c)cols.push(c={id,g:[],w:0});c.g.push(g);c.w=Math.max(c.w,Math.abs(g[2]-g[1])+1)});
+   return cols.map(c=>`<div class="rz-pick-c" style="--n:${c.w}">`+c.g.map(g=>{let h='';const st=g[2]>=g[1]?1:-1;for(let n=g[1];st>0?n<=g[2]:n>=g[2];n+=st)h+=`<button type="button" class="rz-cn" data-n="${n}" aria-pressed="false">${n}</button>`;return `<div class="rz-pick-s" style="--n:${Math.abs(g[2]-g[1])+1}"><span>${KL.t(g[0])}</span><div>${h}</div></div>`}).join('')+'</div>').join('')})()+'</div>';
  p.addEventListener('click',e=>{e.stopPropagation();const x=e.target.closest('.rz-cn');if(!x||x.disabled)return;const n=+x.dataset.n,c=S.c[t.k],i=c.indexOf(n);if(i>=0)c.splice(i,1);else c.push(n);c.sort((a,z)=>a-z);S.q[t.k]=c.length;render()});
  b.append(p);t.pick=p;t.cns=[...p.querySelectorAll('.rz-cn')];
  b.addEventListener('click',e=>{if(e.target.closest('.rz-st,.rz-pick'))return;t.open=!t.open;render()})});
