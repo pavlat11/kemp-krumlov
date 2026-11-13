@@ -1,0 +1,12 @@
+(function(){var r=document.getElementById('galerie');if(!r)return;var it=[].slice.call(r.querySelectorAll('.gl-i')),lb=document.getElementById('glLb'),im=lb.querySelector('img'),t=lb.querySelector('.t'),n=lb.querySelector('.n'),cur=0,last=null;
+var LIM=9,grid=r.querySelector('.gl-grid'),mb=r.querySelector('.gl-more-b'),mw=r.querySelector('.gl-more-w');it.forEach(function(x,i){if(i>=LIM)x.classList.add('extra')});if(mb){mb.querySelector('span').textContent='('+(it.length-LIM)+')';mb.addEventListener('click',function(){grid.classList.remove('lim');mw.hidden=true;mb.setAttribute('aria-expanded','true');var f=it[LIM]&&it[LIM].querySelector('button');if(f)f.focus({preventScroll:true})})}
+function vis(){return it.filter(function(x){return getComputedStyle(x).display!=='none'})}
+function show(i){var v=vis();cur=(i+v.length)%v.length;var e=v[cur].querySelector('img');im.src=e.src;im.alt=e.alt;t.textContent=e.alt;n.textContent=(cur+1)+' / '+v.length}
+function open(el){last=document.activeElement;show(vis().indexOf(el));lb.hidden=false;document.documentElement.style.overflow='hidden';lb.querySelector('.gl-x').focus()}
+function close(){lb.hidden=true;document.documentElement.style.overflow='';if(last)last.focus()}
+it.forEach(function(x){x.querySelector('button').addEventListener('click',function(){open(x)})});
+lb.querySelector('.gl-x').addEventListener('click',close);lb.querySelector('.gl-p').addEventListener('click',function(){show(cur-1)});lb.querySelector('.gl-n').addEventListener('click',function(){show(cur+1)});
+lb.addEventListener('click',function(e){if(e.target===lb)close()});
+addEventListener('keydown',function(e){if(lb.hidden)return;if(e.key==='Escape')close();else if(e.key==='ArrowLeft')show(cur-1);else if(e.key==='ArrowRight')show(cur+1)});
+var sx=null;lb.addEventListener('touchstart',function(e){sx=e.touches[0].clientX},{passive:true});lb.addEventListener('touchend',function(e){if(sx===null)return;var d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>45)show(cur+(d<0?1:-1));sx=null});
+r.querySelectorAll('.gl-f button').forEach(function(b){b.addEventListener('click',function(){r.querySelectorAll('.gl-f button').forEach(function(x){x.classList.toggle('on',x===b)});var f=b.dataset.f;grid.classList.toggle('all',f==='all');if(f!=='all'){grid.classList.remove('lim')}else if(mw&&!mw.hidden){grid.classList.add('lim')}if(mw)mw.style.display=(f==='all'&&grid.classList.contains('lim'))?'':'none';it.forEach(function(x){x.classList.toggle('hide',f!=='all'&&x.dataset.c!==f)})})})})();
