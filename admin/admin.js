@@ -92,12 +92,14 @@ addEventListener('beforeunload',function(e){if(neulozeno&&neulozeno()){e.prevent
 
 /* ---------- UPRAVIT WEB (stránka přímo v administraci) ---------- */
 function upravit(m){
-  var sir={pc:'100%',tab:'820px',mob:'390px'},J=jazykAdm(),LQ=J==='cs'?'':'&lang='+J;
+  var sir={pc:'100%',tab:'820px',mob:'390px'},J=jazykAdm(),LQ='&lang='+J;
   m.innerHTML='<div class="ph" style="margin-bottom:12px"><div><h1>Upravit web</h1><p>Klikněte na text, fotku nebo ikonu a upravte je. Tlačítkem Procházet vypnete úpravy a můžete na webu normálně klikat (kroky rezervace, místa na mapě).</p></div>'+
   '<div class="row" role="group" aria-label="Velikost náhledu"><button type="button" class="btn sm gh" data-w="pc" aria-pressed="true">Počítač</button><button type="button" class="btn sm gh" data-w="tab" aria-pressed="false">Tablet</button><button type="button" class="btn sm gh" data-w="mob" aria-pressed="false">Mobil</button>'+
   '<a class="btn sm gh" href="'+WEB+'?edit=1'+LQ+'" target="_blank" rel="noopener">Nová záložka '+SV(IC.ven,14)+'</a></div></div>'+
   '<div class="row" style="margin:-4px 0 12px;gap:12px;flex-wrap:wrap">'+jazykVolba()+(J!=='cs'?'<span class="mut">Upravujete překlad – klikněte na český text a napište '+(J==='en'?'anglický':'německý')+'. Co nepřeložíte, zůstane česky.</span>':'')+'</div>'+
   '<div class="frame"><iframe id="wf" title="Web Kemp Krumlov v editačním režimu" src="'+WEB+'index.html?edit=1'+LQ+'"></iframe></div>';jazykKlik(m);
+  /* jazyk přepnutý přímo v náhledu → srovnat tlačítka */
+  $('#wf').addEventListener('load',function(){try{var jw=this.contentWindow.KK_LANG;if(jw&&jw!==jazykAdm()){KK.LS.set('admin-jazyk',jw);$$('[data-jz]',m).forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.jz===jw))})}}catch(e){}});
   var f=$('#wf');
   neulozeno=function(){try{return !!(f.contentWindow.KKE&&f.contentWindow.KKE.neulozeno())}catch(e){return false}};
   $$('[data-w]',m).forEach(function(b){b.addEventListener('click',function(){$$('[data-w]',m).forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});f.style.width=sir[b.dataset.w]})});
