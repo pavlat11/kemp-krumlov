@@ -96,3 +96,15 @@ Jazyk webu: `?lang=en|de` (na serveru adresy `/en/`, `/de/`). `js/start.js` se n
 a použije překlady, fotky, ikony a převod na eura i na obsah, který vytvoří skripty později.
 Texty, ve kterých se mění čísla (počty nocí a osob, názvy měsíců v kalendáři), se pro EN/DE musí doplnit
 přímo do skriptů – překlad podle celého textu je nezachytí.
+
+## Uživatelé, role a práva
+
+- Role: `admin` (Správce – smí vše, spravuje uživatele) a `obsluha` (Obsluha – jen sekce povolené v právech).
+- Práva obsluhy podle sekcí administrace: `upravit`, `galerie`, `seo`, `rezervace`, `cenik`, `nastaveni` (Přehled a Můj účet vidí každý).
+- Náhled: účty v `kk.uzivatele` (heslo jen jako SHA-256 se solí), práva v `kk.prava`, přihlášení v `kk.session` – chrání jen před omylem.
+- Server (Laravel): tabulka `users` (jmeno, login, email, role, aktivni, password = bcrypt, posledni_prihlaseni), tabulka/nastavení `prava`;
+  přihlášení přes session (Sanctum/Breeze), každé API ověřuje roli a právo (middleware / Policy). Editační režim webu i ukládání
+  textů, fotek a ikon jen s právem `upravit`; ceník jen s `cenik` atd.
+- Endpointy: `POST /api/login {login, heslo}`, `POST /api/logout`, `GET /api/me`, `PUT /api/me` (jméno, e-mail), `PUT /api/me/heslo`,
+  `GET/POST /api/uzivatele`, `PUT/DELETE /api/uzivatele/{id}`, `PUT /api/uzivatele/{id}/heslo`, `GET/PUT /api/prava`.
+- Pravidla: aspoň jeden aktivní správce musí zůstat; sám sebe nelze smazat ani si změnit roli; heslo aspoň 8 znaků.
