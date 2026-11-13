@@ -2,7 +2,7 @@
 var sec=document.getElementById('areal'),intro=document.getElementById('amIntro');
 if(!sec||!intro||!window.__am)return;
 var AM=window.__am,Z=AM.Z,icon=AM.icon;
-var PR={chatky:'od 890 Kč',podsad:'300 Kč',teepee:'od 700 Kč',stany:'od 190 Kč'};
+var PR=window.KKC?{chatky:KKC.t('chatka','od'),podsad:KKC.t('podsad','od'),teepee:KKC.t('teepee','od'),stany:KKC.t('stan','od')}:{chatky:'od 890 Kč',podsad:'300 Kč',teepee:'od 700 Kč',stany:'od 190 Kč'};
 var TILES=['chatky','teepee','podsad','stany'],PILLS=['lode','pujcovna','kiosek','wc','parking','hriste'];
 var TXT={stany:'Louka pro stany'};
 /* ---------- obsah karty z dat mapy ---------- */

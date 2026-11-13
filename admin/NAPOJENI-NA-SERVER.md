@@ -19,6 +19,8 @@ KK.API_URL = '/api';
 | `KK.texty.vse`             | `GET /api/texty`                         | `{ "o-kempu.3": "<em>…</em>", … }` – jen změněné |
 | `KK.texty.uloz`            | `PUT /api/texty`                         | hodnota `null` = vrátit původní |
 | `KK.seo.nacti / uloz`      | `GET` / `PUT /api/seo`                   | objekt jako `KK.SEO_VYCHOZI` |
+| `KK.cenik.nacti / uloz`   | `GET` / `PUT /api/cenik`                 | celý ceník (formát `KKC.vychozi` v `js/cenik.js`) |
+| `KK.cenik.obnov`           | `DELETE /api/cenik`                      | návrat k výchozímu |
 | `KK.galerie.seznam`        | `GET /api/fotky`                         | seřazené podle `poradi` |
 | `KK.galerie.pridej`        | `POST /api/fotky` (multipart `fotky[]`, `kat`) | server zmenší na 1920 px + náhled 640 px, WebP |
 | `KK.galerie.uprav`         | `PATCH /api/fotky/{id}`                  | `popis`, `kat`, `viditelna` |
@@ -45,6 +47,26 @@ Na serveru šablona vypíše uložený text, pokud existuje, jinak původní:
 Texty s cenou mají navíc `data-cena` – ty se v editoru nemění, budou se brát z ceníku.
 HTML z editoru je vždy vyčištěné (`KK.cisti`) – povolené jen `em, strong, b, i, br, sup, small, u`.
 Na serveru je nutné totéž čištění zopakovat (nikdy nevěřit datům z prohlížeče).
+
+## Ceník
+
+Všechny ceny na webu jdou z `js/cenik.js`. Prvky s cenou mají atribut
+`data-c="klic:sloupec"` (`a` = sezóna / 1 den, `b` = mimo sezónu / vícedenní,
+`od` = nižší z obou s „od“). Server vypíše uložený ceník do stránky:
+
+```html
+<script>window.KK_CENIK_DATA = {{ Js::from($cenik) }};</script>
+```
+
+a `cenik.js` už se postará o úvod, karty ubytování, tabulku ceníku, mapu,
+dopravu, lodě i výpočet rezervace. Cenu poptávky musí server při přijetí
+spočítat znovu sám (nikdy nevěřit ceně poslané z prohlížeče).
+
+## Nastavení serveru (.env)
+
+Hesla a přístupy (databáze, e-mail, klíč aplikace) patří do `.env` – vzor je
+v `.env.example` v kořeni projektu. Obsah webu (texty, ceny, fotky, rezervace)
+do `.env` nepatří, je v databázi, aby ho šlo měnit v administraci.
 
 ## SEO
 

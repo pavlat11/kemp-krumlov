@@ -1,6 +1,6 @@
 (function(){
 var sec=document.getElementById('doprava');if(!sec)return;
-var STOPS=[["Vyšší Brod", 1150], ["Rožmberk nad Vltavou", 850], ["Nahořany", 650], ["Kemp Vltava", 550], ["Viking / Pískárna", 500], ["Vltavan / Spolí", 350], ["Centrum", 250], ["Zlatá Koruna", 350], ["Boršov", 900]],NS='http://www.w3.org/2000/svg';
+var STOPS=[["Vyšší Brod", 1150], ["Rožmberk nad Vltavou", 850], ["Nahořany", 650], ["Kemp Vltava", 550], ["Viking / Pískárna", 500], ["Vltavan / Spolí", 350], ["Centrum", 250], ["Zlatá Koruna", 350], ["Boršov", 900]];if(window.KKC)STOPS.forEach(function(x,i){var p=KKC.p("dop"+(i+1));if(p)x[1]=+p.a}),NS='http://www.w3.org/2000/svg';
 var W=480,H=740;
 function E(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
 /* ---------- geometrie: řeka teče shora dolů, silnice vpravo od ní ---------- */

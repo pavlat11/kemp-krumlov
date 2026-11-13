@@ -27,13 +27,13 @@ const icon=(k,s=24)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="
 const D=[
  {k:'parking',f:{x:340,y:430,w:540,h:440},n:'Parkoviště',c:'#55606b',m:[600,560],
   d:'Parkoviště u vjezdu do kempu, hned vedle občerstvení. Do historického centra dojdete pěšky.',
-  li:['Auto 200 Kč / den','Autobus 500 Kč / den – zdarma, pokud cestující bydlí v kempu','Parkovné platí do 24:00 daného dne']},
+  li:['Auto '+KKC.t('auto','a')+' / den','Autobus '+KKC.t('autobus','a')+' / den – zdarma, pokud cestující bydlí v kempu','Parkovné platí do 24:00 daného dne']},
  {k:'kiosek',f:{x:860,y:500,w:340,h:220},n:'Kiosek a občerstvení',c:'#e0912f',m:[1030,560],
   d:'Občerstvení přímo v kempu s posezením u vody. Kousek odtud vyplouvají lodě z půjčovny.',
-  li:['Občerstvení a pití','Posezení s výhledem na řeku','Úschovna bagáže 50 Kč / batoh']},
+  li:['Občerstvení a pití','Posezení s výhledem na řeku','Úschovna bagáže '+KKC.t('uschovna','a')+' / batoh']},
  {k:'wc',f:{x:850,y:270,w:280,h:190},n:'WC',c:'#5d6fb8',m:[976,330],
   d:'Nové sociální zařízení s WC a sprchami, pár kroků od louky i chatek.',
-  li:['Nové sprchy a WC','Sprcha na mince: 20 Kč / 4 minuty']},
+  li:['Nové sprchy a WC','Sprcha na mince: '+KKC.t('sprcha','a')+' / 4 minuty']},
  {k:'pujcovna',f:{x:-200,y:380,w:640,h:760},n:'Půjčovna lodí PE-LA',c:'#1f6f9a',m:[344,862],
   d:'Půjčovna lodí a raftů PE-LA hned za parkovištěm. Zapůjčíte si kánoe nebo raft a zajistí i přepravu osob a bagáže.',
   li:['Kánoe a rafty','Přeprava osob a bagáže','Hned vedle parkoviště']},
@@ -51,16 +51,16 @@ const D=[
   li:['Hned u kiosku','Výhled na řeku']},
  {k:'stany',f:{x:1190,y:250,w:850,h:520},n:'Louka pro stany',c:'#4f9a58',m:[1560,500],
   d:'Velká travnatá louka mezi řekou a chatkami pro vlastní stany a karavany.',
-  li:['Rezervace nutná až pro skupiny 15+ stanů','Elektřina 200 Kč / noc','Karavan 500 Kč / noc (mimo sezónu 300 Kč)'],price:'200 Kč',unit:'stan / noc · v sezóně'},
+  li:['Rezervace nutná až pro skupiny 15+ stanů','Elektřina '+KKC.t('elek','a')+' / noc','Karavan '+KKC.t('karavan','a')+' / noc (mimo sezónu '+KKC.t('karavan','b')+')'],price:KKC.t('stan','a'),unit:'stan / noc · v sezóně'},
  {k:'podsad',f:{x:1260,y:170,w:340,h:70},n:'Podsadové stany',c:'#2a7c86',m:[1430,200],
   d:'Řada postavených stanů na dřevěné podsadě podél cesty. Přijedete a rovnou se ubytujete.',
-  li:['Stan je postavený, nic nestavíte','Hned u cesty k sociálkám'],price:'300 Kč',unit:'stan / noc + osoby'},
+  li:['Stan je postavený, nic nestavíte','Hned u cesty k sociálkám'],price:KKC.t('podsad','a'),unit:'stan / noc + osoby'},
  {k:'teepee',f:{x:1720,y:360,w:140,h:100},n:'Teepee',c:'#d58a2c',m:[1786,330],
   d:'Velké indiánské teepee na louce pod chatkami. Zážitek hlavně pro rodiny s dětmi a party.',
-  li:['Stojí volně na louce','Kousek od chatek i sociálek'],price:'800 Kč',unit:'noc + osoby · mimo sezónu 700 Kč'},
+  li:['Stojí volně na louce','Kousek od chatek i sociálek'],price:KKC.t('teepee','a'),unit:'noc + osoby · mimo sezónu '+KKC.t('teepee','b')},
  {k:'chatky',f:{x:540,y:0,w:1400,h:310},n:'Chatky',c:'#b6513e',m:[1780,120],
   d:'Dřevěné chatky v klidné části kempu pod lesem a menší řada u vjezdu. Každá má kapacitu 7 osob a je včetně lůžkovin.',
-  li:['Kapacita 7 osob','Včetně lůžkovin','Platí se chatka + každá osoba','Školní kurzy: 200 Kč / osoba'],price:'990 Kč',unit:'chatka / noc + osoby · mimo sezónu 890 Kč'}
+  li:['Kapacita 7 osob','Včetně lůžkovin','Platí se chatka + každá osoba','Školní kurzy: '+KKC.t('skola','a')+' / osoba'],price:KKC.t('chatka','a'),unit:'chatka / noc + osoby · mimo sezónu '+KKC.t('chatka','b')}
 ];
 const Z={};D.forEach(o=>Z[o.k]=o);
 
@@ -391,7 +391,7 @@ function zoomBy(f,cx,cy){const {W}=size();cx??=vb.x+vb.w/2;cy??=vb.y+vb.h/2;cons
 
 /* ===== UI ===== */
 const GRPS=[['Ubytování',['chatky','podsad','teepee','stany']],['Na vodě',['lode','kotva','pujcovna']],['Služby',['recepce','kiosek','wc','parking','hriste']]];
-const PR={chatky:'od 890 Kč',podsad:'300 Kč',teepee:'od 700 Kč',stany:'od 190 Kč'};
+const PR={chatky:KKC.t('chatka','od'),podsad:KKC.t('podsad','od'),teepee:KKC.t('teepee','od'),stany:KKC.t('stan','od')};
 list.replaceChildren();GRPS.forEach(([t,ks])=>{const h=document.createElement('div');h.className='am-grp';h.textContent=t;list.append(h);
   ks.forEach(k=>{const o=Z[k];const b=document.createElement('button');b.type='button';b.className='am-f';b.style.setProperty('--c',o.c);
     b.innerHTML=`<span class="n">${icon(o.k,16)}</span>${o.n}${PR[k]?`<span class="pr">${PR[k]}</span>`:''}`;b.addEventListener('click',()=>select(cur===o?null:o));list.append(b);o.btn=b})});

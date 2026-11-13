@@ -88,6 +88,16 @@ KK.seo={
   upraveno:function(){return !!LS.get('seo',null)}
 };
 
+/* ---------------- CENÍK ----------------
+   Výchozí ceník je v js/cenik.js (KKC.vychozi). Ukládá se celý.
+   server: GET /api/cenik · PUT /api/cenik (server ho pak vypisuje do stránky jako window.KK_CENIK_DATA) */
+KK.cenik={
+  nacti:function(){if(KK.MODE==='server')return api('GET','/cenik');var u=LS.get('cenik',null);return Promise.resolve(u&&u.verze===1?u:null)},
+  uloz:function(c){if(KK.MODE==='server')return api('PUT','/cenik',c);LS.set('cenik',c);historie('Ceník','uloženo');return Promise.resolve(c)},
+  obnov:function(){if(KK.MODE==='server')return api('DELETE','/cenik');LS.del('cenik');historie('Ceník','vrácen na výchozí');return Promise.resolve()},
+  upraveno:function(){return !!LS.get('cenik',null)}
+};
+
 /* ---------------- GALERIE ----------------
    Fotka: {id, popis, kat:'ubyt'|'reka'|'vecer'|'', poradi, viditelna, w, h, src (cesta) | blob, nahled(blob), velikost, pridano}
    server: GET /api/fotky · POST /api/fotky (multipart, více souborů) · PATCH /api/fotky/{id} · DELETE /api/fotky/{id} · PUT /api/fotky/poradi [id,…] */
@@ -150,12 +160,12 @@ function historie(co,popis){var h=LS.get('historie',[]);h.unshift({kdy:Date.now(
 KK.historie=function(){return LS.get('historie',[])};
 KK.export=function(){return KK.galerie.seznam().then(function(f){
   return Promise.all(f.map(function(x){if(!x.blob)return x;return new Promise(function(ok){var r=new FileReader();r.onload=function(){var y=Object.assign({},x);y.blob=r.result;delete y.nahled;ok(y)};r.readAsDataURL(x.blob)})}))
-  .then(function(fotky){return{verze:1,datum:new Date().toISOString(),texty:LS.get('texty',{}),seo:LS.get('seo',null),fotky:fotky}})})};
+  .then(function(fotky){return{verze:1,datum:new Date().toISOString(),texty:LS.get('texty',{}),seo:LS.get('seo',null),cenik:LS.get('cenik',null),fotky:fotky}})})};
 KK.import=function(d){
   if(!d||d.verze!==1)return Promise.reject(new Error('Soubor není záloha administrace Kemp Krumlov.'));
-  LS.set('texty',d.texty||{});if(d.seo)LS.set('seo',d.seo);else LS.del('seo');
+  LS.set('texty',d.texty||{});if(d.seo)LS.set('seo',d.seo);else LS.del('seo');if(d.cenik)LS.set('cenik',d.cenik);else LS.del('cenik');
   var fotky=(d.fotky||[]).map(function(f){if(typeof f.blob==='string'){var p=f.blob.split(','),b=atob(p[1]),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);f.blob=new Blob([a],{type:(p[0].match(/:(.*?);/)||[])[1]||'image/webp'});f.nahled=f.blob}return f});
   return tx('readwrite',function(s){s.clear();fotky.forEach(function(f){s.put(f)})}).then(function(){if(fotky.length)LS.set('galerie',{v:1,zmena:Date.now()});else LS.del('galerie');historie('Záloha','obnovena ze souboru')});
 };
-KK.reset=function(){['texty','seo','galerie','historie'].forEach(LS.del);return tx('readwrite',function(s){s.clear()})};
+KK.reset=function(){['texty','seo','cenik','galerie','historie'].forEach(LS.del);return tx('readwrite',function(s){s.clear()})};
 })();
