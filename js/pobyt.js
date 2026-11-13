@@ -89,7 +89,7 @@ const BUSY=window.RZ_OBSAZENO||{};
 const isBusyK=(k,d)=>(BUSY[k]||[]).includes(iso(d));
 /* KONKRÉTNÍ MÍSTA: chatky a podsadové stany mají čísla, host si vybere které. Obsazenost jednoho místa: RZ_OBSAZENO['chatka-4']=[noci]
    Rozložení (skupiny podle polohy v kempu) jde přepsat v ceníku: KKC.data.mista={chatka:[['Název skupiny',od,do,'sloupec'] (od>do = čísla pozpátku),…]} – skupiny se stejným sloupcem jsou pod sebou */
-const MISTA=Object.assign({chatka:[['Vlevo nahoře',1,5,'vlevo'],['Vlevo dole',6,10,'vlevo'],['Nad sociálkami',20,11,'vpravo']],podsad:[['Řada 1–11',1,11]]},KC.data.mista||{});
+const MISTA=Object.assign({chatka:[['Vlevo nahoře',1,5,'vlevo'],['Vlevo dole',6,10,'vlevo'],['Vpravo',20,11,'vpravo']],podsad:[['Řada 1–11',1,11]]},KC.data.mista||{});
 const CNT={};Object.keys(MISTA).forEach(k=>{CNT[k]=MISTA[k].reduce((a,g)=>Math.max(a,g[1],g[2]),0);S.c[k]=[]});
 const MAXQ=Object.assign({teepee:1},CNT);
 const isBusyU=(k,n,d)=>isBusyK(k,d)||(BUSY[k+'-'+n]||[]).includes(iso(d));
