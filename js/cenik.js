@@ -51,6 +51,9 @@ function nacti(){
   return JSON.parse(JSON.stringify(VYCHOZI));
 }
 var C=nacti();
+var JZ=window.KKL&&KKL.jazyk||'cs',L=function(x){return window.KKL?KKL.t(x):x},P5=function(n){return window.KKL?KKL.pl(n,'noc','noci','nocí'):(n===1?'noc':n<5?'noci':'nocí')};
+/* názvy a poznámky v jiném jazyce (pole n_en, pozn_en … z administrace) */
+if(JZ!=='cs'){(C.polozky||[]).forEach(function(p){if(p['n_'+JZ])p.n=p['n_'+JZ];if(p['pozn_'+JZ])p.pozn=p['pozn_'+JZ];if(p['jed_'+JZ])p.jed=p['jed_'+JZ]});(C.sluzby||[]).forEach(function(x){if(x['n_'+JZ])x.n=x['n_'+JZ];if(x['t_'+JZ])x.t=x['t_'+JZ]})}
 var HZ=C.sezona.hlavniZap!==false;
 var mapa={};C.polozky.forEach(function(p){mapa[p.k]=p});
 var fmt=function(n){return Math.round(n).toLocaleString('cs-CZ').replace(/\s/g,' ')};
@@ -65,7 +68,7 @@ var KKC=window.KKC={
   kat:function(kat){return C.polozky.filter(function(p){return p.kat===kat})},
   minUbyt:function(){var v=KKC.kat('ubytovani').filter(function(p){return p.rez!==0}).map(function(p){return KKC.v(p.k,'min')});return v.length?Math.min.apply(null,v):0},
   sleva:function(n){var s=0;(C.slevy||[]).forEach(function(x){if(n>=x.noci&&x.proc>s)s=x.proc});return s/100},
-  slevyText:function(){return (C.slevy||[]).slice().sort(function(a,b){return a.noci-b.noci}).map(function(x,i,arr){return (i===arr.length-1&&arr.length>1?x.noci+'+ nocí':x.noci+' '+(x.noci<5?'noci':'nocí'))+' −'+x.proc+' %'}).join(', ')},
+  slevyText:function(){return (C.slevy||[]).slice().sort(function(a,b){return a.noci-b.noci}).map(function(x,i,arr){return (i===arr.length-1&&arr.length>1?x.noci+'+ '+P5(5):x.noci+' '+P5(x.noci))+' −'+x.proc+' %'}).join(', ')},
   hlavni:function(m){return HZ&&m+1>=C.sezona.hlavniOd&&m+1<=C.sezona.hlavniDo},
   mesic:['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec']
 };
@@ -94,15 +97,15 @@ if(tb){
   ['osoby','ubytovani','doplnky'].forEach(function(kat){
     var pol=KKC.kat(kat).filter(function(p){return p.skryt!==1});if(!pol.length)return;
     h+='<tr class="ck-kat"><th colspan="3" scope="colgroup">'+esc(C.kategorie[kat].n)+'</th></tr>';
-    pol.forEach(function(p){var pozn=p.pozn;if(p.luzka)pozn=(pozn?pozn+', ':'')+'kapacita '+p.luzka;
+    pol.forEach(function(p){var pozn=p.pozn;if(p.luzka)pozn=(pozn?L(pozn)+', ':'')+L('kapacita')+' '+p.luzka;
       h+='<tr><td>'+esc(p.n)+(pozn?' <small>'+esc(pozn)+'</small>':'')+'</td>'+(HZ?'<td>'+KKC.t(p.k,'a')+'</td><td>'+KKC.t(p.k,'b')+'</td>':'<td colspan="2">'+KKC.t(p.k,'a')+'</td>')+'</tr>'});
   });
   var sl=C.sluzby||[];
   if(sl.length){h+='<tr class="ck-kat"><th colspan="3" scope="colgroup">Služby v kempu</th></tr>';sl.forEach(function(p){if(p.n)h+='<tr><td>'+esc(p.n)+'</td><td colspan="2">'+esc(p.t)+'</td></tr>'})}
   tb.innerHTML=h;
   var ths=document.querySelectorAll('#rzPrice thead th');if(!HZ&&ths.length===3){ths[1].colSpan=2;ths[1].innerHTML='Cena';ths[1].removeAttribute('data-t');ths[2].remove()}
-  var th=HZ&&document.querySelector('#rzPrice thead th small');if(th)th.textContent=KKC.mesic[C.sezona.hlavniOd-1]+'–'+KKC.mesic[C.sezona.hlavniDo-1];
-  var no=document.querySelector('#rzPrice .note');if(no)no.textContent='Ceny za noc.'+((C.slevy||[]).length?' Sleva: '+KKC.slevyText()+'.':'');
+  var th=HZ&&document.querySelector('#rzPrice thead th small');var MZ=function(m){return JZ!=='cs'&&window.KKL?KKL.mesic(m-1):KKC.mesic[m-1]};if(th)th.textContent=MZ(C.sezona.hlavniOd)+'–'+MZ(C.sezona.hlavniDo);
+  var no=document.querySelector('#rzPrice .note');if(no)no.textContent=L('Ceny za noc.')+((C.slevy||[]).length?' '+L('Sleva:')+' '+KKC.slevyText()+'.':'');
 }
 /* ---- 3) přepínač Kč / € v ceníku ---- */
 var dlgH=document.querySelector('#rzPrice .rz-dlg-h'),P=window.KKP;
@@ -118,5 +121,5 @@ if(dlgH&&P&&P.euraPovolena&&!P.EDIT){
   sw.addEventListener('click',function(e){var b=e.target.closest('button');if(b){P.nastavMenu(b.dataset.m);stavM()}});
   document.addEventListener('kk-mena',stavM);stavM();
 }
-var dh=document.querySelector('.rz-disc-hint');if(dh)dh.textContent=(C.slevy||[]).length?'Sleva: '+KKC.slevyText():'';
+var dh=document.querySelector('.rz-disc-hint');if(dh)dh.textContent=(C.slevy||[]).length?L('Sleva:')+' '+KKC.slevyText():'';
 })();

@@ -16,7 +16,7 @@ if(t){
 function pouzij(m){if(m)Object.keys(m).forEach(function(k){[].forEach.call(document.querySelectorAll('[data-t="'+k+'"]'),function(el){if(!el.hasAttribute('data-cena'))el.innerHTML=m[k]})})}
 pouzij(t);
 /* překlad: anglické / německé texty přes české (co chybí, zůstane česky) */
-var L=window.KK_LANG||'cs';if(L!=='cs')pouzij(get('texty.'+L));
+var L=window.KK_LANG||'cs';if(L!=='cs'){var VP=window.KK_PREKLADY&&KK_PREKLADY[L];if(VP)pouzij(VP.texty);pouzij(get('texty.'+L))}
 
 /* 2) SEO */
 var s=get('seo');

@@ -9,6 +9,8 @@
 'use strict';
 function get(k){try{var v=localStorage.getItem('kk.'+k);return v?JSON.parse(v):null}catch(e){return null}}
 var EDIT=/[?&]edit(=1)?(&|$)/.test(location.search);
+var BASE=(document.currentScript&&document.currentScript.src||location.href).replace(/js\/prepisy\.js.*$/,'').replace(/[?#].*$/,'');
+
 /* v editačním režimu bez animací – vše se ukáže rovnou v konečném stavu */
 if(EDIT){window.KK_BEZ_ANIMACI=true;document.documentElement.classList.add('kk-bez-animaci')}
 /* jazyk: ?lang=en|de, jinak poslední volba návštěvníka, jinak čeština */
@@ -19,11 +21,31 @@ window.KK_LANG=L;document.documentElement.lang=L;
 var Tcs=get('dtexty')||{},TL=L==='cs'?{}:(get('dtexty.'+L)||{}),T={};
 Object.keys(Tcs).forEach(function(k){T[k]=Tcs[k]});Object.keys(TL).forEach(function(k){T[k]=TL[k]});
 var O=get('obrazky')||{},I=get('ikony')||{};
+/* výchozí překlady ceníku, rezervace a dopravy (js/preklady.js) – načtou se jen pro EN/DE, přednost mají překlady z administrace */
+if(L!=='cs'&&document.readyState==='loading')document.write('<script src="'+BASE+'js/preklady.js?v=1"><\/script>');
+var PD=L==='cs'?false:null;
+function slov(){if(PD!==null)return PD;var d=window.KK_PREKLADY&&window.KK_PREKLADY[L];
+  if(d){PD=d;Object.keys(d.dtexty||{}).forEach(function(k){if(!(k in TL))T[k]=d.dtexty[k]});
+    PD.vz=(d.vzory||[]).map(function(v){return[new RegExp(v[0]),v[1]]})}
+  else if(document.readyState!=='loading')PD=false;
+  return PD||false}
+function vzory(o){var d=slov();if(!d||!d.vz)return null;var x=o,zm=false;
+  for(var i=0;i<d.vz.length;i++){var r=d.vz[i];if(r[0].test(x)){x=x.replace(r[0],r[1]);zm=true;r[0].lastIndex=0}}
+  return zm?x:null}
+var LOC=L==='en'?'en-GB':L==='de'?'de-DE':'cs-CZ';
+/* jazykové pomůcky pro skripty (rezervace, ceník, doprava) */
+window.KKL={jazyk:L,loc:LOC,
+  t:function(x){if(L==='cs'&&!Tcs[norm(x)])return x;slov();var o=norm(x);return T[o]!=null?T[o]:(L!=='cs'&&vzory(o))||x},
+  pl:function(n,a,b,c){if(L!=='cs'){var d=slov(),f=d&&d.pl&&d.pl[a];if(f)return n===1?f[0]:f[1]}return n===1?a:n>=2&&n<=4?b:c},
+  male:function(x){return L==='de'?x:x.toLowerCase()},
+  mesic:function(m){var s=new Date(2020,m,1).toLocaleString(LOC,{month:'long'});return s},
+  den:function(d){return new Date(2020,5,7+d).toLocaleString(LOC,{weekday:'short'}).replace('.','')},
+  datum:function(d){if(!d)return '–';if(L==='cs')return KKL.den(d.getDay())+' '+d.getDate()+'. '+(d.getMonth()+1)+'.';return d.toLocaleDateString(LOC,{weekday:'short',day:'numeric',month:'short'})}
+};
 /* měna: Kč / €  (cs výchozí Kč, en a de výchozí €). V editačním režimu vždy Kč, aby se do textů neuložila eura. */
 var CEN=get('cenik'),MN=(CEN&&CEN.mena)||{},EUR_OK=MN.eur!==false,KURZ=+MN.kurz||25,ZAOKR=+MN.zaokr||1;
 var MENA=get('mena');if(MENA!=='EUR'&&MENA!=='CZK')MENA=L==='cs'?'CZK':'EUR';if(!EUR_OK||EDIT)MENA='CZK';
 window.KK_MENA=MENA;
-var BASE=(document.currentScript&&document.currentScript.src||location.href).replace(/js\/prepisy\.js.*$/,'').replace(/[?#].*$/,'');
 var URLY={};/* cesta → objectURL nahrazené fotky */
 var SKIP='script,style,noscript,textarea,[data-t],[data-c],[data-cena],.kke-ui';
 var norm=function(s){return s.replace(/\s+/g,' ').trim()};
@@ -81,7 +103,8 @@ function text(n){
   if(n.__kkl!==undefined&&n.data===n.__kkl)return;
   var p=n.parentNode;if(!p||p.nodeType!==1||(p.closest&&p.closest('script,style,noscript,textarea,.kke-ui,[data-bez-meny]')))return;
   var src=n.data,out=src;n.__kkSrc=src;
-  if(!p.closest(SKIP)){var o=norm(src);if(o){n.__kko=o;if(T[o]!=null&&T[o]!==o){var m=src.match(/^(\s*)[\s\S]*?(\s*)$/);out=m[1]+T[o]+m[2]}}}
+  if(!p.closest(SKIP)){var o=norm(src);if(o){n.__kko=o;if(PD===null)slov();var tr=T[o]!=null&&T[o]!==o?T[o]:(L!=='cs'?vzory(o):null);if(tr!=null){var m=src.match(/^(\s*)[\s\S]*?(\s*)$/);out=m[1]+tr+m[2]}}}
+  else if(L!=='cs'&&p.closest('[data-c]')){var o2=norm(src),tr2=o2&&vzory(o2);if(tr2){var m2=src.match(/^(\s*)[\s\S]*?(\s*)$/);out=m2[1]+tr2+m2[2]}}
   if(MENA==='EUR')out=mena(out,n,src);
   if(out!==n.data)n.data=out;
   n.__kkl=n.data;
