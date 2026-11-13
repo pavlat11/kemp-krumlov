@@ -262,6 +262,8 @@ function zpracuj(rs){
 zapniSledovani();
 if(document.body)projdi(document.body);
 document.addEventListener('DOMContentLoaded',function(){projdi(document.body);cssPozadi();seo()});
+/* celý web.css se načítá bez blokování – vyměněná pozadí použít i na něj, až dorazí */
+document.addEventListener('load',function(e){if(e.target&&e.target.tagName==='LINK')cssPozadi()},true);
 
 /* načtení nahrazených fotek */
 if(maObr)KKP.fotky.vse().then(function(a){

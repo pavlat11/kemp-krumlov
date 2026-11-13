@@ -87,7 +87,7 @@ function onScroll(){if(!scT)scT=requestAnimationFrame(onScrollRun)}
 
 addEventListener('scroll',onScroll,{passive:true});
 
-onScrollRun();
+onScroll();
 
 menu?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>menu.classList.remove('open')));
 
