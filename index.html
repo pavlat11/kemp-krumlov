@@ -89,7 +89,7 @@ header.scrolled .lang{color:var(--muted)}
 header.scrolled .burger{color:var(--deep)}
 .progress{position:absolute;left:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--river-2),var(--sun));width:0}
 
-.hero{height:100vh;height:100svh;min-height:600px;color:#fff;padding:100px 0 28px;display:flex;align-items:center;overflow:hidden;isolation:isolate;
+.hero{height:100vh;height:100svh;height:100svh;min-height:600px;color:#fff;padding:100px 0 28px;display:flex;align-items:center;overflow:hidden;isolation:isolate;
   background:radial-gradient(1100px 700px at 78% 50%,#1d3d2e 0%,#12271c 55%,#0c1c14 100%)}
 .sky-stars{position:absolute;top:0;bottom:45%;left:48%;right:0;pointer-events:none;z-index:0;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 30%);mask-image:linear-gradient(90deg,transparent,#000 30%)}
@@ -158,7 +158,7 @@ header.scrolled .burger{color:var(--deep)}
 #canoe.docked .pad{animation-play-state:paused}
 
 /* ===== MAPA AREÁLU – celá obrazovka ===== */
-.areal{position:relative;height:100vh;height:100svh;min-height:560px;padding:0;overflow:hidden;background:#8fbd6c;isolation:isolate}
+.areal{position:relative;height:100vh;height:100svh;height:100svh;min-height:560px;padding:0;overflow:hidden;background:#8fbd6c;isolation:isolate}
 .am-stage{position:absolute;inset:0 0 var(--legH,84px) 0;cursor:grab;touch-action:none}
 .am-stage.drag{cursor:grabbing}
 .am-stage svg{width:100%;height:100%;display:block}
@@ -633,7 +633,7 @@ footer a{text-decoration:none;transition:.2s}footer a:hover{color:var(--sun)}
   .hero-grid{height:auto;gap:30px}
   .hero-text{max-width:600px}
   .map-col{height:auto}
-  .map-wrap{flex:none;height:60vh;min-height:400px;max-height:none}
+  .map-wrap{flex:none;height:60vh;height:60svh;min-height:400px;max-height:none}
   .sky-stars{left:0;bottom:30%;-webkit-mask-image:none;mask-image:none;opacity:.5}
   .cards{grid-template-columns:repeat(2,1fr)}
   .hero-grid,.about,.j-grid,.contact{grid-template-columns:1fr}
@@ -1254,7 +1254,7 @@ html.anim-paused *,html.anim-paused *::before,html.anim-paused *::after{animatio
 }
 </style>
 <style id="hero-100vh-css">
-#top.hero{height:100vh!important;height:100svh!important;min-height:0!important;max-height:none!important;box-sizing:border-box!important;padding:clamp(72px,10vh,108px) 0 clamp(60px,8vh,96px)!important;overflow:hidden!important}
+#top.hero{height:100vh!important;height:100svh!important;height:100svh!important;min-height:0!important;max-height:none!important;box-sizing:border-box!important;padding:clamp(72px,10vh,108px) 0 clamp(60px,8vh,96px)!important;overflow:hidden!important}
 #top h1{font-size:clamp(34px,min(5.4vw,8.6vh),72px)!important}
 #top .sub{font-size:clamp(14px,2.1vh,18px)!important}
 #top .camp-a{margin-top:clamp(14px,3.2vh,40px)!important}
@@ -1600,7 +1600,7 @@ position:relative;overflow:clip;color:#0b2419;padding:clamp(80px,9vw,130px) 0 cl
 #rezervace .rz-calnav:hover:not(:disabled){background:var(--rz-sun)}
 #rezervace .rz-calnav:disabled{opacity:.3;cursor:default}
 #rezervace .rz-calnav.p{left:12px}#rezervace .rz-calnav.n{right:12px}
-#rezervace .rz-m h4{text-align:center;margin:6px 0 12px;font-size:16px;font-weight:800;letter-spacing:-.01em;color:#0b2419;text-transform:capitalize}
+#rezervace .rz-m h4,#rezervace .rz-m h3.rz-mh{text-align:center;margin:6px 0 12px;font-size:16px;font-weight:800;letter-spacing:-.01em;color:#0b2419;text-transform:capitalize}
 #rezervace .rz-wd,#rezervace .rz-days{display:grid;grid-template-columns:repeat(7,1fr)}
 #rezervace .rz-wd span{text-align:center;font-size:11px;font-weight:800;color:#9aa19c;text-transform:uppercase;letter-spacing:.06em;padding-bottom:6px}
 #rezervace .rz-days{row-gap:3px}
@@ -2972,6 +2972,14 @@ html.mnav-open{overflow:hidden}
 @media (prefers-reduced-motion:reduce){.mnav,.mnav-l a{transition:none}}
 </style>
 <style id="hero-cta-instant">@media(max-width:900px){.kk2-scope #top .cta{opacity:1!important;animation:none!important;transform:none!important}}</style>
+<style id="ux-pro-max">
+html body #areal span.ai-load-lab,html body #areal ul.ai-stat>li,html body #doprava div.dp-per>span,html body #galerie figure.gl-i>figcaption,html body #kontakt span>small,html body #o-kempu li>span,html body #okoli div.od-t>span,html body #okoli li>span,html body #okoli ol>li,html body #okoli p.ok-note,html body #okoli p.ok-src,html body #pela div>span,html body #pela p.pp-note,html body #rezervace div.rz-total>small,html body #rezervace p.rz-hint,html body #rezervace p.rz-note,html body #rezervace span.rz-disc-hint,html body #rezervace span.tx>small,html body footer.ft span.sp{font-size:14px!important;line-height:1.5!important}
+html{scroll-padding-top:96px}
+footer.ft a{display:inline-block;min-height:24px;padding-top:2px;padding-bottom:2px}
+#pela .pp-note{max-width:75ch;margin-left:auto;margin-right:auto}
+.kk2-scope header#hd #menu a.act,.kk2-scope header#hd.scrolled #menu a.act{color:#f4a64a!important}.kk2-scope #menu a.act::after{transform:scaleX(1)!important;opacity:1!important}
+.mnav-l a.act{background:rgba(244,166,74,.12)}.mnav-l a.act span{color:#f4a64a}
+</style>
 <style id="kt-mapy-css">
 #kontakt .kt-mapy{position:absolute;inset:0;overflow:hidden;border-radius:inherit;background:#e9efe2}
 #kontakt .kt-mapy-bg{position:absolute;inset:0;width:100%;height:100%}
@@ -3017,7 +3025,7 @@ html.mnav-open{overflow:hidden}
 </div>
 </div>
 <div id="progress" style="position: absolute; left: 0px; bottom: 0px; height: 2px; width: 42.3361%; background: rgb(229, 219, 53); z-index: 3;"></div></header><div id="obsah" tabindex="-1"></div><section class="hero kk2-part" id="top">
-<img alt="Večerní Vltava, kánoe a zámek v Českém Krumlově" class="hero-img" src="hero.webp" fetchpriority="high">
+<img alt="Večerní Vltava, kánoe a zámek v Českém Krumlově" class="hero-img" src="hero.webp" fetchpriority="high" width="1536" height="1024">
 <div class="wrap hero-in">
 <div>
 <div class="season">Kemp Krumlov · sezóna 1. 5. – 1. 10.</div>
@@ -3186,7 +3194,7 @@ html.mnav-open{overflow:hidden}
 
 <div class="ok2-main">
 <figure class="ok2-hero">
-<img src="img/kemp_reprezentativni.webp" alt="Kemp u Vltavy, stany a lodě na břehu" loading="lazy">
+<img src="img/kemp_reprezentativni.webp" alt="Kemp u Vltavy, stany a lodě na břehu" loading="lazy" width="1536" height="1024">
 <figcaption><span class="dot"></span>Přímo na levém břehu Vltavy</figcaption>
 </figure>
 <ul class="ok2-why tl" id="okTl"><div class="tl-track" aria-hidden="true"><div class="tl-fill"></div><div class="tl-boat"><svg viewBox="0 0 26 56" width="26" height="56"><path d="M13 1 C23 12 24 40 13 55 C2 40 3 12 13 1Z" fill="#f4a64a" stroke="#c97d24" stroke-width="1.4"/><path d="M13 7 C19 16 19.5 38 13 49 C6.5 38 7 16 13 7Z" fill="#b9682f" opacity=".55"/><circle cx="13" cy="21" r="4" fill="#c0392b"/><circle cx="13" cy="21" r="2.2" fill="#f0c49a"/><circle cx="13" cy="35" r="4" fill="#f7f0e4"/><circle cx="13" cy="35" r="2.2" fill="#f0c49a"/><path d="M3 18 L23 24 M3 38 L23 32" stroke="#7a4a33" stroke-width="1.6" stroke-linecap="round"/></svg></div></div>
@@ -3198,8 +3206,8 @@ html.mnav-open{overflow:hidden}
 </div>
 
 <div class="ok2-pair">
-<figure><img src="img/posezeni_u_vody.webp" alt="Posezení u vody" loading="lazy"><figcaption>Večer u vody</figcaption></figure>
-<figure><img src="img/chatky_nova.webp" alt="Chatky v Kempu Krumlov" loading="lazy"><figcaption>Chatky pro celou partu</figcaption></figure>
+<figure><img src="img/posezeni_u_vody.webp" alt="Posezení u vody" loading="lazy" width="1536" height="1024"><figcaption>Večer u vody</figcaption></figure>
+<figure><img src="img/chatky_nova.webp" alt="Chatky v Kempu Krumlov" loading="lazy" width="1536" height="1024"><figcaption>Chatky pro celou partu</figcaption></figure>
 </div>
 
 <div class="ok2-am">
@@ -3234,35 +3242,35 @@ html.mnav-open{overflow:hidden}
 </div>
 <div class="ubp-wrap" id="ubPanels">
 <article class="ubp on"><button type="button" class="ubp-tg" aria-expanded="true" aria-label="Chatka pro 7 – zobrazit podrobnosti"></button>
-<img src="img/chatka_nova.webp" alt="Chatka pro 7 osob" loading="lazy">
+<img src="img/chatka_nova.webp" alt="Chatka pro 7 osob" loading="lazy" width="1536" height="1024">
 <div class="ubp-v"><b>Chatka pro 7</b><small>od 890 Kč</small></div>
 <div class="ubp-c"><span class="ubp-t">Pro celou partu</span><h3>Chatka pro 7</h3><p>Dřevěná chatka s kapacitou 7 osob včetně lůžkovin.</p>
 <div class="ubp-f"><span>7 osob</span><span>lůžkoviny</span></div>
 <div class="ubp-r"><div class="ubp-p"><b>od 890 Kč</b> <span>/ noc</span><i>+ poplatek za osobu</i></div><a class="ubp-a" href="#rezervace" data-kc="Chatka">Poptat <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></div>
 </article>
 <article class="ubp"><button type="button" class="ubp-tg" aria-expanded="false" aria-label="Teepee – zobrazit podrobnosti"></button>
-<img src="img/teepee.webp" alt="Teepee" loading="lazy">
+<img src="img/teepee.webp" alt="Teepee" loading="lazy" width="1536" height="1024">
 <div class="ubp-v"><b>Teepee</b><small>od 700 Kč</small></div>
 <div class="ubp-c"><span class="ubp-t">Zážitek pro děti</span><h3>Teepee</h3><p>Indiánský stan na louce — zážitek hlavně pro rodiny s dětmi.</p>
 <div class="ubp-f"><span>na louce</span><span>pro rodiny</span></div>
 <div class="ubp-r"><div class="ubp-p"><b>od 700 Kč</b> <span>/ noc</span><i>+ poplatek za osobu</i></div><a class="ubp-a" href="#rezervace" data-kc="Teepee">Poptat <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></div>
 </article>
 <article class="ubp"><button type="button" class="ubp-tg" aria-expanded="false" aria-label="Podsadový stan – zobrazit podrobnosti"></button>
-<img src="img/podsadovy.webp" alt="Podsadový stan" loading="lazy">
+<img src="img/podsadovy.webp" alt="Podsadový stan" loading="lazy" width="1536" height="1024">
 <div class="ubp-v"><b>Podsadový stan</b><small>300 Kč</small></div>
 <div class="ubp-c"><span class="ubp-t">Bez stavění</span><h3>Podsadový stan</h3><p>Už postavený. Přijedete, hodíte batoh dovnitř a jdete do města.</p>
 <div class="ubp-f"><span>už postavený</span><span>jen batoh</span></div>
 <div class="ubp-r"><div class="ubp-p"><b>300 Kč</b> <span>/ noc</span><i>+ poplatek za osobu</i></div><a class="ubp-a" href="#rezervace" data-kc="Podsadový stan">Poptat <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></div>
 </article>
 <article class="ubp"><button type="button" class="ubp-tg" aria-expanded="false" aria-label="Stan – zobrazit podrobnosti"></button>
-<img src="img/stan.webp" alt="Stan na louce u řeky" loading="lazy">
+<img src="img/stan.webp" alt="Stan na louce u řeky" loading="lazy" width="1536" height="1024">
 <div class="ubp-v"><b>Stan</b><small>od 190 Kč</small></div>
 <div class="ubp-c"><span class="ubp-t">Vlastní stan</span><h3>Stan</h3><p>Velká louka u řeky. Rezervace nutná až pro skupiny 15 a více stanů.</p>
 <div class="ubp-f"><span>louka</span><span>u řeky</span></div>
 <div class="ubp-r"><div class="ubp-p"><b>od 190 Kč</b> <span>/ stan</span><i>+ poplatek za osobu</i></div><a class="ubp-a" href="#rezervace" data-kc="Vlastní stan">Poptat <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></div>
 </article>
 <article class="ubp"><button type="button" class="ubp-tg" aria-expanded="false" aria-label="Karavan – zobrazit podrobnosti"></button>
-<img src="img/karavan.webp" alt="Karavan u řeky" loading="lazy">
+<img src="img/karavan.webp" alt="Karavan u řeky" loading="lazy" width="1536" height="1024">
 <div class="ubp-v"><b>Karavan</b><small>od 300 Kč</small></div>
 <div class="ubp-c"><span class="ubp-t">Pro karavany</span><h3>Karavan</h3><p>Místo pro karavan u řeky, elektřinu si přiobjednáte.</p>
 <div class="ubp-f"><span>elektřina</span><span>volejte předem</span></div>
@@ -3317,7 +3325,7 @@ html.mnav-open{overflow:hidden}
 </div>
 </div>
 <p class="rz-hint"><span class="rz-lg hi"></span>hlavní sezóna (červen–srpen)<span class="rz-busy-lg"><span class="rz-lg bz"></span>obsazeno</span> <span class="rz-sep"></span><span class="rz-disc-hint">Sleva: 2 noci −10 %, 3 noci −15 %, 4+ nocí −20 %</span></p>
-<p class="rz-warn" id="rzWarn" hidden></p>
+<p class="rz-warn" id="rzWarn" role="alert" hidden></p>
 </div>
 
 <div role="group" class="rz-step" data-s="1">
@@ -3517,7 +3525,7 @@ html.mnav-open{overflow:hidden}
 </section>
 <section class="pl" id="pela" style="padding-top:0!important">
 <div class="pl-hero">
-<img src="img/inl-02.webp" alt="Vodáci na raftu a kanoích na Vltavě" loading="lazy">
+<img src="img/inl-02.webp" alt="Vodáci na raftu a kanoích na Vltavě" loading="lazy" width="1536" height="380">
 <div class="wrap pl-hero-in">
 <span class="pl-logo">PE-LA <small>půjčovna lodí</small></span>
 <h2>Vltavu si nejlépe <em>užijete z vody</em></h2>
@@ -4669,7 +4677,7 @@ const nightsList=()=>{const out=[];if(!S.from||!S.to)return out;for(let d=S.from
 const cal=$('rzCal');let view=D(START.getFullYear(),START.getMonth(),1),hover=null;
 const minView=D(TODAY.getFullYear(),TODAY.getMonth(),1);
 function month(m){const y=m.getFullYear(),mo=m.getMonth(),first=D(y,mo,1),len=new Date(y,mo+1,0).getDate(),off=(first.getDay()+6)%7;
- let h=`<div class="rz-m"><h4>${MN[mo]} ${y}</h4><div class="rz-wd"><span>po</span><span>út</span><span>st</span><span>čt</span><span>pá</span><span>so</span><span>ne</span></div><div class="rz-days">`;
+ let h=`<div class="rz-m"><h3 class="rz-mh">${MN[mo]} ${y}</h3><div class="rz-wd"><span>po</span><span>út</span><span>st</span><span>čt</span><span>pá</span><span>so</span><span>ne</span></div><div class="rz-days">`;
  for(let i=0;i<off;i++)h+='<i></i>';
  for(let d=1;d<=len;d++){const x=D(y,mo,d);h+=`<button type="button" class="rz-d" data-d="${iso(x)}"><span>${d}</span></button>`}
  return h+'</div></div>'}
@@ -4808,7 +4816,7 @@ if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{if(w
 /* ---------- odeslání ---------- */
 form.addEventListener('submit',e=>{e.preventDefault();submit()});
 function fieldErr(name,msg){const inp=form.elements[name],lab=inp.closest('.rz-f');let em=lab.querySelector('em');
- if(msg){if(!em){em=document.createElement('em');lab.append(em)}em.textContent=msg;lab.classList.add('err')}else{if(em)em.remove();lab.classList.remove('err')}}
+ if(msg){if(!em){em=document.createElement('em');em.id='err-'+name;lab.append(em)}em.textContent=msg;lab.classList.add('err');inp.setAttribute('aria-invalid','true');inp.setAttribute('aria-describedby','err-'+name)}else{if(em)em.remove();lab.classList.remove('err');inp.removeAttribute('aria-invalid');inp.removeAttribute('aria-describedby')}}
 ['jmeno','telefon','email'].forEach(n=>form.elements[n].addEventListener('input',()=>fieldErr(n,'')));
 function submit(){
  if(!S.to){go(0);warn('Vyberte v kalendáři termín pobytu.');return}
@@ -5273,4 +5281,8 @@ function load(){if(w.classList.contains('on'))return;var f=document.createElemen
 if('IntersectionObserver'in window){var io=new IntersectionObserver(function(e){if(e[0].isIntersecting){load();io.disconnect()}},{rootMargin:'300px'});io.observe(w)}else load();
 b.hidden=false;b.addEventListener('click',load)})();
 </script>
+<script id="nav-spy">(function(){if(!('IntersectionObserver'in window))return;var L=[].slice.call(document.querySelectorAll('#menu a[href^="#"]')),M=[].slice.call(document.querySelectorAll('.mnav-l a[href^="#"]'));var map={};L.concat(M).forEach(function(a){var id=a.getAttribute('href').slice(1);(map[id]=map[id]||[]).push(a)});
+var cur=null;function set(id){if(id===cur)return;cur=id;L.concat(M).forEach(function(a){var on=a.getAttribute('href')==='#'+id;a.classList.toggle('act',on);if(on)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current')})}
+var vis={},alias={};var io=new IntersectionObserver(function(es){es.forEach(function(e){vis[e.target.id]=e.isIntersecting?e.intersectionRatio:0});var best=null,bv=0;Object.keys(vis).forEach(function(k){if(vis[k]>bv){bv=vis[k];best=k}});set(best&&alias[best]||best)},{rootMargin:'-35% 0px -55% 0px',threshold:[0,.01,.5,1]});
+Object.keys(map).forEach(function(id){var el=document.getElementById(id);if(!el)return;if(el.offsetHeight<120){var sec=el.closest('section');if(sec){if(!sec.id)sec.id='sec-'+id;alias[sec.id]=id;el=sec}}io.observe(el)})})();</script>
 </body></html>
