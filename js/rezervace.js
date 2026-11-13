@@ -29,12 +29,15 @@ const UNIT0={stan:['Počet stanů','stan','stany','stanů'],karavan:['Počet kar
 const UNIT=Object.assign({},UNIT0);TYPES.forEach(t=>{if(!UNIT[t.k]){const n=t.n.toLowerCase();UNIT[t.k]=['Počet',n,n,n]}});
 const EXTRAS=KC.kat('doplnky').filter(p=>p.rez!==0&&p.skryt!==1).map(p=>({k:p.k,n:p.n,s:KC.t(p.k,'a')+(p.pozn?' / '+p.pozn.replace(/^za /,''):' / noc')}));
 EXTRAS.forEach(x=>{if(!ICO[x.k])ICO[x.k]='<path d="M12 5v14M5 12h14"/>'});
-const PEOPLE=[{k:'dosp',n:'Dospělí',s:'od 15 let',min:1},{k:'dite',n:'Děti',s:'do 15 let',min:0},{k:'zak',n:'Žáci a studenti',s:'zvýhodněně jen ve vlastním stanu',min:0}];
-const S={type:(TYPES[0]||{}).k,q:{},dosp:1,dite:0,zak:0,units:1,from:null,to:null};TYPES.forEach(t=>S.q[t.k]=0);EXTRAS.forEach(x=>S[x.k]=0);
+const PEOPLE=[{k:'dosp',n:'Dospělí',s:'od 15 let',min:1},{k:'dite',n:'Děti',s:'do 15 let',min:0},{k:'zak',n:'Žáci a studenti',s:'zvýhodněně jen ve vlastním stanu',min:0}].filter(x=>x.k==='dosp'||!(KC.p(x.k)||{}).skryt);
+/* vlastní typy osob z ceníku (např. senior, ZTP) */
+const OS_VLASTNI=KC.kat('osoby').filter(p=>!['os','dite','zak'].includes(p.k)&&p.skryt!==1);
+OS_VLASTNI.forEach(p=>{PEOPLE.push({k:p.k,n:p.n,s:p.pozn||'',min:0,vl:1});if(!ICO[p.k])ICO[p.k]=ICO.dosp});
+const S={type:(TYPES[0]||{}).k,q:{},dosp:1,dite:0,zak:0,units:1,from:null,to:null};OS_VLASTNI.forEach(p=>S[p.k]=0);TYPES.forEach(t=>S.q[t.k]=0);EXTRAS.forEach(x=>S[x.k]=0);
 const fmt=n=>Math.round(n).toLocaleString('cs-CZ')+'\u00a0Kč';
 const plural=(n,a,b,c)=>n===1?a:n>=2&&n<=4?b:c;
 const T=()=>TYPES.find(t=>t.k===S.type);
-const persons=()=>S.dosp+S.dite+S.zak;
+const persons=()=>S.dosp+S.dite+S.zak+OS_VLASTNI.reduce((a,p)=>a+(S[p.k]||0),0);
 const minUnits=()=>{const t=T();return t.cap?Math.max(1,Math.ceil(persons()/t.cap)):1};
 const fitUnits=()=>{};
 const SEL=()=>TYPES.filter(t=>S.q[t.k]>0);
@@ -139,6 +142,7 @@ function compute(){const nights=nightsList(),L=[];let sum=0;
  add(`${ad}× ${plural(ad,'dospělý','dospělí','dospělých')}`,'os',ad);
  add(`${S.dite}× ${plural(S.dite,'dítě','děti','dětí')}`,'dite',S.dite);
  if(onlyStan())add(`${S.zak}× ${plural(S.zak,'žák','žáci','žáků')}`,'zak',S.zak);
+ OS_VLASTNI.forEach(p=>add(`${S[p.k]||0}× ${p.n.toLowerCase()}`,p.k,S[p.k]||0));
  EXTRAS.forEach(x=>add(`${S[x.k]}× ${x.n.toLowerCase()}`,x.k,S[x.k]));
  const n=nights.length,disc=KC.sleva(n),dv=Math.round(sum*disc);
  return{nights,n,L,sum,disc,dv,total:sum-dv}}
@@ -150,7 +154,7 @@ const tw={};function tween(el,to){const o=tw[el.id]||(tw[el.id]={v:0,a:0});cance
 let R,warnT;
 function warn(msg){const w=$('rzWarn');w.textContent=msg;w.hidden=!msg;clearTimeout(warnT);if(msg)warnT=setTimeout(()=>{w.hidden=true},6000)}
 const extrasTxt=()=>EXTRAS.filter(x=>S[x.k]).map(x=>`${S[x.k]>1?S[x.k]+'× ':''}${x.n.toLowerCase()}`).join(', ');
-const peopleTxt=()=>{const a=[`${S.dosp} ${plural(S.dosp,'dospělý','dospělí','dospělých')}`];if(S.dite)a.push(`${S.dite} ${plural(S.dite,'dítě','děti','dětí')}`);if(S.zak)a.push(`${S.zak} ${plural(S.zak,'žák','žáci','žáků')}`);return a.join(', ')};
+const peopleTxt=()=>{const a=[`${S.dosp} ${plural(S.dosp,'dospělý','dospělí','dospělých')}`];if(S.dite)a.push(`${S.dite} ${plural(S.dite,'dítě','děti','dětí')}`);if(S.zak)a.push(`${S.zak} ${plural(S.zak,'žák','žáci','žáků')}`);OS_VLASTNI.forEach(p=>{if(S[p.k])a.push(`${S[p.k]}× ${p.n.toLowerCase()}`)});return a.join(', ')};
 const typeTxt=()=>SEL().map(t=>`${S.q[t.k]}× ${t.n.toLowerCase()}`).join(', ')||'nevybráno';
 const dateTxt=()=>!S.from?'vyberte termín':S.from&&S.to?`${fD(S.from)} – ${fD(S.to)} · ${R.n} ${plural(R.n,'noc','noci','nocí')}`:'vyberte odjezd';
 

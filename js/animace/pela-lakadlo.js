@@ -11,7 +11,7 @@ if('IntersectionObserver' in window&&!reduce){
 else rs.forEach(function(el){el.classList.add('in')});
 
 /* 1 den / vícedenní: ceny se plynule přepočítají */
-var cards=[].slice.call(sec.querySelectorAll('.pp-boat')),multi=false,tw=new WeakMap();
+var cards=[].slice.call(sec.querySelectorAll('.pp-boat:not([data-skryta])')),multi=false,tw=new WeakMap();
 function tween(el,to){var from=+(el.dataset.v||to);el.dataset.v=to;
  if(reduce||from===to){el.textContent=to.toLocaleString('cs-CZ');return}
  var t0=null,dur=420;cancelAnimationFrame(tw.get(el)||0);

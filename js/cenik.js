@@ -12,12 +12,11 @@ var VYCHOZI={verze:1,
  sezona:{otevrenoOd:'05-01',otevrenoDo:'10-01',hlavniOd:6,hlavniDo:8},
  slevy:[{noci:2,proc:10},{noci:3,proc:15},{noci:4,proc:20}],
  kategorie:{
-  osoby:{n:'Osoby',sloupce:['Sezóna','Mimo sezónu'],pevne:1},
+  osoby:{n:'Osoby',sloupce:['Sezóna','Mimo sezónu']},
   ubytovani:{n:'Ubytování',sloupce:['Sezóna','Mimo sezónu']},
   doplnky:{n:'Doplňky',sloupce:['Sezóna','Mimo sezónu']},
   sluzby:{n:'Služby v kempu',sloupce:['Cena']},
-  doprava:{n:'Doprava osob (cena za auto pro 8 osob)',sloupce:['Cena'],pevne:1},
-  lode:{n:'Lodě PE-LA (za loď a den)',sloupce:['1 den','Vícedenní'],pevne:1}
+  doprava:{n:'Doprava osob (cena za auto pro 8 osob)',sloupce:['Cena']}
  },
  polozky:[
   {k:'os',kat:'osoby',n:'Osoba',pozn:'od 15 let, včetně místního poplatku',a:200,b:190},
@@ -39,20 +38,20 @@ var VYCHOZI={verze:1,
   {k:'skola',kat:'sluzby',n:'Školní kurzy',pozn:'',a:200,jed:'osoba'},
   {k:'dop1',kat:'doprava',n:'Vyšší Brod',a:1150},{k:'dop2',kat:'doprava',n:'Rožmberk nad Vltavou',a:850},{k:'dop3',kat:'doprava',n:'Nahořany',a:650},
   {k:'dop4',kat:'doprava',n:'Kemp Vltava',a:550},{k:'dop5',kat:'doprava',n:'Viking / Pískárna',a:500},{k:'dop6',kat:'doprava',n:'Vltavan / Spolí',a:350},
-  {k:'dop7',kat:'doprava',n:'Centrum',a:250},{k:'dop8',kat:'doprava',n:'Zlatá Koruna',a:350},{k:'dop9',kat:'doprava',n:'Boršov',a:900},
-  {k:'kanoe',kat:'lode',n:'Kanoe',pozn:'2–3 osoby',a:700,b:500},{k:'raft4',kat:'lode',n:'Raft',pozn:'3–4 osoby',a:1250,b:950},
-  {k:'raft6',kat:'lode',n:'Raft',pozn:'5–6 osob',a:1600,b:1400},{k:'raft8',kat:'lode',n:'Raft',pozn:'8 osob',a:1800,b:1600}
+  {k:'dop7',kat:'doprava',n:'Centrum',a:250},{k:'dop8',kat:'doprava',n:'Zlatá Koruna',a:350},{k:'dop9',kat:'doprava',n:'Boršov',a:900}
  ]};
+/* starší uložený ceník doplní o nové vlastnosti z výchozího */
+function doplň(u){u.kategorie=JSON.parse(JSON.stringify(VYCHOZI.kategorie));u.polozky=u.polozky.filter(function(p){return u.kategorie[p.kat]});return u}
 function nacti(){
-  if(window.KK_CENIK_DATA)return window.KK_CENIK_DATA;
-  try{var u=JSON.parse(localStorage.getItem('kk.cenik')||'null');if(u&&u.verze===1&&u.polozky)return u}catch(e){}
+  if(window.KK_CENIK_DATA)return doplň(window.KK_CENIK_DATA);
+  try{var u=JSON.parse(localStorage.getItem('kk.cenik')||'null');if(u&&u.verze===1&&u.polozky)return doplň(u)}catch(e){}
   return JSON.parse(JSON.stringify(VYCHOZI));
 }
 var C=nacti();
 var mapa={};C.polozky.forEach(function(p){mapa[p.k]=p});
 var fmt=function(n){return Math.round(n).toLocaleString('cs-CZ').replace(/\s/g,' ')};
 var KKC=window.KKC={
-  data:C,vychozi:VYCHOZI,fmt:fmt,
+  data:C,vychozi:VYCHOZI,fmt:fmt,doplň:doplň,
   p:function(k){return mapa[k]},
   /* cena jako číslo: mode a | b | min */
   v:function(k,mode){var p=mapa[k];if(!p)return 0;var a=+p.a||0,b=p.b==null?a:+p.b;return mode==='b'?b:mode==='min'?Math.min(a,b):a},
@@ -80,9 +79,6 @@ function prepis(el,text){
   else t=fmt(KKC.v(k,m));
   prepis(el,t);
 });
-/* odkazy na lodě (lákadlo „nejlevnější na osobu“ čte data-p1 / data-pm) */
-[].forEach.call(document.querySelectorAll('[data-cl]'),function(el){var k=el.getAttribute('data-cl');if(!mapa[k])return;el.setAttribute('data-p1',KKC.v(k,'a'));el.setAttribute('data-pm',KKC.v(k,'b'));
-  var al=el.getAttribute('aria-label');if(al)el.setAttribute('aria-label',al.replace(/od\s+\d[\d\s]*\s*Kč/,'od '+fmt(Math.min(KKC.v(k,'a'),KKC.v(k,'b')))+' Kč'))});
 
 /* ---- 2) tabulka ceníku ---- */
 var tb=document.querySelector('#rzPrice tbody');

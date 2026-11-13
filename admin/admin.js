@@ -55,8 +55,8 @@ function login(){
 }
 
 /* ---------- kostra ---------- */
-var VIEWS={upravit:upravit,prehled:prehled,obsah:obsah,galerie:galerie,seo:seo,cenik:cenik,rezervace:pripravujeme,lode:pripravujeme,nastaveni:nastaveni};
-var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['obsah','Všechny texty'],['galerie','Galerie'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace',1],['cenik','Ceník a kapacity'],['lode','Půjčovna lodí',1]]],['Systém',[['nastaveni','Nastavení a záloha']]]];
+var VIEWS={upravit:upravit,prehled:prehled,obsah:obsah,galerie:galerie,seo:seo,cenik:cenik,rezervace:pripravujeme,nastaveni:nastaveni};
+var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['obsah','Všechny texty'],['galerie','Galerie'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace',1],['cenik','Ceník a kapacity']]],['Systém',[['nastaveni','Nastavení a záloha']]]];
 function shell(s){
   app.innerHTML='<div class="top"><div class="logo"><i>'+SV(IC.lode,20)+'</i>Administrace</div><button type="button" id="mb" aria-label="Otevřít menu" aria-expanded="false" aria-controls="side">'+SV(IC.menu,22)+'</button></div>'+
   '<div class="app"><nav class="side" id="side" aria-label="Administrace"><div class="logo"><i>'+SV(IC.lode,22)+'</i><span>Kemp Krumlov<small>Administrace</small></span></div>'+
@@ -108,7 +108,7 @@ function prehled(m){
     '<a class="card stat" href="#seo" style="text-decoration:none;color:inherit"><b>'+okN+' / '+ch.length+'</b><span>SEO kontrol v pořádku</span></a>'+
     '<div class="card stat"><b>'+z.ceny+'</b><span>cen zamčeno – upraví se v Ceníku</span></div></div><br>'+
     '<div class="grid g2"><div class="card"><h2>Poslední změny</h2>'+(h.length?'<ul class="hist">'+h.slice(0,8).map(function(x){return '<li><time>'+cas(x.kdy)+'</time><span><b>'+esc(x.co)+'</b> – '+esc(x.popis)+'</span></li>'}).join('')+'</ul>':'<p class="mut">Zatím žádné změny.</p>')+'</div>'+
-    '<div class="card soonc"><h2>Připravujeme</h2><p class="mut" style="margin:0">Další části administrace, které přijdou na řadu:</p><ul><li>Rezervace ubytování – přehled poptávek, potvrzení, kalendář obsazenosti</li><li>Ceník a kapacity – ceny v sezóně a mimo ni, počty chatek, slevy</li><li>Půjčovna lodí – flotila, ceny a rezervace lodí</li></ul></div></div>';
+    '<div class="card soonc"><h2>Připravujeme</h2><p class="mut" style="margin:0">Další části administrace, které přijdou na řadu:</p><ul><li>Rezervace ubytování – přehled poptávek, potvrzení, kalendář obsazenosti</li><li>Ceník a kapacity – ceny v sezóně a mimo ni, počty chatek, slevy</li></ul></div></div>';
   });
 }
 
@@ -293,14 +293,14 @@ function seo(m){
 var POUZITO={stan:1,karavan:1,chatka:1,teepee:1,podsad:1,auto:1,autobus:1,uschovna:1,sprcha:1,elek:1,skola:1,pes:1,poplatek:1,os:1,dite:1,zak:1};
 function cenik(m){
   return KK.cenik.nacti().then(function(ul){
-    var C=JSON.parse(JSON.stringify(ul||KKC.vychozi)),puv=JSON.stringify(C),M=KKC.mesic;
+    var C=JSON.parse(JSON.stringify(ul?KKC.doplň(ul):KKC.vychozi)),puv=JSON.stringify(C),M=KKC.mesic;
     neulozeno=function(){return JSON.stringify(C)!==puv};
     var DNY=function(sel){var h='';for(var i=1;i<=31;i++)h+='<option'+(i===sel?' selected':'')+'>'+i+'</option>';return h};
     var MES=function(sel){return M.map(function(x,i){return '<option value="'+(i+1)+'"'+(i+1===sel?' selected':'')+'>'+x+'</option>'}).join('')};
     var md=function(v){return v.split('-').map(Number)};
     function kresli(){
       var o=md(C.sezona.otevrenoOd),d=md(C.sezona.otevrenoDo);
-      var h='<div class="ph"><div><h1>Ceník a kapacity</h1><p>Jediné místo, kde se mění ceny. Projeví se všude na webu – v úvodu, u ubytování, v ceníku, na mapě kempu, u dopravy i lodí – a také ve výpočtu rezervace.</p></div>'+
+      var h='<div class="ph"><div><h1>Ceník a kapacity</h1><p>Jediné místo, kde se mění ceny. Projeví se všude na webu – v úvodu, u ubytování, v ceníku, na mapě kempu a u dopravy – a také ve výpočtu rezervace.</p></div>'+
       '<div class="row"><a class="btn gh" href="'+WEB+'#ubytovani" target="_blank" rel="noopener">Zobrazit web '+SV(IC.ven,16)+'</a><button type="button" class="btn dan" id="cr">Obnovit výchozí ceník</button></div></div>'+
       '<div class="grid g2" style="margin-bottom:16px"><div class="card"><h2>Sezóna</h2><p class="mut">Kdy je kemp otevřený a kdy platí ceny „Sezóna“.</p>'+
       '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))"><fieldset class="fs"><legend>Otevřeno od</legend><div class="row"><select class="inp" data-s="od-d" aria-label="Den otevření">'+DNY(o[1])+'</select><select class="inp" data-s="od-m" aria-label="Měsíc otevření">'+MES(o[0])+'</select></div></fieldset>'+
@@ -310,18 +310,18 @@ function cenik(m){
       C.slevy.map(function(x,i){return '<div class="row" style="margin-bottom:8px"><label class="row">od <input class="inp num" type="number" min="1" max="60" data-sl="'+i+'" data-f="noci" value="'+x.noci+'" aria-label="Počet nocí"> nocí</label><label class="row">sleva <input class="inp num" type="number" min="0" max="90" data-sl="'+i+'" data-f="proc" value="'+x.proc+'" aria-label="Sleva v procentech"> %</label><button type="button" class="btn ic dan" data-sld="'+i+'" aria-label="Odebrat slevu">'+SV(IC.kos,18)+'</button></div>'}).join('')+
       '</div><button type="button" class="btn sm gh" id="sla">+ Přidat slevu</button></div></div>';
       Object.keys(C.kategorie).forEach(function(kat){
-        var K=C.kategorie[kat],pol=C.polozky.filter(function(p){return p.kat===kat}),dva=K.sloupce.length>1,ub=kat==='ubytovani',dop=kat==='doplnky',slu=kat==='sluzby',rez=ub||dop;
+        var K=C.kategorie[kat],pol=C.polozky.filter(function(p){return p.kat===kat}),dva=K.sloupce.length>1,ub=kat==='ubytovani',dop=kat==='doplnky',slu=kat==='sluzby',rez=ub||dop,lod=kat==='lode',dpr=kat==='doprava',oso=kat==='osoby';
         h+='<section class="card ck" style="margin-bottom:16px"><div class="row" style="margin-bottom:10px"><h2 style="margin:0">'+esc(K.n)+'</h2><span class="sp"></span>'+(K.pevne?'<span class="badge">pevné položky</span>':'<button type="button" class="btn sm pri" data-add="'+kat+'">+ Přidat položku</button>')+'</div>'+
-        (dop?'<p class="mut" style="margin:-4px 0 12px">Doplňky se zaškrtnutím „V rezervaci“ si host může přidat v kroku Doplňky.</p>':'')+(ub?'<p class="mut" style="margin:-4px 0 12px">Lůžka = kolik osob se vejde do jedné jednotky (prázdné = vlastní spaní, např. stan nebo karavan).</p>':'')+
-        '<div class="tw-wrap"><table class="ct"><thead><tr><th>Název</th><th>Poznámka</th>'+K.sloupce.map(function(c){return '<th class="n">'+esc(c)+'</th>'}).join('')+(ub?'<th class="n">Lůžek</th>':'')+(slu?'<th>Za</th>':'')+(rez?'<th>V rezervaci</th>':'')+'<th><span class="sr">Akce</span></th></tr></thead><tbody>'+
+        (dop?'<p class="mut" style="margin:-4px 0 12px">Doplňky se zaškrtnutím „V rezervaci“ si host může přidat v kroku Doplňky.</p>':'')+(oso?'<p class="mut" style="margin:-4px 0 12px">Nová skupina (např. senior, ZTP) se objeví v rezervaci v kroku Kdo jede a v ceníku.</p>':'')+(dpr?'<p class="mut" style="margin:-4px 0 12px">Pořadí = pořadí míst na řece po proudu (shora dolů). Kemp leží mezi Centrem a Zlatou Korunou. Nové místo se na mapě dopravy objeví mezi sousedy v seznamu.</p>':'')+(ub?'<p class="mut" style="margin:-4px 0 12px">Lůžka = kolik osob se vejde do jedné jednotky (prázdné = vlastní spaní, např. stan nebo karavan).</p>':'')+
+        '<div class="tw-wrap"><table class="ct"><thead><tr><th>Název</th><th>Poznámka</th>'+K.sloupce.map(function(c){return '<th class="n">'+esc(c)+'</th>'}).join('')+(ub?'<th class="n">Lůžek</th>':'')+(lod?'<th class="n">Osob</th>':'')+(slu?'<th>Za</th>':'')+(rez?'<th>V rezervaci</th>':'')+'<th><span class="sr">Akce</span></th></tr></thead><tbody>'+
         pol.map(function(p){var i=C.polozky.indexOf(p),fix=K.pevne||POUZITO[p.k]||/^dop\d|^(kanoe|raft)/.test(p.k);
           return '<tr class="'+(p.skryt===1?'skr':'')+'"><td><input class="inp" data-i="'+i+'" data-f="n" value="'+esc(p.n)+'" aria-label="Název" required></td><td><input class="inp" data-i="'+i+'" data-f="pozn" value="'+esc(p.pozn||'')+'" aria-label="Poznámka u '+esc(p.n)+'"></td>'+
           '<td class="n"><label class="kc"><input class="inp num" type="number" min="0" step="10" data-i="'+i+'" data-f="a" value="'+(p.a||0)+'" aria-label="'+esc(p.n)+' – '+esc(K.sloupce[0])+'"> Kč</label></td>'+
           (dva?'<td class="n"><label class="kc"><input class="inp num" type="number" min="0" step="10" data-i="'+i+'" data-f="b" value="'+(p.b==null?p.a:p.b)+'" aria-label="'+esc(p.n)+' – '+esc(K.sloupce[1])+'"> Kč</label></td>':'')+
-          (ub?'<td class="n"><input class="inp num" type="number" min="0" max="50" data-i="'+i+'" data-f="luzka" value="'+(p.luzka||'')+'" aria-label="Lůžek – '+esc(p.n)+'"></td>':'')+
+          (lod?'<td class="n"><input class="inp num" type="number" min="1" max="12" data-i="'+i+'" data-f="osob" value="'+(p.osob||'')+'" aria-label="Osob – '+esc(p.n)+'"></td>':'')+(ub?'<td class="n"><input class="inp num" type="number" min="0" max="50" data-i="'+i+'" data-f="luzka" value="'+(p.luzka||'')+'" aria-label="Lůžek – '+esc(p.n)+'"></td>':'')+
           (slu?'<td><input class="inp" data-i="'+i+'" data-f="jed" value="'+esc(p.jed||'')+'" aria-label="Jednotka – '+esc(p.n)+'" placeholder="den, osoba…"></td>':'')+
           (rez?'<td class="c"><input type="checkbox" class="cb" data-i="'+i+'" data-f="rez"'+(p.rez!==0?' checked':'')+' aria-label="Nabízet v rezervaci – '+esc(p.n)+'"></td>':'')+
-          '<td class="c">'+(fix&&!K.pevne?'<button type="button" class="btn ic gh" data-hide="'+i+'" aria-label="'+(p.skryt===1?'Zobrazit':'Skrýt')+' – '+esc(p.n)+'" title="Cenu používá text na webu, proto ji nejde smazat – jen skrýt z ceníku a rezervace.">'+SV(p.skryt===1?IC.okoX:IC.oko,18)+'</button>':K.pevne?'':'<button type="button" class="btn ic dan" data-del="'+i+'" aria-label="Smazat – '+esc(p.n)+'">'+SV(IC.kos,18)+'</button>')+'</td></tr>'}).join('')+
+          '<td class="c"><span class="row" style="flex-wrap:nowrap;gap:6px;justify-content:flex-end">'+(dpr?'<button type="button" class="btn ic gh" data-mv="'+i+'" data-d="-1" aria-label="Posunout výš – '+esc(p.n)+'"'+(pol.indexOf(p)?'':' disabled')+'>'+SV('<path d="m18 15-6-6-6 6"/>',18)+'</button><button type="button" class="btn ic gh" data-mv="'+i+'" data-d="1" aria-label="Posunout níž – '+esc(p.n)+'"'+(pol.indexOf(p)<pol.length-1?'':' disabled')+'>'+SV('<path d="m6 9 6 6 6-6"/>',18)+'</button>':'')+(p.k==='os'?'':fix&&!K.pevne?'<button type="button" class="btn ic gh" data-hide="'+i+'" aria-label="'+(p.skryt===1?'Zobrazit':'Skrýt')+' – '+esc(p.n)+'" title="Cenu používá text na webu, proto ji nejde smazat – jen skrýt z ceníku a rezervace.">'+SV(p.skryt===1?IC.okoX:IC.oko,18)+'</button>':K.pevne?'':'<button type="button" class="btn ic dan" data-del="'+i+'" aria-label="Smazat – '+esc(p.n)+'">'+SV(IC.kos,18)+'</button>')+'</span></td></tr>'}).join('')+
         '</tbody></table></div></section>';
       });
       h+='<div class="savebar" id="sb" hidden><span id="sbt">Neuložené změny v ceníku</span><span class="row"><button type="button" class="btn sm gh" id="sbz" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.3)">Zahodit</button><button type="button" class="btn sm pri" id="sbu">Uložit ceník</button></span></div>';
@@ -330,14 +330,15 @@ function cenik(m){
     function lista(){var b=$('#sb');if(b)b.hidden=!neulozeno()}
     m.addEventListener('input',function(e){var t=e.target;
       if(t.dataset.i!=null){var p=C.polozky[+t.dataset.i],f=t.dataset.f;
-        if(f==='rez')p.rez=t.checked?1:0;else if(f==='a'||f==='b'||f==='luzka'){var v=t.value===''?(f==='luzka'?0:0):Math.max(0,Math.round(+t.value));if(f==='luzka'){if(v)p.luzka=v;else delete p.luzka}else p[f]=v}else p[f]=t.value}
+        if(f==='rez')p.rez=t.checked?1:0;else if(f==='a'||f==='b'||f==='luzka'||f==='osob'){var v=t.value===''?(f==='luzka'?0:0):Math.max(0,Math.round(+t.value));if(f==='luzka'||f==='osob'){if(v)p[f]=v;else delete p[f]}else p[f]=v}else p[f]=t.value}
       else if(t.dataset.sl!=null){C.slevy[+t.dataset.sl][t.dataset.f]=Math.max(0,Math.round(+t.value||0))}
       else if(t.dataset.s){var g=function(x){return $('[data-s="'+x+'"]',m).value},pad=function(n){return('0'+n).slice(-2)};
         C.sezona.otevrenoOd=pad(g('od-m'))+'-'+pad(g('od-d'));C.sezona.otevrenoDo=pad(g('do-m'))+'-'+pad(g('do-d'));C.sezona.hlavniOd=+g('h-od');C.sezona.hlavniDo=+g('h-do')}
       lista()});
     m.addEventListener('change',function(e){if(e.target.matches('input[type=checkbox],select'))m.dispatchEvent(new Event('input'))});
     m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
-      if(b.dataset.add){var kat=b.dataset.add;C.polozky.push({k:'x'+Date.now().toString(36),kat:kat,n:'',pozn:'',a:0,b:kat==='sluzby'?undefined:0,rez:kat==='doplnky'?1:undefined,jed:kat==='sluzby'?'':undefined});kresli();var ins=$$('section.ck',m).filter(function(s){return $('[data-add="'+kat+'"]',s)})[0];var inp=ins&&$$('tbody tr:last-child input[data-f=n]',ins)[0];if(inp)inp.focus()}
+      if(b.dataset.add){var kat=b.dataset.add;C.polozky.push({k:'x'+Date.now().toString(36),kat:kat,n:'',pozn:'',a:0,b:(kat==='sluzby'||kat==='doprava')?undefined:0,rez:(kat==='doplnky'||kat==='ubytovani')?1:undefined,jed:kat==='sluzby'?'':undefined,osob:kat==='lode'?4:undefined});kresli();var ins=$$('section.ck',m).filter(function(s){return $('[data-add="'+kat+'"]',s)})[0];var inp=ins&&$$('tbody tr:last-child input[data-f=n]',ins)[0];if(inp)inp.focus()}
+      else if(b.dataset.mv){var ix=+b.dataset.mv,d=+b.dataset.d,kt=C.polozky[ix].kat,j=ix+d;while(j>=0&&j<C.polozky.length&&C.polozky[j].kat!==kt)j+=d;if(j>=0&&j<C.polozky.length){var t=C.polozky[ix];C.polozky[ix]=C.polozky[j];C.polozky[j]=t;kresli();var nb=$('[data-mv="'+j+'"][data-d="'+d+'"]',m);if(nb&&!nb.disabled)nb.focus()}}
       else if(b.dataset.del){var p=C.polozky[+b.dataset.del];if(confirm('Smazat položku „'+(p.n||'bez názvu')+'“?')){C.polozky.splice(+b.dataset.del,1);kresli()}}
       else if(b.dataset.hide){var q=C.polozky[+b.dataset.hide];if(q.skryt===1)delete q.skryt;else q.skryt=1;kresli()}
       else if(b.id==='sla'){C.slevy.push({noci:(C.slevy.reduce(function(a,x){return Math.max(a,x.noci)},1))+1,proc:5});kresli()}
@@ -349,7 +350,7 @@ function cenik(m){
         if(chyba){toast('Každá položka musí mít název.',1);var ix=C.polozky.indexOf(chyba),el=$('input[data-i="'+ix+'"][data-f=n]',m);if(el){el.setAttribute('aria-invalid','true');el.focus()}return}
         var o=C.sezona.otevrenoOd,d2=C.sezona.otevrenoDo;if(d2<=o){toast('Konec sezóny musí být po jejím začátku.',1);return}
         if(C.sezona.hlavniDo<C.sezona.hlavniOd){toast('Hlavní sezóna musí končit až po svém začátku.',1);return}
-        C.polozky.forEach(function(p){if(p.b===undefined)delete p.b;if(p.rez===undefined)delete p.rez;if(p.jed===undefined)delete p.jed});
+        C.polozky.forEach(function(p){['b','rez','jed','osob'].forEach(function(k){if(p[k]===undefined)delete p[k]})});
         KK.cenik.uloz(JSON.parse(JSON.stringify(C))).then(function(){puv=JSON.stringify(C);lista();toast('Ceník uložen – ceny se změnily na celém webu i v rezervaci.')})}
     });
     kresli();
@@ -359,8 +360,7 @@ function cenik(m){
 /* ---------- PŘIPRAVUJEME ---------- */
 function pripravujeme(m,v){
   var D={rezervace:['Rezervace','Přehled poptávek ubytování z webu a jejich vyřízení.',['Seznam poptávek s filtrováním (nové, potvrzené, zrušené)','Detail poptávky, potvrzení nebo zamítnutí jedním kliknutím a e-mail hostovi','Kalendář obsazenosti chatek, teepee a podsadových stanů','Ruční zápis rezervace přijaté po telefonu']],
-   cenik:['Ceník a kapacity','Jediné místo, kde se mění ceny – projeví se na webu i ve výpočtu rezervace.',['Ceny v sezóně a mimo sezónu (osoby, děti, stany, chatky, teepee, doplňky)','Počty chatek, teepee a podsadových stanů','Termín sezóny a otevírací doba','Slevy za více nocí']],
-   lode:['Půjčovna lodí','Lodě PE-LA, ceny a rezervace lodí.',['Flotila: kanoe, rafty 4, 6 a 8 osob – počty a ceny','Rezervace lodí a dopravy na místo vyplutí','Kalendář dostupnosti lodí']]}[v];
+   cenik:['Ceník a kapacity','Jediné místo, kde se mění ceny – projeví se na webu i ve výpočtu rezervace.',['Ceny v sezóně a mimo sezónu (osoby, děti, stany, chatky, teepee, doplňky)','Počty chatek, teepee a podsadových stanů','Termín sezóny a otevírací doba','Slevy za více nocí']]}[v];
   m.innerHTML='<div class="ph"><div><h1>'+D[0]+'</h1><p>'+D[1]+'</p></div><span class="badge warn">Připravujeme</span></div><div class="card soonc"><h2>Co tu bude</h2><ul>'+D[2].map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul></div>';
 }
 

@@ -1,6 +1,6 @@
 (function(){
 var sec=document.getElementById('doprava');if(!sec)return;
-var STOPS=[["Vyšší Brod", 1150], ["Rožmberk nad Vltavou", 850], ["Nahořany", 650], ["Kemp Vltava", 550], ["Viking / Pískárna", 500], ["Vltavan / Spolí", 350], ["Centrum", 250], ["Zlatá Koruna", 350], ["Boršov", 900]];if(window.KKC)STOPS.forEach(function(x,i){var p=KKC.p("dop"+(i+1));if(p)x[1]=+p.a}),NS='http://www.w3.org/2000/svg';
+var STOPS=[["Vyšší Brod", 1150], ["Rožmberk nad Vltavou", 850], ["Nahořany", 650], ["Kemp Vltava", 550], ["Viking / Pískárna", 500], ["Vltavan / Spolí", 350], ["Centrum", 250], ["Zlatá Koruna", 350], ["Boršov", 900]],NS='http://www.w3.org/2000/svg';
 var W=480,H=740;
 function E(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
 /* ---------- geometrie: řeka teče shora dolů, silnice vpravo od ní ---------- */
@@ -13,6 +13,14 @@ var D_RIVER=poly(rx,0),D_ROAD=poly(rx,78);
 var road=roadEl,L=road.getTotalLength(),rv=riverEl,RL=rv.getTotalLength();
 var trail=document.getElementById('dpTrail'),van=document.getElementById('dpVan'),camp=document.getElementById('dpCamp'),gS=document.getElementById('dpStops');
 var FR=[.045,.14,.235,.33,.43,.535,.64,.82,.955],CAMP=.735;
+/* zastávky z ceníku: pořadí v ceníku = pořadí po proudu; nové se umístí mezi sousedy */
+if(window.KKC){var FRK={dop1:.045,dop2:.14,dop3:.235,dop4:.33,dop5:.43,dop6:.535,dop7:.64,dop8:.82,dop9:.955};
+ var vse=KKC.kat('doprava'),pol=vse.map(function(p){return p.poloha!=null?+p.poloha/100:FRK[p.k]!=null?FRK[p.k]:null});
+ pol.forEach(function(v,i){if(v!=null)return;var a=null,b=null,ia=i,ib=i;
+  while(ia>0&&a==null){ia--;a=pol[ia]}while(ib<pol.length-1&&b==null){ib++;b=pol[ib]}
+  if(a==null)a=0.01;if(b==null)b=0.99;pol[i]=a+(b-a)*(i-ia)/Math.max(1,(ib-ia)||1)});
+ STOPS=[];FR=[];vse.forEach(function(p,i){if(p.skryt===1)return;STOPS.push([p.n,KKC.v(p.k,'a'),p.k]);FR.push(Math.min(.99,Math.max(.01,pol[i])))});
+ var chW=sec.querySelector('.dp-chips');if(chW)chW.innerHTML=STOPS.map(function(x,i){return '<button type="button" class="dp-chip" data-i="'+i+'"><span class="dp-dot"></span><b>'+x[0].replace(/[&<>]/g,'')+'</b><em>'+KKC.t(x[2],'a')+'</em></button>'}).join('');}
 function rp(f){return rv.getPointAtLength(RL*f)}
 /* ---------- zastávky na řece, popisek vlevo ---------- */
 var stEls=STOPS.map(function(s,i){var p=rp(FR[i]),g=E('g',{class:'dp-st',tabindex:0,role:'button','aria-label':s[0],transform:'translate('+p.x.toFixed(1)+' '+p.y.toFixed(1)+')'},gS);
