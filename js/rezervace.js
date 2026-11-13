@@ -54,8 +54,9 @@ const same=(a,b)=>a&&b&&a.getTime()===b.getTime();
 const iso=d=>d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`:'';
 const now=new Date(),TODAY=D(now.getFullYear(),now.getMonth(),now.getDate());
 const SZ=KC.data.sezona,md=(s)=>s.split('-').map(Number),[OM,OD]=md(SZ.otevrenoOd),[CM,CD]=md(SZ.otevrenoDo);
-const openNight=d=>{const v=(d.getMonth()+1)*100+d.getDate();return v>=OM*100+OD&&v<CM*100+CD};   // poslední noc je den před koncem sezóny
-const endOf=y=>D(y,CM-1,CD);
+const CELOROK=KC.celorocne;
+const openNight=d=>{if(CELOROK)return true;const v=(d.getMonth()+1)*100+d.getDate();return v>=OM*100+OD&&v<CM*100+CD};   // poslední noc je den před koncem sezóny
+const endOf=y=>CELOROK?D(y+1,0,31):D(y,CM-1,CD);
 const isHi=d=>KC.hlavni(d.getMonth());
 /* OBSAZENOST: sem se napojí rezervační systém. Formát: {chatka:['2027-07-18',…], teepee:[…]} = obsazené noci */
 const BUSY=window.RZ_OBSAZENO||{};
@@ -170,7 +171,7 @@ function render(){R=compute();const pending=S.from&&!S.to;if(S.to&&!$('rzWarn').
  EXTRAS.forEach(x=>{x.el.classList.toggle('on',S[x.k]>0);x.el.setAttribute('aria-checked',S[x.k]>0);x.st.upd()});
  /* souhrn */
  const hiN=R.nights.filter(isHi).length,se=$('rzSeason');
- se.textContent=!R.n?'Termín':hiN===R.n?'Sezóna':hiN===0?'Mimo sezónu':'Sezóna + mimo';se.classList.toggle('lo',R.n>0&&hiN===0);
+ se.textContent=!R.n||KC.jednaCena?'Termín':hiN===R.n?'Sezóna':hiN===0?'Mimo sezónu':'Sezóna + mimo';se.classList.toggle('lo',R.n>0&&hiN===0&&!KC.jednaCena);
  if(!S.to){$('rzTotal').textContent='— Kč';delete tw.rzTotal;$('rzBarTotal').textContent='—';delete tw.rzBarTotal;$('rzPer').textContent=pending?'Vyberte v kalendáři den odjezdu':'Cenu uvidíte po výběru termínu'}
  else{tween($('rzTotal'),R.total);tween($('rzBarTotal'),R.total);$('rzPer').textContent=persons()&&R.n?`≈ ${fmt(R.total/persons()/R.n)} na osobu a noc`:''}
  const d=$('rzDisc');d.hidden=!R.disc;d.textContent=R.disc?`Sleva ${Math.round(R.disc*100)} % · ušetříte ${fmt(R.dv)}`:'';

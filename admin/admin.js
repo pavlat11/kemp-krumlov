@@ -335,24 +335,27 @@ function cenik(m){
     var MES=function(sel){return M.map(function(x,i){return '<option value="'+(i+1)+'"'+(i+1===sel?' selected':'')+'>'+x+'</option>'}).join('')};
     var md=function(v){return v.split('-').map(Number)};
     function kresli(){
-      var o=md(C.sezona.otevrenoOd),d=md(C.sezona.otevrenoDo);
+      var o=md(C.sezona.otevrenoOd),d=md(C.sezona.otevrenoDo),HZ=C.sezona.hlavniZap!==false,CR=C.sezona.celorocne===true;
       var h='<div class="ph"><div><h1>Ceník a kapacity</h1><p>Jediné místo, kde se mění ceny. Projeví se všude na webu – v úvodu, u ubytování, v ceníku, na mapě kempu a u dopravy – a také ve výpočtu rezervace.</p></div>'+
       '<div class="row"><a class="btn gh" href="'+WEB+'#ubytovani" target="_blank" rel="noopener">Zobrazit web '+SV(IC.ven,16)+'</a><button type="button" class="btn dan" id="cr">Obnovit výchozí ceník</button></div></div>'+
-      '<div class="grid g2" style="margin-bottom:16px"><div class="card"><h2>Sezóna</h2><p class="mut">Kdy je kemp otevřený a kdy platí ceny „Sezóna“.</p>'+
-      '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))"><fieldset class="fs"><legend>Otevřeno od</legend><div class="row"><select class="inp" data-s="od-d" aria-label="Den otevření">'+DNY(o[1])+'</select><select class="inp" data-s="od-m" aria-label="Měsíc otevření">'+MES(o[0])+'</select></div></fieldset>'+
-      '<fieldset class="fs"><legend>Otevřeno do (den odjezdu)</legend><div class="row"><select class="inp" data-s="do-d" aria-label="Den uzavření">'+DNY(d[1])+'</select><select class="inp" data-s="do-m" aria-label="Měsíc uzavření">'+MES(d[0])+'</select></div></fieldset>'+
-      '<fieldset class="fs"><legend>Hlavní sezóna</legend><div class="row"><select class="inp" data-s="h-od" aria-label="Hlavní sezóna od">'+MES(C.sezona.hlavniOd)+'</select><span>–</span><select class="inp" data-s="h-do" aria-label="Hlavní sezóna do">'+MES(C.sezona.hlavniDo)+'</select></div></fieldset></div></div>'+
+      '<div class="grid g2" style="margin-bottom:16px"><div class="card"><h2>Sezóna</h2><p class="mut">Kdy je kemp otevřený a jestli platí vyšší ceny v hlavní sezóně.</p>'+
+      '<div class="sw-l"><label class="sw"><input type="checkbox" data-sz="celorocne"'+(CR?' checked':'')+'><span aria-hidden="true"></span>Otevřeno celý rok</label>'+
+      '<label class="sw"><input type="checkbox" data-sz="hlavniZap"'+(HZ?' checked':'')+'><span aria-hidden="true"></span>Hlavní sezóna s vyššími cenami</label></div>'+
+      (HZ?'':'<p class="mut" style="margin:0 0 12px">Vypnuto: po celý rok platí jedna cena (sloupec Cena). Ceny „Mimo sezónu“ zůstanou uložené pro případ, že sezónu znovu zapnete.</p>')+
+      '<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">'+(CR?'':'<fieldset class="fs"><legend>Otevřeno od</legend><div class="row"><select class="inp" data-s="od-d" aria-label="Den otevření">'+DNY(o[1])+'</select><select class="inp" data-s="od-m" aria-label="Měsíc otevření">'+MES(o[0])+'</select></div></fieldset>'+
+      '<fieldset class="fs"><legend>Otevřeno do (den odjezdu)</legend><div class="row"><select class="inp" data-s="do-d" aria-label="Den uzavření">'+DNY(d[1])+'</select><select class="inp" data-s="do-m" aria-label="Měsíc uzavření">'+MES(d[0])+'</select></div></fieldset>')+
+      (HZ?'<fieldset class="fs"><legend>Hlavní sezóna</legend><div class="row"><select class="inp" data-s="h-od" aria-label="Hlavní sezóna od">'+MES(C.sezona.hlavniOd)+'</select><span>–</span><select class="inp" data-s="h-do" aria-label="Hlavní sezóna do">'+MES(C.sezona.hlavniDo)+'</select></div></fieldset>':'')+'</div></div>'+
       '<div class="card"><h2>Slevy za více nocí</h2><p class="mut">Sleva se počítá z celé ceny pobytu. Platí nejvyšší, na kterou má host nárok.</p><div id="sl">'+
       C.slevy.map(function(x,i){return '<div class="row" style="margin-bottom:8px"><label class="row">od <input class="inp num" type="number" min="1" max="60" data-sl="'+i+'" data-f="noci" value="'+x.noci+'" aria-label="Počet nocí"> nocí</label><label class="row">sleva <input class="inp num" type="number" min="0" max="90" data-sl="'+i+'" data-f="proc" value="'+x.proc+'" aria-label="Sleva v procentech"> %</label><button type="button" class="btn ic dan" data-sld="'+i+'" aria-label="Odebrat slevu">'+SV(IC.kos,18)+'</button></div>'}).join('')+
       '</div><button type="button" class="btn sm gh" id="sla">+ Přidat slevu</button></div></div>';
       Object.keys(C.kategorie).forEach(function(kat){
-        var K=C.kategorie[kat],pol=C.polozky.filter(function(p){return p.kat===kat}),dva=K.sloupce.length>1,ub=kat==='ubytovani',dop=kat==='doplnky',slu=kat==='sluzby',rez=ub||dop,lod=kat==='lode',dpr=kat==='doprava',oso=kat==='osoby';
+        var K=C.kategorie[kat],pol=C.polozky.filter(function(p){return p.kat===kat}),dva=K.sloupce.length>1&&HZ,SL=dva||K.sloupce.length<2?K.sloupce:['Cena'],ub=kat==='ubytovani',dop=kat==='doplnky',slu=kat==='sluzby',rez=ub||dop,lod=kat==='lode',dpr=kat==='doprava',oso=kat==='osoby';
         h+='<section class="card ck" style="margin-bottom:16px"><div class="row" style="margin-bottom:10px"><h2 style="margin:0">'+esc(K.n)+'</h2><span class="sp"></span>'+(K.pevne?'<span class="badge">pevné položky</span>':'<button type="button" class="btn sm pri" data-add="'+kat+'">+ Přidat položku</button>')+'</div>'+
         (dop?'<p class="mut" style="margin:-4px 0 12px">Doplňky se zaškrtnutím „V rezervaci“ si host může přidat v kroku Doplňky.</p>':'')+(oso?'<p class="mut" style="margin:-4px 0 12px">Nová skupina (např. senior, ZTP) se objeví v rezervaci v kroku Kdo jede a v ceníku.</p>':'')+(dpr?'<p class="mut" style="margin:-4px 0 12px">Pořadí = pořadí míst na řece po proudu (shora dolů). Kemp leží mezi Centrem a Zlatou Korunou. Nové místo se na mapě dopravy objeví mezi sousedy v seznamu.</p>':'')+(ub?'<p class="mut" style="margin:-4px 0 12px">Lůžka = kolik osob se vejde do jedné jednotky (prázdné = vlastní spaní, např. stan nebo karavan).</p>':'')+
-        '<div class="tw-wrap"><table class="ct"><thead><tr><th>Název</th><th>Poznámka</th>'+K.sloupce.map(function(c){return '<th class="n">'+esc(c)+'</th>'}).join('')+(ub?'<th class="n">Lůžek</th>':'')+(lod?'<th class="n">Osob</th>':'')+(slu?'<th>Za</th>':'')+(rez?'<th>V rezervaci</th>':'')+'<th><span class="sr">Akce</span></th></tr></thead><tbody>'+
+        '<div class="tw-wrap"><table class="ct"><thead><tr><th>Název</th><th>Poznámka</th>'+SL.slice(0,dva?2:1).map(function(c){return '<th class="n">'+esc(c)+'</th>'}).join('')+(ub?'<th class="n">Lůžek</th>':'')+(lod?'<th class="n">Osob</th>':'')+(slu?'<th>Za</th>':'')+(rez?'<th>V rezervaci</th>':'')+'<th><span class="sr">Akce</span></th></tr></thead><tbody>'+
         pol.map(function(p){var i=C.polozky.indexOf(p),fix=K.pevne||POUZITO[p.k]||/^dop\d|^(kanoe|raft)/.test(p.k);
           return '<tr class="'+(p.skryt===1?'skr':'')+'"><td><input class="inp" data-i="'+i+'" data-f="n" value="'+esc(p.n)+'" aria-label="Název" required></td><td><input class="inp" data-i="'+i+'" data-f="pozn" value="'+esc(p.pozn||'')+'" aria-label="Poznámka u '+esc(p.n)+'"></td>'+
-          '<td class="n"><label class="kc"><input class="inp num" type="number" min="0" step="10" data-i="'+i+'" data-f="a" value="'+(p.a||0)+'" aria-label="'+esc(p.n)+' – '+esc(K.sloupce[0])+'"> Kč</label></td>'+
+          '<td class="n"><label class="kc"><input class="inp num" type="number" min="0" step="10" data-i="'+i+'" data-f="a" value="'+(p.a||0)+'" aria-label="'+esc(p.n)+' – '+esc(SL[0])+'"> Kč</label></td>'+
           (dva?'<td class="n"><label class="kc"><input class="inp num" type="number" min="0" step="10" data-i="'+i+'" data-f="b" value="'+(p.b==null?p.a:p.b)+'" aria-label="'+esc(p.n)+' – '+esc(K.sloupce[1])+'"> Kč</label></td>':'')+
           (lod?'<td class="n"><input class="inp num" type="number" min="1" max="12" data-i="'+i+'" data-f="osob" value="'+(p.osob||'')+'" aria-label="Osob – '+esc(p.n)+'"></td>':'')+(ub?'<td class="n"><input class="inp num" type="number" min="0" max="50" data-i="'+i+'" data-f="luzka" value="'+(p.luzka||'')+'" aria-label="Lůžek – '+esc(p.n)+'"></td>':'')+
           (slu?'<td><input class="inp" data-i="'+i+'" data-f="jed" value="'+esc(p.jed||'')+'" aria-label="Jednotka – '+esc(p.n)+'" placeholder="den, osoba…"></td>':'')+
@@ -369,7 +372,8 @@ function cenik(m){
         if(f==='rez')p.rez=t.checked?1:0;else if(f==='a'||f==='b'||f==='luzka'||f==='osob'){var v=t.value===''?(f==='luzka'?0:0):Math.max(0,Math.round(+t.value));if(f==='luzka'||f==='osob'){if(v)p[f]=v;else delete p[f]}else p[f]=v}else p[f]=t.value}
       else if(t.dataset.sl!=null){C.slevy[+t.dataset.sl][t.dataset.f]=Math.max(0,Math.round(+t.value||0))}
       else if(t.dataset.s){var g=function(x){return $('[data-s="'+x+'"]',m).value},pad=function(n){return('0'+n).slice(-2)};
-        C.sezona.otevrenoOd=pad(g('od-m'))+'-'+pad(g('od-d'));C.sezona.otevrenoDo=pad(g('do-m'))+'-'+pad(g('do-d'));C.sezona.hlavniOd=+g('h-od');C.sezona.hlavniDo=+g('h-do')}
+        if($('[data-s="od-m"]',m)){C.sezona.otevrenoOd=pad(g('od-m'))+'-'+pad(g('od-d'));C.sezona.otevrenoDo=pad(g('do-m'))+'-'+pad(g('do-d'))}if($('[data-s="h-od"]',m)){C.sezona.hlavniOd=+g('h-od');C.sezona.hlavniDo=+g('h-do')}}
+      else if(t.dataset.sz){C.sezona[t.dataset.sz]=t.checked;var fz=t.dataset.sz;kresli();var nt=$('[data-sz="'+fz+'"]',m);if(nt)nt.focus()}
       lista()});
     m.addEventListener('change',function(e){if(e.target.matches('input[type=checkbox],select'))m.dispatchEvent(new Event('input'))});
     m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
@@ -384,8 +388,8 @@ function cenik(m){
       else if(b.id==='sbu'){
         var chyba=C.polozky.find(function(p){return !String(p.n).trim()});
         if(chyba){toast('Každá položka musí mít název.',1);var ix=C.polozky.indexOf(chyba),el=$('input[data-i="'+ix+'"][data-f=n]',m);if(el){el.setAttribute('aria-invalid','true');el.focus()}return}
-        var o=C.sezona.otevrenoOd,d2=C.sezona.otevrenoDo;if(d2<=o){toast('Konec sezóny musí být po jejím začátku.',1);return}
-        if(C.sezona.hlavniDo<C.sezona.hlavniOd){toast('Hlavní sezóna musí končit až po svém začátku.',1);return}
+        var o=C.sezona.otevrenoOd,d2=C.sezona.otevrenoDo;if(!C.sezona.celorocne&&d2<=o){toast('Konec sezóny musí být po jejím začátku.',1);return}
+        if(C.sezona.hlavniZap!==false&&C.sezona.hlavniDo<C.sezona.hlavniOd){toast('Hlavní sezóna musí končit až po svém začátku.',1);return}
         C.polozky.forEach(function(p){['b','rez','jed','osob'].forEach(function(k){if(p[k]===undefined)delete p[k]})});
         KK.cenik.uloz(JSON.parse(JSON.stringify(C))).then(function(){puv=JSON.stringify(C);lista();toast('Ceník uložen – ceny se změnily na celém webu i v rezervaci.')})}
     });

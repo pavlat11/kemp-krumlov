@@ -180,3 +180,12 @@ table.ct{width:100%;border-collapse:separate;border-spacing:6px 4px;min-width:64
  .tx{grid-template-columns:1fr}.tx .meta{justify-content:flex-start}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* přepínače */
+.sw-l{display:flex;flex-direction:column;gap:10px;margin:2px 0 14px}
+.sw{display:inline-flex;align-items:center;gap:10px;font-weight:700;cursor:pointer;width:max-content;max-width:100%}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.sw span{width:42px;height:24px;border-radius:99px;background:#c9d1cc;position:relative;flex:none;transition:background .15s}
+.sw span::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .15s}
+.sw input:checked+span{background:var(--deep2,#1d5c3f)}
+.sw input:checked+span::after{transform:translateX(18px)}
+.sw input:focus-visible+span{outline:3px solid var(--sun,#f4a64a);outline-offset:2px}

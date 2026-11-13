@@ -9,7 +9,8 @@
 'use strict';
 /* sloupce: a = sezóna / 1 den / cena,  b = mimo sezónu / vícedenní */
 var VYCHOZI={verze:1,
- sezona:{otevrenoOd:'05-01',otevrenoDo:'10-01',hlavniOd:6,hlavniDo:8},
+ sezona:{otevrenoOd:'05-01',otevrenoDo:'10-01',hlavniOd:6,hlavniDo:8,hlavniZap:true,celorocne:false},
+ /* hlavniZap:false = jedna cena po celý rok (platí sloupec a),  celorocne:true = kemp otevřený celý rok */
  slevy:[{noci:2,proc:10},{noci:3,proc:15},{noci:4,proc:20}],
  kategorie:{
   osoby:{n:'Osoby',sloupce:['Sezóna','Mimo sezónu']},
@@ -48,20 +49,22 @@ function nacti(){
   return JSON.parse(JSON.stringify(VYCHOZI));
 }
 var C=nacti();
+var HZ=C.sezona.hlavniZap!==false;
 var mapa={};C.polozky.forEach(function(p){mapa[p.k]=p});
 var fmt=function(n){return Math.round(n).toLocaleString('cs-CZ').replace(/\s/g,' ')};
 var KKC=window.KKC={
   data:C,vychozi:VYCHOZI,fmt:fmt,doplň:doplň,
   p:function(k){return mapa[k]},
   /* cena jako číslo: mode a | b | min */
-  v:function(k,mode){var p=mapa[k];if(!p)return 0;var a=+p.a||0,b=p.b==null?a:+p.b;return mode==='b'?b:mode==='min'?Math.min(a,b):a},
+  jednaCena:!HZ,celorocne:C.sezona.celorocne===true,
+  v:function(k,mode){var p=mapa[k];if(!p)return 0;var a=+p.a||0,b=p.b==null||!HZ?a:+p.b;return mode==='b'?b:mode==='min'?Math.min(a,b):a},
   /* text: „890 Kč“, „od 890 Kč“ (jen když se ceny liší) */
   t:function(k,mode){var p=mapa[k];if(!p)return '';var a=KKC.v(k,'a'),b=KKC.v(k,'b');if(mode==='od')return (a!==b?'od ':'')+fmt(Math.min(a,b))+' Kč';return fmt(KKC.v(k,mode))+' Kč'},
   kat:function(kat){return C.polozky.filter(function(p){return p.kat===kat})},
   minUbyt:function(){var v=KKC.kat('ubytovani').filter(function(p){return p.rez!==0}).map(function(p){return KKC.v(p.k,'min')});return v.length?Math.min.apply(null,v):0},
   sleva:function(n){var s=0;(C.slevy||[]).forEach(function(x){if(n>=x.noci&&x.proc>s)s=x.proc});return s/100},
   slevyText:function(){return (C.slevy||[]).slice().sort(function(a,b){return a.noci-b.noci}).map(function(x,i,arr){return (i===arr.length-1&&arr.length>1?x.noci+'+ nocí':x.noci+' '+(x.noci<5?'noci':'nocí'))+' −'+x.proc+' %'}).join(', ')},
-  hlavni:function(m){return m+1>=C.sezona.hlavniOd&&m+1<=C.sezona.hlavniDo},
+  hlavni:function(m){return HZ&&m+1>=C.sezona.hlavniOd&&m+1<=C.sezona.hlavniDo},
   mesic:['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec']
 };
 
@@ -89,12 +92,13 @@ if(tb){
     var pol=KKC.kat(kat).filter(function(p){return p.skryt!==1});if(!pol.length)return;
     h+='<tr class="ck-kat"><th colspan="3" scope="colgroup">'+esc(C.kategorie[kat].n)+'</th></tr>';
     pol.forEach(function(p){var pozn=p.pozn;if(p.k==='os'&&mapa.poplatek)pozn='včetně místního poplatku '+KKC.t('poplatek','a');if(p.luzka)pozn=(pozn?pozn+', ':'')+'kapacita '+p.luzka;
-      h+='<tr><td>'+esc(p.n)+(pozn?' <small>'+esc(pozn)+'</small>':'')+'</td><td>'+KKC.t(p.k,'a')+'</td><td>'+KKC.t(p.k,'b')+'</td></tr>'});
+      h+='<tr><td>'+esc(p.n)+(pozn?' <small>'+esc(pozn)+'</small>':'')+'</td>'+(HZ?'<td>'+KKC.t(p.k,'a')+'</td><td>'+KKC.t(p.k,'b')+'</td>':'<td colspan="2">'+KKC.t(p.k,'a')+'</td>')+'</tr>'});
   });
   var sl=KKC.kat('sluzby').filter(function(p){return p.skryt!==1&&p.k!=='poplatek'});
   if(sl.length){h+='<tr class="ck-kat"><th colspan="3" scope="colgroup">'+esc(C.kategorie.sluzby.n)+'</th></tr>';sl.forEach(function(p){h+='<tr><td>'+esc(p.n)+(p.pozn?' <small>'+esc(p.pozn)+'</small>':'')+'</td><td colspan="2">'+KKC.t(p.k,'a')+(p.jed?' / '+esc(p.jed):'')+'</td></tr>'})}
   tb.innerHTML=h;
-  var th=document.querySelector('#rzPrice thead th small');if(th)th.textContent=KKC.mesic[C.sezona.hlavniOd-1]+'–'+KKC.mesic[C.sezona.hlavniDo-1];
+  var ths=document.querySelectorAll('#rzPrice thead th');if(!HZ&&ths.length===3){ths[1].colSpan=2;ths[1].innerHTML='Cena';ths[1].removeAttribute('data-t');ths[2].remove()}
+  var th=HZ&&document.querySelector('#rzPrice thead th small');if(th)th.textContent=KKC.mesic[C.sezona.hlavniOd-1]+'–'+KKC.mesic[C.sezona.hlavniDo-1];
   var no=document.querySelector('#rzPrice .note');if(no)no.textContent='Ceny za noc.'+((C.slevy||[]).length?' Sleva: '+KKC.slevyText()+'.':'');
 }
 var dh=document.querySelector('.rz-disc-hint');if(dh)dh.textContent=(C.slevy||[]).length?'Sleva: '+KKC.slevyText():'';
