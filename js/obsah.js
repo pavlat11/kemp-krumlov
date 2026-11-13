@@ -28,10 +28,11 @@ if(s){
   meta('property','og:title',s.ogTitle||s.title);meta('property','og:description',s.ogDescription||s.description);
   if(s.ogImage)meta('property','og:image',/^https?:/.test(s.ogImage)?s.ogImage:(s.canonical||'').replace(/\/$/,'')+'/'+s.ogImage.replace(/^\//,''));
   if(s.googleVerify)meta('name','google-site-verification',s.googleVerify);
+  if(s.keywords)meta('name','keywords',s.keywords);
   var c=document.head.querySelector('link[rel=canonical]');if(c&&s.canonical)c.href=s.canonical;
   var u=document.head.querySelector('meta[property="og:url"]');if(u&&s.canonical)u.setAttribute('content',s.canonical);
   var ld=document.getElementById('ld-kemp');
-  if(ld&&s.firma)try{var j=JSON.parse(ld.textContent),f=s.firma;j.name=f.nazev||j.name;j.telephone=f.telefon||j.telephone;j.email=f.email||j.email;j.priceRange=f.cenovaHladina||j.priceRange;if(s.canonical)j.url=s.canonical;
+  if(ld&&s.firma)try{var j=JSON.parse(ld.textContent),f=s.firma;j.name=f.nazev||j.name;j.telephone=f.telefon||j.telephone;j.email=f.email||j.email;if(s.keywords)j.keywords=s.keywords;if(s.canonical)j.url=s.canonical;
     j.address.streetAddress=f.ulice||j.address.streetAddress;j.address.addressLocality=f.mesto||j.address.addressLocality;j.address.postalCode=f.psc||j.address.postalCode;
     if(f.lat&&f.lng){j.geo.latitude=+f.lat;j.geo.longitude=+f.lng}ld.textContent=JSON.stringify(j)}catch(e){}
 }

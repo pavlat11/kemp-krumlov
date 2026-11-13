@@ -868,7 +868,8 @@ window.KK_PREKLADY={
 },
 "seo": {
 "title": "Kemp Krumlov — riverside campsite closest to the centre of Český Krumlov",
-"desc": "Kemp Krumlov on the bank of the Vltava, the closest campsite to the centre of Český Krumlov. Cabins, teepees, platform tents, pitches for tents and caravans, PE-LA boat rental."
+"desc": "Kemp Krumlov on the bank of the Vltava, the closest campsite to the centre of Český Krumlov. Cabins, teepees, platform tents, pitches for tents and caravans, PE-LA boat rental.",
+"keywords": "camping Cesky Krumlov, campsite Cesky Krumlov, Kemp Krumlov, camping Vltava river, riverside campsite Czech Republic, cabins Cesky Krumlov, accommodation Cesky Krumlov, teepee, glamping tents, caravan pitch, canoe rental, rafting Vltava, canoeing Vltava, PE-LA"
 }
 },
 "de": {
@@ -1737,7 +1738,8 @@ window.KK_PREKLADY={
 },
 "seo": {
 "title": "Kemp Krumlov — Wassersport-Camp am nächsten zum Zentrum von Český Krumlov",
-"desc": "Kemp Krumlov am Ufer der Moldau, am nächsten zum Zentrum von Český Krumlov. Hütten, Tipis, Plattformzelte, Plätze für Zelte und Wohnwagen, Bootsverleih PE-LA."
+"desc": "Kemp Krumlov am Ufer der Moldau, am nächsten zum Zentrum von Český Krumlov. Hütten, Tipis, Plattformzelte, Plätze für Zelte und Wohnwagen, Bootsverleih PE-LA.",
+"keywords": "Camping Krumau, Campingplatz Český Krumlov, Kemp Krumlov, Camping Moldau, Campingplatz am Fluss Tschechien, Hütten Krumau, Unterkunft Krumau, Tipi, Plattformzelte, Wohnmobilstellplatz, Kanuverleih, Rafting Moldau, Kanu Moldau, PE-LA"
 }
 }
 };

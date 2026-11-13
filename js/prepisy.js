@@ -22,7 +22,7 @@ var Tcs=get('dtexty')||{},TL=L==='cs'?{}:(get('dtexty.'+L)||{}),T={};
 Object.keys(Tcs).forEach(function(k){T[k]=Tcs[k]});Object.keys(TL).forEach(function(k){T[k]=TL[k]});
 var O=get('obrazky')||{},I=get('ikony')||{};
 /* výchozí překlady ceníku, rezervace a dopravy (js/preklady.js) – načtou se jen pro EN/DE, přednost mají překlady z administrace */
-if(L!=='cs'&&document.readyState==='loading')document.write('<script src="'+BASE+'js/preklady.js?v=2"><\/script>');
+if(L!=='cs'&&document.readyState==='loading')document.write('<script src="'+BASE+'js/preklady.js?v=3"><\/script>');
 var PD=L==='cs'?false:null;
 function slov(){if(PD!==null)return PD;var d=window.KK_PREKLADY&&window.KK_PREKLADY[L];
   if(d){PD=d;Object.keys(d.dtexty||{}).forEach(function(k){if(!(k in TL))T[k]=d.dtexty[k]});
@@ -145,6 +145,7 @@ function atributy(el){if(L==='cs'||!el.getAttribute)return;var d=slov();if(!d)re
     if(tr&&tr!==v){(el.__kka=el.__kka||{})[a]=tr;el.setAttribute(a,tr)}}}
 function seo(){if(L==='cs')return;var d=slov();if(!d||!d.seo)return;if(d.seo.title)document.title=d.seo.title;
   var m=document.querySelector('meta[name=description]');if(m&&d.seo.desc)m.setAttribute('content',d.seo.desc);
+  var kw=document.querySelector('meta[name=keywords]');if(kw&&d.seo.keywords)kw.setAttribute('content',d.seo.keywords);
   [['og:title','title'],['og:description','desc']].forEach(function(x){var e=document.querySelector('meta[property="'+x[0]+'"]');if(e&&d.seo[x[1]])e.setAttribute('content',d.seo[x[1]])});
   var ol=document.querySelector('meta[property="og:locale"]');if(ol)ol.setAttribute('content',L==='en'?'en_GB':'de_DE')}
 function projdi(root){
