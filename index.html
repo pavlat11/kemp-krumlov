@@ -1164,9 +1164,7 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
 .callbar .btn-dark{flex:1!important;background:#fff!important;color:#0f2a1c!important;border:1.5px solid rgba(15,42,28,.18)}
 .callbar .btn-sun{flex:1.4!important;background:#f4a64a!important;color:#0f2a1c!important}
 }</style>
-<style id="hide-from-rezervace">/* dočasně skryto: vše pod Mapou kempu (včetně patičky). Smazat tento blok = vrátit zpět */
-#okoli,#kontakt,footer.ft{display:none!important}
-</style>
+
 <style id="hero-order-css">#top .camp-scene{margin:18px 0 0}#top .hero-in .cta{margin-top:18px!important}#top .hero-chips{display:none!important}</style>
 <style id="camp-a-css">
 #top .camp-a{width:min(540px,100%);margin:22px 0 0;font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#fff}
@@ -2974,6 +2972,16 @@ html.mnav-open{overflow:hidden}
 @media (prefers-reduced-motion:reduce){.mnav,.mnav-l a{transition:none}}
 </style>
 <style id="hero-cta-instant">@media(max-width:900px){.kk2-scope #top .cta{opacity:1!important;animation:none!important;transform:none!important}}</style>
+<style id="kt-mapy-css">
+#kontakt .kt-mapy{position:absolute;inset:0;overflow:hidden;border-radius:inherit;background:#e9efe2}
+#kontakt .kt-mapy-bg{position:absolute;inset:0;width:100%;height:100%}
+#kontakt .kt-mapy iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+#kontakt .kt-mapy-c{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+#kontakt .kt-mapy-logo{font-weight:800;font-size:13px;letter-spacing:.06em;color:#173b2a;background:#fff;border-radius:999px;padding:6px 12px;box-shadow:0 6px 18px -8px rgba(15,34,25,.35)}
+#kontakt .kt-mapy-open{background:#fff;color:#173b2a;border:1.5px solid #173b2a}
+#kontakt .kt-mapy-open:hover{background:#173b2a;color:#fff}
+#kontakt .kt-mapy-show[hidden]{display:none!important}#kontakt .kt-mapy.on .kt-mapy-c,#kontakt .kt-mapy.on .kt-mapy-bg{display:none}
+</style>
 </head>
 <body>
 
@@ -3596,7 +3604,7 @@ html.mnav-open{overflow:hidden}
 </div>
 <div class="ok-grid">
 <div class="ok-mapw">
-<div class="ok-map"><div class="ok-scroll" id="okMap"><svg id="okSvg" viewBox="0 0 1186 1010" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ilustrovaná mapa Českého Krumlova a kempu"></svg></div></div>
+<div class="ok-map"><div class="ok-scroll" id="okMap"><svg id="okSvg" viewBox="0 0 1186 1010" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Ilustrovaná mapa Českého Krumlova a kempu"></svg></div></div>
 <div class="ok-leg"><span class="lz"><i></i>Zámek</span><span class="lm"><i></i>Město</span><span class="lu"><i></i>Muzea</span><span class="lg"><i></i>Za městem</span><span class="lr"><i></i>cesta z kempu</span></div>
 <p class="ok-note">Mapa je ilustrace podle leteckého snímku, polohy míst jsou orientační.</p>
 </div>
@@ -3632,11 +3640,14 @@ html.mnav-open{overflow:hidden}
 </div>
 <div class="kt-btns">
 <a class="btn btn-sun" href="#rezervace">Poptat pobyt online <span aria-hidden="true">→</span></a>
-<a class="btn kt-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=48.8190,14.3276" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 18-8-8 18-2-8z"/></svg> Navigovat</a>
+<a class="btn kt-ghost" href="https://mapy.com/fnc/v1/route?mapset=traffic&amp;end=14.3276,48.8190&amp;routeType=car_fast_traffic&amp;navigate=true" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 18-8-8 18-2-8z"/></svg> Navigovat</a>
 </div>
 </div>
 <div class="kt-map reveal">
-<iframe loading="lazy" src="https://maps.google.com/maps?q=48.8190,14.3276&amp;z=15&amp;output=embed" referrerpolicy="no-referrer-when-downgrade" title="Mapa Kempu Krumlov"></iframe>
+<div class="kt-mapy" id="ktMapy">
+<svg class="kt-mapy-bg" viewBox="0 0 600 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="600" height="420" fill="#e9efe2"/><path d="M-20 300 C80 250 160 330 260 290 S420 180 520 220 S640 200 640 200 V440 H-20Z" fill="#cfe3ea"/><path d="M-20 300 C80 250 160 330 260 290 S420 180 520 220 S640 200 640 200" fill="none" stroke="#9cc6d4" stroke-width="5"/><path d="M0 120 C120 140 220 90 330 130 S520 100 620 70" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round"/><path d="M0 120 C120 140 220 90 330 130 S520 100 620 70" fill="none" stroke="#f3d38f" stroke-width="8" stroke-linecap="round"/><path d="M300 0 C310 90 290 170 300 260" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/><g fill="#d5e3c7"><circle cx="90" cy="60" r="34"/><circle cx="470" cy="330" r="46"/><circle cx="160" cy="380" r="30"/><circle cx="520" cy="40" r="26"/></g><g fill="#e3d9c6"><rect x="360" y="150" width="40" height="26" rx="4"/><rect x="410" y="160" width="30" height="22" rx="4"/><rect x="200" y="170" width="34" height="24" rx="4"/></g></svg>
+<div class="kt-mapy-c"><span class="kt-mapy-logo" aria-hidden="true">Mapy.cz</span><button type="button" class="btn btn-sun kt-mapy-show" hidden>Zobrazit mapu</button><a class="btn kt-mapy-open" href="https://mapy.com/fnc/v1/showmap?mapset=basic&amp;center=14.3276,48.8190&amp;zoom=15&amp;marker=true" target="_blank" rel="noopener">Otevřít v Mapy.cz <span aria-hidden="true">↗</span></a></div>
+</div>
 <div class="kt-pin"><span class="kt-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6-7-12a7 7 0 0 1 14 0c0 6-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span><span><b>Kemp Krumlov</b><small>Domoradice 107 · ř. km 280,9, levý břeh</small></span></div>
 </div>
 </div>
@@ -3664,7 +3675,7 @@ html.mnav-open{overflow:hidden}
 <div class="ft-cta-btns"><a class="btn btn-sun" href="#rezervace">Rezervovat pobyt <span aria-hidden="true">→</span></a><a class="btn kt-ghost" href="tel:+420720514943">+420 720 514 943</a></div>
 </div>
 <div class="ft-main">
-<div class="ft-brand"><a aria-label="Kemp Krumlov" class="foot-logo" href="#"><svg aria-label="Kemp Krumlov" class="logo-svg" role="img" viewBox="40 40 1480 450" xmlns="http://www.w3.org/2000/svg"><g fill="#2d2d2d" opacity=".55" transform="translate(8 7)"><path d="M63 55H245L305 140L137 383H63Z"></path><path d="M265 55H358L312 125Z"></path><path d="M377 55H558V383H487L322 135Z"></path><path d="M63 402H205L312 242L420 402H558V472H63Z"></path></g><path d="M63 55H245L305 140L137 383H63Z" fill="#0b94d4"></path><path d="M265 55H358L312 125Z" fill="#0b94d4"></path><path d="M377 55H558V383H487L322 135Z" fill="#e5db35"></path><path d="M63 402H205L312 242L420 402H558V472H63Z" fill="#567d22"></path><text fill="currentColor" font-family="'Open Sans',Arial,sans-serif" font-size="292" font-weight="800" lengthAdjust="spacingAndGlyphs" textLength="895" x="606" y="300">KEMP</text><text fill="currentColor" font-family="'Open Sans',Arial,sans-serif" font-size="166" font-weight="400" lengthAdjust="spacingAndGlyphs" textLength="782" x="606" y="440">KRUMLOV</text></svg></a><p>Vodácký kemp na Vltavě, nejblíže centru Českého Krumlova.</p><div class="ft-badges"><span>1. 5. – 1. 10.</span><span>ř. km 280,9</span><span>levý břeh</span></div></div>
+<div class="ft-brand"><a class="foot-logo" href="#top" title="Kemp Krumlov – nahoru"><svg aria-label="Kemp Krumlov" class="logo-svg" role="img" viewBox="40 40 1480 450" xmlns="http://www.w3.org/2000/svg"><g fill="#2d2d2d" opacity=".55" transform="translate(8 7)"><path d="M63 55H245L305 140L137 383H63Z"></path><path d="M265 55H358L312 125Z"></path><path d="M377 55H558V383H487L322 135Z"></path><path d="M63 402H205L312 242L420 402H558V472H63Z"></path></g><path d="M63 55H245L305 140L137 383H63Z" fill="#0b94d4"></path><path d="M265 55H358L312 125Z" fill="#0b94d4"></path><path d="M377 55H558V383H487L322 135Z" fill="#e5db35"></path><path d="M63 402H205L312 242L420 402H558V472H63Z" fill="#567d22"></path><text fill="currentColor" font-family="'Open Sans',Arial,sans-serif" font-size="292" font-weight="800" lengthAdjust="spacingAndGlyphs" textLength="895" x="606" y="300">KEMP</text><text fill="currentColor" font-family="'Open Sans',Arial,sans-serif" font-size="166" font-weight="400" lengthAdjust="spacingAndGlyphs" textLength="782" x="606" y="440">KRUMLOV</text></svg></a><p>Vodácký kemp na Vltavě, nejblíže centru Českého Krumlova.</p><div class="ft-badges"><span>1. 5. – 1. 10.</span><span>ř. km 280,9</span><span>levý břeh</span></div></div>
 <nav class="ft-col" aria-label="Kemp"><b>Kemp</b><a href="#ubytovani">Ubytování</a><a href="#rezervace">Rezervace</a><a href="#areal">Mapa kempu</a></nav>
 <nav class="ft-col" aria-label="Info"><b>Info</b><a href="#vodaci">Pro vodáky</a><a href="#pela">Půjčovna PE-LA</a><a href="#okoli">Okolí</a></nav>
 <div class="ft-col"><b>Kontakt</b><a href="tel:+420720514943">+420 720 514 943</a><a href="mailto:kempkrumlov2017@gmail.com">kempkrumlov2017@gmail.com</a><span>Domoradice 107<br>381 01 Český Krumlov</span></div>
@@ -4964,7 +4975,7 @@ ITEMS.forEach(function(it){if(!POS[it.id])return;
  E('circle',{class:'hit',r:34,fill:'transparent'},g);E('circle',{class:'pr',r:24},g);E('circle',{class:'pb',r:21,filter:'url(#okSh)'},g);
  var n=E('text',{class:'pn',y:8,'text-anchor':'middle'},g);n.textContent=it.n;
  var la=it.la||'r',lx=la==='l'?-30:la==='r'?30:la==='tr'?20:0,ly=(la==='t'||la==='tr')?-32:la==='b'?46:8,an=la==='l'?'end':(la==='r'||la==='tr')?'start':'middle';
- var t=E('text',{class:'pl'+(it.major?' major':''),x:lx,y:ly,'text-anchor':an},g);t.textContent=it.short||it.t;
+ var t=E('text',{class:'pl'+(it.major?' major':''),x:lx,y:ly,'text-anchor':an},g);t.textContent=it.short||it.t;g.removeAttribute('aria-label');var tt=document.createElementNS('http://www.w3.org/2000/svg','title');tt.textContent=it.n+'. '+it.t;g.insertBefore(tt,g.firstChild);[].forEach.call(g.querySelectorAll('text'),function(x){x.setAttribute('aria-hidden','true')});
  g.addEventListener('click',pick(it));g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(it)()}});
  pins[it.id]=g});
 /* odznaky míst za městem na okraji mapy */
@@ -5252,4 +5263,14 @@ an.addEventListener('click',function(){if(window.__setAnimPaused)window.__setAni
 [].forEach.call(p.querySelectorAll('.mnav-lang button'),function(b){b.addEventListener('click',function(){var o=document.querySelector('.lang-menu button[data-lang="'+b.dataset.l+'"]');if(o)o.click();sync()})});
 addEventListener('resize',function(){if(innerWidth>1190&&!p.hidden)close()});
 })();</script>
+<script id="kt-mapy-js">
+/* MAPY.CZ – vložení mapy do Kontaktu.
+   Na mapy.cz najděte kemp → Sdílet → Vložit mapu do webu → zkopírujte adresu z atributu src="…" (začíná https://frame.mapy.cz/…)
+   a vložte ji mezi uvozovky níže. Dokud je prázdné, zobrazí se náhled s odkazem „Otevřít v Mapy.cz“. */
+var MAPY_EMBED='';
+(function(){var w=document.getElementById('ktMapy');if(!w||!MAPY_EMBED)return;var b=w.querySelector('.kt-mapy-show');
+function load(){if(w.classList.contains('on'))return;var f=document.createElement('iframe');f.src=MAPY_EMBED;f.title='Mapa – Kemp Krumlov (Mapy.cz)';f.loading='lazy';f.setAttribute('allowfullscreen','');w.appendChild(f);w.classList.add('on')}
+if('IntersectionObserver'in window){var io=new IntersectionObserver(function(e){if(e[0].isIntersecting){load();io.disconnect()}},{rootMargin:'300px'});io.observe(w)}else load();
+b.hidden=false;b.addEventListener('click',load)})();
+</script>
 </body></html>
