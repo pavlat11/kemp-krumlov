@@ -37,7 +37,7 @@ bar.innerHTML='<span class="kke-tit">'+SV('<path d="M12 20h9"/><path d="M16.5 3.
  '<button type="button" class="kke-b kke-undo" disabled>Zpět</button>'+
  '<button type="button" class="kke-b kke-drop" disabled>Zahodit</button>'+
  '<button type="button" class="kke-b kke-save" disabled>Uložit</button>'+
- (VRAMCI?'':'<a class="kke-b kke-adm" href="'+ADMIN+'#obsah">Administrace</a>'+'<button type="button" class="kke-b kke-end" aria-label="Ukončit editační režim">Ukončit</button>');
+ (VRAMCI?'':'<a class="kke-b kke-adm" href="'+ADMIN+'#prehled">Administrace</a>'+'<button type="button" class="kke-b kke-end" aria-label="Ukončit editační režim">Ukončit</button>');
 document.body.appendChild(bar);
 var st=bar.querySelector('.kke-st'),bUndo=bar.querySelector('.kke-undo'),bDrop=bar.querySelector('.kke-drop'),bSave=bar.querySelector('.kke-save'),bMode=bar.querySelector('.kke-mode');
 
@@ -345,6 +345,6 @@ addEventListener('beforeunload',function(e){if(pocet()&&!(window.KKE&&KKE.opust)
 stav();oznac();
 /* skok z administrace na konkrétní text: ?edit=1#t=klic */
 var hk=decodeURIComponent((location.hash.match(/^#t=(.+)$/)||[])[1]||'');
-if(hk){var he=document.querySelector('[data-t="'+hk+'"]');if(he){setTimeout(function(){var vis=he.getClientRects().length>0;if(vis){he.scrollIntoView({block:'center'});he.classList.add('kke-act');setTimeout(function(){he.classList.remove('kke-act')},1600);he.focus({preventScroll:true})}else toast('Tento text je teď skrytý (např. v dalším kroku rezervace nebo v mobilním menu). Přepněte na Procházet, otevřete ho a pak zpět na Upravovat.',null,6000)},600)}}
+if(hk){var he=document.querySelector('[data-t="'+hk+'"]');if(he){setTimeout(function(){var vis=he.getClientRects().length>0;if(vis){he.scrollIntoView({block:'center'});he.classList.add('kke-act');setTimeout(function(){he.classList.remove('kke-act')},1600);he.focus({preventScroll:true})}else toast('Tento text je teď skrytý (např. v dalším kroku rezervace nebo v mobilním menu). Otevřete ho klikem (tlačítka v editaci fungují) a pak ho upravte.',null,6000)},600)}}
 if(!KK.LS.get('editace-napoveda3',0)){toast('<b>Klikněte na text, fotku nebo ikonu.</b> Tlačítka (menu, kroky rezervace, karty ubytování) fungují normálně – jejich text upravíte <b>dvojklikem</b>.',null,7000);KK.LS.set('editace-napoveda3',1)}
 })();
