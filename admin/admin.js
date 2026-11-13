@@ -326,7 +326,7 @@ function seo(m){
 
 
 /* ---------- CENÍK ---------- */
-var POUZITO={stan:1,karavan:1,chatka:1,teepee:1,podsad:1,auto:1,autobus:1,uschovna:1,sprcha:1,elek:1,skola:1,pes:1,poplatek:1,os:1,dite:1,zak:1};
+var POUZITO={stan:1,karavan:1,chatka:1,teepee:1,podsad:1,auto:1,elek:1,pes:1,os:1,dite:1,zak:1};
 function cenik(m){
   return KK.cenik.nacti().then(function(ul){
     var C=JSON.parse(JSON.stringify(ul?KKC.doplň(ul):KKC.vychozi)),puv=JSON.stringify(C),M=KKC.mesic;
@@ -363,6 +363,9 @@ function cenik(m){
           '<td class="c"><span class="row" style="flex-wrap:nowrap;gap:6px;justify-content:flex-end">'+(dpr?'<button type="button" class="btn ic gh" data-mv="'+i+'" data-d="-1" aria-label="Posunout výš – '+esc(p.n)+'"'+(pol.indexOf(p)?'':' disabled')+'>'+SV('<path d="m18 15-6-6-6 6"/>',18)+'</button><button type="button" class="btn ic gh" data-mv="'+i+'" data-d="1" aria-label="Posunout níž – '+esc(p.n)+'"'+(pol.indexOf(p)<pol.length-1?'':' disabled')+'>'+SV('<path d="m6 9 6 6 6-6"/>',18)+'</button>':'')+(p.k==='os'?'':fix&&!K.pevne?'<button type="button" class="btn ic gh" data-hide="'+i+'" aria-label="'+(p.skryt===1?'Zobrazit':'Skrýt')+' – '+esc(p.n)+'" title="Cenu používá text na webu, proto ji nejde smazat – jen skrýt z ceníku a rezervace.">'+SV(p.skryt===1?IC.okoX:IC.oko,18)+'</button>':K.pevne?'':'<button type="button" class="btn ic dan" data-del="'+i+'" aria-label="Smazat – '+esc(p.n)+'">'+SV(IC.kos,18)+'</button>')+'</span></td></tr>'}).join('')+
         '</tbody></table></div></section>';
       });
+      h+='<section class="card ck" style="margin-bottom:16px"><div class="row" style="margin-bottom:6px"><h2 style="margin:0">Služby v kempu</h2><span class="sp"></span><button type="button" class="btn sm pri" id="sva">+ Přidat službu</button></div>'+
+        '<p class="mut" style="margin:0 0 12px">Jen text do ceníku na webu (např. sprcha, úschovna). Do ceny rezervace se nepočítají, cenu napište i s jednotkou.</p>'+
+        (C.sluzby.length?'<div class="tw-wrap"><table class="ct"><thead><tr><th>Služba</th><th>Cena a podmínky (text)</th><th><span class="sr">Akce</span></th></tr></thead><tbody>'+C.sluzby.map(function(x,i){return '<tr><td><input class="inp" data-sv="'+i+'" data-f="n" value="'+esc(x.n)+'" aria-label="Název služby"></td><td><input class="inp" data-sv="'+i+'" data-f="t" value="'+esc(x.t)+'" aria-label="Cena a podmínky – '+esc(x.n)+'" placeholder="např. 20 Kč / 4 min"></td><td class="c"><button type="button" class="btn ic dan" data-svd="'+i+'" aria-label="Smazat službu – '+esc(x.n)+'">'+SV(IC.kos,18)+'</button></td></tr>'}).join('')+'</tbody></table></div>':'<p class="mut">Žádné služby – v ceníku na webu se sekce nezobrazí.</p>')+'</section>';
       h+='<div class="savebar" id="sb" hidden><span id="sbt">Neuložené změny v ceníku</span><span class="row"><button type="button" class="btn sm gh" id="sbz" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.3)">Zahodit</button><button type="button" class="btn sm pri" id="sbu">Uložit ceník</button></span></div>';
       var y=scrollY;m.innerHTML=h;scrollTo(0,y);lista();
     }
@@ -370,6 +373,7 @@ function cenik(m){
     m.addEventListener('input',function(e){var t=e.target;
       if(t.dataset.i!=null){var p=C.polozky[+t.dataset.i],f=t.dataset.f;
         if(f==='rez')p.rez=t.checked?1:0;else if(f==='a'||f==='b'||f==='luzka'||f==='osob'){var v=t.value===''?(f==='luzka'?0:0):Math.max(0,Math.round(+t.value));if(f==='luzka'||f==='osob'){if(v)p[f]=v;else delete p[f]}else p[f]=v}else p[f]=t.value}
+      else if(t.dataset.sv!=null){C.sluzby[+t.dataset.sv][t.dataset.f]=t.value}
       else if(t.dataset.sl!=null){C.slevy[+t.dataset.sl][t.dataset.f]=Math.max(0,Math.round(+t.value||0))}
       else if(t.dataset.s){var g=function(x){return $('[data-s="'+x+'"]',m).value},pad=function(n){return('0'+n).slice(-2)};
         if($('[data-s="od-m"]',m)){C.sezona.otevrenoOd=pad(g('od-m'))+'-'+pad(g('od-d'));C.sezona.otevrenoDo=pad(g('do-m'))+'-'+pad(g('do-d'))}if($('[data-s="h-od"]',m)){C.sezona.hlavniOd=+g('h-od');C.sezona.hlavniDo=+g('h-do')}}
@@ -381,6 +385,8 @@ function cenik(m){
       else if(b.dataset.mv){var ix=+b.dataset.mv,d=+b.dataset.d,kt=C.polozky[ix].kat,j=ix+d;while(j>=0&&j<C.polozky.length&&C.polozky[j].kat!==kt)j+=d;if(j>=0&&j<C.polozky.length){var t=C.polozky[ix];C.polozky[ix]=C.polozky[j];C.polozky[j]=t;kresli();var nb=$('[data-mv="'+j+'"][data-d="'+d+'"]',m);if(nb&&!nb.disabled)nb.focus()}}
       else if(b.dataset.del){var p=C.polozky[+b.dataset.del];if(confirm('Smazat položku „'+(p.n||'bez názvu')+'“?')){C.polozky.splice(+b.dataset.del,1);kresli()}}
       else if(b.dataset.hide){var q=C.polozky[+b.dataset.hide];if(q.skryt===1)delete q.skryt;else q.skryt=1;kresli()}
+      else if(b.id==='sva'){C.sluzby.push({n:'',t:''});kresli();var si=$$('[data-sv][data-f=n]',m).pop();if(si)si.focus()}
+      else if(b.dataset.svd){var sx=C.sluzby[+b.dataset.svd];if(!sx.n||confirm('Smazat službu „'+sx.n+'“?')){C.sluzby.splice(+b.dataset.svd,1);kresli()}}
       else if(b.id==='sla'){C.slevy.push({noci:(C.slevy.reduce(function(a,x){return Math.max(a,x.noci)},1))+1,proc:5});kresli()}
       else if(b.dataset.sld){C.slevy.splice(+b.dataset.sld,1);kresli()}
       else if(b.id==='sbz'){C=JSON.parse(puv);kresli()}
@@ -390,6 +396,7 @@ function cenik(m){
         if(chyba){toast('Každá položka musí mít název.',1);var ix=C.polozky.indexOf(chyba),el=$('input[data-i="'+ix+'"][data-f=n]',m);if(el){el.setAttribute('aria-invalid','true');el.focus()}return}
         var o=C.sezona.otevrenoOd,d2=C.sezona.otevrenoDo;if(!C.sezona.celorocne&&d2<=o){toast('Konec sezóny musí být po jejím začátku.',1);return}
         if(C.sezona.hlavniZap!==false&&C.sezona.hlavniDo<C.sezona.hlavniOd){toast('Hlavní sezóna musí končit až po svém začátku.',1);return}
+        C.sluzby=C.sluzby.filter(function(x){return String(x.n).trim()});
         C.polozky.forEach(function(p){['b','rez','jed','osob'].forEach(function(k){if(p[k]===undefined)delete p[k]})});
         KK.cenik.uloz(JSON.parse(JSON.stringify(C))).then(function(){puv=JSON.stringify(C);lista();toast('Ceník uložen – ceny se změnily na celém webu i v rezervaci.')})}
     });

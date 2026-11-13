@@ -16,11 +16,10 @@ var VYCHOZI={verze:1,
   osoby:{n:'Osoby',sloupce:['Sezóna','Mimo sezónu']},
   ubytovani:{n:'Ubytování',sloupce:['Sezóna','Mimo sezónu']},
   doplnky:{n:'Doplňky',sloupce:['Sezóna','Mimo sezónu']},
-  sluzby:{n:'Služby v kempu',sloupce:['Cena']},
   doprava:{n:'Doprava osob (cena za auto pro 8 osob)',sloupce:['Cena']}
  },
  polozky:[
-  {k:'os',kat:'osoby',n:'Osoba',pozn:'od 15 let, včetně místního poplatku',a:200,b:190},
+  {k:'os',kat:'osoby',n:'Osoba',pozn:'od 15 let, včetně místního poplatku 50 Kč',a:200,b:190},
   {k:'dite',kat:'osoby',n:'Dítě',pozn:'do 15 let',a:120,b:100},
   {k:'zak',kat:'osoby',n:'Žák ve stanu',pozn:'jen ve vlastním stanu',a:150,b:150},
   {k:'stan',kat:'ubytovani',n:'Stan',pozn:'místo na louce u řeky',a:200,b:190,jed:'stan',rez:1},
@@ -32,17 +31,17 @@ var VYCHOZI={verze:1,
   {k:'moto',kat:'doplnky',n:'Motocykl',pozn:'',a:100,b:100,rez:1},
   {k:'elek',kat:'doplnky',n:'Elektřina',pozn:'',a:200,b:200,rez:1},
   {k:'pes',kat:'doplnky',n:'Pes',pozn:'',a:50,b:50,rez:1},
-  {k:'poplatek',kat:'sluzby',n:'Místní poplatek',pozn:'je už v ceně za osobu',a:50,jed:'osoba / noc'},
-  {k:'sprcha',kat:'sluzby',n:'Sprcha na mince',pozn:'',a:20,jed:'4 min'},
-  {k:'uschovna',kat:'sluzby',n:'Úschovna bagáže',pozn:'',a:50,jed:'batoh'},
-  {k:'autobus',kat:'sluzby',n:'Parkování autobusu',pozn:'zdarma, pokud cestující bydlí v kempu',a:500,jed:'den'},
-  {k:'skola',kat:'sluzby',n:'Školní kurzy',pozn:'',a:200,jed:'osoba'},
   {k:'dop1',kat:'doprava',n:'Vyšší Brod',a:1150},{k:'dop2',kat:'doprava',n:'Rožmberk nad Vltavou',a:850},{k:'dop3',kat:'doprava',n:'Nahořany',a:650},
   {k:'dop4',kat:'doprava',n:'Kemp Vltava',a:550},{k:'dop5',kat:'doprava',n:'Viking / Pískárna',a:500},{k:'dop6',kat:'doprava',n:'Vltavan / Spolí',a:350},
   {k:'dop7',kat:'doprava',n:'Centrum',a:250},{k:'dop8',kat:'doprava',n:'Zlatá Koruna',a:350},{k:'dop9',kat:'doprava',n:'Boršov',a:900}
- ]};
+ ],
+ /* služby v kempu – jen text do ceníku na webu, nepočítají se */
+ sluzby:[{n:'Sprcha na mince',t:'20 Kč / 4 min'},{n:'Úschovna bagáže',t:'50 Kč / batoh'},{n:'Parkování autobusu',t:'500 Kč / den – zdarma, pokud cestující bydlí v kempu'},{n:'Školní kurzy',t:'200 Kč / osoba'}]};
 /* starší uložený ceník doplní o nové vlastnosti z výchozího */
-function doplň(u){u.kategorie=JSON.parse(JSON.stringify(VYCHOZI.kategorie));u.polozky=u.polozky.filter(function(p){return u.kategorie[p.kat]});return u}
+function doplň(u){
+  if(!u.sluzby){var st=u.polozky.filter(function(p){return p.kat==='sluzby'});u.sluzby=st.length?st.filter(function(p){return p.k!=='poplatek'&&p.skryt!==1}).map(function(p){return{n:p.n,t:(p.a||0)+' Kč'+(p.jed?' / '+p.jed:'')+(p.pozn?' – '+p.pozn:'')}}):JSON.parse(JSON.stringify(VYCHOZI.sluzby));
+    var pp=st.filter(function(p){return p.k==='poplatek'})[0],os=u.polozky.filter(function(p){return p.k==='os'})[0];if(os&&!os.pozn)os.pozn='včetně místního poplatku '+(pp?pp.a:50)+' Kč'}
+  u.kategorie=JSON.parse(JSON.stringify(VYCHOZI.kategorie));u.polozky=u.polozky.filter(function(p){return u.kategorie[p.kat]});return u}
 function nacti(){
   if(window.KK_CENIK_DATA)return doplň(window.KK_CENIK_DATA);
   try{var u=JSON.parse(localStorage.getItem('kk.cenik')||'null');if(u&&u.verze===1&&u.polozky)return doplň(u)}catch(e){}
@@ -91,11 +90,11 @@ if(tb){
   ['osoby','ubytovani','doplnky'].forEach(function(kat){
     var pol=KKC.kat(kat).filter(function(p){return p.skryt!==1});if(!pol.length)return;
     h+='<tr class="ck-kat"><th colspan="3" scope="colgroup">'+esc(C.kategorie[kat].n)+'</th></tr>';
-    pol.forEach(function(p){var pozn=p.pozn;if(p.k==='os'&&mapa.poplatek)pozn='včetně místního poplatku '+KKC.t('poplatek','a');if(p.luzka)pozn=(pozn?pozn+', ':'')+'kapacita '+p.luzka;
+    pol.forEach(function(p){var pozn=p.pozn;if(p.luzka)pozn=(pozn?pozn+', ':'')+'kapacita '+p.luzka;
       h+='<tr><td>'+esc(p.n)+(pozn?' <small>'+esc(pozn)+'</small>':'')+'</td>'+(HZ?'<td>'+KKC.t(p.k,'a')+'</td><td>'+KKC.t(p.k,'b')+'</td>':'<td colspan="2">'+KKC.t(p.k,'a')+'</td>')+'</tr>'});
   });
-  var sl=KKC.kat('sluzby').filter(function(p){return p.skryt!==1&&p.k!=='poplatek'});
-  if(sl.length){h+='<tr class="ck-kat"><th colspan="3" scope="colgroup">'+esc(C.kategorie.sluzby.n)+'</th></tr>';sl.forEach(function(p){h+='<tr><td>'+esc(p.n)+(p.pozn?' <small>'+esc(p.pozn)+'</small>':'')+'</td><td colspan="2">'+KKC.t(p.k,'a')+(p.jed?' / '+esc(p.jed):'')+'</td></tr>'})}
+  var sl=C.sluzby||[];
+  if(sl.length){h+='<tr class="ck-kat"><th colspan="3" scope="colgroup">Služby v kempu</th></tr>';sl.forEach(function(p){if(p.n)h+='<tr><td>'+esc(p.n)+'</td><td colspan="2">'+esc(p.t)+'</td></tr>'})}
   tb.innerHTML=h;
   var ths=document.querySelectorAll('#rzPrice thead th');if(!HZ&&ths.length===3){ths[1].colSpan=2;ths[1].innerHTML='Cena';ths[1].removeAttribute('data-t');ths[2].remove()}
   var th=HZ&&document.querySelector('#rzPrice thead th small');if(th)th.textContent=KKC.mesic[C.sezona.hlavniOd-1]+'–'+KKC.mesic[C.sezona.hlavniDo-1];

@@ -27,13 +27,13 @@ const icon=(k,s=24)=>`<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="
 const D=[
  {k:'parking',f:{x:340,y:430,w:540,h:440},n:'Parkoviště',c:'#55606b',m:[600,560],
   d:'Parkoviště u vjezdu do kempu, hned vedle občerstvení. Do historického centra dojdete pěšky.',
-  li:['Auto '+KKC.t('auto','a')+' / den','Autobus '+KKC.t('autobus','a')+' / den – zdarma, pokud cestující bydlí v kempu','Parkovné platí do 24:00 daného dne']},
+  li:['Auto '+KKC.t('auto','a')+' / den','Autobus 500 Kč / den – zdarma, pokud cestující bydlí v kempu','Parkovné platí do 24:00 daného dne']},
  {k:'kiosek',f:{x:860,y:500,w:340,h:220},n:'Kiosek a občerstvení',c:'#e0912f',m:[1030,560],
   d:'Občerstvení přímo v kempu s posezením u vody. Kousek odtud vyplouvají lodě z půjčovny.',
-  li:['Občerstvení a pití','Posezení s výhledem na řeku','Úschovna bagáže '+KKC.t('uschovna','a')+' / batoh']},
+  li:['Občerstvení a pití','Posezení s výhledem na řeku','Úschovna bagáže 50 Kč / batoh']},
  {k:'wc',f:{x:850,y:270,w:280,h:190},n:'WC',c:'#5d6fb8',m:[976,330],
   d:'Nové sociální zařízení s WC a sprchami, pár kroků od louky i chatek.',
-  li:['Nové sprchy a WC','Sprcha na mince: '+KKC.t('sprcha','a')+' / 4 minuty']},
+  li:['Nové sprchy a WC','Sprcha na mince: 20 Kč / 4 minuty']},
  {k:'pujcovna',f:{x:-200,y:380,w:640,h:760},n:'Půjčovna lodí PE-LA',c:'#1f6f9a',m:[344,862],
   d:'Půjčovna lodí a raftů PE-LA hned za parkovištěm. Zapůjčíte si kánoe nebo raft a zajistí i přepravu osob a bagáže.',
   li:['Kánoe a rafty','Přeprava osob a bagáže','Hned vedle parkoviště']},
@@ -60,7 +60,7 @@ const D=[
   li:['Stojí volně na louce','Kousek od chatek i sociálek'],price:KKC.t('teepee','a'),unit:'noc + osoby · mimo sezónu '+KKC.t('teepee','b')},
  {k:'chatky',f:{x:540,y:0,w:1400,h:310},n:'Chatky',c:'#b6513e',m:[1780,120],
   d:'Dřevěné chatky v klidné části kempu pod lesem a menší řada u vjezdu. Každá má kapacitu 7 osob a je včetně lůžkovin.',
-  li:['Kapacita 7 osob','Včetně lůžkovin','Platí se chatka + každá osoba','Školní kurzy: '+KKC.t('skola','a')+' / osoba'],price:KKC.t('chatka','a'),unit:'chatka / noc + osoby · mimo sezónu '+KKC.t('chatka','b')}
+  li:['Kapacita 7 osob','Včetně lůžkovin','Platí se chatka + každá osoba','Školní kurzy: 200 Kč / osoba'],price:KKC.t('chatka','a'),unit:'chatka / noc + osoby · mimo sezónu '+KKC.t('chatka','b')}
 ];
 const Z={};D.forEach(o=>Z[o.k]=o);
 
