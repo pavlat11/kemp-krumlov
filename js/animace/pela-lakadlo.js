@@ -12,8 +12,9 @@ else rs.forEach(function(el){el.classList.add('in')});
 
 /* 1 den / vícedenní: ceny se plynule přepočítají */
 var cards=[].slice.call(sec.querySelectorAll('.pp-boat:not([data-skryta])')),multi=false,tw=new WeakMap();
+var hned=false;
 function tween(el,to){var from=+(el.dataset.v||to);el.dataset.v=to;
- if(reduce||from===to){el.textContent=to.toLocaleString('cs-CZ');return}
+ if(reduce||hned||from===to){el.textContent=to.toLocaleString('cs-CZ');return}
  var t0=null,dur=420;cancelAnimationFrame(tw.get(el)||0);
  (function f(t){if(!t0)t0=t;var p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);el.textContent=Math.round(from+(to-from)*e).toLocaleString('cs-CZ');if(p<1)tw.set(el,requestAnimationFrame(f))})(performance.now())}
 function render(){
@@ -24,7 +25,10 @@ function render(){
   tween(c.querySelector('.pp-price em'),multi?pm:p1);
   c.querySelector('.pp-price>small').textContent=multi?'cena za den při vícedenním půjčení':'cena za den';
   c.querySelector('.pp-alt').textContent=multi?'1 den: '+p1.toLocaleString('cs-CZ')+' Kč / den':'vícedenní '+pm.toLocaleString('cs-CZ')+' Kč / den';
-  c.querySelector('.pp-badge').hidden=c!==best})}
+  c.querySelector('.pp-badge').hidden=c!==best;
+  var tx=function(q){var e=c.querySelector(q);return e?e.textContent.trim():''};
+  c.setAttribute('aria-label',tx('.pp-bt')+' '+tx('.pp-bi~b,.pp-bt+b')+', cena od '+Math.min(p1,pm).toLocaleString('cs-CZ')+' Kč za den, otevřít pe-la.cz')})}
+window.KKPela={render:function(){hned=true;render();hned=false}};
 $('ppTg').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;multi=+b.dataset.m>=2;
  [].forEach.call($('ppTg').children,function(x){x.classList.toggle('on',x===b)});render()});
 render();

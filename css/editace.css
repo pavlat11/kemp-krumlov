@@ -26,3 +26,43 @@ body:has(.kke-bar){padding-bottom:84px}
 .kke-toast.ok{border-left-color:#4caf6e}.kke-toast.err,.kke-toast.lock{border-left-color:#c0392b}
 .kke-toast a{display:inline-block;margin-left:8px;font-weight:800;color:#b5600c}
 @media(max-width:700px){.kke-toast{bottom:140px}.kke-bar{left:8px;right:8px;width:auto;max-width:none;bottom:8px;padding:8px;border-radius:16px}.kke-tit{display:none}.kke-st{flex-basis:100%;text-align:center;min-width:0;padding:2px 0 4px}.kke-b{flex:1;padding:10px 8px;text-align:center}.kke-adm{display:none}}
+
+/* --- texty ze skriptů a map, fotky, ikony --- */
+.kk-edit-prochazet *{cursor:auto}
+.kke-hl{position:fixed;z-index:4990;pointer-events:none;border:2px dashed #f4a64a;border-radius:6px;background:rgba(244,166,74,.08);opacity:0;transition:opacity .12s}
+.kke-hl.on{opacity:1}
+.kke-hl span{position:absolute;left:-2px;top:-24px;background:#f4a64a;color:#0f2219;font:800 11.5px/1 'Plus Jakarta Sans',system-ui,sans-serif;padding:5px 8px;border-radius:6px;white-space:nowrap}
+.kke-hl.t-fotka{border-color:#2a9fd6;background:rgba(42,159,214,.10)}.kke-hl.t-fotka span{background:#2a9fd6;color:#fff;top:4px;left:4px}
+.kke-hl.t-ikona{border-color:#8b5cf6;background:rgba(139,92,246,.12)}.kke-hl.t-ikona span{background:#8b5cf6;color:#fff}
+.kke-hl.t-cena,.kke-hl.t-galerie{border-color:#c0392b;background:rgba(192,57,43,.08)}.kke-hl.t-cena span,.kke-hl.t-galerie span{background:#c0392b;color:#fff}
+.kk-edit body{cursor:default}
+.kke-toast{display:flex;align-items:flex-start;gap:10px;padding-right:8px}
+.kke-tm{flex:1}
+.kke-tx{appearance:none;border:0;background:transparent;color:#173b2a;cursor:pointer;border-radius:8px;padding:4px;display:grid;place-items:center;flex:none}
+.kke-tx:hover{background:rgba(0,0,0,.07)}.kke-tx:focus-visible{outline:2px solid #b5600c}
+.kke-pop{position:fixed;z-index:5002;width:340px;max-width:calc(100vw - 16px);max-height:calc(100vh - 110px);overflow:auto;background:#fff;color:#173b2a;border-radius:16px;padding:14px;box-shadow:0 24px 60px -16px rgba(0,0,0,.5),0 0 0 1px rgba(0,0,0,.06);font:500 14px/1.45 'Plus Jakarta Sans',system-ui,sans-serif;text-align:left;letter-spacing:0;text-transform:none}
+.kke-ph{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.kke-ph b{font-size:15px;font-weight:800}
+.kke-px{appearance:none;border:0;background:transparent;color:#173b2a;cursor:pointer;border-radius:8px;padding:5px;display:grid}
+.kke-px:hover{background:#f1efe8}
+.kke-in{display:block;width:100%;box-sizing:border-box;border:1.5px solid #cfd8d2;border-radius:10px;padding:10px 12px;font:500 15px/1.45 inherit;font-family:inherit;color:#0f2219;background:#fff;resize:vertical}
+.kke-in:focus{outline:none;border-color:#f4a64a;box-shadow:0 0 0 3px rgba(244,166,74,.28)}
+.kke-lb{display:block;font-weight:700;font-size:13px;margin-bottom:10px}.kke-lb .kke-in{margin-top:5px}
+.kke-pm{margin:8px 0 0;font-size:12.5px;color:#4d6457}
+.kke-pm i{color:#173b2a}
+.kke-pb{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+.kke-b2{appearance:none;border:1.5px solid #cfd8d2;background:#fff;color:#173b2a;border-radius:10px;padding:9px 14px;font:700 14px/1.2 inherit;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.kke-b2:hover{background:#f5f3ec}
+.kke-b2.kke-ok{background:#f4a64a;border-color:#f4a64a;color:#0f2219}.kke-b2.kke-ok:hover{background:#ffb965}
+.kke-b2:focus-visible,.kke-file:focus-within{outline:3px solid #b5600c;outline-offset:2px}
+.kke-file{width:100%;justify-content:center;margin-top:10px;box-sizing:border-box}
+.kke-busy{opacity:.6;pointer-events:none}
+.kke-vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.kke-fn{border-radius:10px;overflow:hidden;background:#eef1ee;aspect-ratio:3/2}.kke-fn img{width:100%;height:100%;object-fit:cover;display:block}
+.kke-igr{max-height:300px;overflow:auto;margin-top:10px;padding-right:2px}
+.kke-ig b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#4d6457;margin:8px 0 6px}
+.kke-ig>div{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px}
+.kke-ib{appearance:none;border:1.5px solid #e2e6e2;background:#fff;color:#173b2a;border-radius:10px;height:44px;display:grid;place-items:center;cursor:pointer}
+.kke-ib:hover{border-color:#f4a64a;background:#fff7ec}.kke-ib:focus-visible{outline:3px solid #b5600c;outline-offset:1px}
+.kke-b svg{vertical-align:-3px;margin-right:6px}
+.kke-mode[aria-pressed=true]{background:#2a9fd6;border-color:#2a9fd6}

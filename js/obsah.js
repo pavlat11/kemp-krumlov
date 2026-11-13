@@ -8,6 +8,11 @@ var BASE=(document.currentScript&&document.currentScript.src||'').replace(/js\/o
 
 /* 1) texty */
 var t=get('texty');
+if(t){
+  /* PE-LA: ceny lodí jako obyčejný text "1 den|vícedenní" a animovaná čísla */
+  [].forEach.call(document.querySelectorAll('[data-t-ceny]'),function(el){var v=t[el.dataset.tCeny];if(!v)return;var p=String(v).split('|');if(+p[0])el.dataset.p1=+p[0];if(+p[1])el.dataset.pm=+p[1]});
+  [].forEach.call(document.querySelectorAll('[data-t-n]'),function(el){var v=t[el.dataset.tN];if(v==null||v==='')return;el.dataset.n=+v;el.textContent=(el.dataset.prefix||'')+(+v)+(el.dataset.suffix||'')});
+}
 if(t)Object.keys(t).forEach(function(k){[].forEach.call(document.querySelectorAll('[data-t="'+k+'"]'),function(el){if(!el.hasAttribute('data-cena'))el.innerHTML=t[k]})});
 
 /* 2) SEO */
@@ -42,7 +47,7 @@ if(get('galerie'))document.addEventListener('DOMContentLoaded',function(){
 /* 4) editační režim: ?edit=1 a přihlášený správce */
 var ses=get('session');
 if(/[?&]edit(=1)?(&|$)/.test(location.search)&&ses&&ses.do>Date.now()){
-  var l=document.createElement('link');l.rel='stylesheet';l.href=BASE+'css/editace.css?v=2';document.head.appendChild(l);
-  document.addEventListener('DOMContentLoaded',function(){nactiData().then(function(){return nactiSkript('js/editace.js?v=2')})});
+  var l=document.createElement('link');l.rel='stylesheet';l.href=BASE+'css/editace.css?v=3';document.head.appendChild(l);
+  document.addEventListener('DOMContentLoaded',function(){nactiData().then(function(){return nactiSkript('js/editace.js?v=3')})});
 }
 })();
