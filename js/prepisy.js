@@ -22,7 +22,7 @@ var Tcs=get('dtexty')||{},TL=L==='cs'?{}:(get('dtexty.'+L)||{}),T={};
 Object.keys(Tcs).forEach(function(k){T[k]=Tcs[k]});Object.keys(TL).forEach(function(k){T[k]=TL[k]});
 var O=get('obrazky')||{},I=get('ikony')||{};
 /* výchozí překlady ceníku, rezervace a dopravy (js/preklady.js) – načtou se jen pro EN/DE, přednost mají překlady z administrace */
-if(L!=='cs'&&document.readyState==='loading')document.write('<script src="'+BASE+'js/preklady.js?v=1"><\/script>');
+if(L!=='cs'&&document.readyState==='loading')document.write('<script src="'+BASE+'js/preklady.js?v=2"><\/script>');
 var PD=L==='cs'?false:null;
 function slov(){if(PD!==null)return PD;var d=window.KK_PREKLADY&&window.KK_PREKLADY[L];
   if(d){PD=d;Object.keys(d.dtexty||{}).forEach(function(k){if(!(k in TL))T[k]=d.dtexty[k]});
@@ -47,7 +47,7 @@ var CEN=get('cenik'),MN=(CEN&&CEN.mena)||{},EUR_OK=MN.eur!==false,KURZ=+MN.kurz|
 var MENA=get('mena');if(MENA!=='EUR'&&MENA!=='CZK')MENA=L==='cs'?'CZK':'EUR';if(!EUR_OK||EDIT)MENA='CZK';
 window.KK_MENA=MENA;
 var URLY={};/* cesta → objectURL nahrazené fotky */
-var SKIP='script,style,noscript,textarea,[data-t],[data-c],[data-cena],.kke-ui';
+var SKIP='script,style,noscript,textarea,[data-t],[data-c]:not(.gl-i),[data-cena],.kke-ui';
 var norm=function(s){return s.replace(/\s+/g,' ').trim()};
 
 /* ---------- fotky v IndexedDB ---------- */
@@ -104,7 +104,7 @@ function text(n){
   var p=n.parentNode;if(!p||p.nodeType!==1||(p.closest&&p.closest('script,style,noscript,textarea,.kke-ui,[data-bez-meny]')))return;
   var src=n.data,out=src;n.__kkSrc=src;
   if(!p.closest(SKIP)){var o=norm(src);if(o){n.__kko=o;if(PD===null)slov();var tr=T[o]!=null&&T[o]!==o?T[o]:(L!=='cs'?vzory(o):null);if(tr!=null){var m=src.match(/^(\s*)[\s\S]*?(\s*)$/);out=m[1]+tr+m[2]}}}
-  else if(L!=='cs'&&p.closest('[data-c]')){var o2=norm(src),tr2=o2&&vzory(o2);if(tr2){var m2=src.match(/^(\s*)[\s\S]*?(\s*)$/);out=m2[1]+tr2+m2[2]}}
+  else if(L!=='cs'&&p.closest('[data-c]:not(.gl-i)')){var o2=norm(src),tr2=o2&&vzory(o2);if(tr2){var m2=src.match(/^(\s*)[\s\S]*?(\s*)$/);out=m2[1]+tr2+m2[2]}}
   if(MENA==='EUR')out=mena(out,n,src);
   if(out!==n.data)n.data=out;
   n.__kkl=n.data;
@@ -137,12 +137,23 @@ function ikona(svg){
   }
   svg.__kkl=svg.innerHTML;
 }
+/* překlad popisků (alt, aria-label, title, placeholder) a SEO */
+var ATR=['aria-label','alt','title','placeholder'];
+function atributy(el){if(L==='cs'||!el.getAttribute)return;var d=slov();if(!d)return;
+  for(var i=0;i<4;i++){var a=ATR[i],v=el.getAttribute(a);if(!v||(el.__kka&&el.__kka[a]===v))continue;
+    var o=norm(v),tr=(d.popisky&&d.popisky[o])||(T[o]!=null&&T[o]!==o?T[o]:null)||vzory(o);
+    if(tr&&tr!==v){(el.__kka=el.__kka||{})[a]=tr;el.setAttribute(a,tr)}}}
+function seo(){if(L==='cs')return;var d=slov();if(!d||!d.seo)return;if(d.seo.title)document.title=d.seo.title;
+  var m=document.querySelector('meta[name=description]');if(m&&d.seo.desc)m.setAttribute('content',d.seo.desc);
+  [['og:title','title'],['og:description','desc']].forEach(function(x){var e=document.querySelector('meta[property="'+x[0]+'"]');if(e&&d.seo[x[1]])e.setAttribute('content',d.seo[x[1]])});
+  var ol=document.querySelector('meta[property="og:locale"]');if(ol)ol.setAttribute('content',L==='en'?'en_GB':'de_DE')}
 function projdi(root){
   if(root.nodeType===3){text(root);return}
   if(root.nodeType!==1)return;
   var tag=root.tagName.toLowerCase();if(tag==='script'||tag==='style')return;
   var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),n;while((n=w.nextNode()))text(n);
   if(tag==='img')obrazek(root);if(tag==='svg')ikona(root);
+  if(L!=='cs'){atributy(root);[].forEach.call(root.querySelectorAll('[aria-label],[alt],[title],[placeholder]'),atributy)}
   [].forEach.call(root.getElementsByTagName('img'),obrazek);
   [].forEach.call(root.getElementsByTagName('svg'),ikona);
   if(maObr){if(root.style)pozadi(root);[].forEach.call(root.querySelectorAll('[style*="url("]'),pozadi)}
@@ -205,7 +216,7 @@ window.KKP={
   },
   znovu:function(){if(document.body)projdi(document.body)}
 };
-var mo=null,opt={childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:maObr?['src','style']:['src']};
+var mo=null,opt={childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:(maObr?['src','style']:['src']).concat(L!=='cs'?['aria-label','alt','title','placeholder']:[])};
 function zapniSledovani(){if(mo)return;
 mo=new MutationObserver(zpracuj);mo.observe(document.documentElement,opt)}
 if(!zapnuto)return;
@@ -219,11 +230,12 @@ function zpracuj(rs){
     else if(r.type==='characterData')text(r.target);
     else if(r.attributeName==='src'&&r.target.tagName==='IMG')obrazek(r.target);
     else if(r.attributeName==='style')pozadi(r.target);
+    else if(ATR.indexOf(r.attributeName)>=0)atributy(r.target);
   }
 }
 zapniSledovani();
 if(document.body)projdi(document.body);
-document.addEventListener('DOMContentLoaded',function(){projdi(document.body);cssPozadi()});
+document.addEventListener('DOMContentLoaded',function(){projdi(document.body);cssPozadi();seo()});
 
 /* načtení nahrazených fotek */
 if(maObr)KKP.fotky.vse().then(function(a){

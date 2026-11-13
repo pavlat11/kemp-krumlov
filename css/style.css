@@ -3029,3 +3029,6 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .dp-res-p .kk-mena{margin-top:10px;align-self:flex-end}
 .rz-bar-sum .kk-mena{display:none}
 @media(max-width:900px){.rz-bar-sum .kk-mena{display:inline-flex;align-self:flex-start;margin-top:5px;padding:2px}.rz-bar-sum .kk-mena button{padding:4px 10px;min-height:26px;min-width:36px;font-size:12px}}
+/* přepínač měny nad dekorativní září, klik kdekoli na tlačítku */
+.kk-mena{position:relative;z-index:3}
+.rz-card-top::before,.rz-card-top::after,.dp-res::before,.dp-res::after{pointer-events:none}
