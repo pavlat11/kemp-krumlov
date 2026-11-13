@@ -1,1 +1,0 @@
-(()=>{const I={"kemp-reka":"img/inl-08.webp","terasa":"img/inl-09.webp","chatky":"img/inl-10.webp","teepee":"img/inl-11.webp"};document.querySelectorAll("img[data-img]").forEach(i=>i.src=I[i.dataset.img])})();

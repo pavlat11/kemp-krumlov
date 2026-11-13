@@ -1,4 +1,4 @@
-/* Výchozí překlady ceníku, rezervace a dopravy (EN, DE). Načítá je js/prepisy.js jen pro anglickou a německou verzi.
+/* Výchozí překlady ceníku, rezervace a dopravy (EN, DE). Načítá je js/start.js jen pro anglickou a německou verzi.
    Přednost mají překlady zadané v administraci. texty = klíče data-t, dtexty = texty ze skriptů (přesná shoda),
    pl = množná čísla (1 / více), vzory = texty s čísly (regulární výraz → náhrada). */
 window.KK_PREKLADY={

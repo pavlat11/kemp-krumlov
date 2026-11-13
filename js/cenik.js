@@ -78,7 +78,7 @@ var KKC=window.KKC={
 var CIS=/(od[\s\u00a0]+)?\d{1,3}(?:[ \u00a0]\d{3})*(?!\d)/;
 function prepis(el,text){
   var w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,null),n;
-  /* __kkSrc = text před převodem na eura (js/prepisy.js) */
+  /* __kkSrc = text před převodem na eura (js/start.js) */
   while((n=w.nextNode())){var v=n.__kkSrc!=null?n.__kkSrc:n.nodeValue;if(CIS.test(v)){var nv=v.replace(CIS,text);if(n.__kkSrc!=null&&nv!==v)n.__kkl=undefined;n.nodeValue=nv;return}}
 }
 [].forEach.call(document.querySelectorAll('[data-c]'),function(el){

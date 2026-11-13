@@ -162,7 +162,7 @@ function zmensi(file,max,q){
 
 
 /* ---------------- PŘEPISY: texty ze skriptů a animací, fotky na webu, ikony ----------------
-   (na webu je použije js/prepisy.js)
+   (na webu je použije js/start.js)
    dtexty  {"původní text":"nový text"}       server: GET/PUT /api/prepisy/texty
    ikony   {"klíč":{n:"tent",s:"<path…>"}}    server: GET/PUT /api/prepisy/ikony
    obrazky {"img/x.webp":{id,v}} + soubory     server: GET /api/prepisy/fotky · POST (multipart: cesta, soubor) · DELETE ?cesta=… */

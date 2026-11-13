@@ -92,7 +92,7 @@ Administrace → Nastavení a záloha → **Stáhnout zálohu** vytvoří JSON
 | Měna | `cenik.mena = {eur, kurz, zaokr}`; volba hosta `kk.mena` | součást ceníku; volba hosta zůstává v prohlížeči |
 | Služby (text) | `cenik.sluzby = [{n, t}]` | součást ceníku |
 
-Jazyk webu: `?lang=en|de` (na serveru adresy `/en/`, `/de/`). `js/prepisy.js` se načítá v `<head>`
+Jazyk webu: `?lang=en|de` (na serveru adresy `/en/`, `/de/`). `js/start.js` se načítá v `<head>`
 a použije překlady, fotky, ikony a převod na eura i na obsah, který vytvoří skripty později.
 Texty, ve kterých se mění čísla (počty nocí a osob, názvy měsíců v kalendáři), se pro EN/DE musí doplnit
 přímo do skriptů – překlad podle celého textu je nezachytí.
