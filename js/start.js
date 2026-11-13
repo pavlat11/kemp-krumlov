@@ -83,7 +83,8 @@ function tx(mode,fn){return db().then(function(d){return new Promise(function(ok
 function cesta(u){/* absolutní / relativní URL → "img/x.webp" */
   if(!u)return '';u=String(u).replace(/^url\(["']?|["']?\)$/g,'');if(/^(data|blob):/.test(u))return '';
   try{u=new URL(u,location.href).href}catch(e){return ''}
-  return u.indexOf(BASE)===0?u.slice(BASE.length).replace(/[?#].*$/,''):'';
+  /* menší verze fotky (x-640.webp, x-1024.webp) patří k původní x.webp */
+  return u.indexOf(BASE)===0?u.slice(BASE.length).replace(/[?#].*$/,'').replace(/-(640|1024)\.webp$/,'.webp'):'';
 }
 function hash(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36)}
 function jeIkona(svg){

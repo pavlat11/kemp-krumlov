@@ -73,19 +73,21 @@ const header=document.querySelector('header'),prog=document.getElementById('prog
 
 let lastY=0;
 
-function onScroll(){const y=scrollY;
+/* nejdřív vše přečíst, pak zapsat – a jen jednou za snímek (dřív se rozvržení přepočítávalo při každém posunu) */
+const arEl=document.getElementById('areal'),cnEl=document.getElementById('cenik');let scT=0;
+function onScrollRun(){scT=0;
+  const y=scrollY,vh=innerHeight,sh=document.documentElement.scrollHeight,ar=arEl?arEl.getBoundingClientRect():{top:9e9,bottom:-9e9},cn=cnEl?cnEl.getBoundingClientRect():{top:9e9,bottom:-9e9},menuOpen=menu?.classList.contains('open');
+  const onMap=ar.top<90&&ar.bottom>90;
   header?.classList.toggle('scrolled',y>40);
-  const arR=document.getElementById('areal').getBoundingClientRect(),onMap=arR.top<90&&arR.bottom>90;
   header?.classList.toggle('onmap',onMap);if(onMap)menu?.classList.remove('open');
-  header?.classList.toggle('hide',y>600&&y>lastY&&!menu?.classList.contains('open'));lastY=y;
-  if(prog)prog.style.width=(y/(document.documentElement.scrollHeight-innerHeight)*100)+'%';
-  const ar=document.getElementById('areal').getBoundingClientRect();
-  const cn=document.getElementById('cenik').getBoundingClientRect();
-  callbar?.classList.toggle('show',y>400&&!(ar.top<innerHeight*.5&&ar.bottom>innerHeight*.5)&&!(cn.top<innerHeight*.6&&cn.bottom>innerHeight*.4))}
+  header?.classList.toggle('hide',y>600&&y>lastY&&!(menuOpen&&!onMap));lastY=y;
+  if(prog)prog.style.width=(y/(sh-vh)*100)+'%';
+  callbar?.classList.toggle('show',y>400&&!(ar.top<vh*.5&&ar.bottom>vh*.5)&&!(cn.top<vh*.6&&cn.bottom>vh*.4))}
+function onScroll(){if(!scT)scT=requestAnimationFrame(onScrollRun)}
 
 addEventListener('scroll',onScroll,{passive:true});
 
-onScroll();
+onScrollRun();
 
 menu?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>menu.classList.remove('open')));
 
