@@ -46,7 +46,7 @@ var Tcs=get('dtexty')||{},TL=L==='cs'?{}:(get('dtexty.'+L)||{}),T={};
 Object.keys(Tcs).forEach(function(k){T[k]=Tcs[k]});Object.keys(TL).forEach(function(k){T[k]=TL[k]});
 var O=get('obrazky')||{},I=get('ikony')||{};
 /* výchozí překlady ceníku, rezervace a dopravy (js/preklady.js) – načtou se jen pro EN/DE, přednost mají překlady z administrace */
-if(L!=='cs'&&document.readyState==='loading')document.write('<script src="'+BASE+'js/preklady.js?v=3"><\/script>');
+if(L!=='cs'&&document.readyState==='loading')document.write('<script src="'+BASE+'js/preklady.js?v=4"><\/script>');
 var PD=L==='cs'?false:null;
 function slov(){if(PD!==null)return PD;var d=window.KK_PREKLADY&&window.KK_PREKLADY[L];
   if(d){PD=d;Object.keys(d.dtexty||{}).forEach(function(k){if(!(k in TL))T[k]=d.dtexty[k]});
