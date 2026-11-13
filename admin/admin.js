@@ -55,6 +55,11 @@ function login(){
   f.p.focus();
 }
 
+/* ---------- jazyk úprav (čeština = originál, ostatní = překlad) ---------- */
+function jazykAdm(){var j=KK.LS.get('admin-jazyk','cs');return KK.JAZYKY[j]?j:'cs'}
+function jazykVolba(){var j=jazykAdm();return '<div class="row jz" role="group" aria-label="Jazyk úprav">'+Object.keys(KK.JAZYKY).map(function(k){return '<button type="button" class="btn sm gh" data-jz="'+k+'" aria-pressed="'+(k===j)+'">'+KK.JAZYKY[k]+'</button>'}).join('')+'</div>'}
+function jazykKlik(m){$$('[data-jz]',m).forEach(function(b){b.addEventListener('click',function(){if(b.dataset.jz===jazykAdm())return;if(neulozeno&&neulozeno()&&!confirm('Máte neuložené změny. Přepnout jazyk bez uložení?'))return;KK.LS.set('admin-jazyk',b.dataset.jz);neulozeno=null;route()})})}
+
 /* ---------- kostra ---------- */
 var VIEWS={upravit:upravit,prehled:prehled,obsah:obsah,galerie:galerie,fotky:fotkyIkony,seo:seo,cenik:cenik,rezervace:pripravujeme,nastaveni:nastaveni};
 var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['obsah','Všechny texty'],['galerie','Galerie'],['fotky','Fotky a ikony'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace',1],['cenik','Ceník a kapacity']]],['Systém',[['nastaveni','Nastavení a záloha']]]];
@@ -79,7 +84,7 @@ function route(){
   if(predHash&&predHash!==location.hash&&neulozeno&&neulozeno()&&!confirm('Máte neuložené změny. Opravdu odejít?')){history.replaceState(null,'',predHash);return}
   predHash=location.hash||'#prehled';neulozeno=null;
   $$('.side a.nv').forEach(function(a){if(a.getAttribute('href')==='#'+v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
-  var m=$('#main');m.innerHTML='<p class="mut">Načítám…</p>';
+  var st=$('#main'),m=st.cloneNode(false);st.replaceWith(m);m.innerHTML='<p class="mut">Načítám…</p>';KK.JAZYK='cs';
   Promise.resolve(VIEWS[v](m,v)).then(function(){var h=$('h1',m);if(h){h.tabIndex=-1;h.focus({preventScroll:true})}document.title=(h?h.textContent+' · ':'')+'Administrace · Kemp Krumlov';scrollTo(0,0)});
 }
 addEventListener('beforeunload',function(e){if(neulozeno&&neulozeno()){e.preventDefault();e.returnValue=''}});
@@ -87,11 +92,12 @@ addEventListener('beforeunload',function(e){if(neulozeno&&neulozeno()){e.prevent
 
 /* ---------- UPRAVIT WEB (stránka přímo v administraci) ---------- */
 function upravit(m){
-  var sir={pc:'100%',tab:'820px',mob:'390px'};
+  var sir={pc:'100%',tab:'820px',mob:'390px'},J=jazykAdm(),LQ=J==='cs'?'':'&lang='+J;
   m.innerHTML='<div class="ph" style="margin-bottom:12px"><div><h1>Upravit web</h1><p>Klikněte na text, fotku nebo ikonu a upravte je. Tlačítkem Procházet vypnete úpravy a můžete na webu normálně klikat (kroky rezervace, místa na mapě).</p></div>'+
   '<div class="row" role="group" aria-label="Velikost náhledu"><button type="button" class="btn sm gh" data-w="pc" aria-pressed="true">Počítač</button><button type="button" class="btn sm gh" data-w="tab" aria-pressed="false">Tablet</button><button type="button" class="btn sm gh" data-w="mob" aria-pressed="false">Mobil</button>'+
-  '<a class="btn sm gh" href="'+WEB+'?edit=1" target="_blank" rel="noopener">Nová záložka '+SV(IC.ven,14)+'</a></div></div>'+
-  '<div class="frame"><iframe id="wf" title="Web Kemp Krumlov v editačním režimu" src="'+WEB+'index.html?edit=1"></iframe></div>';
+  '<a class="btn sm gh" href="'+WEB+'?edit=1'+LQ+'" target="_blank" rel="noopener">Nová záložka '+SV(IC.ven,14)+'</a></div></div>'+
+  '<div class="row" style="margin:-4px 0 12px;gap:12px;flex-wrap:wrap">'+jazykVolba()+(J!=='cs'?'<span class="mut">Upravujete překlad – klikněte na český text a napište '+(J==='en'?'anglický':'německý')+'. Co nepřeložíte, zůstane česky.</span>':'')+'</div>'+
+  '<div class="frame"><iframe id="wf" title="Web Kemp Krumlov v editačním režimu" src="'+WEB+'index.html?edit=1'+LQ+'"></iframe></div>';jazykKlik(m);
   var f=$('#wf');
   neulozeno=function(){try{return !!(f.contentWindow.KKE&&f.contentWindow.KKE.neulozeno())}catch(e){return false}};
   $$('[data-w]',m).forEach(function(b){b.addEventListener('click',function(){$$('[data-w]',m).forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});f.style.width=sir[b.dataset.w]})});
@@ -115,20 +121,24 @@ function prehled(m){
 
 /* ---------- OBSAH ---------- */
 function obsah(m){
-  return Promise.all([zdroj(),KK.texty.vse()]).then(function(r){
+  var J=jazykAdm(),PR=J!=='cs';KK.JAZYK=J;
+  return Promise.all([zdroj(),KK.texty.vse(),PR?KK.texty.vse('cs'):null]).then(function(r){
+    var CS=r[2]||{};
     /* + texty, které vypisují skripty (mapy, animace, okolí, rezervace) – ukládají se zvlášť (KK.dtexty) */
     var dt=KK.dtexty.vse(),ul=Object.assign({},r[1]),znam={},rows=r[0].texty.slice();
     (window.KK_DTEXTY||[]).forEach(function(x){if(znam[x[1]])return;znam[x[1]]=1;rows.push({k:'d:'+x[1],sek:x[0],html:esc(x[1]),tag:x[1].length>60?'p':'span',d:1})});
     Object.keys(dt).forEach(function(t){if(!znam[t])rows.push({k:'d:'+t,sek:'web',html:esc(t),tag:'span',d:1});ul['d:'+t]=esc(dt[t])});
-    var z={texty:rows,ceny:r[0].ceny},ulozene=ul,ceka={},filtr={q:'',sek:'',upr:false};
+    if(PR){var dcs=JSON.parse(localStorage.getItem('kk.dtexty')||'{}');rows=rows.map(function(x){var y=Object.assign({},x);y.cs=x.d?(dcs[x.k.slice(2)]!=null?esc(dcs[x.k.slice(2)]):x.html):(CS[x.k]!=null?CS[x.k]:x.html);y.html=y.cs;return y})}
+    var z={texty:rows,ceny:r[0].ceny},ulozene=ul,ceka={},filtr={q:'',sek:'',upr:false,nep:false};
     neulozeno=function(){return Object.keys(ceka).length>0};
     var sekce=[];z.texty.forEach(function(x){if(sekce.indexOf(x.sek)<0)sekce.push(x.sek)});
-    m.innerHTML='<div class="ph"><div><h1>Všechny texty</h1><p>Nejpohodlnější je upravovat texty přímo na webu – uvidíte je hned v místě, kde jsou. Tady najdete všechny texty pohromadě, i ty skryté (další kroky rezervace, místa v mapě kempu a v Okolí, popisky animací).</p></div>'+
+    m.innerHTML='<div class="row" style="margin-bottom:14px;gap:12px;flex-wrap:wrap">'+jazykVolba()+(PR?'<span class="mut">Překlad do jazyka '+KK.JAZYKY[J]+'. Pod každým polem je český originál; nepřeložené texty se na webu ukážou česky.</span>':'')+'</div>'+
+    '<div class="ph"><div><h1>'+(PR?'Překlad – '+KK.JAZYKY[J]:'Všechny texty')+'</h1><p>Nejpohodlnější je upravovat texty přímo na webu – uvidíte je hned v místě, kde jsou. Tady najdete všechny texty pohromadě, i ty skryté (další kroky rezervace, místa v mapě kempu a v Okolí, popisky animací).</p></div>'+
     '<a class="btn pri" href="#upravit">'+SV(IC.obsah,18)+'Upravovat přímo na stránce</a></div>'+
     '<div class="card" style="margin-bottom:16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap"><span class="badge warn">🔒 '+z.ceny+' cen</span><span class="mut" style="flex:1;min-width:240px">Ceny se tady ani v editačním režimu neupravují – budou v sekci <a href="#cenik">Ceník a kapacity</a>, aby se změnily všude naráz včetně výpočtu rezervace.</span></div>'+
     '<div class="toolbar"><label class="sr" for="oq">Hledat text</label><input id="oq" class="inp" type="search" placeholder="Hledat v textech…">'+
     '<label class="sr" for="os">Sekce</label><select id="os" class="inp" style="max-width:240px"><option value="">Všechny sekce</option>'+sekce.map(function(s){return '<option value="'+s+'">'+esc(SEK[s]||s)+'</option>'}).join('')+'</select>'+
-    '<label class="row" style="font-weight:600"><input type="checkbox" id="ou" style="width:18px;height:18px;accent-color:#f4a64a"> Jen upravené</label><span class="sp"></span><span class="mut" id="oc"></span></div>'+
+    '<label class="row" style="font-weight:600"><input type="checkbox" id="ou" style="width:18px;height:18px;accent-color:#f4a64a"> '+(PR?'Jen přeložené':'Jen upravené')+'</label>'+(PR?'<label class="row" style="font-weight:600"><input type="checkbox" id="on" style="width:18px;height:18px;accent-color:#f4a64a"> Jen nepřeložené</label>':'')+'<span class="sp"></span><span class="mut" id="oc"></span></div>'+
     '<div id="ol"></div><div class="savebar" id="sb" hidden><span id="sbt"></span><span class="row"><button type="button" class="btn sm gh" id="sbz" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.3)">Zahodit</button><button type="button" class="btn sm pri" id="sbu">Uložit změny</button></span></div>';
     var ol=$('#ol');
     function aktualni(x){return x.k in ceka?ceka[x.k]:x.k in ulozene?ulozene[x.k]:x.html}
@@ -136,15 +146,15 @@ function obsah(m){
       var q=filtr.q.toLowerCase(),n=0,html='';
       sekce.forEach(function(s){
         if(filtr.sek&&s!==filtr.sek)return;
-        var rows=z.texty.filter(function(x){return x.sek===s&&(!filtr.upr||x.k in ulozene||x.k in ceka)&&(!q||txt(aktualni(x)).toLowerCase().indexOf(q)>=0||txt(x.html).toLowerCase().indexOf(q)>=0)});
+        var rows=z.texty.filter(function(x){return x.sek===s&&(!filtr.upr||x.k in ulozene||x.k in ceka)&&(!filtr.nep||!(x.k in ulozene||x.k in ceka))&&(!q||txt(aktualni(x)).toLowerCase().indexOf(q)>=0||txt(x.html).toLowerCase().indexOf(q)>=0)});
         if(!rows.length)return;n+=rows.length;
         html+='<section class="sec"><h2>'+esc(SEK[s]||s)+' <span class="badge">'+rows.length+'</span></h2>'+rows.map(function(x){
           var upr=x.k in ulozene,ck=x.k in ceka;
           return '<div class="tx'+(upr||ck?' upr':'')+'" data-k="'+x.k+'"><div class="ed" contenteditable="true" role="textbox" aria-multiline="'+(/^(p|li|dd|blockquote|figcaption|div)$/.test(x.tag)?'true':'false')+'" aria-label="'+esc(SEK[s]||s)+': '+esc(txt(x.html).slice(0,60))+'">'+aktualni(x)+'</div>'+
-          '<div class="meta">'+(ck?'<span class="badge warn">Neuloženo</span>':upr?'<span class="badge ok">Upraveno</span>':'')+
-          ((upr||ck)?'<button type="button" class="btn sm gh" data-a="puv">Vrátit původní</button>':'')+
-          (x.d?'<span class="mut" style="font-size:12.5px" title="Text vypisuje mapa, animace nebo krok rezervace. Změní se všude, kde je stejný.">mapa / animace</span>':'<a class="btn sm gh" href="'+WEB+'?edit=1#t='+x.k+'" target="_blank" rel="noopener" aria-label="Ukázat na webu">Na webu '+SV(IC.ven,14)+'</a>')+'</div>'+
-          ((upr||ck)?'<div class="orig">Původně: <s>'+esc(txt(x.html))+'</s></div>':'')+'</div>'}).join('')+'</section>';
+          '<div class="meta">'+(ck?'<span class="badge warn">Neuloženo</span>':upr?'<span class="badge ok">'+(PR?'Přeloženo':'Upraveno')+'</span>':PR?'<span class="badge">Nepřeloženo</span>':'')+
+          ((upr||ck)?'<button type="button" class="btn sm gh" data-a="puv">'+(PR?'Smazat překlad':'Vrátit původní')+'</button>':'')+
+          (x.d?'<span class="mut" style="font-size:12.5px" title="Text vypisuje mapa, animace nebo krok rezervace. Změní se všude, kde je stejný.">mapa / animace</span>':'<a class="btn sm gh" href="'+WEB+'?edit=1'+(PR?'&lang='+J:'')+'#t='+x.k+'" target="_blank" rel="noopener" aria-label="Ukázat na webu">Na webu '+SV(IC.ven,14)+'</a>')+'</div>'+
+          (PR?'<div class="orig">Česky: '+esc(txt(x.cs))+'</div>':(upr||ck)?'<div class="orig">Původně: <s>'+esc(txt(x.html))+'</s></div>':'')+'</div>'}).join('')+'</section>';
       });
       ol.innerHTML=html||'<div class="empty card">Nic neodpovídá hledání.</div>';
       $('#oc').textContent=n+' '+pl(n,'text','texty','textů');lista();
@@ -161,6 +171,8 @@ function obsah(m){
     $('#oq').addEventListener('input',function(e){filtr.q=e.target.value;kresli()});
     $('#os').addEventListener('change',function(e){filtr.sek=e.target.value;kresli()});
     $('#ou').addEventListener('change',function(e){filtr.upr=e.target.checked;kresli()});
+    if(PR)$('#on').addEventListener('change',function(e){filtr.nep=e.target.checked;kresli()});
+    jazykKlik(m);
     $('#sbz').addEventListener('click',function(){ceka={};kresli()});
     $('#sbu').addEventListener('click',function(){var zm={},zd={};Object.keys(ceka).forEach(function(k){var x=z.texty.find(function(y){return y.k===k});
         if(x.d){var o=k.slice(2),v=txt(ceka[k]).replace(/\s+/g,' ').trim();zd[o]=v===o?null:v}else zm[k]=ceka[k]===x.html?null:ceka[k]});
@@ -347,7 +359,12 @@ function cenik(m){
       (HZ?'<fieldset class="fs"><legend>Hlavní sezóna</legend><div class="row"><select class="inp" data-s="h-od" aria-label="Hlavní sezóna od">'+MES(C.sezona.hlavniOd)+'</select><span>–</span><select class="inp" data-s="h-do" aria-label="Hlavní sezóna do">'+MES(C.sezona.hlavniDo)+'</select></div></fieldset>':'')+'</div></div>'+
       '<div class="card"><h2>Slevy za více nocí</h2><p class="mut">Sleva se počítá z celé ceny pobytu. Platí nejvyšší, na kterou má host nárok.</p><div id="sl">'+
       C.slevy.map(function(x,i){return '<div class="row" style="margin-bottom:8px"><label class="row">od <input class="inp num" type="number" min="1" max="60" data-sl="'+i+'" data-f="noci" value="'+x.noci+'" aria-label="Počet nocí"> nocí</label><label class="row">sleva <input class="inp num" type="number" min="0" max="90" data-sl="'+i+'" data-f="proc" value="'+x.proc+'" aria-label="Sleva v procentech"> %</label><button type="button" class="btn ic dan" data-sld="'+i+'" aria-label="Odebrat slevu">'+SV(IC.kos,18)+'</button></div>'}).join('')+
-      '</div><button type="button" class="btn sm gh" id="sla">+ Přidat slevu</button></div></div>';
+      '</div><button type="button" class="btn sm gh" id="sla">+ Přidat slevu</button></div></div>'+
+      '<div class="card" style="margin-bottom:16px"><h2>Měna</h2><p class="mut">Ceny se zadávají v korunách. Na webu si je host může přepnout na eura (v ceníku tlačítkem Kč / €). Anglická a německá verze webu ukazuje eura automaticky.</p>'+
+      '<div class="sw-l"><label class="sw"><input type="checkbox" data-mn="eur"'+(C.mena.eur!==false?' checked':'')+'><span aria-hidden="true"></span>Nabízet ceny v eurech</label></div>'+
+      (C.mena.eur!==false?'<div class="row" style="gap:16px;flex-wrap:wrap"><label class="row" style="font-weight:700">Kurz: 1 € = <input class="inp num" type="number" min="1" max="100" step="0.1" data-mn="kurz" value="'+C.mena.kurz+'" aria-label="Kurz – kolik korun je 1 euro"> Kč</label>'+
+      '<label class="row" style="font-weight:700">Zaokrouhlit na <select class="inp" data-mn="zaokr" aria-label="Zaokrouhlení cen v eurech" style="width:auto">'+[[1,'celá eura'],[0.5,'0,50 €'],[0.1,'0,10 €']].map(function(o){return '<option value="'+o[0]+'"'+(+C.mena.zaokr===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label></div>'+
+      '<p class="mut" style="margin:10px 0 0">Příklad: chatka '+KKC.fmt(C.polozky.filter(function(p){return p.k==='chatka'}).map(function(p){return p.a})[0]||990)+' Kč ≈ '+(Math.round((C.polozky.filter(function(p){return p.k==='chatka'}).map(function(p){return p.a})[0]||990)/C.mena.kurz/C.mena.zaokr)*C.mena.zaokr).toLocaleString('cs-CZ')+' €</p>':'')+'</div>';
       Object.keys(C.kategorie).forEach(function(kat){
         var K=C.kategorie[kat],pol=C.polozky.filter(function(p){return p.kat===kat}),dva=K.sloupce.length>1&&HZ,SL=dva||K.sloupce.length<2?K.sloupce:['Cena'],ub=kat==='ubytovani',dop=kat==='doplnky',slu=kat==='sluzby',rez=ub||dop,lod=kat==='lode',dpr=kat==='doprava',oso=kat==='osoby';
         h+='<section class="card ck" style="margin-bottom:16px"><div class="row" style="margin-bottom:10px"><h2 style="margin:0">'+esc(K.n)+'</h2><span class="sp"></span>'+(K.pevne?'<span class="badge">pevné položky</span>':'<button type="button" class="btn sm pri" data-add="'+kat+'">+ Přidat položku</button>')+'</div>'+
@@ -373,6 +390,7 @@ function cenik(m){
     m.addEventListener('input',function(e){var t=e.target;
       if(t.dataset.i!=null){var p=C.polozky[+t.dataset.i],f=t.dataset.f;
         if(f==='rez')p.rez=t.checked?1:0;else if(f==='a'||f==='b'||f==='luzka'||f==='osob'){var v=t.value===''?(f==='luzka'?0:0):Math.max(0,Math.round(+t.value));if(f==='luzka'||f==='osob'){if(v)p[f]=v;else delete p[f]}else p[f]=v}else p[f]=t.value}
+      else if(t.dataset.mn){var mk=t.dataset.mn;if(mk==='eur'){C.mena.eur=t.checked;kresli();var me=$('[data-mn=eur]',m);if(me)me.focus()}else{var mv=+t.value;if(mk==='kurz'&&mv>0)C.mena.kurz=mv;if(mk==='zaokr')C.mena.zaokr=mv}}
       else if(t.dataset.sv!=null){C.sluzby[+t.dataset.sv][t.dataset.f]=t.value}
       else if(t.dataset.sl!=null){C.slevy[+t.dataset.sl][t.dataset.f]=Math.max(0,Math.round(+t.value||0))}
       else if(t.dataset.s){var g=function(x){return $('[data-s="'+x+'"]',m).value},pad=function(n){return('0'+n).slice(-2)};

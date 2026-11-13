@@ -3008,3 +3008,10 @@ footer.ft a{display:inline-block;min-height:24px;padding-top:2px;padding-bottom:
 /* ===== obal upravitelného textu (administrace) – přebírá vzhled rodiče ===== */
 span.tw{color:inherit!important;font:inherit!important;letter-spacing:inherit!important;text-transform:inherit!important;opacity:1!important;margin:0!important;padding:0!important;background:none!important;border:0!important;transform:none!important;width:auto!important;height:auto!important;position:static!important}
 .kk2-scope header#hd.scrolled .burger{color:#fff!important}
+/* přepínač měny v ceníku */
+.rz-dlg-h .kk-mena{margin-left:auto;margin-right:10px}
+.kk-mena{display:inline-flex;border:1.5px solid #e7e0d2;border-radius:99px;padding:3px;background:#fff;gap:2px}
+.kk-mena button{appearance:none;border:0;background:transparent;color:#0b2419;font:800 14px/1 inherit;font-family:inherit;padding:8px 14px;border-radius:99px;cursor:pointer;min-width:44px;min-height:32px}
+.kk-mena button[aria-pressed=true]{background:#0b2419;color:#fff}
+.kk-mena button:focus-visible{outline:3px solid #f4a64a;outline-offset:2px}
+.kk-mena-pozn{margin:0 0 10px;font-size:13px;color:#5b6b62}

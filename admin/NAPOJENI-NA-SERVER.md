@@ -78,3 +78,21 @@ teď nastavuje v prohlížeči, pak na webu nebude potřeba.
 
 Administrace → Nastavení a záloha → **Stáhnout zálohu** vytvoří JSON
 (`texty`, `seo`, `fotky` včetně obrázků). Na serveru ho jde jednorázově naimportovat.
+
+## Doplněno: překlady, texty ze skriptů, fotky, ikony, měna
+
+| Data | Náhled (localStorage / IndexedDB) | Server |
+|---|---|---|
+| Texty s klíčem `data-t` | `kk.texty` (cs), `kk.texty.en`, `kk.texty.de` | `GET/PUT /api/texty?lang=cs\|en\|de` – tabulka `texty(klic, jazyk, html)` |
+| Texty ze skriptů, map, animací, Okolí | `kk.dtexty`, `kk.dtexty.en`, `kk.dtexty.de` – `{"původní český text":"nový"}` | `GET/PUT /api/prepisy/texty?lang=` – tabulka `prepisy_texty(puvodni, jazyk, text)` |
+| Nahrazené fotky v sekcích | `kk.obrazky` `{"img/x.webp":{id,v}}` + IndexedDB `kk-obrazky` | `POST /api/prepisy/fotky` (cesta + soubor) – server může rovnou vypsat novou cestu do HTML |
+| Ikony | `kk.ikony` `{"klíč":{n:"tent",s:"<path…>"}}` | `GET/PUT /api/prepisy/ikony` |
+| Ceny lodí PE-LA, čísla statistik | `kk.texty` klíče `pela.ceny.N` = `"1den|vícedenní"`, `pela.cislo.N` | součást textů (jazyk cs) |
+| Sezóna | `cenik.sezona.hlavniZap`, `cenik.sezona.celorocne` | součást ceníku |
+| Měna | `cenik.mena = {eur, kurz, zaokr}`; volba hosta `kk.mena` | součást ceníku; volba hosta zůstává v prohlížeči |
+| Služby (text) | `cenik.sluzby = [{n, t}]` | součást ceníku |
+
+Jazyk webu: `?lang=en|de` (na serveru adresy `/en/`, `/de/`). `js/prepisy.js` se načítá v `<head>`
+a použije překlady, fotky, ikony a převod na eura i na obsah, který vytvoří skripty později.
+Texty, ve kterých se mění čísla (počty nocí a osob, názvy měsíců v kalendáři), se pro EN/DE musí doplnit
+přímo do skriptů – překlad podle celého textu je nezachytí.

@@ -13,7 +13,10 @@ if(t){
   [].forEach.call(document.querySelectorAll('[data-t-ceny]'),function(el){var v=t[el.dataset.tCeny];if(!v)return;var p=String(v).split('|');if(+p[0])el.dataset.p1=+p[0];if(+p[1])el.dataset.pm=+p[1]});
   [].forEach.call(document.querySelectorAll('[data-t-n]'),function(el){var v=t[el.dataset.tN];if(v==null||v==='')return;el.dataset.n=+v;el.textContent=(el.dataset.prefix||'')+(+v)+(el.dataset.suffix||'')});
 }
-if(t)Object.keys(t).forEach(function(k){[].forEach.call(document.querySelectorAll('[data-t="'+k+'"]'),function(el){if(!el.hasAttribute('data-cena'))el.innerHTML=t[k]})});
+function pouzij(m){if(m)Object.keys(m).forEach(function(k){[].forEach.call(document.querySelectorAll('[data-t="'+k+'"]'),function(el){if(!el.hasAttribute('data-cena'))el.innerHTML=m[k]})})}
+pouzij(t);
+/* překlad: anglické / německé texty přes české (co chybí, zůstane česky) */
+var L=window.KK_LANG||'cs';if(L!=='cs')pouzij(get('texty.'+L));
 
 /* 2) SEO */
 var s=get('seo');
@@ -34,7 +37,7 @@ if(s){
 }
 
 function nactiSkript(src){return new Promise(function(ok,no){var e=document.createElement('script');e.src=BASE+src;e.onload=ok;e.onerror=no;document.body.appendChild(e)})}
-function nactiData(){return window.KK&&KK.galerie?Promise.resolve():nactiSkript('js/kk-data.js?v=1')}
+function nactiData(){return window.KK&&KK.galerie?Promise.resolve():nactiSkript('js/kk-data.js?v=4')}
 
 /* 3) galerie z administrace */
 if(get('galerie'))document.addEventListener('DOMContentLoaded',function(){
@@ -47,7 +50,7 @@ if(get('galerie'))document.addEventListener('DOMContentLoaded',function(){
 /* 4) editační režim: ?edit=1 a přihlášený správce */
 var ses=get('session');
 if(/[?&]edit(=1)?(&|$)/.test(location.search)&&ses&&ses.do>Date.now()){
-  var l=document.createElement('link');l.rel='stylesheet';l.href=BASE+'css/editace.css?v=3';document.head.appendChild(l);
-  document.addEventListener('DOMContentLoaded',function(){nactiData().then(function(){return nactiSkript('js/editace.js?v=3')})});
+  var l=document.createElement('link');l.rel='stylesheet';l.href=BASE+'css/editace.css?v=4';document.head.appendChild(l);
+  document.addEventListener('DOMContentLoaded',function(){nactiData().then(function(){return nactiSkript('js/editace.js?v=4')})});
 }
 })();

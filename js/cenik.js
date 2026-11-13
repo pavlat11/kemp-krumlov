@@ -35,12 +35,15 @@ var VYCHOZI={verze:1,
   {k:'dop4',kat:'doprava',n:'Kemp Vltava',a:550},{k:'dop5',kat:'doprava',n:'Viking / Pískárna',a:500},{k:'dop6',kat:'doprava',n:'Vltavan / Spolí',a:350},
   {k:'dop7',kat:'doprava',n:'Centrum',a:250},{k:'dop8',kat:'doprava',n:'Zlatá Koruna',a:350},{k:'dop9',kat:'doprava',n:'Boršov',a:900}
  ],
+ /* měna: eur = nabízet přepínač Kč/€, kurz Kč za 1 €, zaokr = zaokrouhlení eur (1 | 0.5 | 0.1) */
+ mena:{eur:true,kurz:25,zaokr:1},
  /* služby v kempu – jen text do ceníku na webu, nepočítají se */
  sluzby:[{n:'Sprcha na mince',t:'20 Kč / 4 min'},{n:'Úschovna bagáže',t:'50 Kč / batoh'},{n:'Parkování autobusu',t:'500 Kč / den – zdarma, pokud cestující bydlí v kempu'},{n:'Školní kurzy',t:'200 Kč / osoba'}]};
 /* starší uložený ceník doplní o nové vlastnosti z výchozího */
 function doplň(u){
   if(!u.sluzby){var st=u.polozky.filter(function(p){return p.kat==='sluzby'});u.sluzby=st.length?st.filter(function(p){return p.k!=='poplatek'&&p.skryt!==1}).map(function(p){return{n:p.n,t:(p.a||0)+' Kč'+(p.jed?' / '+p.jed:'')+(p.pozn?' – '+p.pozn:'')}}):JSON.parse(JSON.stringify(VYCHOZI.sluzby));
     var pp=st.filter(function(p){return p.k==='poplatek'})[0],os=u.polozky.filter(function(p){return p.k==='os'})[0];if(os&&!os.pozn)os.pozn='včetně místního poplatku '+(pp?pp.a:50)+' Kč'}
+  if(!u.mena)u.mena=JSON.parse(JSON.stringify(VYCHOZI.mena));
   u.kategorie=JSON.parse(JSON.stringify(VYCHOZI.kategorie));u.polozky=u.polozky.filter(function(p){return u.kategorie[p.kat]});return u}
 function nacti(){
   if(window.KK_CENIK_DATA)return doplň(window.KK_CENIK_DATA);
@@ -71,7 +74,8 @@ var KKC=window.KKC={
 var CIS=/(od[\s\u00a0]+)?\d{1,3}(?:[ \u00a0]\d{3})*(?!\d)/;
 function prepis(el,text){
   var w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,null),n;
-  while((n=w.nextNode())){if(CIS.test(n.nodeValue)){n.nodeValue=n.nodeValue.replace(CIS,text);return}}
+  /* __kkSrc = text před převodem na eura (js/prepisy.js) */
+  while((n=w.nextNode())){var v=n.__kkSrc!=null?n.__kkSrc:n.nodeValue;if(CIS.test(v)){var nv=v.replace(CIS,text);if(n.__kkSrc!=null&&nv!==v)n.__kkl=undefined;n.nodeValue=nv;return}}
 }
 [].forEach.call(document.querySelectorAll('[data-c]'),function(el){
   var sp=el.getAttribute('data-c').split(':'),k=sp[0],m=sp[1]||'a',t;
@@ -99,6 +103,20 @@ if(tb){
   var ths=document.querySelectorAll('#rzPrice thead th');if(!HZ&&ths.length===3){ths[1].colSpan=2;ths[1].innerHTML='Cena';ths[1].removeAttribute('data-t');ths[2].remove()}
   var th=HZ&&document.querySelector('#rzPrice thead th small');if(th)th.textContent=KKC.mesic[C.sezona.hlavniOd-1]+'–'+KKC.mesic[C.sezona.hlavniDo-1];
   var no=document.querySelector('#rzPrice .note');if(no)no.textContent='Ceny za noc.'+((C.slevy||[]).length?' Sleva: '+KKC.slevyText()+'.':'');
+}
+/* ---- 3) přepínač Kč / € v ceníku ---- */
+var dlgH=document.querySelector('#rzPrice .rz-dlg-h'),P=window.KKP;
+if(dlgH&&P&&P.euraPovolena&&!P.EDIT){
+  var EN=P.jazyk==='en',DE=P.jazyk==='de';
+  var sw=document.createElement('div');sw.className='kk-mena';sw.setAttribute('role','group');sw.setAttribute('aria-label',EN?'Currency':DE?'Währung':'Měna');sw.setAttribute('data-bez-meny','');
+  sw.innerHTML='<button type="button" data-m="CZK">Kč</button><button type="button" data-m="EUR">€</button>';
+  dlgH.insertBefore(sw,dlgH.querySelector('.rz-dlg-x'));
+  var poz=document.createElement('p');poz.className='kk-mena-pozn';poz.setAttribute('data-bez-meny','');
+  poz.textContent=EN?'Euro prices are approximate (1 € = '+P.kurz+' CZK). Payment is in CZK.':DE?'Preise in Euro sind ungefähr (1 € = '+P.kurz+' CZK). Bezahlt wird in CZK.':'Ceny v eurech jsou orientační (1 € = '+P.kurz+' Kč). Platí se v korunách.';
+  var tab=document.querySelector('#rzPrice table');if(tab&&tab.parentNode)tab.parentNode.insertBefore(poz,tab);
+  var stavM=function(){var m=P.mena();[].forEach.call(sw.children,function(b){b.setAttribute('aria-pressed',String(b.dataset.m===m))});poz.hidden=m!=='EUR'};
+  sw.addEventListener('click',function(e){var b=e.target.closest('button');if(b){P.nastavMenu(b.dataset.m);stavM()}});
+  document.addEventListener('kk-mena',stavM);stavM();
 }
 var dh=document.querySelector('.rz-disc-hint');if(dh)dh.textContent=(C.slevy||[]).length?'Sleva: '+KKC.slevyText():'';
 })();

@@ -30,7 +30,9 @@ var SV=function(p,s){return '<svg viewBox="0 0 24 24" width="'+(s||18)+'" height
 
 /* lišta */
 var bar=document.createElement('div');bar.className='kke-bar kke-ui';bar.setAttribute('role','toolbar');bar.setAttribute('aria-label','Editační režim');
+var JZ=KK.JAZYK||'cs';
 bar.innerHTML='<span class="kke-tit">'+SV('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>')+'Editační režim</span>'+
+ (JZ!=='cs'?'<span class="kke-jz" title="Upravujete překlad. Co nepřeložíte, zůstane na webu česky.">'+JZ.toUpperCase()+' – překlad</span>':'')+
  '<span class="kke-st" aria-live="polite"></span>'+
  '<button type="button" class="kke-b kke-mode" aria-pressed="false" title="Vypne úpravy, aby šlo klikat na web (přepnout krok rezervace, spustit animaci, otevřít místo na mapě…)">'+SV('<path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51z"/>')+'<span>Procházet</span></button>'+
  '<button type="button" class="kke-b kke-undo" disabled>Zpět</button>'+
@@ -110,7 +112,7 @@ function textUpravitelny(n){
   if(!n||n.nodeType!==3)return false;var p=n.parentElement;if(!p||p.closest('script,style,[data-t],.kke-ui'))return false;
   var t=P.norm(n.data);return t.length>0&&/[A-Za-zÁ-žá-ž]/.test(t);
 }
-function cenovy(n){var p=n.parentElement,t=P.norm(n.data);if(p.closest('#pela'))return false;return /\d\s*Kč|Kč\b/.test(t)||!!p.closest('[data-c],[data-cena],'+CENIK)}
+function cenovy(n){var p=n.parentElement,t=P.norm(n.data);if(p.closest('#pela'))return false;if(/\d\s*Kč|Kč\b/.test(t)||p.closest('[data-c],[data-cena]'))return true;return JZ==='cs'&&!!p.closest(CENIK)}
 function textVBode(x,y,cil){
   var r=document.caretRangeFromPoint?document.caretRangeFromPoint(x,y):null,n=r&&r.startContainer;
   if(n&&n.nodeType===3&&n.parentElement&&cil.contains(n.parentElement)||n&&n.nodeType===3&&n.parentElement===cil){
@@ -185,7 +187,7 @@ function upravFotku(f){
 
 /* ---------- ikony ---------- */
 var knihovna=null;
-function nactiIkony(){if(knihovna)return knihovna;knihovna=window.KK_IKONY?Promise.resolve():new Promise(function(ok,no){var s=document.createElement('script');s.src=BASE+'js/ikony.js?v=1';s.onload=ok;s.onerror=no;document.head.appendChild(s)});return knihovna}
+function nactiIkony(){if(knihovna)return knihovna;knihovna=window.KK_IKONY?Promise.resolve():new Promise(function(ok,no){var s=document.createElement('script');s.src=BASE+'js/ikony.js?v=2';s.onload=ok;s.onerror=no;document.head.appendChild(s)});return knihovna}
 function upravIkonu(svg){
   var k=P.klicIkony(svg),I=P.ikony(),zmenena=k in pI?!!pI[k]:!!I[k];
   var stejne=[].filter.call(document.getElementsByTagName('svg'),function(s){return s.__kkpuv!=null&&P.klicIkony(s)===k}).length;
@@ -318,7 +320,9 @@ bSave.addEventListener('click',function(){
   if(aktivni)skonci();var z={};
   Object.keys(cekajici).forEach(function(k){z[k]=(orig[k]!=null&&cekajici[k]===orig[k])?null:cekajici[k]});
   var n=pocet();bSave.disabled=true;
-  Promise.all([KK.texty.uloz(z),KK.dtexty.uloz(pD),KK.ikony.uloz(pI),KK.obrazky.uloz(pO)])
+  /* ceny lodí a čísla statistik jsou stejné ve všech jazycích → vždy do češtiny */
+  var zc={};Object.keys(z).forEach(function(k){if(/^pela\.(ceny|cislo)\./.test(k)){zc[k]=z[k];delete z[k]}});
+  Promise.all([KK.texty.uloz(z),KK.dtexty.uloz(pD),KK.ikony.uloz(pI),KK.obrazky.uloz(pO),Object.keys(zc).length?KK.texty.uloz(zc,'cs'):null])
   .then(function(r){ulozene=r[0];cekajici={};pD={};pI={};pO={};zasobnik=[];stav();oznac();toast('Uloženo – '+n+' '+tvar(n,'změna','změny','změn')+'.','ok');return KK.obrazky.uklid()})
   .catch(function(){bSave.disabled=false;toast('Uložení se nepovedlo. Zkuste to znovu.','err')});
 });
@@ -326,8 +330,8 @@ if(!VRAMCI)bar.querySelector('.kke-end').addEventListener('click',function(){
   if(pocet()&&!confirm('Máte neuložené změny. Opravdu odejít bez uložení?'))return;
   cekajici={};pD={};pI={};pO={};location.href=location.pathname+location.hash;
 });
-window.KKE={neulozeno:function(){return pocet()>0}};
-addEventListener('beforeunload',function(e){if(pocet()){e.preventDefault();e.returnValue=''}});
+window.KKE={neulozeno:function(){return pocet()>0},opust:false};
+addEventListener('beforeunload',function(e){if(pocet()&&!(window.KKE&&KKE.opust)){e.preventDefault();e.returnValue=''}});
 stav();oznac();
 /* skok z administrace na konkrétní text: ?edit=1#t=klic */
 var hk=decodeURIComponent((location.hash.match(/^#t=(.+)$/)||[])[1]||'');

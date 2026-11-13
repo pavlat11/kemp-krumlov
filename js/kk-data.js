@@ -44,13 +44,18 @@ KK.auth={
 /* ---------------- TEXTY WEBU ----------------
    Uloženy jen ZMĚNĚNÉ texty: { 'o-kempu.3': '<em>…</em>', … }
    server: GET /api/texty · PUT /api/texty {klic:html,…} · DELETE /api/texty/{klic} */
+/* jazyky: čeština = 'texty', ostatní = 'texty.en', 'texty.de' (překlady; co chybí, zůstane česky)
+   server: …/texty?lang=en */
+KK.JAZYKY={cs:'Čeština',en:'English',de:'Deutsch'};
+KK.JAZYK=window.KK_LANG||'cs';
+function kJ(base,j){j=j||KK.JAZYK;return j==='cs'?base:base+'.'+j}
 KK.texty={
-  vse:function(){return KK.MODE==='server'?api('GET','/texty'):Promise.resolve(LS.get('texty',{}))},
-  vseSync:function(){return LS.get('texty',{})},
-  uloz:function(zmeny){
-    if(KK.MODE==='server')return api('PUT','/texty',zmeny);
-    var t=LS.get('texty',{});Object.keys(zmeny).forEach(function(k){if(zmeny[k]===null)delete t[k];else t[k]=zmeny[k]});
-    LS.set('texty',t);historie('Texty',Object.keys(zmeny).length+' změn');return Promise.resolve(t);
+  vse:function(j){return KK.MODE==='server'?api('GET','/texty?lang='+(j||KK.JAZYK)):Promise.resolve(LS.get(kJ('texty',j),{}))},
+  vseSync:function(j){return LS.get(kJ('texty',j),{})},
+  uloz:function(zmeny,j){
+    if(KK.MODE==='server')return api('PUT','/texty?lang='+(j||KK.JAZYK),zmeny);
+    var key=kJ('texty',j),t=LS.get(key,{});Object.keys(zmeny).forEach(function(k){if(zmeny[k]===null)delete t[k];else t[k]=zmeny[k]});
+    LS.set(key,t);if(Object.keys(zmeny).length)historie((j||KK.JAZYK)==='cs'?'Texty':'Překlad '+(j||KK.JAZYK).toUpperCase(),Object.keys(zmeny).length+' změn');return Promise.resolve(t);
   },
   obnov:function(klic){var z={};z[klic]=null;return KK.texty.uloz(z)}
 };
@@ -164,12 +169,12 @@ function zmensi(file,max,q){
 var _odb=null;
 function odb(){if(_odb)return _odb;_odb=new Promise(function(ok,no){var r=indexedDB.open('kk-obrazky',1);r.onupgradeneeded=function(){r.result.createObjectStore('o',{keyPath:'id'})};r.onsuccess=function(){ok(r.result)};r.onerror=function(){no(r.error)}});return _odb}
 function otx(mode,fn){return odb().then(function(d){return new Promise(function(ok,no){var t=d.transaction('o',mode),s=t.objectStore('o'),r=fn(s);t.oncomplete=function(){ok(r&&r.result!==undefined?r.result:r)};t.onerror=function(){no(t.error)}})})}
-function mapa(klic,nazev){return{
-  vse:function(){return LS.get(klic,{})},
-  uloz:function(zmeny){var t=LS.get(klic,{});Object.keys(zmeny).forEach(function(k){if(zmeny[k]==null)delete t[k];else t[k]=zmeny[k]});
+function mapa(zaklad,nazev,jaz){var K=function(){return jaz?kJ(zaklad):zaklad};return{
+  vse:function(){return LS.get(K(),{})},
+  uloz:function(zmeny){var klic=K(),t=LS.get(klic,{});Object.keys(zmeny).forEach(function(k){if(zmeny[k]==null)delete t[k];else t[k]=zmeny[k]});
     if(Object.keys(t).length)LS.set(klic,t);else LS.del(klic);if(Object.keys(zmeny).length)historie(nazev,Object.keys(zmeny).length+' změn');return Promise.resolve(t)}
 }}
-KK.dtexty=mapa('dtexty','Texty v mapách a animacích');
+KK.dtexty=mapa('dtexty','Texty v mapách a animacích',true);
 KK.ikony=mapa('ikony','Ikony');
 KK.obrazky=mapa('obrazky','Fotky na webu');
 KK.obrazky.soubor={
@@ -186,6 +191,7 @@ KK.obrazky.uklid=function(){var pouzite={};var m=LS.get('obrazky',{});Object.key
   return KK.obrazky.soubor.vse().then(function(a){var x=a.filter(function(o){return !pouzite[o.id]}).map(function(o){return o.id});return x.length?KK.obrazky.soubor.smaz(x):null})};
 KK.obrazky.url=function(z){return KK.obrazky.soubor.vse().then(function(a){var m={};a.forEach(function(o){m[o.id]=URL.createObjectURL(o.blob)});return m})};
 KK.zmensi=function(f,max,q){return zmensi(f,max||1920,q||0.82)};
+function preklady(){var o={};['en','de'].forEach(function(j){o[j]={texty:LS.get('texty.'+j,{}),dtexty:LS.get('dtexty.'+j,{})}});return o}
 function naData(b){return new Promise(function(ok){var r=new FileReader();r.onload=function(){ok(r.result)};r.readAsDataURL(b)})}
 function zDat(u){var p=u.split(','),b=atob(p[1]),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new Blob([a],{type:(p[0].match(/:(.*?);/)||[])[1]||'image/webp'})}
 
@@ -195,14 +201,15 @@ KK.historie=function(){return LS.get('historie',[])};
 KK.export=function(){return KK.galerie.seznam().then(function(f){
   return Promise.all(f.map(function(x){if(!x.blob)return x;return new Promise(function(ok){var r=new FileReader();r.onload=function(){var y=Object.assign({},x);y.blob=r.result;delete y.nahled;ok(y)};r.readAsDataURL(x.blob)})}))
   .then(function(fotky){return KK.obrazky.soubor.vse().catch(function(){return[]}).then(function(ob){return Promise.all(ob.map(function(o){return naData(o.blob).then(function(d){return{id:o.id,data:d}})}))}).then(function(ob){
-    return{verze:1,datum:new Date().toISOString(),texty:LS.get('texty',{}),seo:LS.get('seo',null),cenik:LS.get('cenik',null),fotky:fotky,dtexty:LS.get('dtexty',{}),ikony:LS.get('ikony',{}),obrazky:LS.get('obrazky',{}),obrazkySoubory:ob}})})})};
+    return{verze:1,datum:new Date().toISOString(),texty:LS.get('texty',{}),seo:LS.get('seo',null),cenik:LS.get('cenik',null),fotky:fotky,dtexty:LS.get('dtexty',{}),preklady:preklady(),ikony:LS.get('ikony',{}),obrazky:LS.get('obrazky',{}),obrazkySoubory:ob}})})})};
 KK.import=function(d){
   if(!d||d.verze!==1)return Promise.reject(new Error('Soubor není záloha administrace Kemp Krumlov.'));
-  LS.set('texty',d.texty||{});['dtexty','ikony','obrazky'].forEach(function(k){if(d[k]&&Object.keys(d[k]).length)LS.set(k,d[k]);else LS.del(k)});if(d.seo)LS.set('seo',d.seo);else LS.del('seo');if(d.cenik)LS.set('cenik',d.cenik);else LS.del('cenik');
+  LS.set('texty',d.texty||{});['dtexty','ikony','obrazky'].forEach(function(k){if(d[k]&&Object.keys(d[k]).length)LS.set(k,d[k]);else LS.del(k)});
+  ['en','de'].forEach(function(j){var z=(d.preklady||{})[j]||{};['texty','dtexty'].forEach(function(b){if(z[b]&&Object.keys(z[b]).length)LS.set(b+'.'+j,z[b]);else LS.del(b+'.'+j)})});if(d.seo)LS.set('seo',d.seo);else LS.del('seo');if(d.cenik)LS.set('cenik',d.cenik);else LS.del('cenik');
   var fotky=(d.fotky||[]).map(function(f){if(typeof f.blob==='string'){var p=f.blob.split(','),b=atob(p[1]),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);f.blob=new Blob([a],{type:(p[0].match(/:(.*?);/)||[])[1]||'image/webp'});f.nahled=f.blob}return f});
   return tx('readwrite',function(s){s.clear();fotky.forEach(function(f){s.put(f)})}).then(function(){if(fotky.length)LS.set('galerie',{v:1,zmena:Date.now()});else LS.del('galerie');
     return KK.obrazky.soubor.vymaz().then(function(){return otx('readwrite',function(s){(d.obrazkySoubory||[]).forEach(function(o){s.put({id:o.id,blob:zDat(o.data),kdy:Date.now()})})})});
   }).then(function(){historie('Záloha','obnovena ze souboru')});
 };
-KK.reset=function(){['texty','seo','cenik','galerie','historie','dtexty','ikony','obrazky'].forEach(LS.del);return tx('readwrite',function(s){s.clear()}).then(function(){return KK.obrazky.soubor.vymaz().catch(function(){})})};
+KK.reset=function(){['texty','seo','cenik','galerie','historie','dtexty','ikony','obrazky','texty.en','texty.de','dtexty.en','dtexty.de','mena','jazyk'].forEach(LS.del);return tx('readwrite',function(s){s.clear()}).then(function(){return KK.obrazky.soubor.vymaz().catch(function(){})})};
 })();
