@@ -50,7 +50,7 @@ if(get('galerie'))document.addEventListener('DOMContentLoaded',function(){
 /* 4) editační režim: ?edit=1 a přihlášený správce */
 var ses=get('session');
 if(/[?&]edit(=1)?(&|$)/.test(location.search)&&ses&&ses.do>Date.now()){
-  var l=document.createElement('link');l.rel='stylesheet';l.href=BASE+'css/editace.css?v=4';document.head.appendChild(l);
-  document.addEventListener('DOMContentLoaded',function(){nactiData().then(function(){return nactiSkript('js/editace.js?v=5')})});
+  var l=document.createElement('link');l.rel='stylesheet';l.href=BASE+'css/editace.css?v=5';document.head.appendChild(l);
+  document.addEventListener('DOMContentLoaded',function(){nactiData().then(function(){return nactiSkript('js/editace.js?v=6')})});
 }
 })();

@@ -259,20 +259,18 @@ document.addEventListener('mousemove',function(ev){posledni=ev;if(hlRaf)return;h
 document.addEventListener('scroll',function(){hl.classList.remove('on')},{passive:true,capture:true});
 function ukaz(ev){
   if(prochazet||aktivni||pop){hl.classList.remove('on');return}
-  var z=najdi(ev);if(!z||z.typ==='t'){hl.classList.remove('on');return}
+  var z=najdi(ev),ov=ovladac(ev.target);if(!z||(z.typ==='t'&&!ov)){hl.classList.remove('on');return}
   var r;if(z.node){var rr=document.createRange();rr.selectNodeContents(z.node);r=rr.getBoundingClientRect()}else r=z.el.getBoundingClientRect();
   if(z.typ==='fotka'){r={left:Math.max(r.left,0),top:Math.max(r.top,0),right:Math.min(r.right,innerWidth),bottom:Math.min(r.bottom,innerHeight)};r.width=r.right-r.left;r.height=r.bottom-r.top}
   hl.className='kke-hl kke-ui on t-'+z.typ;hl.style.cssText='left:'+(r.left-4)+'px;top:'+(r.top-4)+'px;width:'+(r.width+8)+'px;height:'+(r.height+8)+'px';
-  hl.firstChild.textContent=STITKY[z.typ];
+  hl.firstChild.textContent=ov?'Klik = ovládání · dvojklik = '+(z.typ==='t'||z.typ==='text'?'upravit text':STITKY[z.typ].toLowerCase()):STITKY[z.typ];hl.classList.toggle('t-ov',!!ov);var sp=hl.firstChild;sp.style.left='';sp.style.right='';var sr=sp.getBoundingClientRect();if(sr.right>innerWidth-4){sp.style.left='auto';sp.style.right='-2px'}if(sp.getBoundingClientRect().left<4){sp.style.left='0';sp.style.right='auto'}
 }
 
 /* klikání: v režimu úprav web nereaguje, klik upravuje */
-document.addEventListener('click',function(ev){
-  if(ev.target.closest&&ev.target.closest('.kke-ui'))return;
-  if(pop&&!ev.target.closest('.kke-pop')){zavriPop();ev.preventDefault();ev.stopImmediatePropagation();return}
-  zavriToast();
-  if(prochazet)return;
-  var z=najdi(ev);
+/* tlačítka (menu, kroky rezervace, karty ubytování, filtry…) fungují i v editaci – jejich text se upraví dvojklikem */
+var OVL='button,[role=tab],[role=button],summary,select,input,label';
+function ovladac(t){if(!t||!t.closest)return null;var c=t.closest(OVL);if(!c||c.closest('.kke-ui')||t.closest('.kke-act'))return null;return c}
+function proved(ev,z){
   if(!z){if(aktivni&&!ev.target.closest('.kke-act'))skonci();return}
   if(z.typ==='t'){ev.preventDefault();ev.stopImmediatePropagation();zacni(z.el);return}
   if(aktivni)skonci();
@@ -284,9 +282,23 @@ document.addEventListener('click',function(ev){
   else if(z.typ==='ikona')upravIkonu(z.el);
   else if(z.typ==='lod')upravCenyLodi(z.karta);
   else if(z.typ==='cislo')upravCislo(z.el);
+}
+document.addEventListener('dblclick',function(ev){
+  if(prochazet||!ev.target.closest||ev.target.closest('.kke-ui,.kke-act'))return;
+  if(!ovladac(ev.target))return;
+  getSelection().removeAllRanges();proved(ev,najdi(ev));
+},true);
+document.addEventListener('click',function(ev){
+  if(ev.target.closest&&ev.target.closest('.kke-ui'))return;
+  if(pop&&!ev.target.closest('.kke-pop')){zavriPop();ev.preventDefault();ev.stopImmediatePropagation();return}
+  zavriToast();
+  if(prochazet)return;
+  if(ovladac(ev.target)){if(aktivni&&!ev.target.closest('.kke-act'))skonci();return}
+  var z=najdi(ev);
+  proved(ev,z);
 },true);
 /* odkazy a tlačítka nesmí reagovat ani na stisk myši (např. přetahování mapy) */
-['pointerdown','mousedown'].forEach(function(t){document.addEventListener(t,function(ev){if(prochazet||!ev.target.closest||ev.target.closest('.kke-ui,.kke-act'))return;if(najdi(ev)&&!ev.target.closest('[data-t]'))ev.preventDefault()},true)});
+['pointerdown','mousedown'].forEach(function(t){document.addEventListener(t,function(ev){if(prochazet||!ev.target.closest||ev.target.closest('.kke-ui,.kke-act')||ovladac(ev.target))return;if(najdi(ev)&&!ev.target.closest('[data-t]'))ev.preventDefault()},true)});
 document.addEventListener('keydown',function(ev){
   if(ev.target.closest&&ev.target.closest('.kke-pop'))return;
   var e=ev.target.closest&&ev.target.closest('[data-t]');
@@ -334,5 +346,5 @@ stav();oznac();
 /* skok z administrace na konkrétní text: ?edit=1#t=klic */
 var hk=decodeURIComponent((location.hash.match(/^#t=(.+)$/)||[])[1]||'');
 if(hk){var he=document.querySelector('[data-t="'+hk+'"]');if(he){setTimeout(function(){var vis=he.getClientRects().length>0;if(vis){he.scrollIntoView({block:'center'});he.classList.add('kke-act');setTimeout(function(){he.classList.remove('kke-act')},1600);he.focus({preventScroll:true})}else toast('Tento text je teď skrytý (např. v dalším kroku rezervace nebo v mobilním menu). Přepněte na Procházet, otevřete ho a pak zpět na Upravovat.',null,6000)},600)}}
-if(!KK.LS.get('editace-napoveda2',0)){toast('<b>Klikněte na text, fotku nebo ikonu.</b> Na web se dá normálně klikat přes tlačítko <b>Procházet</b> (např. další krok rezervace nebo místo na mapě).',null,7000);KK.LS.set('editace-napoveda2',1)}
+if(!KK.LS.get('editace-napoveda3',0)){toast('<b>Klikněte na text, fotku nebo ikonu.</b> Tlačítka (menu, kroky rezervace, karty ubytování) fungují normálně – jejich text upravíte <b>dvojklikem</b>.',null,7000);KK.LS.set('editace-napoveda3',1)}
 })();
