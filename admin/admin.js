@@ -61,8 +61,8 @@ function jazykVolba(){var j=jazykAdm();return '<div class="row jz" role="group" 
 function jazykKlik(m){$$('[data-jz]',m).forEach(function(b){b.addEventListener('click',function(){if(b.dataset.jz===jazykAdm())return;if(neulozeno&&neulozeno()&&!confirm('Máte neuložené změny. Přepnout jazyk bez uložení?'))return;KK.LS.set('admin-jazyk',b.dataset.jz);neulozeno=null;route()})})}
 
 /* ---------- kostra ---------- */
-var VIEWS={upravit:upravit,prehled:prehled,galerie:galerie,fotky:fotkyIkony,seo:seo,cenik:cenik,rezervace:pripravujeme,nastaveni:nastaveni};
-var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['galerie','Galerie'],['fotky','Fotky a ikony'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace',1],['cenik','Ceník a kapacity']]],['Systém',[['nastaveni','Nastavení a záloha']]]];
+var VIEWS={upravit:upravit,prehled:prehled,galerie:galerie,seo:seo,cenik:cenik,rezervace:pripravujeme,nastaveni:nastaveni};
+var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['galerie','Galerie'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace',1],['cenik','Ceník a kapacity']]],['Systém',[['nastaveni','Nastavení a záloha']]]];
 function shell(s){
   app.innerHTML='<div class="top"><div class="logo"><i>'+SV(IC.lode,20)+'</i>Administrace</div><button type="button" id="mb" aria-label="Otevřít menu" aria-expanded="false" aria-controls="side">'+SV(IC.menu,22)+'</button></div>'+
   '<div class="app"><nav class="side" id="side" aria-label="Administrace"><div class="logo"><i>'+SV(IC.lode,22)+'</i><span>Kemp Krumlov<small>Administrace</small></span></div>'+
@@ -122,35 +122,6 @@ function prehled(m){
 }
 
 /* ---------- OBSAH ---------- */
-function fotkyIkony(m){
-  var urls=[];
-  return Promise.all([KK.obrazky.soubor.vse().catch(function(){return[]})]).then(function(r){
-    var soub={};r[0].forEach(function(o){var u=URL.createObjectURL(o.blob);urls.push(u);soub[o.id]=u});
-    var F=window.KK_FOTKY||[],O=KK.obrazky.vse(),I=KK.ikony.vse();
-    var nI=Object.keys(I).length,nO=Object.keys(O).length;
-    function nahled(c){var z=O[c];return z&&soub[z.id]?soub[z.id]:WEB+c}
-    m.innerHTML='<div id="fw"><div class="ph"><div><h1>Fotky a ikony</h1><p>Fotky v sekcích webu (mimo galerii) a ikony. Fotku i ikonu nejsnáz změníte přímo na stránce: v <a href="#upravit">Upravit web</a> na ni klikněte.</p></div>'+
-      '<a class="btn pri" href="#upravit">'+SV(IC.obsah,18)+'Upravit na stránce</a></div>'+
-      '<section class="sec"><h2>Fotky v sekcích <span class="badge">'+F.length+'</span>'+(nO?' <span class="badge ok">'+nO+' '+pl(nO,'nahrazená','nahrazené','nahrazených')+'</span>':'')+'</h2>'+
-      '<p class="mut" style="margin-top:-6px">Fotky v galerii se spravují v sekci <a href="#galerie">Galerie</a>. Nová fotka se zmenší na max. 2200 px; výřez na webu zůstane stejný jako u původní, proto volte podobný formát (na šířku).</p>'+
-      '<div class="ggrid" id="fg">'+F.map(function(f,i){var c=f[1],z=!!O[c];return '<div class="gc'+(z?' sel':'')+'" data-c="'+esc(c)+'"><div class="im" style="cursor:default;background-image:url(&quot;'+esc(nahled(c))+'&quot;)" role="img" aria-label="'+esc(f[2]||c)+'">'+(z?'<span class="n first">Nahrazená</span>':'')+'</div>'+
-        '<div style="padding:10px 12px;display:flex;flex-direction:column;gap:8px"><b style="font-size:14px">'+esc(SEK[f[0]]||f[0])+'</b><span class="mut" style="font-size:12.5px;word-break:break-all">'+esc(f[2]||c.split('/').pop())+'</span>'+
-        '<span class="row" style="gap:6px;flex-wrap:wrap"><label class="btn sm pri" style="cursor:pointer">'+SV('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/>',15)+'Nahradit<input type="file" accept="image/*" data-f="'+i+'" class="sr"></label>'+
-        (z?'<button type="button" class="btn sm gh" data-r="'+i+'">Vrátit původní</button>':'')+'</span></div></div>'}).join('')+'</div></section>'+
-      '<section class="sec"><h2>Ikony'+(nI?' <span class="badge ok">'+nI+' '+pl(nI,'změněná','změněné','změněných')+'</span>':'')+'</h2>'+
-      '<p class="mut" style="margin-top:-6px">Ikonu změníte na stránce v <a href="#upravit">Upravit web</a>: klikněte na ni a vyberte jinou z knihovny. Stejné ikony na stránce se změní společně.</p>'+
-      (nI?'<div class="card"><ul class="hist" id="il">'+Object.keys(I).map(function(k){return '<li><span class="row" style="gap:12px">'+SV(I[k].s,24)+'<span>'+esc(I[k].n)+'</span></span><button type="button" class="btn sm gh" data-ik="'+esc(k)+'">Vrátit původní</button></li>'}).join('')+'</ul></div>':'<div class="card mut">Zatím žádná ikona není změněná.</div>')+
-      '<h3 style="margin:22px 0 10px;font-size:16px">Knihovna ikon <span class="badge">'+(window.KK_IKONY?KK_IKONY.reduce(function(a,g){return a+g[1].length},0):0)+'</span></h3>'+
-      '<div class="card">'+(window.KK_IKONY||[]).map(function(g){return '<div style="margin-bottom:12px"><b class="mut" style="font-size:12px;text-transform:uppercase;letter-spacing:.04em">'+esc(g[0])+'</b><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">'+g[1].map(function(x){return '<span title="'+esc(x[1])+'" style="width:42px;height:42px;display:grid;place-items:center;border:1.5px solid var(--line);border-radius:10px">'+SV(x[2],22)+'<span class="sr">'+esc(x[1])+'</span></span>'}).join('')+'</div></div>'}).join('')+
-      '<p class="mut" style="margin:6px 0 0;font-size:12.5px">Ikony Lucide (licence ISC).</p></div></section></div>';var fw=$('#fw');
-    fw.addEventListener('change',function(e){var inp=e.target.closest('input[data-f]');if(!inp||!inp.files[0])return;var c=F[+inp.dataset.f][1],lab=inp.closest('label');lab.style.opacity='.6';
-      KK.obrazky.nahraj(inp.files[0]).then(function(z){var o={};o[c]={id:z.id,v:z.v};return KK.obrazky.uloz(o)}).then(function(){return KK.obrazky.uklid()})
-      .then(function(){toast('Fotka nahrazena – na webu se projeví po obnovení stránky.');route()}).catch(function(x){lab.style.opacity='';toast((x&&x.message)||'Fotku se nepodařilo nahrát.',1)})});
-    fw.addEventListener('click',function(e){var b=e.target.closest('[data-r]');if(b){var o={};o[F[+b.dataset.r][1]]=null;KK.obrazky.uloz(o).then(function(){return KK.obrazky.uklid()}).then(function(){toast('Vrácena původní fotka.');route()});return}
-      var k=e.target.closest('[data-ik]');if(k){var x={};x[k.dataset.ik]=null;KK.ikony.uloz(x).then(function(){toast('Vrácena původní ikona.');route()})}});
-  });
-}
-
 /* ---------- GALERIE ---------- */
 function galerie(m){
   var urls=[];function u(f,n){if(f.src)return WEB+f.src;var x=KK.galerie.url(f,n);urls.push(x);return x}
@@ -379,7 +350,7 @@ function pripravujeme(m,v){
 
 /* ---------- NASTAVENÍ ---------- */
 function nastaveni(m){
-  m.innerHTML='<div class="ph"><div><h1>Nastavení a záloha</h1><p>Záloha obsahuje všechny upravené texty, SEO a fotky z galerie. Hodí se i pro přenesení na server.</p></div></div>'+
+  m.innerHTML='<div class="ph"><div><h1>Nastavení a záloha</h1><p>Záloha obsahuje všechny upravené texty a překlady, vyměněné fotky a ikony na webu, ceník, SEO i fotky z galerie. Hodí se i pro přenesení na server.</p></div></div>'+
   '<div class="grid g2"><div class="card"><h2>Kde jsou data</h2><p><span class="badge warn">Náhled</span> Vše je uložené jen v tomto prohlížeči. Jiný počítač ani návštěvníci webu změny neuvidí.</p><p class="mut">Po spuštění na serveru se data budou ukládat do databáze a uvidí je všichni. Zálohu odsud pak jde na server nahrát.</p></div>'+
   '<div class="card"><h2>Záloha</h2><p class="mut">Stáhne soubor .json se všemi úpravami.</p><div class="row"><button class="btn pri" id="ex">Stáhnout zálohu</button><label class="btn gh" for="im">Nahrát zálohu</label><input type="file" id="im" accept=".json,application/json" hidden></div></div>'+
   '<div class="card"><h2>Začít znovu</h2><p class="mut">Smaže všechny úpravy textů, SEO i galerii a vrátí web do původní podoby.</p><button class="btn dan" id="rs">Smazat všechny úpravy</button></div></div>';
