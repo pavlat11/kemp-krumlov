@@ -1,5 +1,5 @@
 /* Základ: načítání, hlavička při scrollu, postupné zobrazování sekcí, počítadla */
-const reduce = false;
+const reduce=!!window.KK_BEZ_ANIMACI;
 
 addEventListener('load',()=>setTimeout(()=>document.getElementById('loader').classList.add('done'),reduce?0:600));
 

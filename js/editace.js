@@ -14,7 +14,6 @@ var els=function(k){return [].slice.call(document.querySelectorAll('[data-t="'+k
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
 var pocet=function(){return Object.keys(cekajici).length+Object.keys(pD).length+Object.keys(pI).length+Object.keys(pO).length};
 var tvar=function(n,a,b,c){return n===1?a:n>1&&n<5?b:c};
-if(window.__setAnimPaused)window.__setAnimPaused(true);
 document.documentElement.classList.add('kk-edit');
 
 /* původní texty ze zdrojového HTML (pro „vrátit původní“) */
@@ -305,9 +304,8 @@ bMode.addEventListener('click',function(){
   if(aktivni)skonci();zavriPop();prochazet=!prochazet;
   bMode.setAttribute('aria-pressed',String(prochazet));bMode.querySelector('span').textContent=prochazet?'Upravovat':'Procházet';
   document.documentElement.classList.toggle('kk-edit',!prochazet);document.documentElement.classList.toggle('kk-edit-prochazet',prochazet);
-  if(window.__setAnimPaused)window.__setAnimPaused(!prochazet);
   hl.classList.remove('on');stav();
-  toast(prochazet?'Úpravy jsou vypnuté – web funguje normálně (kroky rezervace, mapy, animace). Pro úpravy klikněte na <b>Upravovat</b>.':'Úpravy zapnuté – klikněte na text, fotku nebo ikonu.');
+  toast(prochazet?'Úpravy jsou vypnuté – na web se dá klikat (kroky rezervace, místa na mapě). Pro úpravy klikněte na <b>Upravovat</b>.':'Úpravy zapnuté – klikněte na text, fotku nebo ikonu.');
 });
 
 bUndo.addEventListener('click',function(){var z=zasobnik.pop();if(!z)return;z();stav();oznac()});

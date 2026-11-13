@@ -24,7 +24,7 @@ locked.forEach(function(e){if(e)e.inert=true});
 var done=false,started=false,ratio=0,pending=null;
 var pctEl=document.getElementById('aiPct'),fillEl=document.getElementById('aiFill'),labEl=document.getElementById('aiLab'),barEl=intro.querySelector('.ai-bar'),loadEl=document.getElementById('aiLoad'),stepEls=[].slice.call(intro.querySelectorAll('.ai-steps li'));
 var LABS=['Načítám areál kempu…','Stavím chatky a budovy…','Rozmisťuji značky…','Hotovo, otevírám mapu'];
-var reduce=false;
+var reduce=!!window.KK_BEZ_ANIMACI;
 var DUR=reduce?700:1900;
 /* nerovnoměrný průběh působí přirozeněji než rovná čára */
 function curve(t){return t<.28?.34*Math.pow(t/.28,.9):t<.6?.34+.36*((t-.28)/.32):t<.8?.70+.18*Math.pow((t-.6)/.2,1.3):.88+.12*(1-Math.pow(1-(t-.8)/.2,2))}
@@ -64,6 +64,8 @@ function open(k){if(done)return;done=true;
  setTimeout(function(){sec.classList.remove('am-rev')},2600);
  setTimeout(hint,1500)}
 document.getElementById('aiGo').addEventListener('click',function(){reveal(null)});
+/* editační režim: mapa rovnou otevřená, bez úvodu */
+if(reduce){done=true;started=true;intro.hidden=true;sec.classList.remove('am-pre');locked.forEach(function(e){if(e)e.inert=false})}
 function hint(){
  var coarse=matchMedia('(pointer:coarse)').matches,h=document.createElement('div');h.className='am-hint';
  h.innerHTML='<i>\u261D</i><span>'+(coarse?'Klepněte na značku nebo tažením posouvejte mapu':'Klikněte na značku nebo tažením posouvejte mapu')+'</span>';

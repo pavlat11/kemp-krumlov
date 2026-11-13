@@ -1,6 +1,6 @@
 (function(){
 var sec=document.getElementById('pela');if(!sec)return;
-var reduce=false;
+var reduce=!!window.KK_BEZ_ANIMACI;
 var $=function(id){return document.getElementById(id)};
 
 /* postupný nástup bloků při scrollování */

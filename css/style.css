@@ -3016,3 +3016,7 @@ span.tw{color:inherit!important;font:inherit!important;letter-spacing:inherit!im
 .kk-mena button:focus-visible{outline:3px solid #f4a64a;outline-offset:2px}
 .kk-mena-pozn{margin:0 0 10px;font-size:13px;color:#5b6b62}
 .ft-cta-btns .btn{display:inline-flex!important;align-items:center;justify-content:center;padding:0 24px!important;line-height:1.2}
+/* editační režim: bez animací, vše rovnou v konečném stavu */
+.kk-bez-animaci *,.kk-bez-animaci *::before,.kk-bez-animaci *::after{animation-duration:0s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:0s!important;transition-delay:0s!important}
+.kk-bez-animaci .reveal,.kk-bez-animaci .pp-r{opacity:1!important;transform:none!important}
+footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-width:100%}

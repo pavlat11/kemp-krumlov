@@ -40,7 +40,7 @@ function burst(){conf.innerHTML='';parts=[];
 function stepParts(){for(const p of parts){if(p.life<=0)continue;p.vy+=.16;p.vx*=.985;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.life-=.011;
   p.e.setAttribute('transform',`translate(${p.x} ${p.y}) rotate(${p.rot})`);p.e.setAttribute('opacity',Math.max(0,p.life))}}
 const DUR=6500,ZIN=900,HOLD=4200,ZOUT=800;let t0=performance.now(),arrived=false;
-const reduce=false;
+const reduce=!!window.KK_BEZ_ANIMACI;
 function reset(){arrived=false;svg.classList.remove('arrived');camp.classList.remove('arrived');canoe.classList.remove('docked');trip.classList.remove('done');
   S.forEach(s=>s.g.classList.remove('on'));conf.innerHTML='';parts=[];setZoom(0)}
 let rmV=true;new IntersectionObserver(e=>{rmV=e[0].isIntersecting}).observe(svg);

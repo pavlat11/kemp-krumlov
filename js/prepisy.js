@@ -9,6 +9,8 @@
 'use strict';
 function get(k){try{var v=localStorage.getItem('kk.'+k);return v?JSON.parse(v):null}catch(e){return null}}
 var EDIT=/[?&]edit(=1)?(&|$)/.test(location.search);
+/* v editačním režimu bez animací – vše se ukáže rovnou v konečném stavu */
+if(EDIT){window.KK_BEZ_ANIMACI=true;document.documentElement.classList.add('kk-bez-animaci')}
 /* jazyk: ?lang=en|de, jinak poslední volba návštěvníka, jinak čeština */
 var JAZYKY=['cs','en','de'],qp=(location.search.match(/[?&]lang=([a-z]{2})/)||[])[1];
 var L=JAZYKY.indexOf(qp)>=0?qp:JAZYKY.indexOf(get('jazyk'))>=0?get('jazyk'):'cs';

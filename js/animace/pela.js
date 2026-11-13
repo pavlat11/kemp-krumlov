@@ -1,6 +1,6 @@
 (function(){
  var sec=document.getElementById('pela'); if(!sec)return;
- var reduce=false;
+ var reduce=!!window.KK_BEZ_ANIMACI;
  function animateNumber(el,delay){
    var target=Number(el.dataset.n||0), pre=el.dataset.prefix||'', suf=el.dataset.suffix||'';
    if(reduce){el.textContent=pre+target+suf;return;}

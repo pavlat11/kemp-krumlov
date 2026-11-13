@@ -57,7 +57,7 @@ function select(i){if(i===sel)return;sel=i;
   if(p<1)anim=requestAnimationFrame(f);else van.classList.add('dp-van-idle')})(performance.now())}
 var auto=null,ai=0;function stopAuto(){clearInterval(auto);auto=null}
 place(CAMP,1,true);
-var reduce=false;
+var reduce=!!window.KK_BEZ_ANIMACI;
 function start(){select(0);if(reduce)return;ai=0;auto=setInterval(function(){ai=(ai+1)%STOPS.length;select(ai)},1400)}
 if('IntersectionObserver' in window){var io=new IntersectionObserver(function(e){if(e[0].isIntersecting){start();io.disconnect()}},{threshold:.25});io.observe(sec.querySelector('.dp-map'))}else start();
 })();
