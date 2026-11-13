@@ -1,0 +1,28 @@
+/* Kemp Krumlov – editační režim (načítá se jen správci) */
+.kk-edit [data-t]{cursor:text;outline:1.5px dashed transparent;outline-offset:3px;border-radius:3px;transition:outline-color .15s,background-color .15s}
+.kk-edit [data-t]:hover,.kk-edit [data-t]:focus-visible{outline-color:#f4a64a!important;background-color:rgba(244,166,74,.10)}
+.kk-edit [data-t].kke-upr{box-shadow:inset 0 -2px 0 rgba(76,175,110,.75)}
+.kk-edit [data-t].kke-ceka{box-shadow:inset 0 -2px 0 #f4a64a;background-color:rgba(244,166,74,.14)}
+.kk-edit [data-t].kke-act{outline:2px solid #f4a64a!important;outline-offset:4px;background-color:rgba(255,255,255,.08);caret-color:#f4a64a;cursor:text;user-select:text;-webkit-user-select:text}
+.kk-edit [data-cena]{cursor:not-allowed}
+.kk-edit [data-cena]:hover{outline-color:#c0392b!important;background-color:rgba(192,57,43,.08)}
+.kk-edit #galerie .gl-i{cursor:not-allowed}
+.kk-edit *{animation-play-state:paused!important}
+.kk-edit .reveal{opacity:1!important;transform:none!important}
+.kk-edit #toTop,.kk-edit #callbar{display:none!important}
+body:has(.kke-bar){padding-bottom:84px}
+.kke-bar{position:fixed;left:0;right:0;margin:0 auto;width:max-content;bottom:16px;z-index:5000;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;max-width:calc(100% - 24px);background:#0f2219;color:#fff;border-radius:18px;padding:8px 8px 8px 16px;box-shadow:0 18px 40px -12px rgba(0,0,0,.55);font:600 14px/1.2 'Plus Jakarta Sans',system-ui,sans-serif}
+.kke-tit{display:flex;align-items:center;gap:8px;font-weight:800;color:#f4a64a;white-space:nowrap}
+.kke-st{color:#cfe2d6;min-width:150px;padding:0 6px}
+.kke-st.dirty{color:#ffd38f}
+.kke-b{appearance:none;border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;border-radius:12px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap}
+.kke-b:hover:not(:disabled){background:rgba(255,255,255,.1)}
+.kke-b:disabled{opacity:.4;cursor:default}
+.kke-b.kke-save{background:#f4a64a;color:#0f2219;border-color:#f4a64a}
+.kke-b.kke-save:hover:not(:disabled){background:#ffb965}
+.kke-b:focus-visible{outline:3px solid #f4a64a;outline-offset:2px}
+.kke-toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,10px);z-index:5001;max-width:min(520px,calc(100% - 24px));background:#fff;color:#173b2a;border-radius:14px;padding:13px 16px;box-shadow:0 18px 40px -12px rgba(0,0,0,.45);font:500 14px/1.5 'Plus Jakarta Sans',system-ui,sans-serif;opacity:0;pointer-events:none;transition:.25s;border-left:5px solid #f4a64a}
+.kke-toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.kke-toast.ok{border-left-color:#4caf6e}.kke-toast.err,.kke-toast.lock{border-left-color:#c0392b}
+.kke-toast a{display:inline-block;margin-left:8px;font-weight:800;color:#b5600c}
+@media(max-width:700px){.kke-toast{bottom:140px}.kke-bar{left:8px;right:8px;width:auto;max-width:none;bottom:8px;padding:8px;border-radius:16px}.kke-tit{display:none}.kke-st{flex-basis:100%;text-align:center;min-width:0;padding:2px 0 4px}.kke-b{flex:1;padding:10px 8px;text-align:center}.kke-adm{display:none}}

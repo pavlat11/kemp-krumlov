@@ -3004,3 +3004,6 @@ footer.ft a{display:inline-block;min-height:24px;padding-top:2px;padding-bottom:
 #kontakt .kt-mapy-open{background:#fff;color:#173b2a;border:1.5px solid #173b2a}
 #kontakt .kt-mapy-open:hover{background:#173b2a;color:#fff}
 #kontakt .kt-mapy-show[hidden]{display:none!important}#kontakt .kt-mapy.on .kt-mapy-c,#kontakt .kt-mapy.on .kt-mapy-bg{display:none}
+
+/* ===== obal upravitelného textu (administrace) – přebírá vzhled rodiče ===== */
+span.tw{color:inherit!important;font:inherit!important;letter-spacing:inherit!important;text-transform:inherit!important;opacity:1!important;margin:0!important;padding:0!important;background:none!important;border:0!important;transform:none!important;width:auto!important;height:auto!important;position:static!important}
