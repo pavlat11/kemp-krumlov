@@ -68,3 +68,5 @@ body:has(.kke-bar){padding-bottom:84px}
 .kke-mode[aria-pressed=true]{background:#2a9fd6;border-color:#2a9fd6}
 .kke-jz{background:#2a9fd6;color:#fff;border-radius:8px;padding:5px 9px;font-size:12.5px;font-weight:800;white-space:nowrap}
 .kke-hl.t-ov span{background:#173b2a;color:#fff}
+/* mobilní menu v editaci: obsah nesmí schovat lišta s uložením */
+.kk-edit .mnav{bottom:var(--kke-h,120px)!important}

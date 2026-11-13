@@ -3032,3 +3032,11 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 /* přepínač měny nad dekorativní září, klik kdekoli na tlačítku */
 .kk-mena{position:relative;z-index:3}
 .rz-card-top::before,.rz-card-top::after,.dp-res::before,.dp-res::after{pointer-events:none}
+/* mobil: přepínač jazyka v horní liště vedle menu (ne v rozbalovacím menu) */
+@media (max-width:1190px){
+.kk2-scope .nav-r .lang-switch{display:block!important;margin:0 4px 0 0}
+.kk2-scope .nav-r .lang-current{padding:8px 9px;min-height:44px}
+.kk2-scope .nav-r .lang-current .sr-lang{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.kk2-scope .nav-r .lang-menu{right:0;left:auto}
+.mnav-lang{display:none!important}
+}

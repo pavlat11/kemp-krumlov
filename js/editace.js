@@ -39,6 +39,7 @@ bar.innerHTML='<span class="kke-tit">'+SV('<path d="M12 20h9"/><path d="M16.5 3.
  '<button type="button" class="kke-b kke-save" disabled>Uložit</button>'+
  (VRAMCI?'':'<a class="kke-b kke-adm" href="'+ADMIN+'#prehled">Administrace</a>'+'<button type="button" class="kke-b kke-end" aria-label="Ukončit editační režim">Ukončit</button>');
 document.body.appendChild(bar);
+var vyskaListy=function(){document.documentElement.style.setProperty('--kke-h',(bar.offsetHeight+(innerWidth<700?16:32))+'px')};addEventListener('resize',vyskaListy);setTimeout(vyskaListy,50);
 var st=bar.querySelector('.kke-st'),bUndo=bar.querySelector('.kke-undo'),bDrop=bar.querySelector('.kke-drop'),bSave=bar.querySelector('.kke-save'),bMode=bar.querySelector('.kke-mode');
 
 /* oznámení: samo zmizí, jde zavřít křížkem i kliknutím kamkoli */
@@ -55,7 +56,7 @@ function zavriToast(){clearTimeout(toastT);if(toastEl)toastEl.className='kke-toa
 function stav(){
   var n=pocet();
   st.textContent=prochazet?'Procházení – úpravy vypnuté':n?n+' '+tvar(n,'neuložená změna','neuložené změny','neuložených změn'):'Klikněte na text, fotku nebo ikonu';
-  st.classList.toggle('dirty',!!n);bSave.disabled=bDrop.disabled=!n;bUndo.disabled=!zasobnik.length;
+  st.classList.toggle('dirty',!!n);if(window.requestAnimationFrame)requestAnimationFrame(function(){if(typeof vyskaListy==='function')vyskaListy()});bSave.disabled=bDrop.disabled=!n;bUndo.disabled=!zasobnik.length;
 }
 function oznac(){
   [].forEach.call(document.querySelectorAll('[data-t]'),function(e){
