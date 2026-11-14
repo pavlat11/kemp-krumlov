@@ -65,7 +65,7 @@ function jazykKlik(m){$$('[data-jz]',m).forEach(function(b){b.addEventListener('
 
 /* ---------- kostra ---------- */
 var VIEWS={upravit:upravit,prehled:prehled,galerie:galerie,seo:seo,cenik:cenik,rezervace:rezervace,nastaveni:nastaveni,uzivatele:uzivatele,ucet:ucet};
-var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['galerie','Galerie'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace'],['cenik','Ceník a kapacity']]],['Systém',[['nastaveni','Nastavení a záloha'],['uzivatele','Uživatelé'],['ucet','Můj účet']]]];
+var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['galerie','Galerie'],['seo','SEO']]],['Provoz',[['cenik','Ceník a kapacity']]],['Systém',[['nastaveni','Nastavení a záloha'],['uzivatele','Uživatelé'],['ucet','Můj účet']]]];
 function shell(s){
   app.innerHTML='<div class="top"><div class="logo"><i>'+SV(IC.lode,20)+'</i>Administrace</div><button type="button" id="mb" aria-label="Otevřít menu" aria-expanded="false" aria-controls="side">'+SV(IC.menu,22)+'</button></div>'+
   '<div class="app"><nav class="side" id="side" aria-label="Administrace"><div class="logo"><i>'+SV(IC.lode,22)+'</i><span>Kemp Krumlov<small>Administrace</small></span></div>'+
