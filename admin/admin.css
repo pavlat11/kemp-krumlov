@@ -678,15 +678,17 @@ table.rlt{width:100%;min-width:900px;border-collapse:separate;border-spacing:0}
 /* tisk dne */
 #tisk{display:none}
 @media print{
- html,body{background:#fff!important}
+ html,body{background:#fff!important;margin:0!important;padding:0!important}
  body>*:not(#tisk){display:none!important}
- #tisk{display:block;font:12pt/1.4 Arial,sans-serif;color:#000}
- #tisk h1{font-size:18pt;margin:0 0 10pt}#tisk h2{font-size:13pt;margin:14pt 0 5pt;border-bottom:1.5pt solid #000;padding-bottom:2pt}
- #tisk table{width:100%;border-collapse:collapse}#tisk th,#tisk td{text-align:left;padding:5pt 6pt;border-bottom:.5pt solid #999;vertical-align:top;font-size:11pt}
- #tisk th{font-size:9pt;text-transform:uppercase;color:#444}#tisk small{font-size:9.5pt;color:#444}
- #tisk tr{break-inside:avoid}
- .tk-ch{display:inline-block;width:11pt;height:11pt;border:1pt solid #000;vertical-align:-1pt}
- .tk-ukl{display:flex;flex-wrap:wrap;gap:8pt 22pt;margin:6pt 0}.tk-ukl i{margin-right:6pt}
- .tk-nic{color:#555;margin:4pt 0}.tk-pat{margin-top:18pt;font-size:9pt;color:#555}
- @page{margin:14mm}
+ #tisk{display:block;font:9.5pt/1.3 Arial,sans-serif;color:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ #tisk h1{font-size:15pt;margin:0 0 6pt}#tisk h2{font-size:11pt;margin:9pt 0 3pt;border-bottom:1.2pt solid #000;padding-bottom:1.5pt;break-after:avoid}
+ #tisk table{width:100%;border-collapse:collapse}#tisk th,#tisk td{text-align:left;padding:2.6pt 5pt;border-bottom:.5pt solid #aaa;vertical-align:top;font-size:9.5pt}
+ #tisk th{font-size:7.5pt;text-transform:uppercase;color:#444;padding-top:1pt;padding-bottom:1.5pt}#tisk small{font-size:8.5pt;color:#444}
+ #tisk td:not(:last-child){white-space:nowrap}#tisk td:last-child{width:99%}
+ #tisk tr,#tisk li{break-inside:avoid}.tk-nw{white-space:nowrap}
+ .tk-ch{display:inline-block;width:9pt;height:9pt;border:.9pt solid #000;vertical-align:-1pt}
+ .tk-ukl{display:flex;flex-wrap:wrap;gap:5pt 18pt;margin:4pt 0}.tk-ukl i{margin-right:5pt}
+ .tk-zus{list-style:none;margin:3pt 0 0;padding:0;columns:2;column-gap:18pt}.tk-zus li{padding:2pt 0;border-bottom:.5pt solid #ccc}
+ .tk-nic{color:#555;margin:3pt 0}.tk-pat{margin-top:10pt;font-size:8pt;color:#555}
+ @page{size:A4 portrait;margin:10mm 11mm}
 }
