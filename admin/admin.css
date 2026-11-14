@@ -277,3 +277,4 @@ button.rs{min-height:36px;cursor:pointer}button.rs.on{outline:3px solid var(--su
 .rk-tip{position:fixed;z-index:50;pointer-events:none;background:var(--deep);color:#fff;border-radius:10px;padding:7px 11px;font-size:13px;line-height:1.45;box-shadow:0 8px 24px -8px rgba(0,0,0,.5);max-width:280px}
 .rk-tip b{font-size:14px}.rk-tip span{color:#b9d6c6}
 .rk-d.hv{background:var(--deep2);color:#fff}
+.rn[draggable]{cursor:grab}.rn[draggable]:active{cursor:grabbing}.rn.dp{outline:3px solid var(--sun);outline-offset:2px}

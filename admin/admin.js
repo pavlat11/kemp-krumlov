@@ -390,11 +390,12 @@ function rezervace(m){
       return '<section class="rn-s"><h2>'+g.n+'</h2><div class="rn-g">'+g.c.map(function(c){var k=g.k+'-'+c,ma=function(r){return (r.mista||[]).indexOf(k)>=0};vse++;
         var r=akt.filter(function(r){return ma(r)&&r.od<=dnes&&dnes<r.do})[0],od=akt.filter(function(r){return ma(r)&&r.do===dnes&&r.stav!=='blk'})[0],o=r&&r.osoby||{},os=(o.dosp||0)+(o.dite||0)+(o.zak||0);
         var cis='<span class="rn-c">'+(g.k==='teepee'?'Teepee':c)+'</span>',zn=od?'<span class="rn-z">ráno odjíždí '+esc(od.jmeno)+'</span>':'';
-        if(!r)return '<button type="button" class="rn vol" data-nm="'+k+'" aria-label="'+esc(R.nazev(k))+', volno">'+cis+'<b>volno</b>'+zn+'</button>';
-        obs++;return '<button type="button" class="rn '+r.stav+'" data-id="'+r.id+'" aria-label="'+esc(R.nazev(k)+', '+r.jmeno+', '+R.STAVY[r.stav])+'">'+cis+'<b>'+esc(r.jmeno)+'</b><small>do '+KR(r.do)+(os?' · '+os+' os.':'')+'</small>'+(r.od===dnes&&r.stav!=='blk'?'<span class="rn-z">přijíždí dnes</span>':zn)+'</button>'}).join('')+'</div></section>'}).join('');
+        if(!r)return '<button type="button" class="rn vol" data-m="'+k+'" data-nm="'+k+'" aria-label="'+esc(R.nazev(k))+', volno">'+cis+'<b>volno</b>'+zn+'</button>';
+        obs++;return '<button type="button" draggable="true" class="rn '+r.stav+'" data-m="'+k+'" data-id="'+r.id+'" aria-label="'+esc(R.nazev(k)+', '+r.jmeno+', '+R.STAVY[r.stav])+'">'+cis+'<b>'+esc(r.jmeno)+'</b><small>do '+KR(r.do)+(os?' · '+os+' os.':'')+'</small>'+(r.od===dnes&&r.stav!=='blk'?'<span class="rn-z">přijíždí dnes</span>':zn)+'</button>'}).join('')+'</div></section>'}).join('');
     return '<div class="card rn-top"><div><b class="rn-d">'+DNY[d.getDay()]+' '+KR(dnes)+' '+d.getFullYear()+'</b><span>Obsazeno '+obs+' z '+vse+' míst</span></div>'+
       '<div><small>Dnes přijíždí</small><div class="rn-l">'+(pri.length?pri.map(jm).join(''):'<span class="mut">nikdo</span>')+'</div></div>'+
       '<div><small>Dnes odjíždí</small><div class="rn-l">'+(odj.length?odj.map(jm).join(''):'<span class="mut">nikdo</span>')+'</div></div></div>'+
+      '<p class="mut" style="font-size:13.5px;margin:0 0 10px">Hosta přestěhujete přetažením jeho kostičky myší na jiné místo. Kliknutím na volné místo založíte rezervaci.</p>'+
       '<div class="row rn-leg" aria-hidden="true"><span class="rs vol">Volno</span>'+['pop','pot','zap','uby','blk'].map(bdg).join('')+'</div>'+
       '<div class="rn-w">'+body+'</div>';
   }
@@ -510,14 +511,20 @@ function rezervace(m){
   /* přetahování: pruh rezervace na jiné místo / den, skupina na jiné pořadí */
   var tah=null,zrus=function(){$$('.dp',box).forEach(function(x){x.classList.remove('dp')})};
   function presunSkupinu(id,pred,za){var n=R.nast(),po=skupiny().map(function(g){return g.id}),i=po.indexOf(id);if(i<0||id===pred)return;po.splice(i,1);var j=po.indexOf(pred);po.splice(za?j+1:j,0,id);n.poradi=po;R.ulozNast(n);kresli()}
-  box.addEventListener('dragstart',function(e){tipSkryj();var b=e.target.closest&&e.target.closest('.rk-b,.rk-dg');if(!b)return;
-    if(b.dataset.dg)tah={g:b.dataset.dg};else{var r=najdi(b.dataset.id);if(!r)return;tah={id:r.id,m:b.parentNode.dataset.m,off:Math.floor(e.offsetX/W)+Math.max(0,-Math.round((D0(r.od)-zac)/864e5))}}
+  box.addEventListener('dragstart',function(e){tipSkryj();var b=e.target.closest&&e.target.closest('.rk-b,.rk-dg,.rn[data-id]');if(!b)return;
+    if(b.dataset.dg)tah={g:b.dataset.dg};else if(b.classList.contains('rn'))tah={id:b.dataset.id,m:b.dataset.m,dnes:1};else{var r=najdi(b.dataset.id);if(!r)return;tah={id:r.id,m:b.parentNode.dataset.m,off:Math.floor(e.offsetX/W)+Math.max(0,-Math.round((D0(r.od)-zac)/864e5))}}
     e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',b.dataset.id||b.dataset.dg)}catch(x){}});
-  box.addEventListener('dragover',function(e){if(!tah)return;var c=e.target.closest(tah.g?'.rk-g[data-gid]':'.rk-t');if(!c)return;e.preventDefault();e.dataTransfer.dropEffect='move';if(!c.classList.contains('dp')){zrus();c.classList.add('dp')}
-    if(!tah.g){var r=najdi(tah.id),i=Math.floor((e.clientX-c.getBoundingClientRect().left)/W)-tah.off,a=ADD(zac,i);if(r)tipUkaz(e,c,'<b>'+esc(r.jmeno)+'</b> → '+R.nazev(c.dataset.m)+'<br>'+den(a)+' – '+den(ADD(a,noci(r))),Math.max(0,Math.min(N-1,i)))}});
+  box.addEventListener('dragover',function(e){if(!tah)return;var c=e.target.closest(tah.g?'.rk-g[data-gid]':tah.dnes?'.rn':'.rk-t');if(!c)return;e.preventDefault();e.dataTransfer.dropEffect='move';if(!c.classList.contains('dp')){zrus();c.classList.add('dp')}
+    if(!tah.g&&!tah.dnes){var r=najdi(tah.id),i=Math.floor((e.clientX-c.getBoundingClientRect().left)/W)-tah.off,a=ADD(zac,i);if(r)tipUkaz(e,c,'<b>'+esc(r.jmeno)+'</b> → '+R.nazev(c.dataset.m)+'<br>'+den(a)+' – '+den(ADD(a,noci(r))),Math.max(0,Math.min(N-1,i)))}});
   box.addEventListener('dragend',function(){tah=null;zrus();tipSkryj()});
   box.addEventListener('drop',function(e){if(!tah)return;var T=tah;tah=null;zrus();tipSkryj();
     if(T.g){var c=e.target.closest('.rk-g[data-gid]');if(!c)return;e.preventDefault();var po=skupiny().map(function(g){return g.id});presunSkupinu(T.g,c.dataset.gid,po.indexOf(T.g)<po.indexOf(c.dataset.gid));return}
+    if(T.dnes){var c2=e.target.closest('.rn'),r2=najdi(T.id);if(!c2||!r2)return;e.preventDefault();var m2=c2.dataset.m;if(m2===T.m)return;
+      if((r2.mista||[]).indexOf(m2)>=0){toast('Tato rezervace už '+R.nazev(m2)+' obsahuje.',1);return}
+      var nm2=r2.mista.map(function(k){return k===T.m?m2:k}),ko=R.kolize(nm2,r2.od,r2.do,r2.id);
+      if(ko.length){toast(R.nazev(m2)+' je v termínu '+KR(r2.od)+' – '+KR(r2.do)+' obsazené.',1);return}
+      if(!confirm('Přestěhovat hosta?\n\n'+r2.jmeno+' ('+KR(r2.od)+' – '+KR(r2.do)+')\n'+R.nazev(T.m)+' → '+R.nazev(m2)))return;
+      try{var y=R.uprav(r2.id,{mista:nm2});KK.zaznam('Rezervace',(y.cislo||'')+' '+y.jmeno+' – přesunuto');kresli();toast(y.jmeno+': '+R.nazev(m2))}catch(q2){toast(q2.message,1)}return}
     var t=e.target.closest('.rk-t');if(!t)return;e.preventDefault();var r=najdi(T.id);if(!r)return;
     var i=Math.floor((e.clientX-t.getBoundingClientRect().left)/W)-T.off,n=noci(r),od=ISO(ADD(zac,i)),dk=ISO(ADD(zac,i+n)),m=t.dataset.m;
     if(od===r.od&&m===T.m)return;
