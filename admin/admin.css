@@ -440,23 +440,3 @@ table.rlt{min-width:620px}.rlt tbody tr:not(.rl-m){cursor:pointer}
 .rk-r.off .rk-t{background-image:repeating-linear-gradient(135deg,rgba(0,0,0,.035) 0 6px,transparent 6px 12px)!important}
 .rnt .rnt-off td{color:#9a9384;font-size:13.5px}.rnt .rnt-off td b{color:#9a9384;text-decoration:line-through}
 .rn-w{margin-top:0;margin-bottom:16px}
-
-/* formulář rezervace – zjednodušený, po blocích */
-#rf form>h2{margin:0 0 6px}
-.rfb{padding:14px 0;border-top:1px solid var(--line)}.rfb:first-of-type{border-top:0;padding-top:6px}
-.rfb h3{margin:0 0 10px;font-size:15px;display:flex;align-items:baseline;gap:10px}.rfb h3 small{font-size:12.5px;font-weight:500;color:var(--mut)}
-#rfn{color:var(--ok)!important;font-weight:700!important}
-.rfg3{grid-template-columns:1.3fr 1fr 1.2fr}
-.rfs-r{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:12px}
-.rfs{display:flex;align-items:center;gap:12px}.rfs>span{font-weight:700;font-size:14px;min-width:92px}
-.rfs-c{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
-.rfs-c button{width:38px;height:38px;border:0;background:#faf8f3;font:inherit;font-size:20px;font-weight:700;color:var(--deep);cursor:pointer}.rfs-c button:hover{background:var(--okBg)}
-.rfs-c .inp{width:48px;min-height:38px;border:0;border-radius:0;text-align:center;padding:0;font-weight:800;-moz-appearance:textfield}
-.rfs-c .inp::-webkit-inner-spin-button,.rfs-c .inp::-webkit-outer-spin-button,.rfc .inp::-webkit-inner-spin-button,.rfc .inp::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
-.rfb2{display:grid;grid-template-columns:1fr 1.3fr;gap:16px}
-.rfc{display:flex;align-items:center;gap:8px}.rfc .inp{max-width:160px;font-size:18px;font-weight:800;-moz-appearance:textfield}.rfc span{font-weight:700}
-#rfci{display:block;margin-top:6px;font-size:12.5px}
-.lnk{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--sunText);text-decoration:underline;cursor:pointer}
-.rfst{display:flex;flex-wrap:wrap}.rfst button[aria-checked=true]{background:#fff;box-shadow:0 1px 3px rgba(15,34,25,.15);color:var(--deep);font-weight:800}
-.rfz summary{cursor:pointer;font-weight:700;font-size:15px}.rfz textarea{margin-top:10px}
-@media(max-width:640px){.rfg3,.rfb2{grid-template-columns:1fr}}
