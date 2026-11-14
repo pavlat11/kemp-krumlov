@@ -165,6 +165,18 @@ var R=window.KKR={
   if(n.stav!=='zru'){var k=R.kolize(n.mista,n.od,n.do,id);if(k.length)throw new Error('V tomto termínu je obsazeno: '+k.map(R.nazev).join(', ')+'.')}
   Object.assign(r,z);pis(K,a);return r},
  smaz:function(id){pis(K,R.vse().filter(function(x){return x.id!==id}))},
- vymaz:function(){pis(K,[])}
+ vymaz:function(){pis(K,[])},
+ /* TESTOVACÍ DATA pro náhled – před ostrým provozem smazat (i automatické vložení níže).
+    Kolem dneška pár pobytů, v červenci sezóny plnější obsazenost a víkend 16.–18. 7. s plnou kapacitou chatek. */
+ ukazka:function(){var n=0,t=new Date(),Y=t.getFullYear()+(t.getMonth()>7?1:0),J=['Novákovi','Müller','Dvořák','Jansen','Kolářová','Veselý','Jelínek','Schmidt','Svoboda','Fischer','Černý','Weber','Procházka','de Vries','Kučera','Horák','Bauer','Marková','Němec','Visser','Pokorná','Hofmann','Král','Urban'],ST=['zap','pot','zap','pop','zap','pot'],C={chatka:890,podsad:300,teepee:700};
+  var dd=function(k){var x=new Date(t.getFullYear(),t.getMonth(),t.getDate()+k);return I(x)},jl=function(d){return I(new Date(Y,6,d))};
+  var p=function(m,od,dk,st,jm){try{var k=m.split('-')[0];R.pridej(st==='blk'?{mista:[m],od:od,do:dk,jmeno:jm,stav:'blk',zprava:'Testovací data'}:{mista:[m],od:od,do:dk,jmeno:jm||J[n%J.length],stav:st||ST[n%ST.length],osoby:{dosp:k==='podsad'?2:2+n%3,dite:k==='podsad'?0:n%3,zak:0},telefon:'+420 777 000 '+('00'+(100+n)).slice(-3),cena:C[k]*R.noci(od,dk).length,zdroj:n%3?'web':'rucne',kdo:'ukázka',zprava:'Testovací data'});n++}catch(e){}};
+  p('chatka-4',dd(-1),dd(3),'uby');p('chatka-12',dd(0),dd(4),'zap');p('chatka-18',dd(2),dd(7),'pot');p('chatka-7',dd(1),dd(3),'pop');p('podsad-3',dd(0),dd(2),'zap');p('podsad-6',dd(3),dd(6),'pop');p('teepee-1',dd(1),dd(4),'pot');p('chatka-15',dd(0),dd(10),'blk','Údržba');
+  var i,d,l;for(i=1;i<=20;i++)p('chatka-'+i,jl(16),jl(18));
+  for(i=1;i<=20;i++){d=1+(i*3)%5;while(d<29){l=2+(i+d)%5;p('chatka-'+i,jl(d),jl(Math.min(31,d+l)));d+=l+(i*d)%3}}
+  for(i=1;i<=11;i++){d=2+(i*2)%6;while(d<28){l=1+(i+d)%3;p('podsad-'+i,jl(d),jl(d+l));d+=l+2+(i+d)%4}}
+  p('teepee-1',jl(3),jl(7));p('teepee-1',jl(10),jl(20));p('teepee-1',jl(24),jl(27));
+  pis('kk.rez.ukazka',1);return n}
 };
+try{if(!cti('kk.rez.ukazka',0)&&!R.vse().length)R.ukazka()}catch(e){}
 })();

@@ -414,7 +414,7 @@ function rezervace(m){
       [['chatka','Chatky'],['podsad','Podsadové stany'],['teepee','Teepee']].map(function(t){return '<tr><td><b>'+t[1]+'</b></td>'+['poptavka','ihned'].map(function(v){return '<td><label class="rr"><input type="radio" name="rezim-'+t[0]+'" value="'+v+'"'+(n.rezim[t[0]]===v?' checked':'')+(adm?'':' disabled')+' aria-label="'+t[1]+' – '+(v==='ihned'?'okamžitá rezervace':'poptávka')+'"><span>'+(v==='ihned'?'Hned potvrzená':'Potvrzuje obsluha')+'</span></label></td>'}).join('')+'</tr>'}).join('')+
       '</tbody></table></div><p class="mut" style="font-size:13.5px;margin:12px 0 0">Když si host vybere víc typů najednou a aspoň jeden z nich potvrzuje obsluha, přijde celá rezervace jako poptávka. Vlastní stany a karavany chodí vždy jako poptávka.</p>'+(adm?'':'<p class="mut">Změnit to smí jen správce.</p>')+'</section>'+
       '<div class="card mut" style="font-size:13.5px;margin-top:16px">'+SV(IC.zamek,16)+' V náhledu jsou rezervace uložené jen v tomto prohlížeči. Host na jiném počítači je neuvidí a jeho rezervace se k vám nedostane. Sdílená obsazenost bude fungovat po spuštění na serveru.</div>'+
-      (adm?'<div class="row" style="margin-top:16px"><button type="button" class="btn gh" data-a="ukazka">Vložit ukázkové rezervace</button><button type="button" class="btn gh" data-a="vymaz">Smazat všechny rezervace</button></div>':'');
+      (adm?'<div class="row" style="margin-top:16px"><button type="button" class="btn gh" data-a="ukazka">Vložit testovací data</button><button type="button" class="btn gh" data-a="vymaz">Smazat všechny rezervace</button></div>':'');
   }
   function detail(id){
     var r=najdi(id);if(!r)return;var b=r.stav==='blk',ak=AKCE[r.stav],o=r.osoby||{},deti=(o.dite||0)+(o.zak||0);
@@ -462,13 +462,7 @@ function rezervace(m){
         KK.zaznam('Rezervace',(x.cislo||'')+' '+x.jmeno+(r?' – upraveno':' – přidáno'));df.close();kresli();toast(b?'Blokace uložena.':'Rezervace '+x.cislo+' uložena.')}catch(q){ch(q.message)}});
     df.showModal();f.jmeno.focus();
   }
-  function ukazka(){
-    var d=function(n){return ISO(ADD(D0(dnes),n))},n=0;
-    [['chatka-4',-1,3,'Novákovi','uby',5,3960],['chatka-12',0,4,'Müller','zap',6,3960],['chatka-18',2,7,'Dvořák','pot',4,4950],['chatka-7',1,3,'Jansen','pop',2,1980],['podsad-3',0,2,'Kolářová','zap',2,600],['podsad-6',3,6,'Veselý','pop',2,900],['teepee-1',1,4,'Jelínek','pot',4,2400]].forEach(function(u){
-      try{R.pridej({mista:[u[0]],od:d(u[1]),do:d(u[2]),jmeno:u[3],stav:u[4],osoby:{dosp:u[5],dite:0,zak:0},cena:u[6],zdroj:'rucne',kdo:'ukázka'});n++}catch(e){}});
-    try{R.pridej({mista:['chatka-15'],od:d(0),do:d(10),jmeno:'Údržba',stav:'blk'});n++}catch(e){}
-    kresli();toast('Vloženo '+n+' ukázkových záznamů.');
-  }
+  function ukazka(){var n=R.ukazka();kresli();toast(n?'Vloženo '+n+' testovacích záznamů.':'Testovací data už tam jsou.')}
   box.addEventListener('click',function(e){var t=e.target,b=t.closest('button');
     if(b){var s=b.dataset;
       if(s.tab){tab=s.tab;KK.LS.set('rez.tab',tab);filtr='';kresli()}
