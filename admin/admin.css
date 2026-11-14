@@ -274,3 +274,6 @@ button.rs{min-height:36px;cursor:pointer}button.rs.on{outline:3px solid var(--su
 .rk-dg:hover{background:#fff;color:var(--deep)}.rk-dg:active{cursor:grabbing}.rk-dg:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
 .rk-b{cursor:grab}.rk-b:active{cursor:grabbing}
 .rk-t.dp{box-shadow:inset 0 0 0 2px var(--sun)}.rk-g.dp{box-shadow:inset 0 3px 0 var(--sun),inset 0 -3px 0 var(--sun)}
+.rk-tip{position:fixed;z-index:50;pointer-events:none;background:var(--deep);color:#fff;border-radius:10px;padding:7px 11px;font-size:13px;line-height:1.45;box-shadow:0 8px 24px -8px rgba(0,0,0,.5);max-width:280px}
+.rk-tip b{font-size:14px}.rk-tip span{color:#b9d6c6}
+.rk-d.hv{background:var(--deep2);color:#fff}

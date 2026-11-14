@@ -404,7 +404,7 @@ function rezervace(m){
     dny.forEach(function(d,i){var t=iso[i]===dnes,c=t?'rgba(244,166,74,.28)':(d.getDay()%6===0?'#f6f1e6':'');if(c)vrst[t?'unshift':'push']('linear-gradient('+c+','+c+') no-repeat '+i*W+'px 0/'+W+'px 100%')});
     var bg=vrst.join(','),idx=function(s){return Math.round((D0(s)-zac)/864e5)};
     var pruh=function(r){var a=Math.max(0,idx(r.od)),b=Math.min(N,idx(r.do));if(b<=a)return '';
-      return '<button type="button" draggable="true" class="rk-b '+r.stav+(filtr&&filtr!==r.stav?' dim':'')+'" data-id="'+r.id+'" style="left:'+(a*W+2)+'px;width:'+((b-a)*W-4)+'px" title="'+esc(r.jmeno+' · '+KR(r.od)+' – '+KR(r.do)+' · '+R.STAVY[r.stav])+'">'+esc(r.jmeno)+'</button>'};
+      return '<button type="button" draggable="true" class="rk-b '+r.stav+(filtr&&filtr!==r.stav?' dim':'')+'" data-id="'+r.id+'" style="left:'+(a*W+2)+'px;width:'+((b-a)*W-4)+'px" aria-label="'+esc(r.jmeno+', '+KR(r.od)+' – '+KR(r.do)+', '+R.STAVY[r.stav])+'">'+esc(r.jmeno)+'</button>'};
     var h='<div class="row rk-nav"><button type="button" class="btn sm gh" data-pos="-7" aria-label="O týden zpět">‹</button><b>'+KR(iso[0])+' – '+KR(iso[N-1])+' '+dny[N-1].getFullYear()+'</b><button type="button" class="btn sm gh" data-pos="7" aria-label="O týden dál">›</button><button type="button" class="btn sm gh" data-pos="0">Dnes</button>'+
       '<label class="row rk-go">Přejít na <input type="date" class="inp" id="rkd" value="'+iso[2]+'"></label>'+
       '<span class="rk-leg" role="group" aria-label="Zvýraznit stav">'+['pop','pot','zap','uby','blk'].map(function(s){return '<button type="button" class="rs '+s+(filtr===s?' on':'')+'" data-fl="'+s+'" aria-pressed="'+(filtr===s)+'">'+R.STAVY[s]+'</button>'}).join('')+'</span></div>'+
@@ -497,15 +497,26 @@ function rezervace(m){
       else if(s.a==='vymaz'&&confirm('Opravdu smazat všechny rezervace i blokace? Nejde to vrátit.')){R.vymaz();KK.zaznam('Rezervace','vše smazáno');kresli();toast('Rezervace smazány.')}
       return}
     if(t.classList.contains('rk-t')){var d=ADD(zac,Math.floor(e.offsetX/W));form(null,{mista:[t.dataset.m],od:ISO(d),do:ISO(ADD(d,1))})}});
+  /* bublina s datem pod myší (i při přetahování) + zvýraznění dne v hlavičce */
+  var tip=m.appendChild(Object.assign(document.createElement('div'),{className:'rk-tip',hidden:true})),tipD=-1;
+  function tipSkryj(){tip.hidden=true;if(tipD>=0){var o=$$('.rk-d',box)[tipD];if(o)o.classList.remove('hv');tipD=-1}}
+  function tipUkaz(e,t,txt,i){tip.innerHTML=txt;tip.hidden=false;var w=tip.offsetWidth,x=e.clientX+14,y=e.clientY+18;if(x+w>innerWidth-8)x=e.clientX-w-10;if(y+tip.offsetHeight>innerHeight-8)y=e.clientY-tip.offsetHeight-10;tip.style.left=x+'px';tip.style.top=y+'px';
+    if(i!==tipD){var D=$$('.rk-d',box);if(tipD>=0&&D[tipD])D[tipD].classList.remove('hv');if(D[i])D[i].classList.add('hv');tipD=i}}
+  var den=function(d){return DNY[d.getDay()]+' '+d.getDate()+'. '+(d.getMonth()+1)+'.'};
+  box.addEventListener('mousemove',function(e){if(tah)return;var t=e.target.closest&&e.target.closest('.rk-t');if(!t){tipSkryj();return}
+    var i=Math.max(0,Math.min(N-1,Math.floor((e.clientX-t.getBoundingClientRect().left)/W))),d=ADD(zac,i),b=e.target.closest('.rk-b'),r=b&&najdi(b.dataset.id);
+    tipUkaz(e,t,'<b>'+den(d)+' '+d.getFullYear()+'</b> · '+R.nazev(t.dataset.m)+(r?'<br>'+esc(r.jmeno)+' · '+KR(r.od)+' – '+KR(r.do)+' · '+R.STAVY[r.stav]:'<br><span>volno – kliknutím založíte rezervaci</span>'),i)});
+  box.addEventListener('mouseleave',tipSkryj);
   /* přetahování: pruh rezervace na jiné místo / den, skupina na jiné pořadí */
   var tah=null,zrus=function(){$$('.dp',box).forEach(function(x){x.classList.remove('dp')})};
   function presunSkupinu(id,pred,za){var n=R.nast(),po=skupiny().map(function(g){return g.id}),i=po.indexOf(id);if(i<0||id===pred)return;po.splice(i,1);var j=po.indexOf(pred);po.splice(za?j+1:j,0,id);n.poradi=po;R.ulozNast(n);kresli()}
-  box.addEventListener('dragstart',function(e){var b=e.target.closest&&e.target.closest('.rk-b,.rk-dg');if(!b)return;
+  box.addEventListener('dragstart',function(e){tipSkryj();var b=e.target.closest&&e.target.closest('.rk-b,.rk-dg');if(!b)return;
     if(b.dataset.dg)tah={g:b.dataset.dg};else{var r=najdi(b.dataset.id);if(!r)return;tah={id:r.id,m:b.parentNode.dataset.m,off:Math.floor(e.offsetX/W)+Math.max(0,-Math.round((D0(r.od)-zac)/864e5))}}
     e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',b.dataset.id||b.dataset.dg)}catch(x){}});
-  box.addEventListener('dragover',function(e){if(!tah)return;var c=e.target.closest(tah.g?'.rk-g[data-gid]':'.rk-t');if(!c)return;e.preventDefault();e.dataTransfer.dropEffect='move';if(!c.classList.contains('dp')){zrus();c.classList.add('dp')}});
-  box.addEventListener('dragend',function(){tah=null;zrus()});
-  box.addEventListener('drop',function(e){if(!tah)return;var T=tah;tah=null;zrus();
+  box.addEventListener('dragover',function(e){if(!tah)return;var c=e.target.closest(tah.g?'.rk-g[data-gid]':'.rk-t');if(!c)return;e.preventDefault();e.dataTransfer.dropEffect='move';if(!c.classList.contains('dp')){zrus();c.classList.add('dp')}
+    if(!tah.g){var r=najdi(tah.id),i=Math.floor((e.clientX-c.getBoundingClientRect().left)/W)-tah.off,a=ADD(zac,i);if(r)tipUkaz(e,c,'<b>'+esc(r.jmeno)+'</b> → '+R.nazev(c.dataset.m)+'<br>'+den(a)+' – '+den(ADD(a,noci(r))),Math.max(0,Math.min(N-1,i)))}});
+  box.addEventListener('dragend',function(){tah=null;zrus();tipSkryj()});
+  box.addEventListener('drop',function(e){if(!tah)return;var T=tah;tah=null;zrus();tipSkryj();
     if(T.g){var c=e.target.closest('.rk-g[data-gid]');if(!c)return;e.preventDefault();var po=skupiny().map(function(g){return g.id});presunSkupinu(T.g,c.dataset.gid,po.indexOf(T.g)<po.indexOf(c.dataset.gid));return}
     var t=e.target.closest('.rk-t');if(!t)return;e.preventDefault();var r=najdi(T.id);if(!r)return;
     var i=Math.floor((e.clientX-t.getBoundingClientRect().left)/W)-T.off,n=noci(r),od=ISO(ADD(zac,i)),dk=ISO(ADD(zac,i+n)),m=t.dataset.m;
