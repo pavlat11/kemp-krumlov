@@ -64,8 +64,8 @@ function jazykVolba(){var j=jazykAdm();return '<div class="row jz" role="group" 
 function jazykKlik(m){$$('[data-jz]',m).forEach(function(b){b.addEventListener('click',function(){if(b.dataset.jz===jazykAdm())return;if(neulozeno&&neulozeno()&&!confirm('Máte neuložené změny. Přepnout jazyk bez uložení?'))return;KK.LS.set('admin-jazyk',b.dataset.jz);neulozeno=null;route()})})}
 
 /* ---------- kostra ---------- */
-var VIEWS={upravit:upravit,prehled:prehled,galerie:galerie,seo:seo,cenik:cenik,rezervace:pripravujeme,nastaveni:nastaveni,uzivatele:uzivatele,ucet:ucet};
-var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['galerie','Galerie'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace',1],['cenik','Ceník a kapacity']]],['Systém',[['nastaveni','Nastavení a záloha'],['uzivatele','Uživatelé'],['ucet','Můj účet']]]];
+var VIEWS={upravit:upravit,prehled:prehled,galerie:galerie,seo:seo,cenik:cenik,rezervace:rezervace,nastaveni:nastaveni,uzivatele:uzivatele,ucet:ucet};
+var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['galerie','Galerie'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace'],['cenik','Ceník a kapacity']]],['Systém',[['nastaveni','Nastavení a záloha'],['uzivatele','Uživatelé'],['ucet','Můj účet']]]];
 function shell(s){
   app.innerHTML='<div class="top"><div class="logo"><i>'+SV(IC.lode,20)+'</i>Administrace</div><button type="button" id="mb" aria-label="Otevřít menu" aria-expanded="false" aria-controls="side">'+SV(IC.menu,22)+'</button></div>'+
   '<div class="app"><nav class="side" id="side" aria-label="Administrace"><div class="logo"><i>'+SV(IC.lode,22)+'</i><span>Kemp Krumlov<small>Administrace</small></span></div>'+
@@ -352,6 +352,140 @@ function pripravujeme(m,v){
   var D={rezervace:['Rezervace','Přehled poptávek ubytování z webu a jejich vyřízení.',['Seznam poptávek s filtrováním (nové, potvrzené, zrušené)','Detail poptávky, potvrzení nebo zamítnutí jedním kliknutím a e-mail hostovi','Kalendář obsazenosti chatek, teepee a podsadových stanů','Ruční zápis rezervace přijaté po telefonu']],
    cenik:['Ceník a kapacity','Jediné místo, kde se mění ceny – projeví se na webu i ve výpočtu rezervace.',['Ceny v sezóně a mimo sezónu (osoby, děti, stany, chatky, teepee, doplňky)','Počty chatek, teepee a podsadových stanů','Termín sezóny a otevírací doba','Slevy za více nocí']]}[v];
   m.innerHTML='<div class="ph"><div><h1>'+D[0]+'</h1><p>'+D[1]+'</p></div><span class="badge warn">Připravujeme</span></div><div class="card soonc"><h2>Co tu bude</h2><ul>'+D[2].map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul></div>';
+}
+
+/* ---------- REZERVACE (kalendář obsazenosti, seznam, nastavení) ---------- */
+function rezervace(m){
+  var R=window.KKR,ja=KK.auth.meSync(),adm=ja.role==='admin',W=40,N=21,NW=150;
+  var D0=function(s){var p=s.split('-');return new Date(+p[0],p[1]-1,+p[2])},ISO=function(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)};
+  var ADD=function(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x},KR=function(s){var d=D0(s);return d.getDate()+'. '+(d.getMonth()+1)+'.'};
+  var DNY=['Ne','Po','Út','St','Čt','Pá','So'],MES=['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
+  var dnes=ISO(new Date()),zac=ADD(D0(dnes),-2),tab=KK.LS.get('rez.tab','kal'),filtr='',sbal={};
+  var AKCE={pop:['pot','Potvrdit poptávku'],pot:['zap','Záloha zaplacena'],zap:['uby','Ubytovat hosta (check-in)'],uby:['odj','Odhlásit hosta (check-out)']};
+  var noci=function(r){return Math.round((D0(r.do)-D0(r.od))/864e5)};
+  var termin=function(r){var n=noci(r);return KR(r.od)+' – '+KR(r.do)+' '+r.do.slice(0,4)+' ('+n+' '+pl(n,'noc','noci','nocí')+')'};
+  var mistaTxt=function(r){var a=(r.mista||[]).map(R.nazev);if(r.dalsi){if(r.dalsi.stan)a.push(r.dalsi.stan+'× vlastní stan');if(r.dalsi.karavan)a.push(r.dalsi.karavan+'× karavan')}return a.join(', ')||'—'};
+  var kc=function(n){return n?Number(n).toLocaleString('cs-CZ')+' Kč':'—'};
+  var bdg=function(s){return '<span class="rs '+s+'">'+R.STAVY[s]+'</span>'};
+  var najdi=function(id){return R.vse().filter(function(x){return x.id===id})[0]};
+  m.innerHTML='<div id="rzv"></div><dialog id="rd" class="dlg rdl" aria-labelledby="rdt"></dialog><dialog id="rf" class="dlg rdl" aria-labelledby="rft"></dialog>';
+  var box=$('#rzv',m),dd=$('#rd',m),df=$('#rf',m);
+
+  function kresli(){
+    var A=R.vse(),akt=A.filter(function(r){return r.stav!=='zru'}),host=akt.filter(function(r){return r.stav!=='blk'});
+    var obs=R.obsazeno(),ch=0,i;for(i=1;i<=20;i++)if((obs['chatka-'+i]||[]).indexOf(dnes)<0)ch++;
+    var dl=[['Dnes přijíždí',host.filter(function(r){return r.od===dnes&&r.stav!=='odj'}).length],['Dnes odjíždí',host.filter(function(r){return r.do===dnes}).length],['Volné chatky dnes v noci',ch+' z 20'],['Poptávky k potvrzení',host.filter(function(r){return r.stav==='pop'}).length],['Čeká na zálohu',host.filter(function(r){return r.stav==='pot'}).length]];
+    box.innerHTML='<div class="ph"><div><h1>Rezervace</h1><p>Chatky, podsadové stany a teepee. Obsazená místa se hostům v rezervaci na webu sama zašednou.</p></div><div class="row"><button type="button" class="btn gh" data-a="blk">Blokovat místo</button><button type="button" class="btn pri" data-a="nova">+ Nová rezervace</button></div></div>'+
+      '<div class="rdl-t">'+dl.map(function(d){return '<div class="card"><small>'+d[0]+'</small><b>'+d[1]+'</b></div>'}).join('')+'</div>'+
+      '<div class="row rtab">'+[['kal','Kalendář'],['sez','Seznam'],['nas','Nastavení']].map(function(t){return '<button type="button" class="btn sm '+(tab===t[0]?'pri':'gh')+'" aria-pressed="'+(tab===t[0])+'" data-tab="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div>'+
+      (tab==='kal'?kal(akt):tab==='sez'?sez(A):nas());
+  }
+  function kal(akt){
+    var dny=[],i;for(i=0;i<N;i++)dny.push(ADD(zac,i));var iso=dny.map(ISO);
+    var vrst=['repeating-linear-gradient(90deg,transparent 0 '+(W-1)+'px,#ece7dc '+(W-1)+'px '+W+'px)'];
+    dny.forEach(function(d,i){var t=iso[i]===dnes,c=t?'rgba(244,166,74,.28)':(d.getDay()%6===0?'#f6f1e6':'');if(c)vrst[t?'unshift':'push']('linear-gradient('+c+','+c+') no-repeat '+i*W+'px 0/'+W+'px 100%')});
+    var bg=vrst.join(','),idx=function(s){return Math.round((D0(s)-zac)/864e5)};
+    var pruh=function(r){var a=Math.max(0,idx(r.od)),b=Math.min(N,idx(r.do));if(b<=a)return '';
+      return '<button type="button" class="rk-b '+r.stav+(filtr&&filtr!==r.stav?' dim':'')+'" data-id="'+r.id+'" style="left:'+(a*W+2)+'px;width:'+((b-a)*W-4)+'px" title="'+esc(r.jmeno+' · '+KR(r.od)+' – '+KR(r.do)+' · '+R.STAVY[r.stav])+'">'+esc(r.jmeno)+'</button>'};
+    var h='<div class="row rk-nav"><button type="button" class="btn sm gh" data-pos="-7" aria-label="O týden zpět">‹</button><b>'+KR(iso[0])+' – '+KR(iso[N-1])+' '+dny[N-1].getFullYear()+'</b><button type="button" class="btn sm gh" data-pos="7" aria-label="O týden dál">›</button><button type="button" class="btn sm gh" data-pos="0">Dnes</button>'+
+      '<label class="row rk-go">Přejít na <input type="date" class="inp" id="rkd" value="'+iso[2]+'"></label>'+
+      '<span class="rk-leg" role="group" aria-label="Zvýraznit stav">'+['pop','pot','zap','uby','blk'].map(function(s){return '<button type="button" class="rs '+s+(filtr===s?' on':'')+'" data-fl="'+s+'" aria-pressed="'+(filtr===s)+'">'+R.STAVY[s]+'</button>'}).join('')+'</span></div>'+
+      '<div class="card rk"><div class="rk-in" style="width:'+(NW+N*W)+'px"><div class="rk-h"><div class="rk-n">'+MES[dny[0].getMonth()]+' '+dny[0].getFullYear()+'</div>'+dny.map(function(d,i){return '<div class="rk-d'+(iso[i]===dnes?' td':d.getDay()%6===0?' we':'')+'" style="width:'+W+'px"><small>'+DNY[d.getDay()]+'</small><b>'+d.getDate()+'</b></div>'}).join('')+'</div>';
+    R.SKUPINY.forEach(function(g){var kl=g.c.map(function(c){return g.k+'-'+c}),zav=sbal[g.id];
+      var vol=kl.filter(function(k){return !akt.some(function(r){return (r.mista||[]).indexOf(k)>=0&&r.od<=dnes&&dnes<r.do})}).length;
+      h+='<button type="button" class="rk-g" data-g="'+g.id+'" aria-expanded="'+!zav+'"><span><b>'+g.n+'</b> dnes v noci volné '+vol+' z '+kl.length+' · '+(zav?'rozbalit':'sbalit')+'</span></button>';
+      if(!zav)kl.forEach(function(k){h+='<div class="rk-r"><div class="rk-n">'+R.nazev(k).replace('Podsadový stan','Stan')+'</div><div class="rk-t" data-m="'+k+'" style="width:'+N*W+'px;background:'+bg+'">'+akt.filter(function(r){return (r.mista||[]).indexOf(k)>=0}).map(pruh).join('')+'</div></div>'})});
+    h+='<div class="rk-g st"><span><b>Bez čísla místa</b> počet na každou noc</span></div>';
+    [['stan','Vlastní stany'],['karavan','Karavany']].forEach(function(t){
+      h+='<div class="rk-r"><div class="rk-n">'+t[1]+'</div>'+iso.map(function(d){var s=0;akt.forEach(function(r){if(r.dalsi&&r.dalsi[t[0]]&&r.od<=d&&d<r.do)s+=+r.dalsi[t[0]]});return '<div class="rk-c" style="width:'+W+'px">'+(s||'')+'</div>'}).join('')+'</div>'});
+    return h+'</div></div><p class="mut rk-p">Pruh zabírá všechny noci pobytu, den odjezdu je už volný pro dalšího hosta. Kliknutím na pruh otevřete rezervaci, kliknutím na volné políčko založíte novou.</p>';
+  }
+  function sez(A){
+    var L=A.slice().sort(function(a,b){return a.od<b.od?-1:a.od>b.od?1:0}).filter(function(r){return !filtr||r.stav===filtr});
+    return '<div class="row" style="margin-bottom:12px"><label class="row rk-go">Stav <select class="inp" id="rsf"><option value="">Všechny</option>'+Object.keys(R.STAVY).map(function(s){return '<option value="'+s+'"'+(filtr===s?' selected':'')+'>'+R.STAVY[s]+'</option>'}).join('')+'</select></label></div>'+
+      '<section class="card"><div class="tw-wrap"><table class="ct"><thead><tr><th>Číslo</th><th>Host</th><th>Termín</th><th>Místa</th><th>Stav</th><th class="n">Cena</th><th class="c"><span class="sr">Akce</span></th></tr></thead><tbody>'+
+      (L.length?L.map(function(r){return '<tr><td>'+esc(r.cislo||'')+'</td><td><b>'+esc(r.jmeno)+'</b>'+(r.telefon?'<br><small class="mut">'+esc(r.telefon)+'</small>':'')+'</td><td>'+termin(r)+'</td><td>'+esc(mistaTxt(r))+'</td><td>'+bdg(r.stav)+'</td><td class="n" style="white-space:nowrap">'+kc(r.cena)+'</td><td class="c"><button type="button" class="btn sm gh" data-id="'+r.id+'">Otevřít</button></td></tr>'}).join(''):'<tr><td colspan="7" class="mut">Žádné rezervace.</td></tr>')+
+      '</tbody></table></div></section>';
+  }
+  function nas(){
+    var n=R.nast();
+    return '<section class="card"><h2>Jak vzniká rezervace z webu</h2><div class="sw-l">'+
+      [['poptavka','Poptávka – potvrzuje obsluha','Host pošle poptávku. Místo se mu hned podrží, aby ho nezabral nikdo jiný, a vy poptávku potvrdíte nebo zrušíte.'],['ihned','Okamžitá rezervace','Rezervace je potvrzená hned po odeslání, čeká se jen na zálohu.']].map(function(o){return '<label class="rr"><input type="radio" name="rezim" value="'+o[0]+'"'+(n.rezim===o[0]?' checked':'')+(adm?'':' disabled')+'><span><b>'+o[1]+'</b><small>'+o[2]+'</small></span></label>'}).join('')+
+      '</div>'+(adm?'':'<p class="mut">Změnit to smí jen správce.</p>')+'</section>'+
+      '<div class="card mut" style="font-size:13.5px;margin-top:16px">'+SV(IC.zamek,16)+' V náhledu jsou rezervace uložené jen v tomto prohlížeči. Host na jiném počítači je neuvidí a jeho rezervace se k vám nedostane. Sdílená obsazenost bude fungovat po spuštění na serveru.</div>'+
+      (adm?'<div class="row" style="margin-top:16px"><button type="button" class="btn gh" data-a="ukazka">Vložit ukázkové rezervace</button><button type="button" class="btn gh" data-a="vymaz">Smazat všechny rezervace</button></div>':'');
+  }
+  function detail(id){
+    var r=najdi(id);if(!r)return;var b=r.stav==='blk',ak=AKCE[r.stav],o=r.osoby||{},deti=(o.dite||0)+(o.zak||0);
+    dd.innerHTML='<div class="row" style="justify-content:space-between;align-items:flex-start;flex-wrap:nowrap"><div><small class="mut">'+(b?'Blokace místa':'Rezervace '+esc(r.cislo||''))+'</small><h2 id="rdt" style="margin:0">'+esc(r.jmeno)+'</h2></div>'+bdg(r.stav)+'</div>'+
+      '<dl class="rdd"><dt>Místa</dt><dd>'+esc(mistaTxt(r))+'</dd><dt>Termín</dt><dd>'+termin(r)+'</dd>'+
+      (b?'':'<dt>Osoby</dt><dd>'+(o.dosp||0)+' dosp.'+(deti?', '+deti+' '+pl(deti,'dítě','děti','dětí'):'')+'</dd><dt>Telefon</dt><dd>'+(r.telefon?'<a href="tel:'+esc(r.telefon)+'">'+esc(r.telefon)+'</a>':'—')+'</dd><dt>E-mail</dt><dd>'+(r.email?'<a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a>':'—')+'</dd><dt>Cena</dt><dd>'+kc(r.cena)+'</dd><dt>Zdroj</dt><dd>'+(r.zdroj==='web'?'Web'+(r.jazyk&&r.jazyk!=='cs'?' ('+r.jazyk.toUpperCase()+')':''):'Zadala obsluha'+(r.kdo?' – '+esc(r.kdo):''))+'</dd>')+
+      (r.zprava?'<dt>Poznámka</dt><dd>'+esc(r.zprava)+'</dd>':'')+'</dl>'+
+      (ak?'<button type="button" class="btn pri" style="width:100%" data-st="'+ak[0]+'">'+ak[1]+'</button>':'')+
+      '<div class="row" style="margin-top:10px;justify-content:space-between"><span class="row"><button type="button" class="btn sm gh" data-e="upr">Upravit</button>'+
+      (b?'':r.stav==='zru'?'<button type="button" class="btn sm gh" data-st="pop">Obnovit</button>':'<button type="button" class="btn sm gh" data-st="zru">Zrušit rezervaci</button>')+
+      (adm||b?'<button type="button" class="btn sm gh" data-e="del">Smazat</button>':'')+'</span><button type="button" class="btn sm gh" data-e="zav">Zavřít</button></div>';
+    dd.dataset.id=id;if(!dd.open)dd.showModal();
+  }
+  dd.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var id=dd.dataset.id;
+    if(b.dataset.st){try{var r=R.uprav(id,{stav:b.dataset.st});KK.zaznam('Rezervace',(r.cislo||'')+' '+r.jmeno+' – '+R.STAVY[r.stav]);toast('Stav: '+R.STAVY[r.stav]+'.');kresli();if(r.stav==='zru')dd.close();else detail(id)}catch(x){toast(x.message,1)}}
+    else if(b.dataset.e==='zav')dd.close();
+    else if(b.dataset.e==='upr'){dd.close();form(najdi(id))}
+    else if(b.dataset.e==='del'&&confirm('Opravdu smazat? Nejde to vrátit.')){R.smaz(id);dd.close();kresli();toast('Smazáno.')}});
+  function form(r,pre){
+    pre=pre||{};var b=r?r.stav==='blk':!!pre.blk,o=(r&&r.osoby)||{},d=(r&&r.dalsi)||{},num=function(n,l,v){return '<label class="f">'+l+'<input class="inp" name="'+n+'" type="number" min="0" inputmode="numeric" value="'+(v||'')+'"></label>'};
+    df.innerHTML='<form method="dialog" novalidate><h2 id="rft">'+(r?(b?'Upravit blokaci':'Upravit rezervaci'):(b?'Blokovat místo':'Nová rezervace'))+'</h2><div class="rfg">'+
+      '<label class="f s2">'+(b?'Důvod blokace':'Jméno hosta')+'<input class="inp" name="jmeno" required autocomplete="off"></label>'+
+      (b?'':'<label class="f">Telefon<input class="inp" name="telefon" type="tel" autocomplete="off"></label><label class="f">E-mail<input class="inp" name="email" type="email" autocomplete="off"></label>')+
+      '<label class="f">'+(b?'Od':'Příjezd')+'<input class="inp" name="od" type="date" required></label><label class="f">'+(b?'Do (tento den už je volno)':'Odjezd')+'<input class="inp" name="do" type="date" required></label>'+
+      (b?'':num('dosp','Dospělí',o.dosp)+num('dite','Děti',(o.dite||0)+(o.zak||0))+num('stan','Vlastní stany',d.stan)+num('karavan','Karavany',d.karavan)+num('cena','Cena (Kč)',r&&r.cena)+
+        '<label class="f">Stav<select class="inp" name="stav">'+['pop','pot','zap','uby','odj'].map(function(s){return '<option value="'+s+'">'+R.STAVY[s]+'</option>'}).join('')+'</select></label>')+
+      '<fieldset class="s2 rmf"><legend>Místa <small>přeškrtnutá jsou v termínu obsazená</small></legend><div id="rmm"></div></fieldset>'+
+      '<label class="f s2">Poznámka<textarea class="inp" name="zprava" rows="2"></textarea></label></div>'+
+      '<p class="err-msg" role="alert" hidden></p><div class="row" style="justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn gh" data-z>Zrušit</button><button class="btn pri">Uložit</button></div></form>';
+    var f=$('form',df),er=$('.err-msg',f),vyb={};((r&&r.mista)||pre.mista||[]).forEach(function(k){vyb[k]=1});
+    f.jmeno.value=r?r.jmeno:'';f.od.value=r?r.od:(pre.od||dnes);f.do.value=r?r.do:(pre.do||ISO(ADD(D0(f.od.value),1)));f.zprava.value=(r&&r.zprava)||'';
+    if(!b){f.telefon.value=(r&&r.telefon)||'';f.email.value=(r&&r.email)||'';f.stav.value=r&&r.stav!=='zru'?r.stav:'pot'}
+    function mista(){var od=f.od.value,dk=f.do.value,kol={};if(od&&dk&&od<dk)R.kolize([].concat.apply([],R.SKUPINY.map(function(g){return g.c.map(function(c){return g.k+'-'+c})})),od,dk,r&&r.id).forEach(function(k){kol[k]=1});
+      $('#rmm',f).innerHTML=R.SKUPINY.map(function(g){return '<div class="rmg"><small>'+g.n+'</small><div>'+g.c.map(function(c){var k=g.k+'-'+c,z=kol[k];if(z)delete vyb[k];return '<label class="rm'+(z?' z':'')+'"><input type="checkbox" value="'+k+'"'+(vyb[k]?' checked':'')+(z?' disabled':'')+' aria-label="'+R.nazev(k)+(z?', obsazeno':'')+'"><span>'+(g.k==='teepee'?'Teepee':c)+'</span></label>'}).join('')+'</div></div>'}).join('')}
+    mista();f.od.addEventListener('change',mista);f.do.addEventListener('change',mista);
+    $('#rmm',f).addEventListener('change',function(e){if(e.target.checked)vyb[e.target.value]=1;else delete vyb[e.target.value]});
+    $('[data-z]',f).addEventListener('click',function(){df.close()});
+    f.addEventListener('submit',function(e){e.preventDefault();er.hidden=true;var ch=function(t,el){er.textContent=t;er.hidden=false;if(el)el.focus()};
+      var z={jmeno:f.jmeno.value.trim(),od:f.od.value,do:f.do.value,mista:Object.keys(vyb),zprava:f.zprava.value.trim()};
+      if(!z.jmeno)return ch(b?'Napište důvod blokace.':'Vyplňte jméno hosta.',f.jmeno);
+      if(!z.od||!z.do||z.od>=z.do)return ch(b?'Konec musí být po začátku.':'Odjezd musí být po příjezdu.',f.do);
+      if(b)z.stav='blk';else{z.telefon=f.telefon.value.trim();z.email=f.email.value.trim();z.osoby={dosp:+f.dosp.value||0,dite:+f.dite.value||0,zak:0};z.dalsi={stan:+f.stan.value||0,karavan:+f.karavan.value||0};z.cena=+f.cena.value||0;z.stav=f.stav.value}
+      if(!z.mista.length&&(b||!(z.dalsi.stan||z.dalsi.karavan)))return ch('Vyberte aspoň jedno místo.');
+      try{var x;if(r)x=R.uprav(r.id,z);else{z.zdroj='rucne';z.kdo=ja.jmeno;x=R.pridej(z)}
+        KK.zaznam('Rezervace',(x.cislo||'')+' '+x.jmeno+(r?' – upraveno':' – přidáno'));df.close();kresli();toast(b?'Blokace uložena.':'Rezervace '+x.cislo+' uložena.')}catch(q){ch(q.message)}});
+    df.showModal();f.jmeno.focus();
+  }
+  function ukazka(){
+    var d=function(n){return ISO(ADD(D0(dnes),n))},n=0;
+    [['chatka-4',-1,3,'Novákovi','uby',5,3960],['chatka-12',0,4,'Müller','zap',6,3960],['chatka-18',2,7,'Dvořák','pot',4,4950],['chatka-7',1,3,'Jansen','pop',2,1980],['podsad-3',0,2,'Kolářová','zap',2,600],['podsad-6',3,6,'Veselý','pop',2,900],['teepee-1',1,4,'Jelínek','pot',4,2400]].forEach(function(u){
+      try{R.pridej({mista:[u[0]],od:d(u[1]),do:d(u[2]),jmeno:u[3],stav:u[4],osoby:{dosp:u[5],dite:0,zak:0},cena:u[6],zdroj:'rucne',kdo:'ukázka'});n++}catch(e){}});
+    try{R.pridej({mista:['chatka-15'],od:d(0),do:d(10),jmeno:'Údržba',stav:'blk'});n++}catch(e){}
+    kresli();toast('Vloženo '+n+' ukázkových záznamů.');
+  }
+  box.addEventListener('click',function(e){var t=e.target,b=t.closest('button');
+    if(b){var s=b.dataset;
+      if(s.tab){tab=s.tab;KK.LS.set('rez.tab',tab);filtr='';kresli()}
+      else if(s.id)detail(s.id);
+      else if(s.pos!=null){zac=+s.pos?ADD(zac,+s.pos):ADD(D0(dnes),-2);kresli()}
+      else if(s.fl){filtr=filtr===s.fl?'':s.fl;kresli()}
+      else if(s.g){sbal[s.g]=!sbal[s.g];kresli()}
+      else if(s.a==='nova')form(null);
+      else if(s.a==='blk')form(null,{blk:1});
+      else if(s.a==='ukazka')ukazka();
+      else if(s.a==='vymaz'&&confirm('Opravdu smazat všechny rezervace i blokace? Nejde to vrátit.')){R.vymaz();KK.zaznam('Rezervace','vše smazáno');kresli();toast('Rezervace smazány.')}
+      return}
+    if(t.classList.contains('rk-t')){var d=ADD(zac,Math.floor(e.offsetX/W));form(null,{mista:[t.dataset.m],od:ISO(d),do:ISO(ADD(d,1))})}});
+  box.addEventListener('change',function(e){var t=e.target;
+    if(t.id==='rkd'&&t.value){zac=ADD(D0(t.value),-2);kresli()}
+    else if(t.id==='rsf'){filtr=t.value;kresli()}
+    else if(t.name==='rezim'){var n=R.nast();n.rezim=t.value;R.ulozNast(n);KK.zaznam('Rezervace','režim: '+(t.value==='ihned'?'okamžitá rezervace':'poptávka'));toast('Uloženo – platí pro nové rezervace z webu.')}});
+  kresli();
 }
 
 /* ---------- NASTAVENÍ ---------- */

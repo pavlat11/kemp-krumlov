@@ -108,3 +108,22 @@ přímo do skriptů – překlad podle celého textu je nezachytí.
 - Endpointy: `POST /api/login {login, heslo}`, `POST /api/logout`, `GET /api/me`, `PUT /api/me` (jméno, e-mail), `PUT /api/me/heslo`,
   `GET/POST /api/uzivatele`, `PUT/DELETE /api/uzivatele/{id}`, `PUT /api/uzivatele/{id}/heslo`, `GET/PUT /api/prava`.
 - Pravidla: aspoň jeden aktivní správce musí zůstat; sám sebe nelze smazat ani si změnit roli; heslo aspoň 8 znaků.
+
+## Rezervace (chatky, podsadové stany, teepee)
+
+V náhledu drží rezervace objekt `KKR` na konci `js/cenik.js` (localStorage `kk.rezervace`, `kk.rez.nast`, `kk.rez.cislo`). Na serveru stačí jeho funkce přepsat na volání API, web (`js/pobyt.js`) i administrace (`rezervace()` v `admin/admin.js`) používají jen je.
+
+- Místa: `chatka-1` … `chatka-20`, `podsad-1` … `podsad-11`, `teepee-1`. Skupiny pro kalendář jsou v `KKR.SKUPINY`.
+- Rezervace: `id, cislo, stav, od, do, mista[], dalsi{stan,karavan}, osoby{dosp,dite,zak}, jmeno, telefon, email, zprava, cena, zdroj(web|rucne), jazyk, kdo, vytvoreno`.
+- Stavy: `pop` poptávka, `pot` potvrzená, `zap` zaplacená záloha, `uby` ubytovaný, `odj` odjel, `zru` zrušená (místo neblokuje), `blk` blokace místa.
+- Obsazené jsou noci `od ≤ noc < do`; den odjezdu je volný pro dalšího hosta.
+- Nastavení `rezim`: `poptavka` (web zakládá stav `pop`) nebo `ihned` (web zakládá `pot`).
+
+| Funkce v náhledu | API |
+|---|---|
+| `KKR.obsazeno()` | `GET /api/obsazenost?od=&do=` – veřejné, vrací jen `{misto:[noci]}`, žádné osobní údaje |
+| `KKR.pridej(r)` z webu | `POST /api/rezervace` – veřejné, omezit počet požadavků |
+| `KKR.vse()`, `uprav`, `smaz`, `pridej` z administrace | `GET/POST/PATCH/DELETE /api/admin/rezervace` – jen přihlášení, právo `rezervace` |
+| `KKR.nast()`, `ulozNast` | `GET/PUT /api/admin/rezervace/nastaveni` – ukládat smí jen správce |
+
+Kontrolu kolize (`KKR.kolize`) musí server dělat znovu při zápisu, v jedné transakci se zámkem na dotčená místa (`SELECT … FOR UPDATE`), jinak si dva hosté ve stejnou chvíli zarezervují stejnou chatku. Po uložení poslat e-mail hostovi a kempu.

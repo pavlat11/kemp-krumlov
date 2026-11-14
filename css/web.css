@@ -1862,7 +1862,8 @@ body.rz-inview #callbar{transform:translateY(140px)!important}
 #rezervace .rz-types{display:flex!important;flex-direction:column;gap:10px}
 #rezervace .rz-row{display:grid;grid-template-columns:132px minmax(0,1fr) auto;gap:16px;align-items:center;padding:9px;border:1.5px solid #ece5d7;border-radius:20px;background:#fff;transition:border-color .2s,box-shadow .2s,background .2s}
 #rezervace .rz-row.on{border-color:#173b2a;background:#fbf8f2;box-shadow:0 10px 24px -16px #173b2a99}
-#rezervace .rz-row.busy{opacity:.55}
+#rezervace .rz-row.busy{opacity:.6;filter:grayscale(1)}
+#rezervace .rz-row.busy .tx b[data-obs]:not([data-obs=""])::after{content:attr(data-obs);display:block;font-size:12px;font-weight:800;color:#5a2a0a}
 #rezervace .rz-row .ph{height:88px;border-radius:14px;background:#e9e3d6 center/cover;position:relative}
 #rezervace .rz-row .ph .n{position:absolute;top:7px;left:7px;background:#f4a64a;color:#fff;font-weight:800;font-size:12px;line-height:1;font-style:normal;border-radius:9px;padding:5px 8px;box-shadow:0 3px 8px #0003}
 #rezervace .rz-row .ph .n:empty{display:none}

@@ -85,7 +85,10 @@ const openNight=d=>{if(CELOROK)return true;const v=(d.getMonth()+1)*100+d.getDat
 const endOf=y=>CELOROK?D(y+1,0,31):D(y,CM-1,CD);
 const isHi=d=>KC.hlavni(d.getMonth());
 /* OBSAZENOST: sem se napojí rezervační systém. Formát: {chatka:['2027-07-18',…], teepee:[…]} = obsazené noci */
-const BUSY=window.RZ_OBSAZENO||{};
+const BUSY={};
+function nactiBusy(){Object.keys(BUSY).forEach(k=>delete BUSY[k]);[window.RZ_OBSAZENO||{},window.KKR?KKR.obsazeno():{}].forEach(o=>Object.keys(o).forEach(k=>{BUSY[k]=(BUSY[k]||[]).concat(o[k])}));
+ if(BUSY['teepee-1'])BUSY.teepee=(BUSY.teepee||[]).concat(BUSY['teepee-1']);root.classList.toggle('has-busy',Object.values(BUSY).some(a=>a&&a.length))}
+nactiBusy();
 const isBusyK=(k,d)=>(BUSY[k]||[]).includes(iso(d));
 /* KONKRÉTNÍ MÍSTA: chatky a podsadové stany mají čísla, host si vybere které. Obsazenost jednoho místa: RZ_OBSAZENO['chatka-4']=[noci]
    Rozložení (skupiny podle polohy v kempu) jde přepsat v ceníku: KKC.data.mista={chatka:[['Název skupiny',od,do,'sloupec'] (od>do = čísla pozpátku),…]} – skupiny se stejným sloupcem jsou pod sebou */
@@ -211,7 +214,7 @@ function render(){Object.keys(MISTA).forEach(k=>{S.c[k]=S.c[k].filter(n=>freeU(k
  $('rzN').textContent=R.n;$('rzNl').textContent=plural(R.n,'noc','noci','nocí');
  root.querySelectorAll('#rzQuick button').forEach(b=>b.classList.toggle('on',!!S.to&&+b.dataset.n===R.n));
  PEOPLE.forEach(r=>{r.st.upd();r.el.classList.toggle('has',S[r.k]>0)});
- TYPES.forEach(x=>{const q=S.q[x.k],fr=freeK(x.k);x.el.classList.toggle('on',q>0);x.el.classList.toggle('busy',!fr);x.el.querySelector('.n').textContent=q?q+'×':'';x.st.upd()});
+ TYPES.forEach(x=>{const q=S.q[x.k],fr=freeK(x.k);x.el.classList.toggle('on',q>0);x.el.classList.toggle('busy',!fr);x.el.querySelector('.tx b').dataset.obs=fr?'':KL.t('Ve vašem termínu obsazeno');x.el.querySelector('.n').textContent=q?q+'×':'';x.st.upd()});
  $('rzTNote').hidden=true;
  TYPES.forEach(t=>{if(!t.pick)return;const c=S.c[t.k],o=!!(t.open||c.length);t.pick.hidden=!o;t.tg.setAttribute('aria-expanded',o);
   t.tg.textContent=c.length?KL.t('č.')+' '+c.join(', '):KL.t(t.k==='chatka'?'Vybrat číslo chatky':'Vybrat číslo stanu');
@@ -279,12 +282,20 @@ function submit(){
  if(ep){btn.disabled=true;btn.textContent='Odesílám…';
   fetch(ep,{method:'POST',body:new FormData(form)}).then(r=>{if(!r.ok)throw 0;done(false)})
   .catch(()=>{btn.disabled=false;btn.innerHTML='Odeslat poptávku <span>→</span>';warnSend()})}
+ else if(window.KKR){let r;
+  try{r=KKR.pridej({stav:KKR.nast().rezim==='ihned'?'pot':'pop',od:iso(S.from),do:iso(S.to),
+   mista:[].concat(...Object.keys(MISTA).map(k=>S.c[k].map(n=>k+'-'+n)),S.q.teepee?['teepee-1']:[]),dalsi:{stan:S.q.stan||0,karavan:S.q.karavan||0},
+   osoby:{dosp:S.dosp,dite:S.dite,zak:S.zak},jmeno:f.jmeno.value.trim(),telefon:f.telefon.value.trim(),email:f.email.value.trim(),zprava:f.zprava.value.trim(),cena:Math.round(R.total),zdroj:'web',jazyk:KL.jazyk})}
+  catch(x){nactiBusy();drawCal();render();go(2);warn(KL.t('Vybrané místo si mezitím zarezervoval někdo jiný. Vyberte prosím jiné.'));return}
+  done(false,r);nactiBusy();drawCal()}
  else{const body=`${summaryText()}\n\nJméno: ${f.jmeno.value}\nTelefon: ${f.telefon.value}\nE-mail: ${f.email.value||'-'}\nZpráva: ${f.zprava.value||'-'}`;
   location.href=`mailto:kempkrumlov2017@gmail.com?subject=${encodeURIComponent('Poptávka pobytu '+fDY(S.from)+' – '+fDY(S.to))}&body=${encodeURIComponent(body)}`;done(true)}}
 function warnSend(){alert('Poptávku se nepodařilo odeslat. Zkuste to prosím znovu nebo zavolejte na +420 720 514 943.')}
-function done(viaMail){const f=form.elements;
+function done(viaMail,rz){const f=form.elements;
  $('rzDoneH').textContent=viaMail?'Skoro hotovo – dokončete odeslání v e-mailu':'Děkujeme, poptávka je odeslaná';
  $('rzDoneP').textContent=viaMail?'Otevřeli jsme vám e-mail s vyplněnou poptávkou, stačí ho odeslat. Ozveme se s potvrzením termínu a přesnou cenou.':`${KL.t('Ozveme se vám na')} ${f.telefon.value}${f.email.value?' '+KL.t('nebo')+' '+f.email.value:''} ${KL.t('s potvrzením termínu a přesnou cenou.')}`;
+ if(rz){const hned=rz.stav==='pot';$('rzDoneH').textContent=KL.t(hned?'Rezervace je potvrzená':'Děkujeme, poptávka je odeslaná');
+  $('rzDoneP').textContent=KL.t(hned?'Číslo rezervace':'Číslo poptávky')+' '+rz.cislo+'. '+KL.t(hned?'Místo je zarezervované na vaše jméno.':'Místo vám držíme, ozveme se s potvrzením.')}
  $('rzDoneSum').innerHTML=summaryText().split('\n').map(l=>{const i=l.indexOf(':');return `<b>${l.slice(0,i+1)}</b>${l.slice(i+1)}`}).join('<br>');
  form.hidden=true;const d=$('rzDone');d.hidden=false;
  d.scrollIntoView({behavior:'smooth',block:'center'});d.focus({preventScroll:true})}
@@ -301,7 +312,7 @@ $('rzPriceBtn').addEventListener('click',openP);$('rzPriceBtn2').addEventListene
 dlg.querySelector('.rz-dlg-x').addEventListener('click',()=>dlg.close());
 dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
 
-if(Object.values(BUSY).some(a=>a&&a.length))root.classList.add('has-busy');
+addEventListener('storage',e=>{if(e.key==='kk.rezervace'){nactiBusy();drawCal();render()}});
 drawCal();render();go(0,false);
 })();
 ;

@@ -42,7 +42,7 @@ if(s){
 }
 
 function nactiSkript(src){return new Promise(function(ok,no){var e=document.createElement('script');e.src=BASE+src;e.onload=ok;e.onerror=no;document.body.appendChild(e)})}
-function nactiData(){return window.KK&&KK.galerie?Promise.resolve():nactiSkript('js/kk-data.js?v=5')}
+function nactiData(){return window.KK&&KK.galerie?Promise.resolve():nactiSkript('js/kk-data.js?v=6')}
 
 /* 3) galerie z administrace */
 if(get('galerie'))document.addEventListener('DOMContentLoaded',function(){
