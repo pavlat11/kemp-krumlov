@@ -239,13 +239,13 @@ const D=[
  {k:'stany',f:{x:1190,y:250,w:850,h:520},n:'Louka pro stany',c:'#4f9a58',m:[1560,500],
   d:'Velká travnatá louka mezi řekou a chatkami pro vlastní stany a karavany.',
   li:['Rezervace nutná až pro skupiny 15+ stanů','Elektřina '+KKC.t('elek','a')+' / noc','Karavan '+KKC.t('karavan','a')+' / noc (mimo sezónu '+KKC.t('karavan','b')+')'],price:KKC.t('stan','a'),unit:'stan / noc · v sezóně'},
- {k:'podsad',f:{x:1260,y:170,w:340,h:70},n:'Podsadové stany',c:'#2a7c86',m:[1430,200],
+ {k:'podsad',f:{x:1260,y:170,w:340,h:70},n:'Podsadové stany',c:'#2a7c86',m:[1268,212],
   d:'Řada postavených stanů na dřevěné podsadě podél cesty. Přijedete a rovnou se ubytujete.',
   li:['Stan je postavený, nic nestavíte','Hned u cesty k sociálkám'],price:KKC.t('podsad','a'),unit:'stan / noc + osoby'},
- {k:'teepee',f:{x:1720,y:360,w:140,h:100},n:'Teepee',c:'#d58a2c',m:[1786,330],
+ {k:'teepee',f:{x:1720,y:360,w:140,h:100},n:'Teepee',c:'#d58a2c',m:[1930,480],
   d:'Velké indiánské teepee na louce pod chatkami. Zážitek hlavně pro rodiny s dětmi a party.',
   li:['Stojí volně na louce','Kousek od chatek i sociálek'],price:KKC.t('teepee','a'),unit:'noc + osoby · mimo sezónu '+KKC.t('teepee','b')},
- {k:'chatky',f:{x:540,y:0,w:1400,h:310},n:'Chatky',c:'#b6513e',m:[1780,120],
+ {k:'chatky',f:{x:540,y:0,w:1400,h:310},n:'Chatky',c:'#b6513e',m:[2010,110],
   d:'Dřevěné chatky v klidné části kempu pod lesem a menší řada u vjezdu. Každá má kapacitu 7 osob a je včetně lůžkovin.',
   li:['Kapacita 7 osob','Včetně lůžkovin','Platí se chatka + každá osoba','Školní kurzy: 200 Kč / osoba'],price:KKC.t('chatka','a'),unit:'chatka / noc + osoby · mimo sezónu '+KKC.t('chatka','b')}
 ];
@@ -313,6 +313,7 @@ const car=(p,x,y,c,rot=0)=>{const g=G(p,{transform:`translate(${x} ${y}) rotate(
 const van=(p,x,y,rot=0,w=16,h=7)=>{const g=G(p,{transform:`translate(${x} ${y}) rotate(${rot})`,filter:'url(#amSh)'});E('rect',{x:-w/2,y:-h/2,width:w,height:h,rx:1.5,fill:'#f3f3ef'},g);E('rect',{x:w/2-4,y:-h/2+1,width:3,height:h-2,fill:'rgba(30,50,60,.4)'},g)};
 const boat=(p,x,y,rot,c,len=9)=>{const g=G(p,{transform:`translate(${x} ${y}) rotate(${rot})`});E('path',{d:`M${-len} 0 Q${-len*.4} -3 0 -3 Q${len*.4} -3 ${len} 0 Q${len*.4} 3 0 3 Q${-len*.4} 3 ${-len} 0Z`,fill:c,stroke:'rgba(0,0,0,.25)','stroke-width':.5},g)};
 const raft=(p,x,y,c,rot=0)=>{const g=G(p,{transform:`translate(${x} ${y}) rotate(${rot})`});E('rect',{x:-8,y:-4,width:16,height:8,rx:4,fill:c,stroke:'rgba(0,0,0,.25)','stroke-width':.5},g);E('rect',{x:-5,y:-2,width:10,height:4,rx:2,fill:'rgba(0,0,0,.18)'},g)};
+const cnum=(p,x,y,n,r,fs,bg,fg)=>{const g=G(p,{class:'am-cnum'});E('circle',{cx:x,cy:y,r,fill:bg,stroke:'#fff','stroke-width':1.2,filter:'url(#amSh)'},g);const t=E('text',{x,y,'dominant-baseline':'central','text-anchor':'middle','font-family':FONT,'font-weight':800,'font-size':fs,fill:fg},g);t.textContent=n};
 const zone=o=>{const g=G(S2,{class:'am-zone','data-k':o.k});o.g=g;return g};
 const hl=(g,tag,a)=>E(tag,Object.assign({class:'hl'},a),g);
 
@@ -459,7 +460,7 @@ const DOCKS=[760,905,1010,1160];
  dl(1560,560,'Louka pro stany',16)}
 // podsadové stany
 {const g=zone(Z.podsad);hl(g,'rect',{x:636,y:92,width:160,height:24,rx:6});
- for(let i=0;i<12;i++)ptent(g,646+i*12.5,104)}
+ for(let i=0;i<11;i++)ptent(g,651+i*13.5,104);for(let i=0;i<11;i++)cnum(g,651+i*13.5,89,i+1,6,7,'#2a7c86','#fff')}
 // teepee (podle skutečnosti: bílé plátno, dřevěné tyče nahoře, vchod)
 {const g=zone(Z.teepee);hl(g,'circle',{cx:893,cy:208,r:30});
  const cx=893,by=216,rx=19,ry=7,ay=178;
@@ -485,9 +486,12 @@ const DOCKS=[760,905,1010,1160];
  cabin(g,616,125,0);
  for(let i=0;i<5;i++)cabin(g,832+i*28,22,0);
  for(let i=0;i<5;i++)cabin(g,832+i*28,96,0);
+ for(let i=0;i<10;i++)cnum(g,290+i*27.5-2,108-i*6.3-8.8,20-i,8,9,'#fff','#173a29');
+ for(let i=0;i<5;i++)cnum(g,832+i*28,13,i+1,8,9,'#fff','#173a29');
+ for(let i=0;i<5;i++)cnum(g,832+i*28,87,i+6,8,9,'#fff','#173a29');
  dl(1780,268,'Chatky',16)}
 const trs=G(S2);
-[[672,232,24],[757,225,24],[928,340,28],[1022,328,28],[1125,318,28],[1188,262,22],[1047,232,24],[1110,205,28],[1180,195,20],[728,85,22],[485,362,20],[548,238,15],[440,437,24],[487,435,22],[535,432,20],[668,430,13],[300,495,20],[1225,322,20],[1240,250,18],[575,85,12]].forEach(([x,y,r])=>tree(trs,x,y,r));
+[[672,232,24],[757,225,24],[928,340,28],[1022,328,28],[1125,318,28],[1188,262,22],[1047,232,24],[1110,205,28],[1180,195,20],[700,62,16],[485,362,20],[548,238,15],[440,437,24],[487,435,22],[535,432,20],[668,430,13],[300,495,20],[1225,322,20],[1240,250,18],[575,85,12]].forEach(([x,y,r])=>tree(trs,x,y,r));
 dl(976,476,'WC',14);
 dl(-640,600,'Nový potok',13,30,'#4a4a4a');dl(-900,520,'Na Svahu',12,62,'#4a4a4a');dl(-700,320,'U Trojice',12,8,'#4a4a4a');dl(-590,900,'most Na Svahu',11,90,'#4a4a4a');
 /* hloubkové řazení stromů (vzdálenější dřív) */
