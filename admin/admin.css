@@ -631,3 +631,11 @@ table.rlt{width:100%;min-width:900px;border-collapse:separate;border-spacing:0}
 .sb-nh small{display:block;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin-bottom:8px}
 .sb-nh-p{font-weight:800;padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:8px;overflow-wrap:anywhere}
 .sb-nh-t{margin:0;white-space:pre-wrap;font:inherit;font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+/* blokace termínů v Nastavení, větší hledání */
+.rbl-l{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.rbl-l button{width:100%;display:flex;gap:14px;align-items:center;text-align:left;padding:10px 12px;border:1px solid var(--line);border-left:4px solid #b9b2a3;border-radius:10px;background:repeating-linear-gradient(135deg,#faf8f3 0 8px,#f2eee5 8px 16px);font:inherit;color:var(--deep);cursor:pointer}
+.rbl-l button:hover{border-color:#b9b2a3}
+.rbl-d{min-width:150px;font-weight:800}.rbl-d small,.rbl-t small{display:block;font-weight:400;color:var(--mut);font-size:13px}
+.rbl-t{min-width:0}.rbl-t small{overflow-wrap:anywhere}
+.rm-vse{gap:6px;margin:2px 0 6px}
+.rz-top .rq{flex:1 1 220px}.rz-top .rq .inp{min-height:46px;font-size:16px;border-radius:12px}.rz-top .rq svg{width:20px;height:20px}
