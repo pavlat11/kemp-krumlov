@@ -362,7 +362,7 @@ function rezervace(m){
   var DNY=['Ne','Po','Út','St','Čt','Pá','So'],MES=['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
   var dnes=ISO(new Date()),zac=ADD(D0(dnes),-2),tab=KK.LS.get('rez.tab','dnes'),filtr='',sbal={};
   /* skupiny v pořadí a směru, jaké si obsluha nastavila */
-  var skupiny=function(){var n=R.nast(),po=n.poradi||[],ob=n.obr||{};return R.SKUPINY.slice().sort(function(a,b){var x=po.indexOf(a.id),y=po.indexOf(b.id);return (x<0?99:x)-(y<0?99:y)}).map(function(g){return ob[g.id]?Object.assign({},g,{c:g.c.slice().reverse()}):g})};
+  var skupiny=function(){var n=R.nast(),po=n.poradi||[];return R.SKUPINY.slice().sort(function(a,b){var x=po.indexOf(a.id),y=po.indexOf(b.id);return (x<0?99:x)-(y<0?99:y)})};
   var AKCE={pop:['pot','Potvrdit poptávku'],pot:['zap','Záloha zaplacena'],zap:['uby','Ubytovat hosta (check-in)'],uby:['odj','Odhlásit hosta (check-out)']};
   var noci=function(r){return Math.round((D0(r.do)-D0(r.od))/864e5)};
   var termin=function(r){var n=noci(r);return KR(r.od)+' – '+KR(r.do)+' '+r.do.slice(0,4)+' ('+n+' '+pl(n,'noc','noci','nocí')+')'};
@@ -413,12 +413,12 @@ function rezervace(m){
     skupiny().forEach(function(g,gi,GA){var kl=g.c.map(function(c){return g.k+'-'+c}),zav=sbal[g.id];
       var vol=kl.filter(function(k){return !akt.some(function(r){return (r.mista||[]).indexOf(k)>=0&&r.od<=dnes&&dnes<r.do})}).length;
       h+='<div class="rk-g" data-gid="'+g.id+'"><span><button type="button" class="rk-dg" draggable="true" data-dg="'+g.id+'" aria-label="Přesunout skupinu '+g.n+' – táhněte myší, nebo šipkami nahoru a dolů" title="Chytněte a přetáhněte skupinu jinam">⠿</button><button type="button" class="rk-gt" data-g="'+g.id+'" aria-expanded="'+!zav+'"><b>'+g.n+'</b> dnes v noci volné '+vol+' z '+kl.length+' · '+(zav?'rozbalit':'sbalit')+'</button>'+
-        (kl.length>1?'<button type="button" class="rk-mv" data-ob="'+g.id+'" aria-label="Obrátit pořadí čísel ve skupině '+g.n+'" title="Obrátit pořadí čísel">⇅</button>':'')+'</span></div>';
+        '</span></div>';
       if(!zav)kl.forEach(function(k){h+='<div class="rk-r"><div class="rk-n">'+R.nazev(k).replace('Podsadový stan','Stan')+'</div><div class="rk-t" data-m="'+k+'" style="width:'+N*W+'px;background:'+bg+'">'+akt.filter(function(r){return (r.mista||[]).indexOf(k)>=0}).map(pruh).join('')+'</div></div>'})});
     h+='<div class="rk-g st"><span><b>Bez čísla místa</b> počet na každou noc</span></div>';
     [['stan','Vlastní stany'],['karavan','Karavany']].forEach(function(t){
       h+='<div class="rk-r"><div class="rk-n">'+t[1]+'</div>'+iso.map(function(d){var s=0;akt.forEach(function(r){if(r.dalsi&&r.dalsi[t[0]]&&r.od<=d&&d<r.do)s+=+r.dalsi[t[0]]});return '<div class="rk-c" style="width:'+W+'px">'+(s||'')+'</div>'}).join('')+'</div>'});
-    return h+'</div></div><p class="mut rk-p">Rezervaci přesunete tak, že její pruh chytnete myší a přetáhnete na jinou chatku nebo jiný den. Pořadí skupin změníte přetažením za úchyt ⠿ u názvu, tlačítkem ⇅ obrátíte pořadí čísel. Pruh zabírá všechny noci pobytu, den odjezdu je už volný pro dalšího hosta. Kliknutím na pruh otevřete rezervaci, kliknutím na volné políčko založíte novou.</p>';
+    return h+'</div></div><p class="mut rk-p">Rezervaci přesunete tak, že její pruh chytnete myší a přetáhnete na jinou chatku nebo jiný den. Pořadí skupin změníte přetažením za úchyt ⠿ u názvu. Pruh zabírá všechny noci pobytu, den odjezdu je už volný pro dalšího hosta. Kliknutím na pruh otevřete rezervaci, kliknutím na volné políčko založíte novou.</p>';
   }
   function sez(A){
     var L=A.slice().sort(function(a,b){return a.od<b.od?-1:a.od>b.od?1:0}).filter(function(r){return !filtr||r.stav===filtr});
@@ -490,7 +490,6 @@ function rezervace(m){
       else if(s.pos!=null){zac=+s.pos?ADD(zac,+s.pos):ADD(D0(dnes),-2);kresli()}
       else if(s.fl){filtr=filtr===s.fl?'':s.fl;kresli()}
       else if(s.g){sbal[s.g]=!sbal[s.g];kresli()}
-      else if(s.ob){var n2=R.nast();n2.obr=n2.obr||{};n2.obr[s.ob]=!n2.obr[s.ob];R.ulozNast(n2);kresli()}
       else if(s.nm)form(null,{mista:[s.nm]});
       else if(s.a==='nova')form(null);
       else if(s.a==='blk')form(null,{blk:1});
