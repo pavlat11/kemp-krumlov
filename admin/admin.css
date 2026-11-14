@@ -545,3 +545,4 @@ table.rlt{width:100%;min-width:900px;border-collapse:separate;border-spacing:0}
 .rz-lay{min-width:0;max-width:100%}.rz-lay>#rzv{min-width:0;max-width:100%;overflow-x:clip}.rl-ob{flex:0 1 auto;min-width:0}
 #main{min-width:0}
 @media(max-width:760px){.rlt tbody tr:not(.rl-m) td:nth-child(5){display:none}}
+.rn-leg::after{content:"přijíždí dnes";color:var(--mut);font-weight:500;margin-left:12px;padding-left:16px;background:radial-gradient(circle at 5px 50%,var(--sun) 4px,#fff 4.5px,#fff 5.5px,transparent 6px) no-repeat left center/12px 12px}
