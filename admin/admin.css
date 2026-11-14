@@ -252,12 +252,25 @@ button.rs{min-height:36px;cursor:pointer}button.rs.on{outline:3px solid var(--su
 .rm.z{cursor:not-allowed}.rm.z span{background:repeating-linear-gradient(135deg,#ece8df 0 5px,#ddd8cc 5px 10px);color:#5f6862;text-decoration:line-through;box-shadow:none}
 @media(max-width:560px){.rfg{grid-template-columns:1fr}.rk-leg{margin-left:0}}
 .rnt{min-width:480px}.rnt td{padding:8px 4px}.rnt .rr{align-items:center}
-.rn-h{font-size:15px;margin:18px 0 8px}
-.rn-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px}
-.rn{display:flex;align-items:center;gap:10px;min-height:60px;padding:8px 10px;border:1px solid var(--line);border-radius:14px;background:#fff;font:inherit;color:var(--deep);text-align:left;cursor:pointer}
-.rn:hover{border-color:var(--deep2)}
-.rn-c{flex:none;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:16px;background:var(--deep2);color:#fff}
-.rn.vol{background:transparent;border-style:dashed}.rn.vol .rn-c{background:#fff;color:var(--deep);box-shadow:inset 0 0 0 1.5px #cfd8d1}.rn.vol b{color:var(--mut);font-weight:700}
-.rn.blk .rn-c{background:#d9d3c6;color:#3c4a42}
-.rn-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}.rn-t b{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rn-t small{font-size:12px;color:var(--mut)}.rn-t .rn-o{color:var(--warn);font-weight:700}
-.rn .rs{flex:none}
+.rn-top{display:grid;grid-template-columns:auto 1fr 1fr;gap:12px 28px;align-items:start;margin-bottom:14px}
+.rn-top>div{display:flex;flex-direction:column;gap:4px;min-width:0}.rn-top small{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+.rn-d{font-size:20px}.rn-l{display:flex;flex-wrap:wrap;gap:6px}
+.rn-j{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:5px 10px;font:inherit;font-size:13.5px;color:var(--deep);cursor:pointer;min-height:32px}.rn-j:hover{border-color:var(--deep2)}
+.rn-leg{gap:6px;margin-bottom:14px}.rs.vol{background:#fff;color:var(--mut);border:2px dashed #cfd8d1}
+.rn-w{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,560px),1fr));gap:14px}
+.rn-s{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px}.rn-s h2{font-size:14px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}
+.rn-g{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.rn{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:1px;height:100px;min-width:0;padding:8px 9px;border:2px solid transparent;border-radius:12px;font:inherit;text-align:left;cursor:pointer;overflow:hidden}
+.rn:hover{filter:brightness(.96)}
+.rn-c{font-size:20px;font-weight:800;line-height:1.1}
+.rn b{font-size:13.5px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rn small{font-size:11.5px;opacity:.9;white-space:nowrap}
+.rn-z{margin-top:auto;flex:none;line-height:1.6;font-size:10.5px;font-weight:800;background:var(--sun);color:var(--deep);border-radius:6px;padding:1px 6px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rn.vol{background:#fff;border:2px dashed #cfd8d1;color:var(--deep)}.rn.vol b{color:var(--mut);font-weight:600}
+.rn.pop{background:#fde9c8;color:#6b3f06;border:2px dashed #c77a1a}.rn.pot{background:#cfe6f0;color:#12414f}.rn.zap{background:#1f6d77;color:#fff}.rn.uby{background:#173b2a;color:#fff}.rn.odj{background:#e4e0d6;color:#3c4a42}
+.rn.blk{background:repeating-linear-gradient(135deg,#ece8df 0 6px,#d9d3c6 6px 12px);color:#3c4a42}
+.rn:focus-visible,.rn-j:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+@media(max-width:760px){.rn-top{grid-template-columns:1fr}.rn-g{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}}
+.rk-dg{width:32px;height:32px;border:0;border-radius:8px;background:transparent;font-size:18px;line-height:1;color:var(--mut);cursor:grab}
+.rk-dg:hover{background:#fff;color:var(--deep)}.rk-dg:active{cursor:grabbing}.rk-dg:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.rk-b{cursor:grab}.rk-b:active{cursor:grabbing}
+.rk-t.dp{box-shadow:inset 0 0 0 2px var(--sun)}.rk-g.dp{box-shadow:inset 0 3px 0 var(--sun),inset 0 -3px 0 var(--sun)}

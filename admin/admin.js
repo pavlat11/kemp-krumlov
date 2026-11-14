@@ -383,14 +383,20 @@ function rezervace(m){
       (tab==='kal'?kal(akt):tab==='sez'?sez(A):tab==='nas'?nas():prehledDnes(akt));
   }
   function prehledDnes(akt){
-    var d=D0(dnes),h='<p class="mut" style="margin:0 0 14px">Kdo je dnes ('+DNY[d.getDay()]+' '+KR(dnes)+') na kterém místě. Kliknutím na obsazené místo otevřete rezervaci, kliknutím na volné založíte novou.</p>';
-    skupiny().forEach(function(g){
-      h+='<h2 class="rn-h">'+g.n+'</h2><div class="rn-g">'+g.c.map(function(c){var k=g.k+'-'+c,ma=function(r){return (r.mista||[]).indexOf(k)>=0};
+    var d=D0(dnes),G=skupiny(),vse=0,obs=0,host=akt.filter(function(r){return r.stav!=='blk'});
+    var jm=function(r){return '<button type="button" class="rn-j" data-id="'+r.id+'"><b>'+esc(r.jmeno)+'</b> '+esc((r.mista||[]).map(function(k){return R.nazev(k).replace('Podsadový stan','Stan')}).join(', ')||mistaTxt(r))+'</button>'};
+    var pri=host.filter(function(r){return r.od===dnes&&r.stav!=='odj'}),odj=host.filter(function(r){return r.do===dnes});
+    var body=G.map(function(g){
+      return '<section class="rn-s"><h2>'+g.n+'</h2><div class="rn-g">'+g.c.map(function(c){var k=g.k+'-'+c,ma=function(r){return (r.mista||[]).indexOf(k)>=0};vse++;
         var r=akt.filter(function(r){return ma(r)&&r.od<=dnes&&dnes<r.do})[0],od=akt.filter(function(r){return ma(r)&&r.do===dnes&&r.stav!=='blk'})[0],o=r&&r.osoby||{},os=(o.dosp||0)+(o.dite||0)+(o.zak||0);
-        var cis='<span class="rn-c">'+(g.k==='teepee'?'T':c)+'</span>',odj=od?'<small class="rn-o">ráno odjíždí: '+esc(od.jmeno)+'</small>':'';
-        return r?'<button type="button" class="rn '+r.stav+'" data-id="'+r.id+'" aria-label="'+esc(R.nazev(k)+', '+r.jmeno+', '+R.STAVY[r.stav])+'">'+cis+'<span class="rn-t"><b>'+esc(r.jmeno)+'</b><small>'+(r.stav==='blk'?'blokace':(r.od===dnes?'přijíždí dnes':'od '+KR(r.od)))+' · do '+KR(r.do)+(os?' · '+os+' os.':'')+'</small>'+odj+'</span>'+bdg(r.stav)+'</button>'
-          :'<button type="button" class="rn vol" data-nm="'+k+'" aria-label="'+esc(R.nazev(k))+', volno">'+cis+'<span class="rn-t"><b>Volno</b>'+odj+'</span></button>'}).join('')+'</div>'});
-    return h;
+        var cis='<span class="rn-c">'+(g.k==='teepee'?'Teepee':c)+'</span>',zn=od?'<span class="rn-z">ráno odjíždí '+esc(od.jmeno)+'</span>':'';
+        if(!r)return '<button type="button" class="rn vol" data-nm="'+k+'" aria-label="'+esc(R.nazev(k))+', volno">'+cis+'<b>volno</b>'+zn+'</button>';
+        obs++;return '<button type="button" class="rn '+r.stav+'" data-id="'+r.id+'" aria-label="'+esc(R.nazev(k)+', '+r.jmeno+', '+R.STAVY[r.stav])+'">'+cis+'<b>'+esc(r.jmeno)+'</b><small>do '+KR(r.do)+(os?' · '+os+' os.':'')+'</small>'+(r.od===dnes&&r.stav!=='blk'?'<span class="rn-z">přijíždí dnes</span>':zn)+'</button>'}).join('')+'</div></section>'}).join('');
+    return '<div class="card rn-top"><div><b class="rn-d">'+DNY[d.getDay()]+' '+KR(dnes)+' '+d.getFullYear()+'</b><span>Obsazeno '+obs+' z '+vse+' míst</span></div>'+
+      '<div><small>Dnes přijíždí</small><div class="rn-l">'+(pri.length?pri.map(jm).join(''):'<span class="mut">nikdo</span>')+'</div></div>'+
+      '<div><small>Dnes odjíždí</small><div class="rn-l">'+(odj.length?odj.map(jm).join(''):'<span class="mut">nikdo</span>')+'</div></div></div>'+
+      '<div class="row rn-leg" aria-hidden="true"><span class="rs vol">Volno</span>'+['pop','pot','zap','uby','blk'].map(bdg).join('')+'</div>'+
+      '<div class="rn-w">'+body+'</div>';
   }
   function kal(akt){
     var dny=[],i;for(i=0;i<N;i++)dny.push(ADD(zac,i));var iso=dny.map(ISO);
@@ -398,20 +404,20 @@ function rezervace(m){
     dny.forEach(function(d,i){var t=iso[i]===dnes,c=t?'rgba(244,166,74,.28)':(d.getDay()%6===0?'#f6f1e6':'');if(c)vrst[t?'unshift':'push']('linear-gradient('+c+','+c+') no-repeat '+i*W+'px 0/'+W+'px 100%')});
     var bg=vrst.join(','),idx=function(s){return Math.round((D0(s)-zac)/864e5)};
     var pruh=function(r){var a=Math.max(0,idx(r.od)),b=Math.min(N,idx(r.do));if(b<=a)return '';
-      return '<button type="button" class="rk-b '+r.stav+(filtr&&filtr!==r.stav?' dim':'')+'" data-id="'+r.id+'" style="left:'+(a*W+2)+'px;width:'+((b-a)*W-4)+'px" title="'+esc(r.jmeno+' · '+KR(r.od)+' – '+KR(r.do)+' · '+R.STAVY[r.stav])+'">'+esc(r.jmeno)+'</button>'};
+      return '<button type="button" draggable="true" class="rk-b '+r.stav+(filtr&&filtr!==r.stav?' dim':'')+'" data-id="'+r.id+'" style="left:'+(a*W+2)+'px;width:'+((b-a)*W-4)+'px" title="'+esc(r.jmeno+' · '+KR(r.od)+' – '+KR(r.do)+' · '+R.STAVY[r.stav])+'">'+esc(r.jmeno)+'</button>'};
     var h='<div class="row rk-nav"><button type="button" class="btn sm gh" data-pos="-7" aria-label="O týden zpět">‹</button><b>'+KR(iso[0])+' – '+KR(iso[N-1])+' '+dny[N-1].getFullYear()+'</b><button type="button" class="btn sm gh" data-pos="7" aria-label="O týden dál">›</button><button type="button" class="btn sm gh" data-pos="0">Dnes</button>'+
       '<label class="row rk-go">Přejít na <input type="date" class="inp" id="rkd" value="'+iso[2]+'"></label>'+
       '<span class="rk-leg" role="group" aria-label="Zvýraznit stav">'+['pop','pot','zap','uby','blk'].map(function(s){return '<button type="button" class="rs '+s+(filtr===s?' on':'')+'" data-fl="'+s+'" aria-pressed="'+(filtr===s)+'">'+R.STAVY[s]+'</button>'}).join('')+'</span></div>'+
       '<div class="card rk"><div class="rk-in" style="width:'+(NW+N*W)+'px"><div class="rk-h"><div class="rk-n">'+MES[dny[0].getMonth()]+' '+dny[0].getFullYear()+'</div>'+dny.map(function(d,i){return '<div class="rk-d'+(iso[i]===dnes?' td':d.getDay()%6===0?' we':'')+'" style="width:'+W+'px"><small>'+DNY[d.getDay()]+'</small><b>'+d.getDate()+'</b></div>'}).join('')+'</div>';
     skupiny().forEach(function(g,gi,GA){var kl=g.c.map(function(c){return g.k+'-'+c}),zav=sbal[g.id];
       var vol=kl.filter(function(k){return !akt.some(function(r){return (r.mista||[]).indexOf(k)>=0&&r.od<=dnes&&dnes<r.do})}).length;
-      h+='<div class="rk-g"><span><button type="button" class="rk-gt" data-g="'+g.id+'" aria-expanded="'+!zav+'"><b>'+g.n+'</b> dnes v noci volné '+vol+' z '+kl.length+' · '+(zav?'rozbalit':'sbalit')+'</button>'+
-        '<button type="button" class="rk-mv" data-mv="'+g.id+'" data-d="-1"'+(gi?'':' disabled')+' aria-label="Posunout skupinu '+g.n+' výš">↑</button><button type="button" class="rk-mv" data-mv="'+g.id+'" data-d="1"'+(gi<GA.length-1?'':' disabled')+' aria-label="Posunout skupinu '+g.n+' níž">↓</button>'+(kl.length>1?'<button type="button" class="rk-mv" data-ob="'+g.id+'" aria-label="Obrátit pořadí čísel ve skupině '+g.n+'" title="Obrátit pořadí čísel">⇅</button>':'')+'</span></div>';
+      h+='<div class="rk-g" data-gid="'+g.id+'"><span><button type="button" class="rk-dg" draggable="true" data-dg="'+g.id+'" aria-label="Přesunout skupinu '+g.n+' – táhněte myší, nebo šipkami nahoru a dolů" title="Chytněte a přetáhněte skupinu jinam">⠿</button><button type="button" class="rk-gt" data-g="'+g.id+'" aria-expanded="'+!zav+'"><b>'+g.n+'</b> dnes v noci volné '+vol+' z '+kl.length+' · '+(zav?'rozbalit':'sbalit')+'</button>'+
+        (kl.length>1?'<button type="button" class="rk-mv" data-ob="'+g.id+'" aria-label="Obrátit pořadí čísel ve skupině '+g.n+'" title="Obrátit pořadí čísel">⇅</button>':'')+'</span></div>';
       if(!zav)kl.forEach(function(k){h+='<div class="rk-r"><div class="rk-n">'+R.nazev(k).replace('Podsadový stan','Stan')+'</div><div class="rk-t" data-m="'+k+'" style="width:'+N*W+'px;background:'+bg+'">'+akt.filter(function(r){return (r.mista||[]).indexOf(k)>=0}).map(pruh).join('')+'</div></div>'})});
     h+='<div class="rk-g st"><span><b>Bez čísla místa</b> počet na každou noc</span></div>';
     [['stan','Vlastní stany'],['karavan','Karavany']].forEach(function(t){
       h+='<div class="rk-r"><div class="rk-n">'+t[1]+'</div>'+iso.map(function(d){var s=0;akt.forEach(function(r){if(r.dalsi&&r.dalsi[t[0]]&&r.od<=d&&d<r.do)s+=+r.dalsi[t[0]]});return '<div class="rk-c" style="width:'+W+'px">'+(s||'')+'</div>'}).join('')+'</div>'});
-    return h+'</div></div><p class="mut rk-p">Šipkami u názvu skupiny změníte pořadí skupin, tlačítkem ⇅ obrátíte pořadí čísel. Pruh zabírá všechny noci pobytu, den odjezdu je už volný pro dalšího hosta. Kliknutím na pruh otevřete rezervaci, kliknutím na volné políčko založíte novou.</p>';
+    return h+'</div></div><p class="mut rk-p">Rezervaci přesunete tak, že její pruh chytnete myší a přetáhnete na jinou chatku nebo jiný den. Pořadí skupin změníte přetažením za úchyt ⠿ u názvu, tlačítkem ⇅ obrátíte pořadí čísel. Pruh zabírá všechny noci pobytu, den odjezdu je už volný pro dalšího hosta. Kliknutím na pruh otevřete rezervaci, kliknutím na volné políčko založíte novou.</p>';
   }
   function sez(A){
     var L=A.slice().sort(function(a,b){return a.od<b.od?-1:a.od>b.od?1:0}).filter(function(r){return !filtr||r.stav===filtr});
@@ -483,7 +489,6 @@ function rezervace(m){
       else if(s.pos!=null){zac=+s.pos?ADD(zac,+s.pos):ADD(D0(dnes),-2);kresli()}
       else if(s.fl){filtr=filtr===s.fl?'':s.fl;kresli()}
       else if(s.g){sbal[s.g]=!sbal[s.g];kresli()}
-      else if(s.mv){var n=R.nast(),po=skupiny().map(function(g){return g.id}),i=po.indexOf(s.mv),j=i+ +s.d;if(j>=0&&j<po.length){po.splice(j,0,po.splice(i,1)[0]);n.poradi=po;R.ulozNast(n);kresli();var fb=$('[data-mv="'+s.mv+'"][data-d="'+s.d+'"]',box);if(fb&&!fb.disabled)fb.focus()}}
       else if(s.ob){var n2=R.nast();n2.obr=n2.obr||{};n2.obr[s.ob]=!n2.obr[s.ob];R.ulozNast(n2);kresli()}
       else if(s.nm)form(null,{mista:[s.nm]});
       else if(s.a==='nova')form(null);
@@ -492,6 +497,23 @@ function rezervace(m){
       else if(s.a==='vymaz'&&confirm('Opravdu smazat všechny rezervace i blokace? Nejde to vrátit.')){R.vymaz();KK.zaznam('Rezervace','vše smazáno');kresli();toast('Rezervace smazány.')}
       return}
     if(t.classList.contains('rk-t')){var d=ADD(zac,Math.floor(e.offsetX/W));form(null,{mista:[t.dataset.m],od:ISO(d),do:ISO(ADD(d,1))})}});
+  /* přetahování: pruh rezervace na jiné místo / den, skupina na jiné pořadí */
+  var tah=null,zrus=function(){$$('.dp',box).forEach(function(x){x.classList.remove('dp')})};
+  function presunSkupinu(id,pred,za){var n=R.nast(),po=skupiny().map(function(g){return g.id}),i=po.indexOf(id);if(i<0||id===pred)return;po.splice(i,1);var j=po.indexOf(pred);po.splice(za?j+1:j,0,id);n.poradi=po;R.ulozNast(n);kresli()}
+  box.addEventListener('dragstart',function(e){var b=e.target.closest&&e.target.closest('.rk-b,.rk-dg');if(!b)return;
+    if(b.dataset.dg)tah={g:b.dataset.dg};else{var r=najdi(b.dataset.id);if(!r)return;tah={id:r.id,m:b.parentNode.dataset.m,off:Math.floor(e.offsetX/W)+Math.max(0,-Math.round((D0(r.od)-zac)/864e5))}}
+    e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',b.dataset.id||b.dataset.dg)}catch(x){}});
+  box.addEventListener('dragover',function(e){if(!tah)return;var c=e.target.closest(tah.g?'.rk-g[data-gid]':'.rk-t');if(!c)return;e.preventDefault();e.dataTransfer.dropEffect='move';if(!c.classList.contains('dp')){zrus();c.classList.add('dp')}});
+  box.addEventListener('dragend',function(){tah=null;zrus()});
+  box.addEventListener('drop',function(e){if(!tah)return;var T=tah;tah=null;zrus();
+    if(T.g){var c=e.target.closest('.rk-g[data-gid]');if(!c)return;e.preventDefault();var po=skupiny().map(function(g){return g.id});presunSkupinu(T.g,c.dataset.gid,po.indexOf(T.g)<po.indexOf(c.dataset.gid));return}
+    var t=e.target.closest('.rk-t');if(!t)return;e.preventDefault();var r=najdi(T.id);if(!r)return;
+    var i=Math.floor((e.clientX-t.getBoundingClientRect().left)/W)-T.off,n=noci(r),od=ISO(ADD(zac,i)),dk=ISO(ADD(zac,i+n)),m=t.dataset.m;
+    if(od===r.od&&m===T.m)return;
+    if(m!==T.m&&(r.mista||[]).indexOf(m)>=0){toast('Tato rezervace už '+R.nazev(m)+' obsahuje.',1);return}
+    try{var x=R.uprav(r.id,{od:od,do:dk,mista:(r.mista||[]).map(function(k){return k===T.m?m:k})});KK.zaznam('Rezervace',(x.cislo||'')+' '+x.jmeno+' – přesunuto');kresli();toast(x.jmeno+': '+R.nazev(m)+', '+KR(od)+' – '+KR(dk))}catch(q){toast(q.message,1)}});
+  box.addEventListener('keydown',function(e){var b=e.target;if(!b.dataset||!b.dataset.dg||(e.key!=='ArrowUp'&&e.key!=='ArrowDown'))return;e.preventDefault();
+    var po=skupiny().map(function(g){return g.id}),i=po.indexOf(b.dataset.dg),j=i+(e.key==='ArrowUp'?-1:1);if(j<0||j>=po.length)return;presunSkupinu(b.dataset.dg,po[j],j>i);var f=$('[data-dg="'+b.dataset.dg+'"]',box);if(f)f.focus()});
   box.addEventListener('change',function(e){var t=e.target;
     if(t.id==='rkd'&&t.value){zac=ADD(D0(t.value),-2);kresli()}
     else if(t.id==='rsf'){filtr=t.value;kresli()}
