@@ -417,3 +417,24 @@ table.rlt{min-width:620px}.rlt tbody tr:not(.rl-m){cursor:pointer}
 .btn[data-qs][data-st="odj"]{background:var(--deep);border-color:var(--deep);color:#fff}
 .btn[data-qs][data-st="odj"]::before{content:"←"}
 .btn[data-qs][data-st="odj"]:hover{background:var(--deep2);border-color:var(--deep2);color:#fff}
+
+/* nastavení: co se rezervuje */
+.rco-l{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.rco-l li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#faf8f3}
+.rco-l li.on{background:#fff;border-color:#cfe3d6}
+.rco-l b{display:block}.rco-l small{color:var(--mut);font-size:13px}.rco-l li.on small{color:var(--ok);font-weight:700}
+.rsw{position:relative;display:inline-block;width:46px;height:26px;flex:none;cursor:pointer}
+.rsw input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.rsw i{position:absolute;inset:0;border-radius:99px;background:#cfc8b8;transition:background .15s}
+.rsw i::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+.rsw input:checked+i{background:var(--ok)}.rsw input:checked+i::after{transform:translateX(20px)}
+.rsw input:focus-visible+i{outline:3px solid var(--sun);outline-offset:2px}
+.rsw input:disabled+i{opacity:.5}
+.rco-g{margin-top:10px}.rco-g small{display:block;font-weight:700;color:var(--mut);font-size:12.5px;margin-bottom:6px}
+.rco-g>div{display:flex;flex-wrap:wrap;gap:6px}
+.rco-m{min-width:40px;height:36px;padding:0 10px;border-radius:9px;border:1.5px solid #cfe3d6;background:#fff;color:var(--deep);font:inherit;font-weight:800;cursor:pointer}
+.rco-m:hover{border-color:var(--ok)}
+.rco-m.off{background:#f1ede4;border-color:var(--line);color:#9a9384;text-decoration:line-through}
+.rn.off{background:repeating-linear-gradient(135deg,#f3efe6 0 6px,#ebe5d8 6px 12px);border-color:var(--line);color:#9a9384;cursor:default}
+.rk-r.off .rk-n{color:#9a9384}.rk-r.off .rk-n small{display:block;font-size:11px;font-weight:600}
+.rk-r.off .rk-t{background-image:repeating-linear-gradient(135deg,rgba(0,0,0,.035) 0 6px,transparent 6px 12px)!important}

@@ -155,6 +155,9 @@ var R=window.KKR={
  /* stav nové rezervace z webu: potvrzená jen když všechna vybraná místa mají okamžitou rezervaci */
  stavWeb:function(mista){var z=R.nast().rezim;return mista&&mista.length&&mista.every(function(m){return z[m.split('-')[0]]==='ihned'})?'pot':'pop'},
  ulozNast:function(n){pis(KN,n)},
+ /* místa vypnutá z rezervace (personál, oprava) a typy, které se nerezervují */
+ vyp:function(){var v=R.nast().vyp;return Array.isArray(v)?v:[]},
+ rezTyp:function(k){var p=window.KKC&&KKC.p(k);return !p||p.rez!==0},
  vse:function(){return cti(K,[]).map(function(r){if(r.stav==='zap')r.stav='pot';return r})}, /* zálohy se neplatí – dřívější stav 'zap' se bere jako potvrzená */
  noci:function(od,dk){var r=[],d=D(od),e=D(dk);while(d<e&&r.length<400){r.push(I(d));d.setDate(d.getDate()+1)}return r},
  obsazeno:function(krome){var o={};R.vse().forEach(function(r){if(r.stav==='zru'||r.id===krome)return;var n=R.noci(r.od,r.do);(r.mista||[]).forEach(function(m){o[m]=(o[m]||[]).concat(n)})});return o},
