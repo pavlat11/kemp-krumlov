@@ -365,3 +365,20 @@ button.rs{min-height:34px;cursor:pointer;border-color:var(--line);background:#ff
 table.rlt{min-width:620px}.rlt tbody tr:not(.rl-m){cursor:pointer}
 .rl-j{border:0;background:none;padding:0;font:inherit;font-weight:700;font-size:15px;color:var(--deep);cursor:pointer;text-align:left}.rl-j:hover{text-decoration:underline}.rl-j:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
 .rlt tr:has(.rl-j.sel) td{background:#f4eedf}.rlt td small{white-space:nowrap}
+/* Kdo kde dnes je – větší stejné kostičky, 5 v řadě, skupiny vedle sebe */
+.rn-w{background:none;border:0;padding:0;margin-top:22px}.rn-hd{margin-bottom:10px}.rn-hd h2{font-size:17px}
+.rn-leg .popt{background:#fff;box-shadow:inset 0 0 0 2px #e08a1e}
+.rn-sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,540px),1fr));gap:14px;align-items:start}
+.rn-s{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:0}.rn-s h3{margin:0 0 10px;font-size:12.5px}
+.rn-g{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.rn,.rn.vol,.rn.obs,.rn.ceka,.rn.popt,.rn.blk{display:flex;flex-direction:column;align-items:flex-start;gap:1px;height:92px;padding:8px 10px;border-radius:12px;border:1.5px solid var(--line);background:#fff;box-shadow:none}
+.rn-c{font-size:20px;line-height:1.15;min-width:0;text-align:left}
+.rn b{font-size:13.5px;max-width:100%}.rn small{font-size:11.5px;max-width:100%;opacity:.85}
+.rn em{margin-top:auto;font-style:normal;font-size:10.5px;font-weight:800;line-height:1.5;padding:0 6px;border-radius:6px;background:var(--sun);color:var(--deep);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rn.vol{border-style:dashed;border-color:#d5ddd7}.rn.vol b{color:#8b948e;font-weight:500;font-size:13px}
+.rn.obs{background:var(--deep2);border-color:var(--deep2);color:#fff}
+.rn.ceka{background:#dcebed;border-color:#dcebed;color:#12414f;box-shadow:none}
+.rn.popt{background:#fff;border-color:#e08a1e;color:var(--warn)}
+.rn.blk{background:repeating-linear-gradient(135deg,#f0ede6 0 6px,#e1dcd0 6px 12px);border-color:#e1dcd0;color:#4a534d}
+.rn-leg .ceka{background:#dcebed;box-shadow:none}
+@media(max-width:760px){.rn-g{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}}
