@@ -141,3 +141,5 @@ Upravují se v Rezervace → Nastavení → Šablony e-mailů a ukládají se do
 | `kemp` | `emailKemp` (jen česky) | každá nová rezervace z webu |
 
 Zástupné údaje: `{jmeno} {cislo} {od} {do} {noci} {mista} {osoby} {cena} {telefon} {email} {zprava} {stav}`. Dosazení dělá `KKR.dosad(text, rezervace, jazyk)` – server musí dělat totéž (formát data `d. m. rrrr`, názvy míst a množná čísla podle jazyka). E-mail hostovi se posílá jen když vyplnil e-mail.
+
+E-mail se posílá jako HTML (a text šablony zároveň jako textová verze). Grafický rám dělá `KKR.emailHtml(druh, jazyk, predmet, text, rezervace)`: hlavička kempu, barevný pruh podle druhu, nadpis, odstavce, bloky řádků „Popisek: hodnota“ se vykreslí jako tabulka, dole kontakty z `KKR.KONTAKT`. Server může tuto funkci převzít 1:1 (např. jako Blade šablonu).

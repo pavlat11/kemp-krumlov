@@ -436,8 +436,8 @@ function rezervace(m){
       '<label class="sb-l">Text e-mailu<textarea class="inp" id="sbt" rows="14"'+dis+'>'+esc(s.text)+'</textarea></label>'+
       '<div class="sb-pol"><small>Vložit údaj z rezervace (klikněte, vloží se tam, kde je kurzor):</small><div>'+R.SABL_POLE.map(function(x){return '<button type="button" class="sb-ch" data-sv="{'+x[0]+'}"'+dis+'>'+x[1]+'</button>'}).join('')+'</div></div>'+
       '<div class="row sb-akce">'+(adm?'<button type="button" class="btn pri" data-a="sbuloz">Uložit šablonu</button>'+(s.upravena?'<button type="button" class="btn gh" data-a="sbvych">Vrátit výchozí znění</button>':''):'<p class="mut">Měnit šablony smí jen správce.</p>')+'</div>'+
-      '<div class="sb-nh"><small>Náhled s ukázkovými údaji</small><div class="sb-nh-p" id="sbnp"></div><pre class="sb-nh-t" id="sbnt"></pre></div>'}
-  function sbNahled(){var p=$('#sbp',box),t=$('#sbt',box);if(!p)return;var v=sbVzor();$('#sbnp',box).textContent=R.dosad(p.value,v,sbJ);$('#sbnt',box).textContent=R.dosad(t.value,v,sbJ)}
+      '<div class="sb-nh"><small>Náhled e-mailu s ukázkovými údaji</small><div class="sb-nh-p"><span>Předmět:</span> <b id="sbnp"></b></div><iframe class="sb-if" id="sbif" title="Náhled e-mailu"></iframe></div>'}
+  function sbNahled(){var p=$('#sbp',box),t=$('#sbt',box);if(!p)return;var v=sbVzor();$('#sbnp',box).textContent=R.dosad(p.value,v,sbJ);var f=$('#sbif',box);f.srcdoc=R.emailHtml(sbT,sbJ,p.value,t.value,v);f.onload=function(){try{f.style.height=(f.contentDocument.documentElement.scrollHeight+4)+'px'}catch(x){}}}
   function sbKresli(){var e=$('#sbed',box);if(!e)return;e.innerHTML=sbHtml();$$('[data-sb]',box).forEach(function(b){b.setAttribute('aria-selected',b.dataset.sb===sbT)});sbNahled()}
   function sbZmena(){var p=$('#sbp',box),t=$('#sbt',box);if(!p)return false;var s=R.sablona(sbT,sbJ);return p.value!==s.predmet||t.value!==s.text}
   function sbPrepni(fn){if(!sbZmena()){fn();return}ptej('Šablona má neuložené změny\n\nChcete je uložit?',{ok:'Uložit',ne:'Zahodit'}).then(function(ok){if(ok)sbUloz(1);fn()})}
@@ -753,7 +753,7 @@ function rezervace(m){
   box.addEventListener('keydown',function(e){var b=e.target;if(!b.dataset||!b.dataset.dg||(e.key!=='ArrowUp'&&e.key!=='ArrowDown'))return;e.preventDefault();
     var po=skupiny().map(function(g){return g.id}),i=po.indexOf(b.dataset.dg),j=i+(e.key==='ArrowUp'?-1:1);if(j<0||j>=po.length)return;presunSkupinu(b.dataset.dg,po[j],j>i);var f=$('[data-dg="'+b.dataset.dg+'"]',box);if(f)f.focus()});
   box.addEventListener('input',function(e){var t=e.target;if(t.id!=='rq')return;q=t.value.trim()?t.value:'';lim=100;var p=t.selectionStart;kresli();var n=$('#rq',box);n.focus();try{n.setSelectionRange(p,p)}catch(x){}});
-  box.addEventListener('input',function(e){if(e.target.id==='sbp'||e.target.id==='sbt')sbNahled()});
+  var sbTm;box.addEventListener('input',function(e){if(e.target.id==='sbp'||e.target.id==='sbt'){clearTimeout(sbTm);sbTm=setTimeout(sbNahled,350)}});
   box.addEventListener('focusin',function(e){if(e.target.id==='sbp'||e.target.id==='sbt')sbF=e.target});
   box.addEventListener('change',function(e){var t=e.target;
     if(t.id==='sbem'){var v=t.value.trim();if(v&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){toast('Zkontrolujte e-mail.',1);return}var n=R.nast();n.emailKemp=v;R.ulozNast(n);KK.zaznam('Rezervace','e-mail pro upozornění: '+(v||'–'));toast('Uloženo.');return}

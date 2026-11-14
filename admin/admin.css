@@ -639,3 +639,5 @@ table.rlt{width:100%;min-width:900px;border-collapse:separate;border-spacing:0}
 .rbl-t{min-width:0}.rbl-t small{overflow-wrap:anywhere}
 .rm-vse{gap:6px;margin:2px 0 6px}
 .rz-top .rq{flex:1 1 220px}.rz-top .rq .inp{min-height:46px;font-size:16px;border-radius:12px}.rz-top .rq svg{width:20px;height:20px}
+.sb-nh-p span{color:var(--mut);font-weight:400}
+.sb-if{display:block;width:100%;min-height:520px;border:0;border-radius:10px;background:#efe9dc}
