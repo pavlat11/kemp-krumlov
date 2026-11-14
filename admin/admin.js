@@ -410,8 +410,9 @@ function rezervace(m){
       '<section class="rn-w"><div class="rn-hd"><h2>Kdo kde dnes je</h2><span class="rn-leg" aria-hidden="true"><i class="obs"></i>ubytovaný<i class="ceka"></i>čeká na příjezd<i class="popt"></i>nepotvrzená poptávka<i class="vol"></i>volno<i class="blk"></i>blokace</span></div>'+'<div class="rn-sg">'+mapa+'</div>'+
       '<p class="mut rn-p">Hosta přestěhujete přetažením na jiné místo. Kliknutím na volné místo založíte rezervaci.</p></section>';
   }
+  var rzT,rzW=0;window.addEventListener('resize',function(){clearTimeout(rzT);rzT=setTimeout(function(){if(!document.body.contains(box)||tab!=='kal'||box.clientWidth===rzW)return;rzW=box.clientWidth;kresli()},150)});
   function kal(akt){
-    N=+KK.LS.get('rez.dni',31)||31;W=Math.max(N>31?16:26,Math.min(48,Math.floor((box.clientWidth-NW-22)/N)));
+    N=+KK.LS.get('rez.dni',31)||31;W=Math.max(N>31?16:26,Math.min(240,Math.floor((box.clientWidth-NW-22)/N)));
     var dny=[],i;for(i=0;i<N;i++)dny.push(ADD(zac,i));var iso=dny.map(ISO),m1=MES[dny[0].getMonth()],m2=MES[dny[N-1].getMonth()];
     var vrst=['repeating-linear-gradient(90deg,transparent 0 '+(W-1)+'px,#ece7dc '+(W-1)+'px '+W+'px)'];
     dny.forEach(function(d,i){var t=iso[i]===dnes,c=t?'rgba(244,166,74,.28)':(d.getDay()%6===0?'#f6f1e6':'');if(c)vrst[t?'unshift':'push']('linear-gradient('+c+','+c+') no-repeat '+i*W+'px 0/'+W+'px 100%')});
@@ -421,7 +422,7 @@ function rezervace(m){
       return '<button type="button" draggable="true" class="rk-b '+r.stav+(filtr&&filtr!==r.stav?' dim':'')+'" data-id="'+r.id+'" style="left:'+(a*W+2)+'px;width:'+((b-a)*W-4)+'px" aria-label="'+esc(r.jmeno+', '+KR(r.od)+' – '+KR(r.do)+', '+R.STAVY[r.stav])+'">'+esc(r.jmeno)+'</button>'};
     var h='<div class="row rk-nav"><button type="button" class="btn sm gh" data-pos="'+(N>31?-28:-7)+'" aria-label="Zpět">‹</button><b>'+KR(iso[0])+' – '+KR(iso[N-1])+' '+dny[N-1].getFullYear()+'</b><button type="button" class="btn sm gh" data-pos="'+(N>31?28:7)+'" aria-label="Dál">›</button><button type="button" class="btn sm gh" data-pos="0">Dnes</button>'+
       '<label class="row rk-go">Přejít na <input type="date" class="inp" id="rkd" value="'+iso[2]+'"></label>'+
-      '<label class="row rk-go">Zobrazit <select class="inp" id="rkn">'+[[14,'2 týdny'],[21,'3 týdny'],[31,'měsíc'],[62,'2 měsíce'],[92,'3 měsíce']].map(function(o){return '<option value="'+o[0]+'"'+(N===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label>'+
+      '<label class="row rk-go">Zobrazit <select class="inp" id="rkn">'+[[7,'1 týden'],[14,'2 týdny'],[21,'3 týdny'],[31,'měsíc'],[62,'2 měsíce'],[92,'3 měsíce']].map(function(o){return '<option value="'+o[0]+'"'+(N===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label>'+
       '<span class="rk-leg" role="group" aria-label="Zvýraznit stav">'+['pop','pot','uby','blk'].map(function(s){return '<button type="button" class="rs '+s+(filtr===s?' on':'')+'" data-fl="'+s+'" aria-pressed="'+(filtr===s)+'">'+R.STAVY[s]+'</button>'}).join('')+'</span></div>'+
       '<div class="card rk'+(W<30?' uz':'')+(W<22?' uz2':'')+'"><div class="rk-in" style="width:'+(NW+N*W)+'px"><div class="rk-h"><div class="rk-n">'+(m1===m2?m1:m1+' – '+m2)+' '+dny[N-1].getFullYear()+'</div>'+dny.map(function(d,i){return '<div class="rk-d'+(iso[i]===dnes?' td':d.getDay()%6===0?' we':'')+(d.getDate()===1&&i?' m1':'')+'" style="width:'+W+'px"'+(d.getDate()===1?' title="'+MES[d.getMonth()]+'"':'')+'><small>'+DNY[d.getDay()]+'</small><b>'+d.getDate()+'</b></div>'}).join('')+'</div>';
     skupiny().forEach(function(g,gi,GA){var kl=g.c.map(function(c){return g.k+'-'+c}),zav=sbal[g.id];
