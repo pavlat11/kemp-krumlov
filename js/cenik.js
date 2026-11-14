@@ -168,6 +168,8 @@ var R=window.KKR={
  uprav:function(id,z){var a=R.vse(),r=a.filter(function(x){return x.id===id})[0];if(!r)throw new Error('Rezervace nenalezena.');var n=Object.assign({},r,z);
   if(n.stav!=='zru'){var k=R.kolize(n.mista,n.od,n.do,id);if(k.length)throw new Error('V tomto termínu je obsazeno: '+k.map(R.nazev).join(', ')+'.')}
   Object.assign(r,z);pis(K,a);return r},
+ /* ubytovaní hosté, kterým už uplynul den odjezdu, se sami přepnou na „Odjel“ (zapomenuté odhlášení); vrací počet */
+ auto:function(dnes){var a=R.vse(),n=0;a.forEach(function(r){if(r.stav==='uby'&&r.do&&r.do<dnes){r.stav='odj';r.hist=(r.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Automaticky odhlášen (odjezd '+r.do+' už uplynul)'}]).slice(-30);n++}});if(n)pis(K,a);return n},
  smaz:function(id){pis(K,R.vse().filter(function(x){return x.id!==id}))},
  vymaz:function(){pis(K,[])},
  /* TESTOVACÍ DATA pro náhled – před ostrým provozem smazat (i automatické vložení níže).

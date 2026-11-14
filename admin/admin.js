@@ -135,6 +135,7 @@ function prehled(m){
     var hes=jaP&&jaP.vychozi?'':'';
     var prov='';
     if(rez){
+      R.auto(dnes);
       var A=R.vse().filter(function(x){return x.stav!=='zru'}),H=A.filter(function(x){return x.stav!=='blk'}),vyp=R.vyp();
       var mista=[].concat.apply([],R.SKUPINY.filter(function(g){return R.rezTyp(g.k)}).map(function(g){return g.c.map(function(c){return g.k+'-'+c})})).filter(function(k){return vyp.indexOf(k)<0});
       var obs=function(den){var u={};A.forEach(function(x){if(x.od<=den&&den<x.do)(x.mista||[]).forEach(function(k){u[k]=1})});return mista.filter(function(k){return u[k]}).length};
@@ -405,7 +406,7 @@ function rezervace(m){
   var D0=function(s){var p=s.split('-');return new Date(+p[0],p[1]-1,+p[2])},ISO=function(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)};
   var ADD=function(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x},KR=function(s){var d=D0(s);return d.getDate()+'. '+(d.getMonth()+1)+'.'};
   var DNY=['Ne','Po','Út','St','Čt','Pá','So'],MES=['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
-  var dnes=ISO(new Date()),zac=ADD(D0(dnes),-2),tab=KK.LS.get('rez.tab','dnes'),denP=dnes,filtr='',sbal={},rozb={};
+  var dnes=ISO(new Date()),zac=ADD(D0(dnes),-2),autoN=R.auto(dnes),tab=KK.LS.get('rez.tab','dnes'),denP=dnes,filtr='',sbal={},rozb={};
   var F0={stav:'',obd:'bud',typ:'',zdroj:'',raz:'od',od:'',do:''},F=Object.assign({},F0),q='',lim=100,posl=[];
   /* skupiny v pořadí a směru, jaké si obsluha nastavila */
   var skupiny=function(){var n=R.nast(),po=n.poradi2||[];return R.SKUPINY.filter(function(g){return R.rezTyp(g.k)}).sort(function(a,b){var x=po.indexOf(a.id),y=po.indexOf(b.id);return (x<0?99:x)-(y<0?99:y)})};
@@ -729,6 +730,7 @@ function rezervace(m){
     else if(t.dataset.rt){var k=t.dataset.rt,on=t.checked;KK.cenik.nacti().then(function(c){c=c||JSON.parse(JSON.stringify(KKC.vychozi));var p=(c.polozky||[]).filter(function(x){return x.k===k})[0];if(!p){p=JSON.parse(JSON.stringify(KKC.p(k)));c.polozky.push(p)}p.rez=on?1:0;return KK.cenik.uloz(c)}).then(function(){var p=KKC.p(k);if(p)p.rez=on?1:0;KK.zaznam('Rezervace',(KKC.p(k)||{}).n+': '+(on?'rezervace zapnutá':'bez rezervace'));toast(on?'Rezervace zapnutá.':'Vypnuto – na webu bude „stačí přijet“.');kresli()}).catch(function(x){toast(x.message,1)})}
     else if(/^rezim-/.test(t.name)){var n=R.nast(),k=t.name.slice(6);n.rezim[k]=t.value;R.ulozNast(n);KK.zaznam('Rezervace','režim '+k+': '+(t.value==='ihned'?'okamžitá rezervace':'poptávka'));toast('Uloženo – platí pro nové rezervace z webu.')}});
   kresli();
+  if(autoN)setTimeout(function(){toast(autoN+' '+pl(autoN,'host po odjezdu byl automaticky odhlášen','hosté po odjezdu byli automaticky odhlášeni','hostů po odjezdu bylo automaticky odhlášeno')+'.')},400);
 }
 
 /* ---------- NASTAVENÍ ---------- */
