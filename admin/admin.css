@@ -405,18 +405,18 @@ table.rlt{min-width:620px}.rlt tbody tr:not(.rl-m){cursor:pointer}
 .rn-leg::after{content:"● přijíždí dnes";color:var(--warn);margin-left:12px;font-weight:700}
 @media(max-width:1100px){.rn-s{grid-template-columns:1fr;gap:8px}.rn-s h3{flex-direction:row;gap:10px;align-items:baseline}.rn-g{grid-template-columns:repeat(auto-fill,minmax(84px,1fr))}}
 
-/* rychlé akce rezervací – každá má vlastní barvu a značku */
-.btn[data-qs]{border-width:1.5px;font-weight:800;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
-.btn[data-qs]::before{font-size:14px;line-height:1;font-weight:900}
-.btn[data-qs][data-st="pot"]{background:#fff;border-color:#e08a1e;color:var(--warn)}
-.btn[data-qs][data-st="pot"]::before{content:"✓"}
-.btn[data-qs][data-st="pot"]:hover{background:var(--warnBg);border-color:#e08a1e;color:var(--warn)}
-.btn[data-qs][data-st="uby"]{background:var(--ok);border-color:var(--ok);color:#fff}
-.btn[data-qs][data-st="uby"]::before{content:"→"}
-.btn[data-qs][data-st="uby"]:hover{background:#256a40;border-color:#256a40;color:#fff}
-.btn[data-qs][data-st="odj"]{background:var(--deep);border-color:var(--deep);color:#fff}
-.btn[data-qs][data-st="odj"]::before{content:"←"}
-.btn[data-qs][data-st="odj"]:hover{background:var(--deep2);border-color:var(--deep2);color:#fff}
+/* akční tlačítka mají barvu stavu, do kterého rezervaci posunou (stejně jako legenda) */
+.btn[data-qs],.btn.rp-a[data-st]{border-width:1.5px;font-weight:800;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn[data-qs]::before,.btn.rp-a[data-st]::before{font-size:14px;line-height:1;font-weight:900}
+.btn[data-qs][data-st="pot"],.btn.rp-a[data-st="pot"]{background:#1f6d77;border-color:#1f6d77;color:#fff}
+.btn[data-qs][data-st="pot"]::before,.btn.rp-a[data-st="pot"]::before{content:"✓"}
+.btn[data-qs][data-st="pot"]:hover,.btn.rp-a[data-st="pot"]:hover{background:#185a62;border-color:#185a62;color:#fff}
+.btn[data-qs][data-st="uby"],.btn.rp-a[data-st="uby"]{background:var(--deep2);border-color:var(--deep2);color:#fff}
+.btn[data-qs][data-st="uby"]::before,.btn.rp-a[data-st="uby"]::before{content:"→"}
+.btn[data-qs][data-st="uby"]:hover,.btn.rp-a[data-st="uby"]:hover{background:var(--deep);border-color:var(--deep);color:#fff}
+.btn[data-qs][data-st="odj"],.btn.rp-a[data-st="odj"]{background:#fff;border-color:#c9c2b2;color:#3c4a42}
+.btn[data-qs][data-st="odj"]::before,.btn.rp-a[data-st="odj"]::before{content:"←"}
+.btn[data-qs][data-st="odj"]:hover,.btn.rp-a[data-st="odj"]:hover{background:#e4e0d6;border-color:#b3ab98;color:var(--deep)}
 
 /* nastavení: co se rezervuje */
 .rco-l{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
