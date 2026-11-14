@@ -439,3 +439,4 @@ table.rlt{min-width:620px}.rlt tbody tr:not(.rl-m){cursor:pointer}
 .rk-r.off .rk-n{color:#9a9384}.rk-r.off .rk-n small{display:block;font-size:11px;font-weight:600}
 .rk-r.off .rk-t{background-image:repeating-linear-gradient(135deg,rgba(0,0,0,.035) 0 6px,transparent 6px 12px)!important}
 .rnt .rnt-off td{color:#9a9384;font-size:13.5px}.rnt .rnt-off td b{color:#9a9384;text-decoration:line-through}
+.rn-w{margin-top:0;margin-bottom:16px}
