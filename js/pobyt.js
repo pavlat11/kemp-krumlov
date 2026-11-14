@@ -214,7 +214,7 @@ function render(){Object.keys(MISTA).forEach(k=>{S.c[k]=S.c[k].filter(n=>freeU(k
  $('rzN').textContent=R.n;$('rzNl').textContent=plural(R.n,'noc','noci','nocí');
  root.querySelectorAll('#rzQuick button').forEach(b=>b.classList.toggle('on',!!S.to&&+b.dataset.n===R.n));
  PEOPLE.forEach(r=>{r.st.upd();r.el.classList.toggle('has',S[r.k]>0)});
- TYPES.forEach(x=>{const q=S.q[x.k],fr=freeK(x.k);x.el.classList.toggle('on',q>0);x.el.classList.toggle('busy',!fr);x.el.querySelector('.tx b').dataset.obs=fr?'':KL.t('Ve vašem termínu obsazeno');x.el.querySelector('.n').textContent=q?q+'×':'';x.st.upd()});
+ TYPES.forEach(x=>{const q=S.q[x.k],fr=freeK(x.k);x.el.classList.toggle('on',q>0);x.el.classList.toggle('busy',!fr);x.el.querySelector('.tx b').dataset.obs=fr?'':KL.t('Plná kapacita – ve vašem termínu obsazeno');x.el.querySelector('.n').textContent=q?q+'×':'';x.st.upd()});
  $('rzTNote').hidden=true;
  TYPES.forEach(t=>{if(!t.pick)return;const c=S.c[t.k],o=!!(t.open||c.length);t.pick.hidden=!o;t.tg.setAttribute('aria-expanded',o);
   t.tg.textContent=c.length?KL.t('č.')+' '+c.join(', '):KL.t(t.k==='chatka'?'Vybrat číslo chatky':'Vybrat číslo stanu');
