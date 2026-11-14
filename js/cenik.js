@@ -154,6 +154,38 @@ var R=window.KKR={
  nast:function(){var n=cti(KN,{}),z=n.rezim,r={};['chatka','podsad','teepee','stan','karavan'].forEach(function(k){r[k]=(typeof z==='string'?z:(z||{})[k])==='ihned'?'ihned':'poptavka'});n.rezim=r;return n},
  /* stav nové rezervace z webu: potvrzená jen když všechna vybraná místa mají okamžitou rezervaci */
  stavWeb:function(mista,dalsi){var z=R.nast().rezim,k=[];(mista||[]).forEach(function(m){k.push(m.split('-')[0])});Object.keys(dalsi||{}).forEach(function(t){if(+dalsi[t]>0)k.push(t)});return k.length&&k.every(function(t){return z[t]==='ihned'})?'pot':'pop'},
+ /* ---- šablony e-mailů (úprava v Rezervace → Nastavení; server je použije při odesílání) ---- */
+ SABL_TYPY:[
+  {k:'poptavka',n:'Poptávka přijata',kdo:'host',kdy:'Host odešle poptávku z webu (typ, který potvrzuje obsluha).'},
+  {k:'rezervace',n:'Rezervace potvrzena',kdo:'host',kdy:'Okamžitá rezervace z webu, nebo když obsluha převede poptávku na rezervaci.'},
+  {k:'zruseno',n:'Rezervace zrušena',kdo:'host',kdy:'Obsluha rezervaci nebo poptávku zruší.'},
+  {k:'kemp',n:'Upozornění pro kemp',kdo:'kemp',kdy:'Přijde vám při každé nové poptávce nebo rezervaci z webu.'}],
+ SABL_POLE:[['jmeno','Jméno hosta'],['cislo','Číslo rezervace'],['od','Příjezd'],['do','Odjezd'],['noci','Počet nocí'],['mista','Ubytování'],['osoby','Osoby'],['cena','Cena'],['telefon','Telefon'],['email','E-mail hosta'],['zprava','Zpráva od hosta'],['stav','Stav']],
+ SABL_VYCH:{
+  poptavka:{
+   cs:{predmet:'Poptávka {cislo} – Kemp Krumlov',text:'Dobrý den, {jmeno},\n\nděkujeme za vaši poptávku. Termín vám zatím držíme, ale rezervace ještě není potvrzená – ozveme se vám co nejdříve.\n\nČíslo poptávky: {cislo}\nTermín: {od} – {do} ({noci})\nUbytování: {mista}\nOsoby: {osoby}\nOrientační cena: {cena}\n\nKdyž budete potřebovat cokoli změnit, stačí odpovědět na tento e-mail.\n\nS pozdravem\nKemp Krumlov'},
+   en:{predmet:'Inquiry {cislo} – Kemp Krumlov',text:'Hello {jmeno},\n\nthank you for your inquiry. We are holding the dates for you, but the booking is not confirmed yet – we will get back to you as soon as possible.\n\nInquiry number: {cislo}\nDates: {od} – {do} ({noci})\nAccommodation: {mista}\nGuests: {osoby}\nEstimated price: {cena}\n\nIf you need to change anything, just reply to this e-mail.\n\nBest regards\nKemp Krumlov'},
+   de:{predmet:'Anfrage {cislo} – Kemp Krumlov',text:'Guten Tag {jmeno},\n\nvielen Dank für Ihre Anfrage. Wir halten den Termin für Sie frei, die Reservierung ist aber noch nicht bestätigt – wir melden uns so bald wie möglich.\n\nAnfragenummer: {cislo}\nTermin: {od} – {do} ({noci})\nUnterkunft: {mista}\nPersonen: {osoby}\nVoraussichtlicher Preis: {cena}\n\nWenn Sie etwas ändern möchten, antworten Sie einfach auf diese E-Mail.\n\nMit freundlichen Grüßen\nKemp Krumlov'}},
+  rezervace:{
+   cs:{predmet:'Rezervace {cislo} potvrzena – Kemp Krumlov',text:'Dobrý den, {jmeno},\n\nvaše rezervace je potvrzená. Těšíme se na vás!\n\nČíslo rezervace: {cislo}\nTermín: {od} – {do} ({noci})\nUbytování: {mista}\nOsoby: {osoby}\nCena: {cena} (platí se na místě)\n\nKdyž budete potřebovat cokoli změnit nebo zrušit, stačí odpovědět na tento e-mail.\n\nS pozdravem\nKemp Krumlov'},
+   en:{predmet:'Booking {cislo} confirmed – Kemp Krumlov',text:'Hello {jmeno},\n\nyour booking is confirmed. We look forward to seeing you!\n\nBooking number: {cislo}\nDates: {od} – {do} ({noci})\nAccommodation: {mista}\nGuests: {osoby}\nPrice: {cena} (paid on site)\n\nIf you need to change or cancel anything, just reply to this e-mail.\n\nBest regards\nKemp Krumlov'},
+   de:{predmet:'Reservierung {cislo} bestätigt – Kemp Krumlov',text:'Guten Tag {jmeno},\n\nIhre Reservierung ist bestätigt. Wir freuen uns auf Sie!\n\nReservierungsnummer: {cislo}\nTermin: {od} – {do} ({noci})\nUnterkunft: {mista}\nPersonen: {osoby}\nPreis: {cena} (Zahlung vor Ort)\n\nWenn Sie etwas ändern oder stornieren möchten, antworten Sie einfach auf diese E-Mail.\n\nMit freundlichen Grüßen\nKemp Krumlov'}},
+  zruseno:{
+   cs:{predmet:'Rezervace {cislo} zrušena – Kemp Krumlov',text:'Dobrý den, {jmeno},\n\nvaše rezervace {cislo} na termín {od} – {do} byla zrušena.\n\nPokud jde o omyl nebo si chcete vybrat jiný termín, odpovězte prosím na tento e-mail.\n\nS pozdravem\nKemp Krumlov'},
+   en:{predmet:'Booking {cislo} cancelled – Kemp Krumlov',text:'Hello {jmeno},\n\nyour booking {cislo} for {od} – {do} has been cancelled.\n\nIf this is a mistake or you would like to choose other dates, please reply to this e-mail.\n\nBest regards\nKemp Krumlov'},
+   de:{predmet:'Reservierung {cislo} storniert – Kemp Krumlov',text:'Guten Tag {jmeno},\n\nIhre Reservierung {cislo} für {od} – {do} wurde storniert.\n\nFalls es sich um einen Irrtum handelt oder Sie einen anderen Termin wählen möchten, antworten Sie bitte auf diese E-Mail.\n\nMit freundlichen Grüßen\nKemp Krumlov'}},
+  kemp:{
+   cs:{predmet:'Nová {stav} {cislo}: {jmeno}, {od} – {do}',text:'Z webu přišla nová {stav}.\n\nČíslo: {cislo}\nHost: {jmeno}\nTelefon: {telefon}\nE-mail: {email}\nTermín: {od} – {do} ({noci})\nUbytování: {mista}\nOsoby: {osoby}\nCena: {cena}\n\nZpráva od hosta:\n{zprava}\n\nDetail najdete v administraci v Rezervacích.'}}},
+ SABL_JAZ:function(t){return t==='kemp'?['cs']:['cs','en','de']},
+ sablona:function(t,j){var v=R.SABL_VYCH[t]||{},d=v[j]||v.cs||{predmet:'',text:''},s=((R.nast().sablony||{})[t]||{})[j]||{};return {predmet:typeof s.predmet==='string'?s.predmet:d.predmet,text:typeof s.text==='string'?s.text:d.text,upravena:typeof s.predmet==='string'||typeof s.text==='string'}},
+ ulozSablonu:function(t,j,o){var n=R.nast();n.sablony=n.sablony||{};n.sablony[t]=n.sablony[t]||{};if(o)n.sablony[t][j]={predmet:o.predmet,text:o.text};else delete n.sablony[t][j];R.ulozNast(n)},
+ /* dosadí údaje rezervace do šablony; j = jazyk e-mailu (jména míst, počty nocí, osoby) */
+ dosad:function(txt,r,j){r=r||{};j=j||'cs';var W={cs:{ch:'Chatka',ps:'Podsadový stan',st:'vlastní stan',kr:'karavan',n:['noc','noci','nocí'],d:'dosp.',k:['dítě','děti','dětí'],pop:'poptávka',pot:'rezervace'},en:{ch:'Cabin',ps:'Tent on platform',st:'own tent',kr:'caravan',n:['night','nights','nights'],d:'adults',k:['child','children','children'],pop:'inquiry',pot:'booking'},de:{ch:'Hütte',ps:'Zelt auf Podest',st:'eigenes Zelt',kr:'Wohnwagen',n:['Nacht','Nächte','Nächte'],d:'Erw.',k:['Kind','Kinder','Kinder'],pop:'Anfrage',pot:'Reservierung'}}[j]||{};
+  var P=function(c,a){return c===1?a[0]:c>=2&&c<=4?a[1]:a[2]},F=function(s){if(!s)return '';var p=s.split('-');return +p[2]+'. '+(+p[1])+'. '+p[0]};
+  var nc=r.od&&r.do?R.noci(r.od,r.do).length:0,o=r.osoby||{},dt=(o.dite||0)+(o.zak||0);
+  var mi=(r.mista||[]).map(function(m){var p=m.split('-');return p[0]==='chatka'?W.ch+' '+p[1]:p[0]==='podsad'?W.ps+' '+p[1]:'Teepee'});var dl=r.dalsi||{};if(+dl.stan)mi.push(dl.stan+'× '+W.st);if(+dl.karavan)mi.push(dl.karavan+'× '+W.kr);
+  var h={jmeno:r.jmeno||'',cislo:r.cislo||'',od:F(r.od),do:F(r.do),noci:nc+' '+P(nc,W.n),mista:mi.join(', '),osoby:(o.dosp||0)+' '+W.d+(dt?', '+dt+' '+P(dt,W.k):''),cena:r.cena?String(r.cena).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' Kč':'',telefon:r.telefon||'',email:r.email||'',zprava:r.zprava||'–',stav:r.stav==='pop'?W.pop:W.pot};
+  return String(txt||'').replace(/\{(\w+)\}/g,function(a,k){return k in h?h[k]:a})},
  ulozNast:function(n){pis(KN,n)},
  /* místa vypnutá z rezervace (personál, oprava) a typy, které se nerezervují */
  vyp:function(){var v=R.nast().vyp;return Array.isArray(v)?v:[]},

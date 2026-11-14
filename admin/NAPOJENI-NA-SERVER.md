@@ -128,3 +128,16 @@ V náhledu drží rezervace objekt `KKR` na konci `js/cenik.js` (localStorage `k
 | `KKR.nast()`, `ulozNast` | `GET/PUT /api/admin/rezervace/nastaveni` – ukládat smí jen správce |
 
 Kontrolu kolize (`KKR.kolize`) musí server dělat znovu při zápisu, v jedné transakci se zámkem na dotčená místa (`SELECT … FOR UPDATE`), jinak si dva hosté ve stejnou chvíli zarezervují stejnou chatku. Po uložení poslat e-mail hostovi a kempu.
+
+## Šablony e-mailů
+
+Upravují se v Rezervace → Nastavení → Šablony e-mailů a ukládají se do nastavení rezervací (`nast.sablony[druh][jazyk] = {predmet, text}`, chybějící = výchozí znění z `KKR.SABL_VYCH`). Adresa kempu pro upozornění je v `nast.emailKemp`.
+
+| Druh | Komu | Kdy odeslat |
+|---|---|---|
+| `poptavka` | host (jazyk z `r.jazyk`) | nová rezervace z webu ve stavu `pop` |
+| `rezervace` | host | nová rezervace z webu ve stavu `pot`, nebo změna stavu `pop` → `pot` |
+| `zruseno` | host | změna stavu na `zru` |
+| `kemp` | `emailKemp` (jen česky) | každá nová rezervace z webu |
+
+Zástupné údaje: `{jmeno} {cislo} {od} {do} {noci} {mista} {osoby} {cena} {telefon} {email} {zprava} {stav}`. Dosazení dělá `KKR.dosad(text, rezervace, jazyk)` – server musí dělat totéž (formát data `d. m. rrrr`, názvy míst a množná čísla podle jazyka). E-mail hostovi se posílá jen když vyplnil e-mail.
