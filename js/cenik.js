@@ -149,7 +149,10 @@ var R=window.KKR={
  SKUPINY:[{id:'cl',k:'chatka',n:'Chatky vlevo',c:rada(20,11)},{id:'cn',k:'chatka',n:'Chatky vpravo nahoře',c:rada(1,5)},{id:'cd',k:'chatka',n:'Chatky vpravo dole',c:rada(6,10)},{id:'ps',k:'podsad',n:'Podsadové stany',c:rada(1,11)},{id:'tp',k:'teepee',n:'Teepee',c:[1]}],
  STAVY:{pop:'Poptávka',pot:'Potvrzená',zap:'Zaplacená',uby:'Ubytovaný',odj:'Odjel',zru:'Zrušená',blk:'Blokace'},
  nazev:function(m){var p=m.split('-');return p[0]==='chatka'?'Chatka '+p[1]:p[0]==='podsad'?'Podsadový stan '+p[1]:'Teepee'},
- nast:function(){return Object.assign({rezim:'poptavka'},cti(KN,{}))},
+ /* režim pro každý typ zvlášť: 'poptavka' (potvrzuje obsluha) nebo 'ihned' */
+ nast:function(){var n=cti(KN,{}),z=n.rezim,r={};['chatka','podsad','teepee'].forEach(function(k){r[k]=(typeof z==='string'?z:(z||{})[k])==='ihned'?'ihned':'poptavka'});n.rezim=r;return n},
+ /* stav nové rezervace z webu: potvrzená jen když všechna vybraná místa mají okamžitou rezervaci */
+ stavWeb:function(mista){var z=R.nast().rezim;return mista&&mista.length&&mista.every(function(m){return z[m.split('-')[0]]==='ihned'})?'pot':'pop'},
  ulozNast:function(n){pis(KN,n)},
  vse:function(){return cti(K,[])},
  noci:function(od,dk){var r=[],d=D(od),e=D(dk);while(d<e&&r.length<400){r.push(I(d));d.setDate(d.getDate()+1)}return r},

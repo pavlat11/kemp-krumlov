@@ -117,7 +117,7 @@ V náhledu drží rezervace objekt `KKR` na konci `js/cenik.js` (localStorage `k
 - Rezervace: `id, cislo, stav, od, do, mista[], dalsi{stan,karavan}, osoby{dosp,dite,zak}, jmeno, telefon, email, zprava, cena, zdroj(web|rucne), jazyk, kdo, vytvoreno`.
 - Stavy: `pop` poptávka, `pot` potvrzená, `zap` zaplacená záloha, `uby` ubytovaný, `odj` odjel, `zru` zrušená (místo neblokuje), `blk` blokace místa.
 - Obsazené jsou noci `od ≤ noc < do`; den odjezdu je volný pro dalšího hosta.
-- Nastavení `rezim`: `poptavka` (web zakládá stav `pop`) nebo `ihned` (web zakládá `pot`).
+- Nastavení `rezim` je pro každý typ zvlášť: `{chatka,podsad,teepee}` = `poptavka` nebo `ihned`. Web zakládá `pot`, jen když všechna vybraná místa mají `ihned` a v rezervaci nejsou vlastní stany ani karavany; jinak `pop` (`KKR.stavWeb`).
 
 | Funkce v náhledu | API |
 |---|---|

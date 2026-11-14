@@ -409,9 +409,10 @@ function rezervace(m){
   }
   function nas(){
     var n=R.nast();
-    return '<section class="card"><h2>Jak vzniká rezervace z webu</h2><div class="sw-l">'+
-      [['poptavka','Poptávka – potvrzuje obsluha','Host pošle poptávku. Místo se mu hned podrží, aby ho nezabral nikdo jiný, a vy poptávku potvrdíte nebo zrušíte.'],['ihned','Okamžitá rezervace','Rezervace je potvrzená hned po odeslání, čeká se jen na zálohu.']].map(function(o){return '<label class="rr"><input type="radio" name="rezim" value="'+o[0]+'"'+(n.rezim===o[0]?' checked':'')+(adm?'':' disabled')+'><span><b>'+o[1]+'</b><small>'+o[2]+'</small></span></label>'}).join('')+
-      '</div>'+(adm?'':'<p class="mut">Změnit to smí jen správce.</p>')+'</section>'+
+    return '<section class="card"><h2>Jak vzniká rezervace z webu</h2><p class="mut" style="margin:0 0 12px"><b>Poptávka</b>: host pošle poptávku, místo se mu hned podrží a vy ji potvrdíte nebo zrušíte. <b>Okamžitá rezervace</b>: je potvrzená hned po odeslání, čeká se jen na zálohu.</p>'+
+      '<div class="tw-wrap"><table class="ct rnt"><thead><tr><th>Typ ubytování</th><th>Poptávka – potvrzuje obsluha</th><th>Okamžitá rezervace</th></tr></thead><tbody>'+
+      [['chatka','Chatky'],['podsad','Podsadové stany'],['teepee','Teepee']].map(function(t){return '<tr><td><b>'+t[1]+'</b></td>'+['poptavka','ihned'].map(function(v){return '<td><label class="rr"><input type="radio" name="rezim-'+t[0]+'" value="'+v+'"'+(n.rezim[t[0]]===v?' checked':'')+(adm?'':' disabled')+' aria-label="'+t[1]+' – '+(v==='ihned'?'okamžitá rezervace':'poptávka')+'"><span>'+(v==='ihned'?'Hned potvrzená':'Potvrzuje obsluha')+'</span></label></td>'}).join('')+'</tr>'}).join('')+
+      '</tbody></table></div><p class="mut" style="font-size:13.5px;margin:12px 0 0">Když si host vybere víc typů najednou a aspoň jeden z nich potvrzuje obsluha, přijde celá rezervace jako poptávka. Vlastní stany a karavany chodí vždy jako poptávka.</p>'+(adm?'':'<p class="mut">Změnit to smí jen správce.</p>')+'</section>'+
       '<div class="card mut" style="font-size:13.5px;margin-top:16px">'+SV(IC.zamek,16)+' V náhledu jsou rezervace uložené jen v tomto prohlížeči. Host na jiném počítači je neuvidí a jeho rezervace se k vám nedostane. Sdílená obsazenost bude fungovat po spuštění na serveru.</div>'+
       (adm?'<div class="row" style="margin-top:16px"><button type="button" class="btn gh" data-a="ukazka">Vložit ukázkové rezervace</button><button type="button" class="btn gh" data-a="vymaz">Smazat všechny rezervace</button></div>':'');
   }
@@ -484,7 +485,7 @@ function rezervace(m){
   box.addEventListener('change',function(e){var t=e.target;
     if(t.id==='rkd'&&t.value){zac=ADD(D0(t.value),-2);kresli()}
     else if(t.id==='rsf'){filtr=t.value;kresli()}
-    else if(t.name==='rezim'){var n=R.nast();n.rezim=t.value;R.ulozNast(n);KK.zaznam('Rezervace','režim: '+(t.value==='ihned'?'okamžitá rezervace':'poptávka'));toast('Uloženo – platí pro nové rezervace z webu.')}});
+    else if(/^rezim-/.test(t.name)){var n=R.nast(),k=t.name.slice(6);n.rezim[k]=t.value;R.ulozNast(n);KK.zaznam('Rezervace','režim '+k+': '+(t.value==='ihned'?'okamžitá rezervace':'poptávka'));toast('Uloženo – platí pro nové rezervace z webu.')}});
   kresli();
 }
 

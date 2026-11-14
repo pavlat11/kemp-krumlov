@@ -247,3 +247,4 @@ button.rs{min-height:36px;cursor:pointer}button.rs.on{outline:3px solid var(--su
 .rm input:focus-visible+span{outline:3px solid var(--sun);outline-offset:2px}
 .rm.z{cursor:not-allowed}.rm.z span{background:repeating-linear-gradient(135deg,#ece8df 0 5px,#ddd8cc 5px 10px);color:#5f6862;text-decoration:line-through;box-shadow:none}
 @media(max-width:560px){.rfg{grid-template-columns:1fr}.rk-leg{margin-left:0}}
+.rnt{min-width:480px}.rnt td{padding:8px 4px}.rnt .rr{align-items:center}
