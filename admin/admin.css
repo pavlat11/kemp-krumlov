@@ -561,3 +561,23 @@ table.rlt{width:100%;min-width:900px;border-collapse:separate;border-spacing:0}
 .rk-b.pop{background:var(--c-popBg);color:var(--warn);box-shadow:inset 0 0 0 1.5px var(--c-pop)}
 .rs.pop::before{background:var(--c-pop)}.rs.pot::before{background:var(--c-pot)}.rs.uby::before{background:var(--c-uby)}
 .rk-leg .rs.pop{background:var(--c-popBg);color:var(--warn)}
+
+/* Dnes: výběr dne pro plánek */
+.rn-leg::after{content:none!important}
+.rn-leg .pd{width:10px;height:10px;border-radius:50%;background:var(--sun)}
+.rn-nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px}
+.rn-nav .inp{min-height:38px;width:auto}.rn-nav .btn{min-height:38px}
+.rn-so{margin-left:auto;font-size:13.5px;color:var(--mut)}
+.rn-dny{display:grid;grid-template-columns:repeat(14,minmax(62px,1fr));gap:6px;margin:0 0 14px;overflow-x:auto;padding-bottom:2px}
+.rn-d{display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 4px;border:1.5px solid var(--line);border-radius:12px;background:#fff;font:inherit;color:var(--deep);cursor:pointer}
+.rn-d:hover{border-color:var(--ok)}
+.rn-d small{font-size:11px;font-weight:700;color:var(--mut)}.rn-d b{font-size:14px;font-weight:800;white-space:nowrap}
+.rn-d i{font-style:normal;font-size:11px;font-weight:700;color:var(--ok);white-space:nowrap}
+.rn-d.we{background:#f6f1e6}.rn-d.pl i{color:var(--danger,#b3261e)}
+.rn-d.on{background:var(--deep);border-color:var(--deep);color:#fff}.rn-d.on small,.rn-d.on i{color:#cfe3d6}
+.nep{font-weight:500;font-size:12px;color:var(--mut);margin-left:4px}
+/* kalendář: kříž pod myší */
+.rk-in{position:relative}
+.rk-col{position:absolute;top:0;bottom:0;background:rgba(23,59,42,.08);box-shadow:inset 1px 0 0 rgba(23,59,42,.25),inset -1px 0 0 rgba(23,59,42,.25);pointer-events:none;z-index:2}
+.rk-r.hvr .rk-n{background:#dfece4;color:var(--deep);font-weight:800}
+.rk-r.hvr .rk-t::after{content:"";position:absolute;inset:0;background:rgba(23,59,42,.08);box-shadow:inset 0 1px 0 rgba(23,59,42,.25),inset 0 -1px 0 rgba(23,59,42,.25);pointer-events:none}

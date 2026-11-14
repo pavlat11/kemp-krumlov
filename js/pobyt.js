@@ -348,7 +348,11 @@ if(window.KKC){var FRK={dop1:.045,dop2:.14,dop3:.235,dop4:.33,dop5:.43,dop6:.535
   while(ia>0&&a==null){ia--;a=pol[ia]}while(ib<pol.length-1&&b==null){ib++;b=pol[ib]}
   if(a==null)a=0.01;if(b==null)b=0.99;pol[i]=a+(b-a)*(i-ia)/Math.max(1,(ib-ia)||1)});
  STOPS=[];FR=[];vse.forEach(function(p,i){if(p.skryt===1)return;STOPS.push([p.n,KKC.v(p.k,'a'),p.k]);FR.push(Math.min(.99,Math.max(.01,pol[i])))});
- var chW=sec.querySelector('.dp-chips');if(chW)chW.innerHTML=STOPS.map(function(x,i){return '<button type="button" class="dp-chip" data-i="'+i+'"><span class="dp-dot"></span><b>'+x[0].replace(/[&<>]/g,'')+'</b><em>'+KKC.t(x[2],'a')+'</em></button>'}).join('');}
+ var chW=sec.querySelector('.dp-chips');if(chW)chW.innerHTML=STOPS.map(function(x,i){return '<button type="button" class="dp-chip" data-i="'+i+'"><span class="dp-dot"></span><b>'+x[0].replace(/[&<>]/g,'')+'</b><em>'+KKC.t(x[2],'a')+'</em></button>'}).join('');
+ /* kemp jako výchozí bod v seznamu – na svém místě po proudu */
+ if(chW){var TT=function(t){return window.KL&&KL.t?KL.t(t):t},dom=document.createElement('div'),ic=0;dom.className='dp-home';
+  dom.innerHTML='<span class="dp-hic" aria-hidden="true"><svg viewBox="-12 -12 24 24" width="20" height="20"><path d="M-9 7 0 -9 9 7Z" fill="#ffc978"/><path d="M0 -1 -3 7 3 7Z" fill="#0b2419"/></svg></span><b>Kemp Krumlov</b><em>'+TT('odtud vás vezeme')+'</em>';
+  FR.forEach(function(f){if(f<CAMP)ic++});chW.insertBefore(dom,chW.children[ic]||null)}}
 function rp(f){return rv.getPointAtLength(RL*f)}
 /* ---------- zastávky na řece, popisek vlevo ---------- */
 var stEls=STOPS.map(function(s,i){var p=rp(FR[i]),g=E('g',{class:'dp-st',tabindex:0,role:'button','aria-label':s[0],transform:'translate('+p.x.toFixed(1)+' '+p.y.toFixed(1)+')'},gS);
