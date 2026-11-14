@@ -61,7 +61,7 @@ function login(){
 /* ---------- jazyk úprav (čeština = originál, ostatní = překlad) ---------- */
 function jazykAdm(){var j=KK.LS.get('admin-jazyk','cs');return KK.JAZYKY[j]?j:'cs'}
 function jazykVolba(){var j=jazykAdm();return '<div class="row jz" role="group" aria-label="Jazyk úprav">'+Object.keys(KK.JAZYKY).map(function(k){return '<button type="button" class="btn sm gh" data-jz="'+k+'" aria-pressed="'+(k===j)+'">'+KK.JAZYKY[k]+'</button>'}).join('')+'</div>'}
-function jazykKlik(m){$$('[data-jz]',m).forEach(function(b){b.addEventListener('click',function(){if(b.dataset.jz===jazykAdm())return;if(neulozeno&&neulozeno()&&!confirm('Máte neuložené změny. Přepnout jazyk bez uložení?'))return;KK.LS.set('admin-jazyk',b.dataset.jz);neulozeno=null;route()})})}
+function jazykKlik(m){$$('[data-jz]',m).forEach(function(b){b.addEventListener('click',function(){if(b.dataset.jz===jazykAdm())return;var jd=function(){KK.LS.set('admin-jazyk',b.dataset.jz);neulozeno=null;route()};if(neulozeno&&neulozeno())ptej('Máte neuložené změny\n\nKdyž přepnete jazyk, změny se neuloží.',{ok:'Přepnout bez uložení',ne:'Zůstat'}).then(function(a){if(a)jd()});else jd()})})}
 
 /* ---------- kostra ---------- */
 var VIEWS={upravit:upravit,prehled:prehled,galerie:galerie,seo:seo,cenik:cenik,rezervace:rezervace,nastaveni:nastaveni,uzivatele:uzivatele,ucet:ucet};
@@ -77,16 +77,29 @@ function shell(s){
   function zavri(){side.classList.remove('open');mb.setAttribute('aria-expanded','false');if(scrim){scrim.remove();scrim=null}}
   mb.addEventListener('click',function(){side.classList.add('open');mb.setAttribute('aria-expanded','true');scrim=document.body.appendChild(Object.assign(document.createElement('div'),{className:'scrim'}));scrim.onclick=zavri;$('a',side).focus()});
   side.addEventListener('click',function(e){if(e.target.closest('a.nv'))zavri()});
-  $('#lo').addEventListener('click',function(){if(odejit()){KK.auth.logout().then(login)}});
+  $('#lo').addEventListener('click',function(){odejit().then(function(a){if(a)KK.auth.logout().then(login)})});
   onhashchange=route;route();
 }
-var neulozeno=null;function odejit(){return !neulozeno||!neulozeno()||confirm('Máte neuložené změny. Opravdu odejít?')}
+var neulozeno=null;function odejit(){return !neulozeno||!neulozeno()?Promise.resolve(true):ptej('Máte neuložené změny\n\nKdyž odejdete, změny se neuloží.',{ok:'Odejít bez uložení',ne:'Zůstat'})}
+/* hezké potvrzovací okno místo confirm(); vrací Promise<true|false>, s o.pole Promise<text|null> */
+function ptej(txt,o){o=o||{};return new Promise(function(res){
+  var p=String(txt).split('\n\n'),d=document.createElement('dialog'),hot=false;d.className='dlg ptj'+(o.nebezp?' nb':'');d.setAttribute('aria-labelledby','ptjh');
+  d.innerHTML='<form method="dialog" novalidate><div class="ptj-i" aria-hidden="true">'+(o.nebezp?'!':'?')+'</div><h2 id="ptjh">'+esc(p[0])+'</h2>'+p.slice(1).map(function(x){return '<p>'+esc(x).replace(/\n/g,'<br>')+'</p>'}).join('')+
+    (o.pole!=null?'<input class="inp" aria-labelledby="ptjh" value="'+esc(o.pole)+'" autocomplete="off">':'')+
+    '<div class="ptj-b"><button type="button" class="btn gh" data-n>'+(o.ne||'Zrušit')+'</button><button type="submit" class="btn '+(o.nebezp?'dan2':'pri')+'">'+(o.ok||'Ano')+'</button></div></form>';
+  document.body.appendChild(d);var inp=$('input',d);
+  var konec=function(v){if(hot)return;hot=true;try{d.close()}catch(e){}d.remove();res(v)};
+  $('[data-n]',d).addEventListener('click',function(){konec(o.pole!=null?null:false)});
+  $('form',d).addEventListener('submit',function(e){e.preventDefault();konec(o.pole!=null?inp.value:true)});
+  d.addEventListener('cancel',function(e){e.preventDefault();konec(o.pole!=null?null:false)});
+  d.addEventListener('click',function(e){if(e.target===d)konec(o.pole!=null?null:false)});
+  d.showModal();(inp||$(o.nebezp?'[data-n]':'[type=submit]',d)).focus();if(inp)inp.select()})}
 var predHash=null;
 function route(){
   var v=(location.hash.slice(1)||'prehled').split('/')[0];if(!VIEWS[v])v='prehled';
   var ja=KK.auth.meSync();if(!ja){onhashchange=null;login();return}
   if(!KK.auth.muze(v)){var prvni=['prehled','upravit','rezervace','galerie','ucet'].filter(function(x){return KK.auth.muze(x)})[0]||'ucet';if(v!==prvni){toast('Do sekce „'+(KK.SEKCE[v]||v)+'“ nemáte přístup.',1);location.replace('#'+prvni);return}}
-  if(predHash&&predHash!==location.hash&&neulozeno&&neulozeno()&&!confirm('Máte neuložené změny. Opravdu odejít?')){history.replaceState(null,'',predHash);return}
+  if(predHash&&predHash!==location.hash&&neulozeno&&neulozeno()){var cilH=location.hash;history.replaceState(null,'',predHash);odejit().then(function(a){if(a){neulozeno=null;location.hash=cilH}});return}
   predHash=location.hash||'#prehled';neulozeno=null;
   $$('.side a.nv').forEach(function(a){if(a.getAttribute('href')==='#'+v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   var st=$('#main'),m=st.cloneNode(false);st.replaceWith(m);m.innerHTML='<p class="mut">Načítám…</p>';KK.JAZYK='cs';
@@ -193,7 +206,7 @@ function galerie(m){
     gg.addEventListener('click',function(e){var b=e.target.closest('button[data-a]');if(!b)return;var i=id(e),ix=fotky.findIndex(function(f){return f.id===i}),a=b.dataset.a;
       if(a==='vl'||a==='vp'){var j=ix+(a==='vl'?-1:1);var t=fotky[ix];fotky[ix]=fotky[j];fotky[j]=t;uloz_poradi().then(function(){kresli();var nb=$('.gc[data-id="'+i+'"] [data-a="'+a+'"]');if(nb&&!nb.disabled)nb.focus();else{nb=$('.gc[data-id="'+i+'"] input');if(nb)nb.focus()}})}
       if(a==='viz'){var f=fotky[ix];f.viditelna=f.viditelna===false;KK.galerie.uprav(i,{viditelna:f.viditelna}).then(function(){kresli();toast(f.viditelna?'Fotka je zase na webu.':'Fotka je skrytá na webu.')})}
-      if(a==='del'&&confirm('Opravdu smazat tuto fotku?')){KK.galerie.smaz([i]).then(function(){fotky.splice(ix,1);delete vyber[i];return uloz_poradi()}).then(function(){kresli();toast('Fotka smazána.')})}
+      if(a==='del')ptej('Smazat tuto fotku?\n\nZmizí z galerie na webu. Nejde to vrátit.',{ok:'Smazat',nebezp:1}).then(function(ok){if(!ok)return;KK.galerie.smaz([i]).then(function(){var fx=fotky.findIndex(function(x){return x.id===i});if(fx>=0)fotky.splice(fx,1);delete vyber[i];return uloz_poradi()}).then(function(){kresli();toast('Fotka smazána.')})})
     });
     /* přetahování pořadí */
     var dragId=null;
@@ -206,7 +219,7 @@ function galerie(m){
     $('#ga').addEventListener('change',function(e){vyber={};if(e.target.checked)fotky.forEach(function(f){vyber[f.id]=1});kresli()});
     $('#gk').addEventListener('change',function(e){var k=e.target.value;if(k==='-')return;var ids=Object.keys(vyber);Promise.all(ids.map(function(i){F(i).kat=k;return KK.galerie.uprav(i,{kat:k})})).then(function(){toast('Kategorie změněna u '+ids.length+' '+pl(ids.length,'fotky','fotek','fotek')+'.');e.target.value='-';kresli()})});
     $$('#gb [data-h]').forEach(function(b){b.addEventListener('click',function(){var v=b.dataset.h==='1',ids=Object.keys(vyber);Promise.all(ids.map(function(i){F(i).viditelna=v;return KK.galerie.uprav(i,{viditelna:v})})).then(function(){toast(v?'Fotky jsou na webu.':'Fotky jsou skryté.');kresli()})})});
-    $('#gd').addEventListener('click',function(){var ids=Object.keys(vyber);if(!confirm('Opravdu smazat '+ids.length+' '+pl(ids.length,'fotku','fotky','fotek')+'?'))return;KK.galerie.smaz(ids).then(function(){fotky=fotky.filter(function(f){return !vyber[f.id]});vyber={};return uloz_poradi()}).then(function(){kresli();toast('Smazáno.')})});
+    $('#gd').addEventListener('click',function(){var ids=Object.keys(vyber);ptej('Smazat '+ids.length+' '+pl(ids.length,'fotku','fotky','fotek')+'?\n\nZmizí z galerie na webu. Nejde to vrátit.',{ok:'Smazat',nebezp:1}).then(function(ok){if(!ok)return;KK.galerie.smaz(ids).then(function(){fotky=fotky.filter(function(f){return !vyber[f.id]});vyber={};return uloz_poradi()}).then(function(){kresli();toast('Smazáno.')})})});
     /* nahrávání */
     function nahraj(list){
       list=[].slice.call(list).filter(function(f){return /^image\//.test(f.type)||/\.(jpe?g|png|webp|gif|heic)$/i.test(f.name)});if(!list.length){toast('Vyberte prosím obrázky.',1);return}
@@ -280,7 +293,7 @@ function seo(m){
       'kemp Český Krumlov, kemp Krumlov, kemp u Vltavy, vodácký kemp, kemp Vltava, chatky Český Krumlov, ubytování Český Krumlov, teepee, podsadové stany, stanování u řeky, kemp pro karavany, půjčovna lodí, sjíždění Vltavy, raft Vltava, kanoe Vltava, PE-LA, Domoradice'.split(', ').forEach(function(x){if(lo.indexOf(x.toLowerCase())<0)ma.push(x)});el.value=ma.join(', ');el.dispatchEvent(new Event('input',{bubbles:true}))});
     f.addEventListener('submit',function(e){e.preventDefault();cti();if(!s.title){toast('Titulek nesmí být prázdný.',1);f.elements.title.focus();return}
       KK.seo.uloz(JSON.parse(JSON.stringify(s))).then(function(){zm=false;toast('SEO uloženo.')})});
-    $('#sr').addEventListener('click',function(){if(!confirm('Vrátit všechny SEO údaje na výchozí hodnoty?'))return;s=JSON.parse(JSON.stringify(KK.SEO_VYCHOZI));nastav();nahled();zm=true});
+    $('#sr').addEventListener('click',function(){ptej('Vrátit SEO na výchozí hodnoty?\n\nPřepíšou se všechny SEO údaje. Projeví se až po uložení.',{ok:'Vrátit výchozí'}).then(function(ok){if(!ok)return;s=JSON.parse(JSON.stringify(KK.SEO_VYCHOZI));nastav();nahled();zm=true})});
     nastav();nahled();
   });
 }
@@ -322,13 +335,16 @@ function cenik(m){
       h+='<section class="card ck" style="margin-bottom:16px"><div class="row" style="margin-bottom:6px"><h2 style="margin:0">Služby v kempu</h2><span class="badge">text</span><span class="sp"></span><button type="button" class="btn sm pri" id="sva">+ Přidat službu</button></div>'+
         '<p class="mut" style="margin:0 0 12px">Jen text do ceníku na webu (např. sprcha, úschovna). Do ceny rezervace se nepočítají, cenu napište i s jednotkou.</p>'+
         (C.sluzby.length?'<div class="tw-wrap"><table class="ct"><thead><tr><th>Služba</th><th>Cena a podmínky (text)</th><th><span class="sr">Akce</span></th></tr></thead><tbody>'+C.sluzby.map(function(x,i){return '<tr><td><input class="inp" data-sv="'+i+'" data-f="'+pole('n')+'" value="'+esc(hod(x,'n'))+'"'+ph(x,'n')+' aria-label="Název služby'+(PR?' – '+KK.JAZYKY[J]:'')+'"></td><td><input class="inp" data-sv="'+i+'" data-f="'+pole('t')+'" value="'+esc(hod(x,'t'))+'"'+(PR?ph(x,'t'):' placeholder="např. 20 Kč / 4 min"')+' aria-label="Cena a podmínky – '+esc(x.n)+'"></td><td class="c"><button type="button" class="btn ic dan" data-svd="'+i+'" aria-label="Smazat službu – '+esc(x.n)+'">'+SV(IC.kos,18)+'</button></td></tr>'}).join('')+'</tbody></table></div>':'<p class="mut">Žádné služby – v ceníku na webu se sekce nezobrazí.</p>')+'</section>';
+      var kempI=-1;
       Object.keys(C.kategorie).forEach(function(kat){
         var K=C.kategorie[kat],pol=C.polozky.filter(function(p){return p.kat===kat}),dva=K.sloupce.length>1&&HZ,SL=dva||K.sloupce.length<2?K.sloupce:['Cena'],ub=kat==='ubytovani',dop=kat==='doplnky',slu=kat==='sluzby',rez=ub||dop,lod=kat==='lode',dpr=kat==='doprava',oso=kat==='osoby';
         h+='<section class="card ck" style="margin-bottom:16px"><div class="row" style="margin-bottom:10px"><h2 style="margin:0">'+esc(K.n)+'</h2><span class="sp"></span>'+(K.pevne?'<span class="badge">pevné položky</span>':'<button type="button" class="btn sm pri" data-add="'+kat+'">+ Přidat položku</button>')+'</div>'+
         (dop?'<p class="mut" style="margin:-4px 0 12px">Doplňky se zaškrtnutím „V rezervaci“ si host může přidat v kroku Doplňky.</p>':'')+(oso?'<p class="mut" style="margin:-4px 0 12px">Nová skupina (např. senior, ZTP) se objeví v rezervaci v kroku Kdo jede a v ceníku.</p>':'')+(dpr?'<p class="mut" style="margin:-4px 0 12px">Pořadí = pořadí míst na řece po proudu (shora dolů). Kemp leží mezi Centrem a Zlatou Korunou. Nové místo se na mapě dopravy objeví mezi sousedy v seznamu.</p>':'')+(ub?'<p class="mut" style="margin:-4px 0 12px">Lůžka = kolik osob se vejde do jedné jednotky (prázdné = vlastní spaní, např. stan nebo karavan).</p>':'')+
+        (function(){kempI=-1;if(dpr)pol.some(function(p,x){if(p.k==='dop8'||p.k==='dop9'){kempI=x;return true}});return ''})()+
         '<div class="tw-wrap"><table class="ct"><thead><tr><th>Název</th><th>Poznámka</th>'+SL.slice(0,dva?2:1).map(function(c){return '<th class="n">'+esc(c)+'</th>'}).join('')+(ub?'<th class="n">Lůžek</th>':'')+(lod?'<th class="n">Osob</th>':'')+(slu?'<th>Za</th>':'')+(rez?'<th>V rezervaci</th>':'')+'<th><span class="sr">Akce</span></th></tr></thead><tbody>'+
-        pol.map(function(p){var i=C.polozky.indexOf(p),fix=K.pevne||POUZITO[p.k]||/^dop\d|^(kanoe|raft)/.test(p.k);
-          return '<tr class="'+(p.skryt===1?'skr':'')+'"><td><input class="inp" data-i="'+i+'" data-f="'+pole('n')+'" value="'+esc(hod(p,'n'))+'"'+ph(p,'n')+' aria-label="Název'+(PR?' – '+KK.JAZYKY[J]:'')+'"'+(PR?'':' required')+'></td><td><input class="inp" data-i="'+i+'" data-f="'+pole('pozn')+'" value="'+esc(hod(p,'pozn'))+'"'+ph(p,'pozn')+' aria-label="Poznámka u '+esc(p.n)+(PR?' – '+KK.JAZYKY[J]:'')+'"></td>'+
+        pol.map(function(p,pi){var i=C.polozky.indexOf(p),fix=K.pevne||POUZITO[p.k]||/^dop\d|^(kanoe|raft)/.test(p.k);
+          var kemp=dpr&&pi===kempI?'<tr class="ck-kemp"><td colspan="9"><span><i aria-hidden="true">▲</i><b>Kemp Krumlov</b> odtud hosty vezeme – místa nad tímto řádkem jsou proti proudu, pod ním po proudu</span></td></tr>':'';
+          return kemp+'<tr class="'+(p.skryt===1?'skr':'')+'"><td><input class="inp" data-i="'+i+'" data-f="'+pole('n')+'" value="'+esc(hod(p,'n'))+'"'+ph(p,'n')+' aria-label="Název'+(PR?' – '+KK.JAZYKY[J]:'')+'"'+(PR?'':' required')+'></td><td><input class="inp" data-i="'+i+'" data-f="'+pole('pozn')+'" value="'+esc(hod(p,'pozn'))+'"'+ph(p,'pozn')+' aria-label="Poznámka u '+esc(p.n)+(PR?' – '+KK.JAZYKY[J]:'')+'"></td>'+
           '<td class="n"><label class="kc"><input class="inp num" type="number" min="0" step="10" data-i="'+i+'" data-f="a" value="'+(p.a||0)+'" aria-label="'+esc(p.n)+' – '+esc(SL[0])+'"> Kč</label></td>'+
           (dva?'<td class="n"><label class="kc"><input class="inp num" type="number" min="0" step="10" data-i="'+i+'" data-f="b" value="'+(p.b==null?p.a:p.b)+'" aria-label="'+esc(p.n)+' – '+esc(K.sloupce[1])+'"> Kč</label></td>':'')+
           (lod?'<td class="n"><input class="inp num" type="number" min="1" max="12" data-i="'+i+'" data-f="osob" value="'+(p.osob||'')+'" aria-label="Osob – '+esc(p.n)+'"></td>':'')+(ub?'<td class="n"><input class="inp num" type="number" min="0" max="50" data-i="'+i+'" data-f="luzka" value="'+(p.luzka||'')+'" aria-label="Lůžek – '+esc(p.n)+'"></td>':'')+
@@ -355,14 +371,14 @@ function cenik(m){
     m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
       if(b.dataset.add){var kat=b.dataset.add;C.polozky.push({k:'x'+Date.now().toString(36),kat:kat,n:'',pozn:'',a:0,b:(kat==='sluzby'||kat==='doprava')?undefined:0,rez:(kat==='doplnky'||kat==='ubytovani')?1:undefined,jed:kat==='sluzby'?'':undefined,osob:kat==='lode'?4:undefined});kresli();var ins=$$('section.ck',m).filter(function(s){return $('[data-add="'+kat+'"]',s)})[0];var inp=ins&&$$('tbody tr:last-child input[data-f=n]',ins)[0];if(inp)inp.focus()}
       else if(b.dataset.mv){var ix=+b.dataset.mv,d=+b.dataset.d,kt=C.polozky[ix].kat,j=ix+d;while(j>=0&&j<C.polozky.length&&C.polozky[j].kat!==kt)j+=d;if(j>=0&&j<C.polozky.length){var t=C.polozky[ix];C.polozky[ix]=C.polozky[j];C.polozky[j]=t;kresli();var nb=$('[data-mv="'+j+'"][data-d="'+d+'"]',m);if(nb&&!nb.disabled)nb.focus()}}
-      else if(b.dataset.del){var p=C.polozky[+b.dataset.del];if(confirm('Smazat položku „'+(p.n||'bez názvu')+'“?')){C.polozky.splice(+b.dataset.del,1);kresli()}}
+      else if(b.dataset.del){var p=C.polozky[+b.dataset.del];ptej('Smazat položku „'+(p.n||'bez názvu')+'“?\n\nZ ceníku zmizí až po uložení.',{ok:'Smazat',nebezp:1}).then(function(ok){if(!ok)return;var pi=C.polozky.indexOf(p);if(pi>=0)C.polozky.splice(pi,1);kresli()})}
       else if(b.dataset.hide){var q=C.polozky[+b.dataset.hide];if(q.skryt===1)delete q.skryt;else q.skryt=1;kresli()}
       else if(b.id==='sva'){C.sluzby.push({n:'',t:''});kresli();var si=$$('[data-sv][data-f=n]',m).pop();if(si)si.focus()}
-      else if(b.dataset.svd){var sx=C.sluzby[+b.dataset.svd];if(!sx.n||confirm('Smazat službu „'+sx.n+'“?')){C.sluzby.splice(+b.dataset.svd,1);kresli()}}
+      else if(b.dataset.svd){var sx=C.sluzby[+b.dataset.svd];(sx.n?ptej('Smazat službu „'+sx.n+'“?',{ok:'Smazat',nebezp:1}):Promise.resolve(true)).then(function(ok){if(!ok)return;var si2=C.sluzby.indexOf(sx);if(si2>=0)C.sluzby.splice(si2,1);kresli()})}
       else if(b.id==='sla'){C.slevy.push({noci:(C.slevy.reduce(function(a,x){return Math.max(a,x.noci)},1))+1,proc:5});kresli()}
       else if(b.dataset.sld){C.slevy.splice(+b.dataset.sld,1);kresli()}
       else if(b.id==='sbz'){C=JSON.parse(puv);kresli()}
-      else if(b.id==='cr'){if(confirm('Vrátit celý ceník na výchozí hodnoty?')){KK.cenik.obnov().then(function(){C=JSON.parse(JSON.stringify(KKC.vychozi));puv=JSON.stringify(C);kresli();toast('Ceník vrácen na výchozí.')})}}
+      else if(b.id==='cr'){ptej('Vrátit celý ceník na výchozí hodnoty?\n\nVšechny vaše ceny a položky se přepíšou. Nejde to vrátit.',{ok:'Vrátit výchozí',nebezp:1}).then(function(ok){if(ok)KK.cenik.obnov().then(function(){C=JSON.parse(JSON.stringify(KKC.vychozi));puv=JSON.stringify(C);kresli();toast('Ceník vrácen na výchozí.')})})}
       else if(b.id==='sbu'){
         var chyba=C.polozky.find(function(p){return !String(p.n).trim()});
         if(chyba){toast('Každá položka musí mít název.',1);var ix=C.polozky.indexOf(chyba),el=$('input[data-i="'+ix+'"][data-f=n]',m);if(el){el.setAttribute('aria-invalid','true');el.focus()}return}
@@ -573,15 +589,16 @@ function rezervace(m){
     oznac();
   }
   /* pojistka proti omylu: ubytování / odhlášení v jiný den, než říká rezervace */
-  function overDatum(id,st){var r=najdi(id);if(!r)return true;
-    if(st==='uby'&&r.od!==dnes)return confirm('Pozor – termín nesedí s dnešním datem.\n\n'+r.jmeno+' má příjezd '+KR(r.od)+' '+r.od.slice(0,4)+(r.od>dnes?' (až za '+Math.round((D0(r.od)-D0(dnes))/864e5)+' '+pl(Math.round((D0(r.od)-D0(dnes))/864e5),'den','dny','dní')+')':' (měl přijet už dřív)')+', dnes je '+KR(dnes)+'\n\nOpravdu ubytovat?');
-    if(st==='odj'&&r.do!==dnes)return confirm('Pozor – termín nesedí s dnešním datem.\n\n'+r.jmeno+' má odjezd '+KR(r.do)+' '+r.do.slice(0,4)+(r.do>dnes?' (pobyt ještě neskončil)':' (měl odjet už dřív)')+', dnes je '+KR(dnes)+'\n\nOpravdu odhlásit?');
-    return true}
+  function overDatum(id,st){var r=najdi(id),A=Promise.resolve(true);if(!r)return A;
+    var dni=function(a,b){var n=Math.abs(Math.round((D0(a)-D0(b))/864e5));return n+' '+pl(n,'den','dny','dní')};
+    if(st==='uby'&&r.od!==dnes)return ptej('Termín nesedí s dnešním datem\n\n'+r.jmeno+' má příjezd '+KR(r.od)+' '+r.od.slice(0,4)+(r.od>dnes?' – to je až za '+dni(r.od,dnes):' – měl přijet už před '+dni(r.od,dnes).replace(/dny$|dní$/,'dny').replace(/den$/,'dnem'))+'.\nDnes je '+KR(dnes)+'\n\nOpravdu ho chcete ubytovat?',{ok:'Přesto ubytovat',nebezp:1});
+    if(st==='odj'&&r.do!==dnes)return ptej('Termín nesedí s dnešním datem\n\n'+r.jmeno+' má odjezd '+KR(r.do)+' '+r.do.slice(0,4)+(r.do>dnes?' – pobyt ještě neskončil':' – měl odjet už dřív')+'.\nDnes je '+KR(dnes)+'\n\nOpravdu ho chcete odhlásit?',{ok:'Přesto odhlásit',nebezp:1});
+    return A}
   dd.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var id=dd.dataset.id;
-    if(b.dataset.st){if(!overDatum(id,b.dataset.st))return;try{var r=zmen(id,{stav:b.dataset.st},R.STAVY[b.dataset.st]);KK.zaznam('Rezervace',(r.cislo||'')+' '+r.jmeno+' – '+R.STAVY[r.stav]);toast('Stav: '+R.STAVY[r.stav]+'.');kresli()}catch(x){toast(x.message,1)}}
+    if(b.dataset.st){var nst=b.dataset.st;overDatum(id,nst).then(function(ok){if(!ok)return;try{var r=zmen(id,{stav:nst},R.STAVY[nst]);KK.zaznam('Rezervace',(r.cislo||'')+' '+r.jmeno+' – '+R.STAVY[r.stav]);toast('Stav: '+R.STAVY[r.stav]+'.');kresli()}catch(x){toast(x.message,1)}})}
     else if(b.dataset.e==='zav')dd.close();
     else if(b.dataset.e==='upr')form(najdi(id));
-    else if(b.dataset.e==='del'&&confirm('Opravdu smazat? Nejde to vrátit.')){R.smaz(id);dd.hidden=true;kresli();toast('Smazáno.')}});
+    else if(b.dataset.e==='del'){var rs=najdi(id);ptej('Smazat '+(rs&&rs.stav==='blk'?'blokaci':'rezervaci')+(rs?' „'+rs.jmeno+'“':'')+'?\n\nZmizí z kalendáře, seznamu i historie. Nejde to vrátit.'+(rs&&rs.stav!=='blk'?'\n\nKdyž host jen odřekl, použijte raději „Zrušit rezervaci“.':''),{ok:'Smazat',nebezp:1}).then(function(ok){if(!ok)return;R.smaz(id);dd.hidden=true;kresli();toast('Smazáno.')})}});
   function form(r,pre){
     pre=pre||{};var b=r?r.stav==='blk':!!pre.blk,o=(r&&r.osoby)||{},d=(r&&r.dalsi)||{},num=function(n,l,v){return '<label class="f">'+l+'<input class="inp" name="'+n+'" type="number" min="0" inputmode="numeric" value="'+(v||'')+'"></label>'};
     df.innerHTML='<form method="dialog" novalidate><h2 id="rft">'+(r?(b?'Upravit blokaci':'Upravit rezervaci'):(b?'Blokovat místo':'Nová rezervace'))+'</h2><div class="rfg">'+
@@ -626,7 +643,7 @@ function rezervace(m){
   box.addEventListener('click',function(e){var t=e.target,b=t.closest('button');
     if(b){var s=b.dataset;
       if(s.tab){tab=s.tab;KK.LS.set('rez.tab',tab);filtr='';q='';lim=100;kresli()}
-      else if(s.qs){if(!overDatum(s.qs,s.st))return;try{var rr=zmen(s.qs,{stav:s.st},R.STAVY[s.st]);KK.zaznam('Rezervace',(rr.cislo||'')+' '+rr.jmeno+' – '+R.STAVY[rr.stav]);kresli();toast(rr.jmeno+': '+R.STAVY[rr.stav]+'.')}catch(x){toast(x.message,1)}}
+      else if(s.qs){var qi=s.qs,qt=s.st;overDatum(qi,qt).then(function(ok){if(!ok)return;try{var rr=zmen(qi,{stav:qt},R.STAVY[qt]);KK.zaznam('Rezervace',(rr.cislo||'')+' '+rr.jmeno+' – '+R.STAVY[rr.stav]);kresli();toast(rr.jmeno+': '+R.STAVY[rr.stav]+'.')}catch(x){toast(x.message,1)}})}
       else if(s.fs!=null){F.stav=s.fs;lim=100;kresli()}
       else if(s.fo!=null){F.obd=s.fo;F.stav='';lim=100;kresli()}
       else if(s.a==='csv'){var Q=function(v){v=String(v==null?'':v);return /[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
@@ -648,7 +665,7 @@ function rezervace(m){
       else if(s.a==='blk')form(null,{blk:1});
       else if(s.a==='ukazka')ukazka();
       else if(s.vm){var n=R.nast(),v=R.vyp().slice(),i=v.indexOf(s.vm);if(i<0)v.push(s.vm);else v.splice(i,1);n.vyp=v;R.ulozNast(n);KK.zaznam('Rezervace',R.nazev(s.vm)+(i<0?' vypnuto z rezervace':' zapnuto do rezervace'));toast(R.nazev(s.vm)+(i<0?' vypnuto – hosté si ho nevyberou.':' zapnuto.'));kresli()}
-      else if(s.a==='vymaz'&&confirm('Opravdu smazat všechny rezervace i blokace? Nejde to vrátit.')){R.vymaz();KK.zaznam('Rezervace','vše smazáno');kresli();toast('Rezervace smazány.')}
+      else if(s.a==='vymaz')ptej('Smazat všechny rezervace i blokace?\n\nSmaže se úplně všechno včetně historie. Nejde to vrátit.',{ok:'Smazat vše',nebezp:1}).then(function(ok){if(!ok)return;R.vymaz();KK.zaznam('Rezervace','vše smazáno');kresli();toast('Rezervace smazány.')});
       return}
     var rj=t.closest&&t.closest('.rlt tr');if(rj&&(rj=$('.rl-j',rj))){detail(rj.dataset.id);return}
     if(t.classList.contains('rk-t')){var d=ADD(zac,Math.floor(e.offsetX/W));form(null,{mista:[t.dataset.m],od:ISO(d),do:ISO(ADD(d,1))})}});
@@ -672,19 +689,19 @@ function rezervace(m){
     var nm=(r.mista||[]).map(function(k){return k===mS?mN:k}),kol=R.kolize(nm,od,dk,r.id),zm=od!==r.od||dk!==r.do;
     var kam=R.nazev(mN)+(zm?', '+KR(od)+' – '+KR(dk):'');
     if(!kol.length){
-      if(!confirm((zm?'Přesunout rezervaci?':'Přestěhovat hosta?')+'\n\n'+r.jmeno+' ('+KR(r.od)+' – '+KR(r.do)+')\n'+R.nazev(mS)+' → '+kam))return;
-      var x=zmen(r.id,{od:od,do:dk,mista:nm},'Přesun: '+kam);KK.zaznam('Rezervace',(x.cislo||'')+' '+x.jmeno+' – přesunuto');kresli();toast(x.jmeno+': '+kam);return}
+      ptej((zm?'Přesunout rezervaci?':'Přestěhovat hosta?')+'\n\n'+r.jmeno+' · '+KR(r.od)+' – '+KR(r.do)+'\n'+R.nazev(mS)+'  →  '+kam,{ok:zm?'Přesunout':'Přestěhovat'}).then(function(ok){if(!ok)return;
+        try{var x=zmen(r.id,{od:od,do:dk,mista:nm},'Přesun: '+kam);KK.zaznam('Rezervace',(x.cislo||'')+' '+x.jmeno+' – přesunuto');kresli();toast(x.jmeno+': '+kam)}catch(q){toast(q.message,1)}});return}
     var prek=R.vse().filter(function(x){return x.id!==r.id&&x.stav!=='zru'&&x.od<dk&&od<x.do&&(x.mista||[]).some(function(k){return nm.indexOf(k)>=0})}),r3=prek[0];
     if(kol.length>1||kol[0]!==mN||prek.length!==1||r3.stav==='blk'||(r3.mista||[]).indexOf(mS)>=0){toast((kol.length===1?R.nazev(kol[0])+' je':'Místa '+kol.map(R.nazev).join(', ')+' jsou')+' v termínu '+KR(od)+' – '+KR(dk)+' obsazené'+(prek.length>1?' více rezervacemi':r3&&r3.stav==='blk'?' blokací':'')+'.',1);return}
     var nm3=r3.mista.map(function(k){return k===mN?mS:k}),vadi=R.vse().filter(function(x){return x.id!==r.id&&x.id!==r3.id&&x.stav!=='zru'&&x.od<r3.do&&r3.od<x.do&&(x.mista||[]).indexOf(mS)>=0});
     if(vadi.length){toast(R.nazev(mN)+' je obsazené ('+r3.jmeno+') a prohodit to nejde – '+R.nazev(mS)+' má v termínu '+KR(r3.od)+' – '+KR(r3.do)+' jinou rezervaci.',1);return}
-    if(!confirm('Prohodit hosty?\n\n'+r.jmeno+' ('+KR(r.od)+' – '+KR(r.do)+'): '+R.nazev(mS)+' → '+kam+'\n'+r3.jmeno+' ('+KR(r3.od)+' – '+KR(r3.do)+'): '+R.nazev(mN)+' → '+R.nazev(mS)))return;
+    ptej('Prohodit hosty?\n\n'+r.jmeno+' · '+KR(r.od)+' – '+KR(r.do)+'\n'+R.nazev(mS)+'  →  '+kam+'\n\n'+r3.jmeno+' · '+KR(r3.od)+' – '+KR(r3.do)+'\n'+R.nazev(mN)+'  →  '+R.nazev(mS),{ok:'Prohodit'}).then(function(ok){if(!ok)return;
     var puv3=r3.mista.slice();
     try{R.uprav(r3.id,{mista:puv3.filter(function(k){return k!==mN})});
       var y=zmen(r.id,{od:od,do:dk,mista:nm},'Prohození s '+r3.jmeno+': '+kam);
       var z=zmen(r3.id,{mista:nm3},'Prohození s '+r.jmeno+': '+R.nazev(mS));
       KK.zaznam('Rezervace',y.jmeno+' ↔ '+z.jmeno+' – prohozeno');kresli();toast('Prohozeno: '+y.jmeno+' ↔ '+z.jmeno)}
-    catch(q){try{R.uprav(r3.id,{mista:puv3})}catch(q9){}kresli();toast(q.message,1)}}
+    catch(q){try{R.uprav(r3.id,{mista:puv3})}catch(q9){}kresli();toast(q.message,1)}})}
   box.addEventListener('dragstart',function(e){tipSkryj();var b=e.target.closest&&e.target.closest('.rk-b,.rk-dg,.rn[data-id]');if(!b)return;
     if(b.dataset.dg)tah={g:b.dataset.dg};else if(b.classList.contains('rn'))tah={id:b.dataset.id,m:b.dataset.m,dnes:1};else{var r=najdi(b.dataset.id);if(!r)return;tah={id:r.id,m:b.parentNode.dataset.m,off:Math.floor(e.offsetX/W)+Math.max(0,-Math.round((D0(r.od)-zac)/864e5))}}
     e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',b.dataset.id||b.dataset.dg)}catch(x){}});
@@ -755,8 +772,8 @@ function uzivatele(m){
       KK.uzivatele.uprav(id,z).then(function(){toast('Uloženo.');route()}).catch(function(x){toast(x.message,1);route()})});
     $('#ul').addEventListener('click',function(e){var b=e.target.closest('button[data-a]');if(!b)return;var id=b.closest('tr').dataset.id,u=najdi(id);
       if(b.dataset.a==='upr')otevri(u);
-      if(b.dataset.a==='heslo'){var h=prompt('Nové heslo pro '+u.jmeno+' (aspoň 8 znaků):',KK.uzivatele.heslo());if(h==null)return;KK.uzivatele.noveHeslo(id,h).then(function(){toast('Heslo změněno: '+h);route()}).catch(function(x){toast(x.message,1)})}
-      if(b.dataset.a==='del'&&confirm('Smazat uživatele '+u.jmeno+'? Tato akce nejde vrátit.'))KK.uzivatele.smaz(id).then(function(){toast('Uživatel smazán.');route()}).catch(function(x){toast(x.message,1)})});
+      if(b.dataset.a==='heslo'){ptej('Nové heslo pro '+u.jmeno+'\n\nAspoň 8 znaků. Navržené heslo můžete přepsat.',{pole:KK.uzivatele.heslo(),ok:'Nastavit heslo'}).then(function(h){if(h==null)return;KK.uzivatele.noveHeslo(id,h).then(function(){toast('Heslo změněno: '+h);route()}).catch(function(x){toast(x.message,1)})})}
+      if(b.dataset.a==='del')ptej('Smazat uživatele '+u.jmeno+'?\n\nDo administrace se už nepřihlásí. Nejde to vrátit.',{ok:'Smazat',nebezp:1}).then(function(ok){if(ok)KK.uzivatele.smaz(id).then(function(){toast('Uživatel smazán.');route()}).catch(function(x){toast(x.message,1)})})});
     $$('[data-pr]',m).forEach(function(c){c.addEventListener('change',function(){var P2=KK.prava.vse();P2.obsluha[c.dataset.pr]=c.checked?1:0;KK.prava.uloz(P2).then(function(){toast('Práva obsluhy uložena.')})})});
   });
 }
@@ -781,9 +798,9 @@ function nastaveni(m){
   '<div class="card"><h2>Záloha</h2><p class="mut">Stáhne soubor .json se všemi úpravami.</p><div class="row"><button class="btn pri" id="ex">Stáhnout zálohu</button><label class="btn gh" for="im">Nahrát zálohu</label><input type="file" id="im" accept=".json,application/json" hidden></div></div>'+
   '<div class="card"><h2>Začít znovu</h2><p class="mut">Smaže všechny úpravy textů, SEO i galerii a vrátí web do původní podoby.</p><button class="btn dan" id="rs">Smazat všechny úpravy</button></div></div>';
   $('#ex').addEventListener('click',function(){KK.export().then(function(d){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:'application/json'}));a.download='kemp-krumlov-zaloha-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Záloha stažena.')})});
-  $('#im').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;if(!confirm('Nahrání zálohy přepíše současné úpravy. Pokračovat?')){e.target.value='';return}
-    f.text().then(function(t){return KK.import(JSON.parse(t))}).then(function(){ZDROJ=null;toast('Záloha obnovena.')}).catch(function(x){toast(x.message||'Soubor nejde načíst.',1)});e.target.value=''});
-  $('#rs').addEventListener('click',function(){if(!confirm('Opravdu smazat všechny úpravy? Nejde to vrátit.'))return;KK.reset().then(function(){toast('Vše vráceno do původní podoby.')})});
+  $('#im').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var inpZ=e.target;ptej('Nahrát zálohu?\n\nSoučasné úpravy webu, ceník i rezervace se přepíšou obsahem souboru.',{ok:'Nahrát zálohu',nebezp:1}).then(function(ok){if(!ok){inpZ.value='';return}
+    f.text().then(function(t){return KK.import(JSON.parse(t))}).then(function(){ZDROJ=null;toast('Záloha obnovena.')}).catch(function(x){toast(x.message||'Soubor nejde načíst.',1)});inpZ.value=''})});
+  $('#rs').addEventListener('click',function(){ptej('Smazat všechny úpravy?\n\nWeb, ceník i nastavení se vrátí do původní podoby. Nejde to vrátit.',{ok:'Smazat vše',nebezp:1}).then(function(ok){if(ok)KK.reset().then(function(){toast('Vše vráceno do původní podoby.')})})});
 }
 
 KK.auth.me().then(function(s){s?shell(s):login()});

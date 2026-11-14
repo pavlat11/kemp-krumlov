@@ -322,10 +322,18 @@ bMode.addEventListener('click',function(){
 });
 
 bUndo.addEventListener('click',function(){var z=zasobnik.pop();if(!z)return;z();stav();oznac()});
-bDrop.addEventListener('click',function(){if(!confirm('Zahodit všechny neuložené změny?'))return;
+/* potvrzovací okno místo confirm() */
+function ptej(tit,txt,ok){return new Promise(function(res){var d=document.createElement('dialog'),hot=0;d.className='kke-ui kke-ptj';
+  d.innerHTML='<h2></h2><p></p><div><button type="button" data-n>Zůstat</button><button type="button" data-y></button></div>';
+  d.querySelector('h2').textContent=tit;d.querySelector('p').textContent=txt;d.querySelector('[data-y]').textContent=ok;
+  var k=function(v){if(hot)return;hot=1;try{d.close()}catch(e){}d.remove();res(v)};
+  d.querySelector('[data-n]').onclick=function(){k(false)};d.querySelector('[data-y]').onclick=function(){k(true)};
+  d.addEventListener('cancel',function(e){e.preventDefault();k(false)});d.addEventListener('click',function(e){if(e.target===d)k(false)});
+  document.body.appendChild(d);d.showModal();d.querySelector('[data-n]').focus()})}
+bDrop.addEventListener('click',function(){ptej('Zahodit změny?','Všechny neuložené úpravy se ztratí.','Zahodit změny').then(function(ok){if(!ok)return;
   var nove=Object.keys(pO).map(function(c){return pO[c]&&pO[c].id}).filter(Boolean);
   cekajici={};pD={};pI={};pO={};zasobnik=[];
-  (nove.length?KK.obrazky.soubor.smaz(nove).catch(function(){}):Promise.resolve()).then(function(){location.reload()});
+  (nove.length?KK.obrazky.soubor.smaz(nove).catch(function(){}):Promise.resolve()).then(function(){location.reload()})});
 });
 bSave.addEventListener('click',function(){
   if(aktivni)skonci();var z={};
@@ -338,8 +346,8 @@ bSave.addEventListener('click',function(){
   .catch(function(){bSave.disabled=false;toast('Uložení se nepovedlo. Zkuste to znovu.','err')});
 });
 if(!VRAMCI)bar.querySelector('.kke-end').addEventListener('click',function(){
-  if(pocet()&&!confirm('Máte neuložené změny. Opravdu odejít bez uložení?'))return;
-  cekajici={};pD={};pI={};pO={};location.href=location.pathname+location.hash;
+  (pocet()?ptej('Máte neuložené změny','Když odejdete, změny se neuloží.','Odejít bez uložení'):Promise.resolve(true)).then(function(ok){if(!ok)return;
+  cekajici={};pD={};pI={};pO={};location.href=location.pathname+location.hash})
 });
 window.KKE={neulozeno:function(){return pocet()>0},opust:false};
 addEventListener('beforeunload',function(e){if(pocet()&&!(window.KKE&&KKE.opust)){e.preventDefault();e.returnValue=''}});

@@ -59,8 +59,8 @@ var smiUpravit=function(){if(!ses||ses.do<=Date.now())return false;var u=(get('u
   if(get('uzivatele')&&(!u||u.aktivni===false))return false;var role=u?u.role:ses.role;if(role==='admin')return true;
   var p=(get('prava')||{})[role]||{};return p.upravit!==0};
 if(/[?&]edit(=1)?(&|$)/.test(location.search)&&smiUpravit()){
-  var l=document.createElement('link');l.rel='stylesheet';l.href=BASE+'css/editace.css?v=7';document.head.appendChild(l);
-  document.addEventListener('DOMContentLoaded',function(){nactiData().then(function(){return nactiSkript('js/editace.js?v=8')})});
+  var l=document.createElement('link');l.rel='stylesheet';l.href=BASE+'css/editace.css?v=8';document.head.appendChild(l);
+  document.addEventListener('DOMContentLoaded',function(){nactiData().then(function(){return nactiSkript('js/editace.js?v=9')})});
 }
 })();
 ;
