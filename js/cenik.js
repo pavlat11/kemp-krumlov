@@ -148,7 +148,7 @@ var D=function(s){var p=s.split('-');return new Date(+p[0],p[1]-1,+p[2])};
 var I=function(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)};
 var R=window.KKR={
  SKUPINY:[{id:'cn',k:'chatka',n:'Chatky vpravo nahoře',c:rada(1,5)},{id:'cd',k:'chatka',n:'Chatky vpravo dole',c:rada(6,10)},{id:'cl',k:'chatka',n:'Chatky vlevo',c:rada(11,20)},{id:'ps',k:'podsad',n:'Podsadové stany',c:rada(1,11)},{id:'tp',k:'teepee',n:'Teepee',c:[1]}],
- STAVY:{pop:'Poptávka',pot:'Potvrzená',uby:'Ubytovaný',odj:'Odjel',zru:'Zrušená',blk:'Blokace'},
+ STAVY:{pop:'Poptávka',pot:'Rezervace',uby:'Ubytovaný',odj:'Odjel',zru:'Zrušená',blk:'Blokace'},
  nazev:function(m){var p=m.split('-');return p[0]==='chatka'?'Chatka '+p[1]:p[0]==='podsad'?'Podsadový stan '+p[1]:'Teepee'},
  /* režim pro každý typ zvlášť: 'poptavka' (potvrzuje obsluha) nebo 'ihned' */
  nast:function(){var n=cti(KN,{}),z=n.rezim,r={};['chatka','podsad','teepee','stan','karavan'].forEach(function(k){r[k]=(typeof z==='string'?z:(z||{})[k])==='ihned'?'ihned':'poptavka'});n.rezim=r;return n},
