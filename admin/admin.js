@@ -522,7 +522,10 @@ function rezervace(m){
     var i=Math.floor((e.clientX-t.getBoundingClientRect().left)/W)-T.off,n=noci(r),od=ISO(ADD(zac,i)),dk=ISO(ADD(zac,i+n)),m=t.dataset.m;
     if(od===r.od&&m===T.m)return;
     if(m!==T.m&&(r.mista||[]).indexOf(m)>=0){toast('Tato rezervace už '+R.nazev(m)+' obsahuje.',1);return}
-    try{var x=R.uprav(r.id,{od:od,do:dk,mista:(r.mista||[]).map(function(k){return k===T.m?m:k})});KK.zaznam('Rezervace',(x.cislo||'')+' '+x.jmeno+' – přesunuto');kresli();toast(x.jmeno+': '+R.nazev(m)+', '+KR(od)+' – '+KR(dk))}catch(q){toast(q.message,1)}});
+    var nm=(r.mista||[]).map(function(k){return k===T.m?m:k}),kol=R.kolize(nm,od,dk,r.id);
+    if(kol.length){toast('V tomto termínu je obsazeno: '+kol.map(R.nazev).join(', ')+'.',1);return}
+    if(!confirm('Přesunout rezervaci?\n\n'+r.jmeno+'\n'+R.nazev(T.m)+', '+KR(r.od)+' – '+KR(r.do)+'\n→ '+R.nazev(m)+', '+KR(od)+' – '+KR(dk)))return;
+    try{var x=R.uprav(r.id,{od:od,do:dk,mista:nm});KK.zaznam('Rezervace',(x.cislo||'')+' '+x.jmeno+' – přesunuto');kresli();toast(x.jmeno+': '+R.nazev(m)+', '+KR(od)+' – '+KR(dk))}catch(q){toast(q.message,1)}});
   box.addEventListener('keydown',function(e){var b=e.target;if(!b.dataset||!b.dataset.dg||(e.key!=='ArrowUp'&&e.key!=='ArrowDown'))return;e.preventDefault();
     var po=skupiny().map(function(g){return g.id}),i=po.indexOf(b.dataset.dg),j=i+(e.key==='ArrowUp'?-1:1);if(j<0||j>=po.length)return;presunSkupinu(b.dataset.dg,po[j],j>i);var f=$('[data-dg="'+b.dataset.dg+'"]',box);if(f)f.focus()});
   box.addEventListener('change',function(e){var t=e.target;
