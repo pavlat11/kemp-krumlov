@@ -409,8 +409,12 @@ function rezervace(m){
   var cas=function(t){var d=new Date(t);return d.getDate()+'. '+(d.getMonth()+1)+'. '+d.getFullYear()+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)};
   var kratM=function(r){var a=(r.mista||[]).map(function(k){return R.nazev(k).replace('Podsadový stan','Stan')});if(r.dalsi){if(r.dalsi.stan)a.push(r.dalsi.stan+'× vl. stan');if(r.dalsi.karavan)a.push(r.dalsi.karavan+'× karavan')}return a.join(', ')||'—'};
 
+  var kTab='';
   function kresli(){
     var A=R.vse(),akt=A.filter(function(r){return r.stav!=='zru'});
+    /* po překreslení zůstat tam, kde uživatel byl (stejná záložka) */
+    var kO=$('.rk',box),kS=kO&&kTab===tab+'|'+q?[kO.scrollTop,kO.scrollLeft,window.scrollX,window.scrollY]:null,dO=$('.rn-dny',box),dS=dO&&kTab===tab+'|'+q?dO.scrollLeft:null;
+    Promise.resolve().then(function(){var k=$('.rk',box);if(kS&&k){k.scrollTop=kS[0];k.scrollLeft=kS[1];window.scrollTo(kS[2],kS[3])}var dn=$('.rn-dny',box);if(dS!=null&&dn)dn.scrollLeft=dS;kTab=tab+'|'+q});
     box.innerHTML='<div class="rz-top"><h1>Rezervace</h1><div class="rz-seg" role="group" aria-label="Zobrazení">'+[['dnes','Dnes'],['kal','Kalendář'],['sez','Seznam'],['nas','Nastavení']].map(function(t){return '<button type="button" aria-pressed="'+(!q&&tab===t[0])+'" data-tab="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div>'+
       '<label class="rq"><span class="sr">Hledat v rezervacích</span>'+SV(IC.seo,18)+'<input type="search" id="rq" class="inp" placeholder="Hledat jméno, telefon, číslo, chatka 12, 16. 7. …" value="'+esc(q)+'" autocomplete="off"></label>'+
       '<div class="row rz-ak"><button type="button" class="btn gh" data-a="blk">Blokovat místo</button><button type="button" class="btn pri" data-a="nova">+ Nová rezervace</button></div></div>'+
