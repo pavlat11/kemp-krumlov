@@ -440,3 +440,10 @@ table.rlt{min-width:620px}.rlt tbody tr:not(.rl-m){cursor:pointer}
 .rk-r.off .rk-t{background-image:repeating-linear-gradient(135deg,rgba(0,0,0,.035) 0 6px,transparent 6px 12px)!important}
 .rnt .rnt-off td{color:#9a9384;font-size:13.5px}.rnt .rnt-off td b{color:#9a9384;text-decoration:line-through}
 .rn-w{margin-top:0;margin-bottom:16px}
+/* cena dole ve formuláři rezervace */
+.rfp{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:16px;padding:14px 16px;border-radius:12px;background:#f4f8f5;border:1px solid #d6e6db}
+.rfp b{display:block;font-size:15px}.rfp small{display:block;font-size:12.5px;color:var(--mut);margin-top:2px}
+.rfc{display:flex;align-items:center;gap:8px;flex:none}.rfc .inp{width:140px;text-align:right;font-size:20px;font-weight:800;-moz-appearance:textfield}.rfc>span:last-child{font-weight:800;font-size:17px}
+.rfc .inp::-webkit-inner-spin-button,.rfc .inp::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.lnk{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--sunText);text-decoration:underline;cursor:pointer}
+@media(max-width:560px){.rfp{flex-direction:column;align-items:stretch}.rfc .inp{width:100%}}

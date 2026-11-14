@@ -536,18 +536,28 @@ function rezervace(m){
       '<label class="f s2">'+(b?'Důvod blokace':'Jméno hosta')+'<input class="inp" name="jmeno" required autocomplete="off"></label>'+
       (b?'':'<label class="f">Telefon<input class="inp" name="telefon" type="tel" autocomplete="off"></label><label class="f">E-mail<input class="inp" name="email" type="email" autocomplete="off"></label>')+
       '<label class="f">'+(b?'Od':'Příjezd')+'<input class="inp" name="od" type="date" required></label><label class="f">'+(b?'Do (tento den už je volno)':'Odjezd')+'<input class="inp" name="do" type="date" required></label>'+
-      (b?'':num('dosp','Dospělí',o.dosp)+num('dite','Děti',(o.dite||0)+(o.zak||0))+num('cena','Cena (Kč)',r&&r.cena)+
+      (b?'':num('dosp','Dospělí',o.dosp)+num('dite','Děti',(o.dite||0)+(o.zak||0))+
         '<label class="f">Stav<select class="inp" name="stav">'+['pop','pot','uby','odj'].map(function(s){return '<option value="'+s+'">'+R.STAVY[s]+'</option>'}).join('')+'</select></label>')+
       '<fieldset class="s2 rmf"><legend>Místa <small>přeškrtnutá jsou v termínu obsazená</small></legend><div id="rmm"></div></fieldset>'+
       '<label class="f s2">Poznámka<textarea class="inp" name="zprava" rows="2"></textarea></label></div>'+
+      (b?'':'<div class="rfp"><div><b>Cena</b><small id="rfci"></small></div><label class="rfc"><span class="sr">Cena v Kč</span><input class="inp" name="cena" type="number" min="0" inputmode="numeric"><span>Kč</span></label></div>')+
       '<p class="err-msg" role="alert" hidden></p><div class="row" style="justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn gh" data-z>Zrušit</button><button class="btn pri">Uložit</button></div></form>';
     var f=$('form',df),er=$('.err-msg',f),vyb={};((r&&r.mista)||pre.mista||[]).forEach(function(k){vyb[k]=1});
     f.jmeno.value=r?r.jmeno:'';f.od.value=r?r.od:(pre.od||dnes);f.do.value=r?r.do:(pre.do||ISO(ADD(D0(f.od.value),1)));f.zprava.value=(r&&r.zprava)||'';
-    if(!b){f.telefon.value=(r&&r.telefon)||'';f.email.value=(r&&r.email)||'';f.stav.value=r&&r.stav!=='zru'?r.stav:'pot'}
+    if(!b){f.telefon.value=(r&&r.telefon)||'';f.email.value=(r&&r.email)||'';f.stav.value=r&&r.stav!=='zru'?r.stav:'pot';f.cena.value=(r&&r.cena)||''}
+    var rucne=!!(r&&r.cena);
+    var spocti=function(){if(b||!window.KKC)return;var od=f.od.value,dk=f.do.value,nn=od&&dk&&od<dk?Math.round((D0(dk)-D0(od))/864e5):0,q={};
+      Object.keys(vyb).forEach(function(k){var t=k.split('-')[0];q[t]=(q[t]||0)+1});q.stan=+d.stan||0;q.karavan=+d.karavan||0;q.os=+f.dosp.value||0;q.dite=+f.dite.value||0;
+      var sum=0;for(var i=0;i<nn;i++){var h=KKC.hlavni(ADD(D0(od),i).getMonth())?'a':'b';Object.keys(q).forEach(function(k){if(q[k]&&KKC.p(k))sum+=KKC.v(k,h)*q[k]})}
+      var sl=KKC.sleva(nn),c=Math.round(sum-sum*sl),inf=nn+' '+pl(nn,'noc','noci','nocí')+(sl?' · sleva '+Math.round(sl*100)+' %':'');
+      if(!rucne)f.cena.value=c||'';
+      $('#rfci',f).innerHTML=!c?'Vyberte termín, místa a osoby – cena se spočítá podle ceníku.':rucne&&+f.cena.value!==c?'Zadáno ručně · podle ceníku '+kc(c)+' <button type="button" class="lnk" data-cp>Použít</button>':'Podle ceníku · '+inf};
     function mista(){var od=f.od.value,dk=f.do.value,kol={};if(od&&dk&&od<dk)R.kolize([].concat.apply([],R.SKUPINY.map(function(g){return g.c.map(function(c){return g.k+'-'+c})})),od,dk,r&&r.id).forEach(function(k){kol[k]=1});
       $('#rmm',f).innerHTML=R.SKUPINY.map(function(g){return '<div class="rmg"><small>'+g.n+'</small><div>'+g.c.map(function(c){var k=g.k+'-'+c,z=kol[k];if(z)delete vyb[k];return '<label class="rm'+(z?' z':'')+'"><input type="checkbox" value="'+k+'"'+(vyb[k]?' checked':'')+(z?' disabled':'')+' aria-label="'+R.nazev(k)+(z?', obsazeno':'')+'"><span>'+(g.k==='teepee'?'Teepee':c)+'</span></label>'}).join('')+'</div></div>'}).join('')}
-    mista();f.od.addEventListener('change',mista);f.do.addEventListener('change',mista);
-    $('#rmm',f).addEventListener('change',function(e){if(e.target.checked)vyb[e.target.value]=1;else delete vyb[e.target.value]});
+    mista();spocti();f.od.addEventListener('change',function(){mista();spocti()});f.do.addEventListener('change',function(){mista();spocti()});
+    $('#rmm',f).addEventListener('change',function(e){if(e.target.checked)vyb[e.target.value]=1;else delete vyb[e.target.value];spocti()});
+    f.addEventListener('input',function(e){var t=e.target;if(t.name==='cena')rucne=t.value!=='';if(t.name==='cena'||t.name==='dosp'||t.name==='dite')spocti()});
+    f.addEventListener('click',function(e){if(e.target.closest('[data-cp]')){rucne=false;spocti()}});
     $('[data-z]',f).addEventListener('click',function(){df.close()});
     f.addEventListener('submit',function(e){e.preventDefault();er.hidden=true;var ch=function(t,el){er.textContent=t;er.hidden=false;if(el)el.focus()};
       var z={jmeno:f.jmeno.value.trim(),od:f.od.value,do:f.do.value,mista:Object.keys(vyb),zprava:f.zprava.value.trim()};
