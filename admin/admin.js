@@ -537,7 +537,7 @@ function rezervace(m){
       (b?'':'<label class="f">Telefon<input class="inp" name="telefon" type="tel" autocomplete="off"></label><label class="f">E-mail<input class="inp" name="email" type="email" autocomplete="off"></label>')+
       '<label class="f">'+(b?'Od':'Příjezd')+'<input class="inp" name="od" type="date" required></label><label class="f">'+(b?'Do (tento den už je volno)':'Odjezd')+'<input class="inp" name="do" type="date" required></label>'+
       (b?'':num('dosp','Dospělí',o.dosp)+num('dite','Děti',(o.dite||0)+(o.zak||0))+
-        '<label class="f">Stav<select class="inp" name="stav">'+['pop','pot','uby','odj'].map(function(s){return '<option value="'+s+'">'+R.STAVY[s]+'</option>'}).join('')+'</select></label>')+
+        '<fieldset class="f s2 rfst"><legend>Stav</legend><div class="rfst-g">'+['pop','pot','uby','odj'].map(function(s){return '<label class="rfst-o '+s+'"><input type="radio" name="stav" value="'+s+'"><span>'+R.STAVY[s]+'</span></label>'}).join('')+'</div></fieldset>')+
       '<fieldset class="s2 rmf"><legend>Místa <small>přeškrtnutá jsou v termínu obsazená</small></legend><div id="rmm"></div></fieldset>'+
       '<label class="f s2">Poznámka<textarea class="inp" name="zprava" rows="2"></textarea></label></div>'+
       (b?'':'<div class="rfp"><div><b>Cena</b><small id="rfci"></small></div><label class="rfc"><span class="sr">Cena v Kč</span><input class="inp" name="cena" type="number" min="0" inputmode="numeric"><span>Kč</span></label></div>')+

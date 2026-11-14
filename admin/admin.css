@@ -447,3 +447,12 @@ table.rlt{min-width:620px}.rlt tbody tr:not(.rl-m){cursor:pointer}
 .rfc .inp::-webkit-inner-spin-button,.rfc .inp::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .lnk{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--sunText);text-decoration:underline;cursor:pointer}
 @media(max-width:560px){.rfp{flex-direction:column;align-items:stretch}.rfc .inp{width:100%}}
+/* stav ve formuláři jako přepínač */
+.rfst{border:0;padding:0;margin:0;min-width:0}.rfst legend{font-weight:700;font-size:14px;padding:0;margin-bottom:6px}
+.rfst-g{display:inline-flex;flex-wrap:wrap;gap:4px;padding:4px;border-radius:12px;background:#f1ede4}
+.rfst-o{position:relative;cursor:pointer}.rfst-o input{position:absolute;opacity:0;width:1px;height:1px}
+.rfst-o span{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:6px 14px;border-radius:9px;font-weight:700;font-size:14px;color:var(--mut)}
+.rfst-o span::before{content:"";width:9px;height:9px;border-radius:50%;background:#bdb5a3}
+.rfst-o.pop span::before{background:#e08a1e}.rfst-o.pot span::before{background:#1f6d77}.rfst-o.uby span::before{background:var(--deep2)}
+.rfst-o input:checked+span{background:#fff;color:var(--deep);box-shadow:0 1px 3px rgba(15,34,25,.18)}
+.rfst-o input:focus-visible+span{outline:3px solid var(--sun);outline-offset:1px}
