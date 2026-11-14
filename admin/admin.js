@@ -151,7 +151,7 @@ function prehled(m){
       '<li class="'+(jaP&&jaP.vychozi?'warn':'ok')+'"><a href="#ucet"><b>Heslo</b><span>'+(jaP&&jaP.vychozi?'Výchozí – změňte ho':'Nastavené')+'</span></a></li>'+
       '<li class="ok"><a href="'+WEB+'index.html" target="_blank" rel="noopener"><b>Web</b><span>Otevřít v novém okně ↗</span></a></li></ul></div>';
     var hi='<div class="card"><h2>Poslední změny</h2>'+(h.length?'<ul class="hist">'+h.slice(0,6).map(function(x){return '<li><time>'+cas(x.kdy)+'</time><span><b>'+esc(x.co)+'</b> – '+esc(x.popis)+'</span></li>'}).join('')+'</ul>':'<p class="mut">Zatím žádné změny.</p>')+'</div>';
-    m.innerHTML=hes+h1+prov+'<div class="grid pv-r2">'+web+hi+'</div>';
+    m.innerHTML=hes+h1+prov+hi;
     m.addEventListener('click',function(e){var a=e.target.closest('[data-pv],[data-rn]');if(!a)return;if(a.dataset.pv)KK.LS.set('rez.tab',a.dataset.pv);if(a.hasAttribute('data-rn'))sessionStorage.setItem('kk.rez.nova','1')});
   });
 }
