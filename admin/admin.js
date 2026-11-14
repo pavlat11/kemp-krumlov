@@ -119,7 +119,7 @@ function prehled(m){
     var kc=function(n){return Math.round(n).toLocaleString('cs-CZ').replace(/\s/g,' ')+' Kč'};
     var h1='<div class="ph"><div><h1>Dobrý den, '+esc(jaP?jaP.jmeno.split(' ')[0]:'')+'</h1><p>Dnes je '+DL[nd.getDay()]+' '+nd.getDate()+'. '+MG[nd.getMonth()]+' '+nd.getFullYear()+'.</p></div><div class="row">'+
       (rez?'<a class="btn pri" href="#rezervace" data-rn>+ Nová rezervace</a>':'')+'<a class="btn" href="#upravit">'+SV(IC.obsah,18)+'Upravit web</a></div></div>';
-    var hes=jaP&&jaP.vychozi?'<div class="card pv-w"><b>Používáte výchozí heslo.</b> <a href="#ucet">Změňte si ho v Můj účet</a> – kdokoli, kdo ho zná, se dostane do administrace.</div>':'';
+    var hes=jaP&&jaP.vychozi?'':'';
     var prov='';
     if(rez){
       var A=R.vse().filter(function(x){return x.stav!=='zru'}),H=A.filter(function(x){return x.stav!=='blk'}),vyp=R.vyp();
