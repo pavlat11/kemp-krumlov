@@ -140,13 +140,14 @@ var dh=document.querySelector('.rz-disc-hint');if(dh)dh.textContent=(C.slevy||[]
    Obsazené jsou noci od ≤ noc < do. Stav 'zru' místo neblokuje, 'blk' je blokace místa obsluhou. */
 (function(){
 var K='kk.rezervace',KN='kk.rez.nast',KC='kk.rez.cislo';
-var cti=function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
-var pis=function(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}};
+var mem=null; /* při hromadném vkládání (testovací data) se pracuje v paměti a zapíše se až na konci */
+var cti=function(k,d){if(mem&&k in mem)return mem[k];try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}};
+var pis=function(k,v){if(mem&&(k===K||k===KC)){mem[k]=v;return true}try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}};
 var rada=function(a,b){var r=[],s=a<=b?1:-1;for(var i=a;s>0?i<=b:i>=b;i+=s)r.push(i);return r};
 var D=function(s){var p=s.split('-');return new Date(+p[0],p[1]-1,+p[2])};
 var I=function(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)};
 var R=window.KKR={
- SKUPINY:[{id:'cl',k:'chatka',n:'Chatky vlevo',c:rada(20,11)},{id:'cn',k:'chatka',n:'Chatky vpravo nahoře',c:rada(1,5)},{id:'cd',k:'chatka',n:'Chatky vpravo dole',c:rada(6,10)},{id:'ps',k:'podsad',n:'Podsadové stany',c:rada(1,11)},{id:'tp',k:'teepee',n:'Teepee',c:[1]}],
+ SKUPINY:[{id:'cn',k:'chatka',n:'Chatky vpravo nahoře',c:rada(1,5)},{id:'cd',k:'chatka',n:'Chatky vpravo dole',c:rada(6,10)},{id:'cl',k:'chatka',n:'Chatky vlevo',c:rada(11,20)},{id:'ps',k:'podsad',n:'Podsadové stany',c:rada(1,11)},{id:'tp',k:'teepee',n:'Teepee',c:[1]}],
  STAVY:{pop:'Poptávka',pot:'Potvrzená',uby:'Ubytovaný',odj:'Odjel',zru:'Zrušená',blk:'Blokace'},
  nazev:function(m){var p=m.split('-');return p[0]==='chatka'?'Chatka '+p[1]:p[0]==='podsad'?'Podsadový stan '+p[1]:'Teepee'},
  /* režim pro každý typ zvlášť: 'poptavka' (potvrzuje obsluha) nebo 'ihned' */
@@ -168,15 +169,49 @@ var R=window.KKR={
  vymaz:function(){pis(K,[])},
  /* TESTOVACÍ DATA pro náhled – před ostrým provozem smazat (i automatické vložení níže).
     Kolem dneška pár pobytů, v červenci sezóny plnější obsazenost a víkend 16.–18. 7. s plnou kapacitou chatek. */
- ukazka:function(){var n=0,t=new Date(),Y=t.getFullYear()+(t.getMonth()>7?1:0),J=['Novákovi','Müller','Dvořák','Jansen','Kolářová','Veselý','Jelínek','Schmidt','Svoboda','Fischer','Černý','Weber','Procházka','de Vries','Kučera','Horák','Bauer','Marková','Němec','Visser','Pokorná','Hofmann','Král','Urban'],ST=['pot','pot','pot','pop','pot','pot'],C={chatka:890,podsad:300,teepee:700};
+ ukazka:function(vse){var v=vse?0:cti('kk.rez.ukazka',0),n=0,m0={};m0[K]=cti(K,[]);m0[KC]=cti(KC,0);mem=m0;try{var t=new Date(),Y=t.getFullYear()+(t.getMonth()>7?1:0),J=['Novákovi','Müller','Dvořák','Jansen','Kolářová','Veselý','Jelínek','Schmidt','Svoboda','Fischer','Černý','Weber','Procházka','de Vries','Kučera','Horák','Bauer','Marková','Němec','Visser','Pokorná','Hofmann','Král','Urban'],ST=['pot','pot','pot','pop','pot','pot'],C={chatka:890,podsad:300,teepee:700};
   var dd=function(k){var x=new Date(t.getFullYear(),t.getMonth(),t.getDate()+k);return I(x)},jl=function(d){return I(new Date(Y,6,d))};
   var p=function(m,od,dk,st,jm){try{var k=m.split('-')[0];R.pridej(st==='blk'?{mista:[m],od:od,do:dk,jmeno:jm,stav:'blk',zprava:'Testovací data'}:{mista:[m],od:od,do:dk,jmeno:jm||J[n%J.length],stav:st||ST[n%ST.length],osoby:{dosp:k==='podsad'?2:2+n%3,dite:k==='podsad'?0:n%3,zak:0},telefon:'+420 777 000 '+('00'+(100+n)).slice(-3),cena:C[k]*R.noci(od,dk).length,zdroj:n%3?'web':'rucne',kdo:'ukázka',zprava:'Testovací data'});n++}catch(e){}};
+  if(v<1){
   p('chatka-4',dd(-1),dd(3),'uby');p('chatka-12',dd(0),dd(4),'pot');p('chatka-18',dd(2),dd(7),'pot');p('chatka-7',dd(1),dd(3),'pop');p('podsad-3',dd(0),dd(2),'pot');p('podsad-6',dd(3),dd(6),'pop');p('teepee-1',dd(1),dd(4),'pot');p('chatka-15',dd(0),dd(10),'blk','Údržba');
   var i,d,l;for(i=1;i<=20;i++)p('chatka-'+i,jl(16),jl(18));
   for(i=1;i<=20;i++){d=1+(i*3)%5;while(d<29){l=2+(i+d)%5;p('chatka-'+i,jl(d),jl(Math.min(31,d+l)));d+=l+(i*d)%3}}
   for(i=1;i<=11;i++){d=2+(i*2)%6;while(d<28){l=1+(i+d)%3;p('podsad-'+i,jl(d),jl(d+l));d+=l+2+(i+d)%4}}
   p('teepee-1',jl(3),jl(7));p('teepee-1',jl(10),jl(20));p('teepee-1',jl(24),jl(27));
-  pis('kk.rez.ukazka',1);return n}
+  }
+  if(v<2){ /* 2. dávka: plný provoz kolem dneška, minulé pobyty, červen a srpen, vlastní stany a karavany, skupiny, zrušené */
+   var E=['cs','cs','de','cs','en','nl'],mo=function(m,d){return I(new Date(Y,m,d))};
+   var U=function(mista,a,b,st,ex){try{var nc=R.noci(a,b).length,cn=0;mista.forEach(function(m){cn+=C[m.split('-')[0]]*nc});var web=n%3>0,r=Object.assign({mista:mista,od:a,do:b,jmeno:J[(n*7+3)%J.length],stav:st,osoby:{dosp:2+n%2,dite:n%3,zak:0},telefon:'+420 6'+('0'+(n%90+10)).slice(-2)+' '+(100+n*7%900)+' '+(100+n*13%900),email:n%2?'host'+(n+1)+'@example.com':'',zdroj:web?'web':'rucne',jazyk:web?E[n%E.length]:'cs',kdo:web?'':'ukázka',zprava:n%4?'':'Testovací data – přijedeme později večer.'},ex||{});
+     if(r.dalsi)cn+=((r.dalsi.stan||0)*150+(r.dalsi.karavan||0)*250)*nc;r.cena=r.cena||cn;R.pridej(r);n++}catch(e){}};
+   var ch=function(i){return ['chatka-'+i]},ps=function(i){return ['podsad-'+i]};
+   /* právě ubytovaní, dnešní odjezdy a příjezdy */
+   [[1,-3,2],[2,-2,1],[5,-1,4],[8,-4,0],[9,-2,0],[10,-1,3],[13,-5,2],[16,-2,0],[17,-1,5],[19,-3,1],[20,-2,2]].forEach(function(x){U(ch(x[0]),dd(x[1]),dd(x[2]),'uby')});
+   [[1,-1,2],[2,-2,0],[5,-1,1],[8,-3,3],[9,-1,2]].forEach(function(x){U(ps(x[0]),dd(x[1]),dd(x[2]),'uby')});
+   U(['teepee-1'],dd(-2),dd(1),'uby');
+   [[3,0,3],[6,0,2],[14,0,5]].forEach(function(x){U(ch(x[0]),dd(x[1]),dd(x[2]),'pot')});U(ch(11),dd(0),dd(2),'pop');
+   [[4,0,2],[10,0,3],[11,0,1]].forEach(function(x){U(ps(x[0]),dd(x[1]),dd(x[2]),'pot')});
+   U(ch(8),dd(1),dd(4),'pot');U(ch(16),dd(1),dd(3),'pop');U(ch(9),dd(2),dd(6),'pot');U(ps(2),dd(1),dd(3),'pop');
+   /* vlastní stany a karavany */
+   [[-1,2,2,0,'uby'],[-2,1,0,1,'uby'],[0,3,1,1,'pop'],[0,2,3,0,'pop'],[1,4,0,2,'pop'],[3,6,2,1,'pop']].forEach(function(x){U([],dd(x[0]),dd(x[1]),x[4],{dalsi:{stan:x[2],karavan:x[3]}})});
+   /* minulé pobyty (odjeli) a nejbližší týdny */
+   var i,d,l;
+   for(i=1;i<=20;i++){d=-24+(i*5)%7;while(d<-6){l=2+(i+d+40)%4;U(ch(i),dd(d),dd(Math.min(-5,d+l)),'odj');d+=l+1+(i+d+40)%3}}
+   for(i=1;i<=11;i++){d=-20+(i*3)%6;while(d<-6){l=1+(i+d+40)%3;U(ps(i),dd(d),dd(Math.min(-5,d+l)),'odj');d+=l+2}}
+   for(i=1;i<=20;i++){d=5+(i*3)%6;while(d<32){l=2+(i+d)%5;U(ch(i),dd(d),dd(d+l),(i+d)%4?'pot':'pop');d+=l+(i*d)%4}}
+   for(i=1;i<=11;i++){d=4+(i*2)%5;while(d<30){l=1+(i+d)%3;U(ps(i),dd(d),dd(d+l),(i+d)%3?'pot':'pop');d+=l+1+(i+d)%4}}
+   U(['teepee-1'],dd(6),dd(9),'pot');U(['teepee-1'],dd(12),dd(15),'pop');U(['teepee-1'],dd(20),dd(26),'pot');
+   U(ch(2),dd(5),dd(8),'zru');U(ps(7),dd(2),dd(4),'zru');U(ch(12),dd(9),dd(12),'zru');
+   /* červen a srpen sezóny */
+   [5,7].forEach(function(M){
+    U(['chatka-1','chatka-2','chatka-3','podsad-1','podsad-2'],mo(M,5),mo(M,9),'pot',{jmeno:M===5?'Skautský oddíl Kaplice':'Vodáci Vltava – skupina',osoby:{dosp:4,dite:14,zak:0}});
+    for(i=1;i<=20;i++){d=1+(i*3)%6;while(d<28){l=2+(i+d+M)%5;U(ch(i),mo(M,d),mo(M,Math.min(31,d+l)),(i+d)%5?'pot':'pop');d+=l+(i*d+M)%4}}
+    for(i=1;i<=11;i++){d=1+(i*2)%5;while(d<28){l=1+(i+d+M)%4;U(ps(i),mo(M,d),mo(M,d+l),(i+d)%4?'pot':'pop');d+=l+1+(i+d)%3}}
+    for(d=2;d<28;d+=3+d%2)U(['teepee-1'],mo(M,d),mo(M,d+2+d%2),d%3?'pot':'pop');
+    for(d=1;d<28;d+=2)U([],mo(M,d),mo(M,d+2+d%3),d%4?'pot':'pop',{dalsi:{stan:1+d%3,karavan:d%2}})});
+   for(d=1;d<30;d+=2)U([],jl(d),jl(Math.min(31,d+2+d%3)),d%4?'pot':'pop',{dalsi:{stan:1+d%4,karavan:(d+1)%2}});
+  }
+  }finally{mem=null;pis(K,m0[K]);pis(KC,m0[KC])}
+  pis('kk.rez.ukazka',2);return n}
 };
-try{if(!cti('kk.rez.ukazka',0)&&!R.vse().length)R.ukazka()}catch(e){}
+try{if(cti('kk.rez.ukazka',0)<2)R.ukazka()}catch(e){}
 })();
