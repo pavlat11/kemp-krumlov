@@ -434,15 +434,16 @@ function rezervace(m){
       return '<div class="rn-s"><h3>'+g.n+'<span>'+(vol?'volné '+vol+' z '+g.c.length:'plno')+'</span></h3><div class="rn-g">'+t+'</div></div>'}).join('');
     var souhrn=[['chatka','chatky'],['podsad','podsadové stany'],['teepee','teepee']].map(function(t){var x=poc[t[0]]||[0,0];return t[1]+' '+x[0]+' z '+x[1]}).join(' · ');
     var jeD=denP===dnes,dp=D0(denP),VM=[].concat.apply([],G.map(function(g){return g.c.map(function(c){return g.k+'-'+c})})).filter(function(k){return R.vyp().indexOf(k)<0});
-    var volD=function(x){var u={};akt.forEach(function(r){if(r.od<=x&&x<r.do)(r.mista||[]).forEach(function(k){u[k]=1})});return VM.filter(function(k){return !u[k]}).length};
+    var TN=[['chatka','chatky'],['podsad','stany'],['teepee','teepee']].filter(function(t){return VM.some(function(k){return k.split('-')[0]===t[0]})});
+    var volD=function(x){var u={},o={n:0};akt.forEach(function(r){if(r.od<=x&&x<r.do)(r.mista||[]).forEach(function(k){u[k]=1})});VM.forEach(function(k){if(!u[k]){var t=k.split('-')[0];o[t]=(o[t]||0)+1;o.n++}});return o};
     var z0=denP<dnes||denP>ISO(ADD(D0(dnes),13))?dp:D0(dnes),pas='';
-    for(var i=0;i<14;i++){var x=ADD(z0,i),xi=ISO(x),v=volD(xi);pas+='<button type="button" class="rn-d'+(xi===denP?' on':'')+(x.getDay()%6===0?' we':'')+(v?'':' pl')+'" data-den="'+xi+'" aria-pressed="'+(xi===denP)+'" aria-label="'+DL[x.getDay()]+' '+x.getDate()+'. '+MG[x.getMonth()]+', volných míst '+v+'"><small>'+(xi===dnes?'Dnes':DNY[x.getDay()])+'</small><b>'+x.getDate()+'. '+(x.getMonth()+1)+'.</b><i>'+(v?v+' '+pl(v,'volné','volná','volných'):'plno')+'</i></button>'}
+    for(var i=0;i<14;i++){var x=ADD(z0,i),xi=ISO(x),vo=volD(xi),v=vo.n;pas+='<button type="button" class="rn-d'+(xi===denP?' on':'')+(x.getDay()%6===0?' we':'')+(v?'':' pl')+'" data-den="'+xi+'" aria-pressed="'+(xi===denP)+'" aria-label="'+DL[x.getDay()]+' '+x.getDate()+'. '+MG[x.getMonth()]+', volno: '+TN.map(function(t){return t[1]+' '+(vo[t[0]]||0)}).join(', ')+'"><small>'+(xi===dnes?'Dnes':DNY[x.getDay()])+'</small><b>'+x.getDate()+'. '+(x.getMonth()+1)+'.</b>'+(v?'<span class="rn-dv">'+TN.map(function(t){var c=vo[t[0]]||0;return '<i'+(c?'':' class="nic"')+'>'+t[1]+' <b>'+c+'</b></i>'}).join('')+'</span>':'<i class="plno">plno</i>')+'</button>'}
     return '<p class="rz-dat"><b>'+DL[d.getDay()]+' '+d.getDate()+'. '+MG[d.getMonth()]+'</b></p>'+
       '<section class="rn-w"><div class="rn-hd"><h2>'+(jeD?'Kdo kde dnes je':'Kdo kde bude · '+DL[dp.getDay()].toLowerCase()+' '+dp.getDate()+'. '+MG[dp.getMonth()]+(dp.getFullYear()!==d.getFullYear()?' '+dp.getFullYear():''))+'</h2>'+
         '<span class="rn-leg" aria-hidden="true"><i class="obs"></i>ubytovaný<i class="ceka"></i>potvrzená<i class="popt"></i>poptávka<i class="vol"></i>volno<i class="blk"></i>blokace<i class="pd"></i>'+(jeD?'přijíždí dnes':'přijíždí ten den')+'</span></div>'+
       '<div class="rn-nav"><button type="button" class="btn sm" data-dpos="-1" aria-label="Předchozí den">‹</button><label><span class="sr">Datum</span><input type="date" class="inp" id="rnd" value="'+denP+'"></label><button type="button" class="btn sm" data-dpos="1" aria-label="Další den">›</button>'+(jeD?'':'<button type="button" class="btn sm pri" data-dpos="0">Zpět na dnešek</button>')+
         '<span class="rn-so">Obsazeno: '+souhrn+'</span></div>'+
-      '<div class="rn-dny" role="group" aria-label="Vybrat den">'+pas+'</div>'+
+      '<p class="rn-dl">Volná místa na noc:</p><div class="rn-dny" role="group" aria-label="Vybrat den">'+pas+'</div>'+
       '<div class="rn-sg">'+mapa+'</div>'+
       '<p class="mut rn-p">Hosta přestěhujete přetažením na jiné místo, na obsazené místo se hosté prohodí. Kliknutím na volné místo založíte rezervaci'+(jeD?'.':' od '+KR(denP))+'</p></section>'+
       '<div class="ruk-g">'+sloupec('Přijíždí dnes',host.filter(function(r){return r.od===dnes&&r.stav!=='odj'&&r.stav!=='uby'}),0,'Dnes nikdo nepřijíždí.')+
