@@ -3181,7 +3181,3 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 @keyframes aiHintM{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 @keyframes aiShine{from{background-position:120% 0}to{background-position:-120% 0}}
 .rz-norez{margin:10px 0 0;padding:10px 14px;border-radius:12px;background:#eef5ef;color:#24563a;font-size:14px}
-#doprava .dp-home{position:relative;display:flex;align-items:center;gap:10px;padding:9px 14px 9px 2px;margin:2px 0;border-radius:16px;background:#0b2419;color:#fff}
-#doprava .dp-hic{position:relative;z-index:1;flex:none;display:grid;place-items:center;width:28px;height:28px;margin-left:1px;border-radius:50%;background:#0b2419;border:2.5px solid #fff}
-#doprava .dp-home b{font-size:15.5px;font-weight:800;white-space:nowrap}
-#doprava .dp-home em{margin-left:auto;font-style:normal;font-size:13px;font-weight:700;color:#ffc978;white-space:nowrap}
