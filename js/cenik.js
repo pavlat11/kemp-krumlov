@@ -223,7 +223,8 @@ var R=window.KKR={
   if(n.stav!=='zru'){var k=R.kolize(n.mista,n.od,n.do,id);if(k.length)throw new Error('V tomto termínu je obsazeno: '+k.map(R.nazev).join(', ')+'.')}
   Object.assign(r,z);pis(K,a);return r},
  /* ubytovaní hosté, kterým už uplynul den odjezdu, se sami přepnou na „Odjel“ (zapomenuté odhlášení); vrací počet */
- auto:function(dnes){var a=R.vse(),n=0;a.forEach(function(r){if(r.stav==='uby'&&r.do&&r.do<dnes){r.stav='odj';r.hist=(r.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Automaticky odhlášen (odjezd '+r.do+' už uplynul)'}]).slice(-30);n++}});if(n)pis(K,a);return n},
+ auto:function(dnes){var a=R.vse(),n=0;a.forEach(function(r){if((r.stav==='pot'||r.stav==='pop')&&r.od&&r.od<dnes){r.stav='zru';r.hist=(r.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Automaticky zrušena – host nepřijel (příjezd '+r.od+')'}]).slice(-30);n++}
+  else if(r.stav==='uby'&&r.do&&r.do<dnes){r.stav='odj';r.hist=(r.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Automaticky odhlášen (odjezd '+r.do+' už uplynul)'}]).slice(-30);n++}});if(n)pis(K,a);return n},
  obnov:function(a){pis(K,a)}, /* vrácení poslední změny zpět (administrace) */
  smaz:function(id){pis(K,R.vse().filter(function(x){return x.id!==id}))},
  vymaz:function(){pis(K,[])},

@@ -673,10 +673,8 @@ table.rlt{width:100%;min-width:900px;border-collapse:separate;border-spacing:0}
 .rp-kr li.ho{color:var(--mut)}.rp-kr li.ho i{background:#e3ddd0;color:var(--deep)}.rp-kr li.ho::before,.rp-kr li.ted::before{background:#b9b2a3}
 .rp-kr li.ted{color:var(--deep)}.rp-kr li.ted i{background:var(--c-pot);border-color:var(--c-pot);color:#fff}
 .rp-kr li.ted.pop i{background:var(--c-pop);border-color:var(--c-pop)}.rp-kr li.ted.uby i,.rp-kr li.ted.odj i{background:var(--c-uby);border-color:var(--c-uby)}
-/* úkoly: stáří poptávky, nepřijeli */
+/* úkoly: stáří poptávky */
 .ru-c{font-style:normal;color:#8a4f08;font-weight:700}.ru-c.dl{color:var(--err)}
-.ru-2{display:flex;gap:6px;flex:none}
-.ruk-nep{margin:16px 0 0}.ruk-nep .ruk{border-color:#e9c9a0;background:#fffaf2}.ruk-nep>p{font-size:13.5px;margin:8px 2px 0}
 /* tisk dne */
 #tisk{display:none}
 @media print{
