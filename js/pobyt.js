@@ -286,8 +286,8 @@ function submit(){
   fetch(ep,{method:'POST',body:new FormData(form)}).then(r=>{if(!r.ok)throw 0;done(false)})
   .catch(()=>{btn.disabled=false;btn.innerHTML='Odeslat poptávku <span>→</span>';warnSend()})}
  else if(window.KKR){let r;
-   const mista=[].concat(...Object.keys(MISTA).map(k=>S.c[k].map(n=>k+'-'+n)),S.q.teepee?['teepee-1']:[]),vlastni=(S.q.stan||0)+(S.q.karavan||0);
-  try{r=KKR.pridej({stav:vlastni?'pop':KKR.stavWeb(mista),od:iso(S.from),do:iso(S.to),
+   const mista=[].concat(...Object.keys(MISTA).map(k=>S.c[k].map(n=>k+'-'+n)),S.q.teepee?['teepee-1']:[]);
+  try{r=KKR.pridej({stav:KKR.stavWeb(mista,{stan:S.q.stan||0,karavan:S.q.karavan||0}),od:iso(S.from),do:iso(S.to),
    mista,dalsi:{stan:S.q.stan||0,karavan:S.q.karavan||0},
    osoby:{dosp:S.dosp,dite:S.dite,zak:S.zak},jmeno:f.jmeno.value.trim(),telefon:f.telefon.value.trim(),email:f.email.value.trim(),zprava:f.zprava.value.trim(),cena:Math.round(R.total),zdroj:'web',jazyk:KL.jazyk})}
   catch(x){nactiBusy();drawCal();render();go(2);warn(KL.t('Vybrané místo si mezitím zarezervoval někdo jiný. Vyberte prosím jiné.'));return}
