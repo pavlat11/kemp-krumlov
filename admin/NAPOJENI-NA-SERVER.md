@@ -115,7 +115,8 @@ V náhledu drží rezervace objekt `KKR` na konci `js/cenik.js` (localStorage `k
 
 - Místa: `chatka-1` … `chatka-20`, `podsad-1` … `podsad-11`, `teepee-1`. Skupiny pro kalendář jsou v `KKR.SKUPINY`.
 - Rezervace: `id, cislo, stav, od, do, mista[], dalsi{stan,karavan}, osoby{dosp,dite,zak}, jmeno, telefon, email, zprava, cena, zdroj(web|rucne), jazyk, kdo, vytvoreno`.
-- Stavy: `pop` poptávka, `pot` potvrzená, `zap` zaplacená záloha, `uby` ubytovaný, `odj` odjel, `zru` zrušená (místo neblokuje), `blk` blokace místa.
+- Zálohy se neplatí, stav „zaplaceno“ není.
+- Stavy: `pop` poptávka, `pot` potvrzená, `uby` ubytovaný, `odj` odjel, `zru` zrušená (místo neblokuje), `blk` blokace místa.
 - Obsazené jsou noci `od ≤ noc < do`; den odjezdu je volný pro dalšího hosta.
 - Nastavení `rezim` je pro každý typ zvlášť: `{chatka,podsad,teepee}` = `poptavka` nebo `ihned`. Web zakládá `pot`, jen když všechna vybraná místa mají `ihned` a v rezervaci nejsou vlastní stany ani karavany; jinak `pop` (`KKR.stavWeb`).
 
