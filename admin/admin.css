@@ -692,3 +692,11 @@ table.rlt{width:100%;min-width:900px;border-collapse:separate;border-spacing:0}
  .tk-nic{color:#555;margin:3pt 0}.tk-pat{margin-top:10pt;font-size:8pt;color:#555}
  @page{size:A4 portrait;margin:10mm 11mm}
 }
+/* hromadné akce v seznamu */
+.rlt .rl-x{width:36px;padding-right:0;text-align:center}.rlt .rl-x input{width:18px;height:18px;accent-color:var(--c-pot);cursor:pointer;vertical-align:middle}
+.rlt tr.vyb td{background:#eef6f6!important}
+.rhb{position:fixed;left:290px;right:40px;bottom:16px;z-index:50;max-width:1070px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:0;padding:10px 14px;border-radius:14px;background:var(--deep);color:#fff;box-shadow:0 14px 30px -12px rgba(0,0,0,.45)}
+.rhb[hidden]{display:none}.rhb b{white-space:nowrap}.rhb-a{display:flex;flex-wrap:wrap;gap:6px;flex:1}
+.rhb .btn.gh{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}.rhb .btn.gh:hover{background:rgba(255,255,255,.12)}
+.rhb .btn.rp-d{color:#ffb4a8;border-color:rgba(255,180,168,.5)}
+@media(max-width:900px){.rhb{left:12px;right:12px}.rlt .rl-x{width:30px}}
