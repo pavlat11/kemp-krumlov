@@ -382,3 +382,25 @@ table.rlt{min-width:620px}.rlt tbody tr:not(.rl-m){cursor:pointer}
 .rn.blk{background:repeating-linear-gradient(135deg,#f0ede6 0 6px,#e1dcd0 6px 12px);border-color:#e1dcd0;color:#4a534d}
 .rn-leg .ceka{background:#dcebed;box-shadow:none}
 @media(max-width:760px){.rn-g{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}}
+
+/* Dnes – plánek jako tabulka: každá skupina jeden řádek, všechny kostičky stejné a pod sebou */
+.rn-w{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+.rn-sg{display:block}
+.rn-s{display:grid;grid-template-columns:170px minmax(0,1fr);gap:14px;align-items:center;background:none;border:0;border-top:1px solid #efe9dc;border-radius:0;padding:10px 0;margin:0}
+.rn-sg .rn-s:first-child{border-top:0}
+.rn-s h3{display:flex;flex-direction:column;gap:2px;margin:0;font-size:14px;font-weight:700;text-transform:none;letter-spacing:0;color:var(--deep)}
+.rn-s h3 span{font-size:12.5px;font-weight:500;color:var(--mut)}
+.rn-g{grid-template-columns:repeat(11,minmax(0,1fr));gap:6px}
+.rn,.rn.vol,.rn.obs,.rn.ceka,.rn.popt,.rn.blk{height:66px;padding:6px 8px;border-radius:10px;gap:0;justify-content:flex-start;border-width:1.5px}
+.rn-c{font-size:17px;line-height:1.15}
+.rn b{font-size:12.5px;line-height:1.25}.rn small{font-size:10.5px;line-height:1.25}
+.rn em{position:absolute;top:5px;right:5px;margin:0;font-size:0;width:10px;height:10px;padding:0;border-radius:50%;background:var(--sun);box-shadow:0 0 0 2px #fff}
+.rn{position:relative}
+.rn.vol{background:#fbfaf6;border:1.5px solid #ebe6da}.rn.vol .rn-c{color:#7d8780}.rn.vol b{font-size:11.5px;color:#a0a79f}
+.rn.vol:hover{background:#fff;border-color:var(--deep2)}
+.rn.obs{background:var(--deep2);border-color:var(--deep2);color:#fff}
+.rn.ceka{background:#1f6d77;border-color:#1f6d77;color:#fff}
+.rn.popt{background:var(--warnBg);border-color:#e08a1e;color:var(--warn)}
+.rn-leg .ceka{background:#1f6d77}.rn-leg .vol{background:#fbfaf6;border:1.5px solid #ddd6c6;box-shadow:none}
+.rn-leg::after{content:"● přijíždí dnes";color:var(--warn);margin-left:12px;font-weight:700}
+@media(max-width:1100px){.rn-s{grid-template-columns:1fr;gap:8px}.rn-s h3{flex-direction:row;gap:10px;align-items:baseline}.rn-g{grid-template-columns:repeat(auto-fill,minmax(84px,1fr))}}
