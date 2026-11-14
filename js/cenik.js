@@ -224,6 +224,7 @@ var R=window.KKR={
   Object.assign(r,z);pis(K,a);return r},
  /* ubytovaní hosté, kterým už uplynul den odjezdu, se sami přepnou na „Odjel“ (zapomenuté odhlášení); vrací počet */
  auto:function(dnes){var a=R.vse(),n=0;a.forEach(function(r){if(r.stav==='uby'&&r.do&&r.do<dnes){r.stav='odj';r.hist=(r.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Automaticky odhlášen (odjezd '+r.do+' už uplynul)'}]).slice(-30);n++}});if(n)pis(K,a);return n},
+ obnov:function(a){pis(K,a)}, /* vrácení poslední změny zpět (administrace) */
  smaz:function(id){pis(K,R.vse().filter(function(x){return x.id!==id}))},
  vymaz:function(){pis(K,[])},
  /* TESTOVACÍ DATA pro náhled – před ostrým provozem smazat (i automatické vložení níže).

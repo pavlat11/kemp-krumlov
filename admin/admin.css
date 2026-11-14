@@ -643,3 +643,52 @@ table.rlt{width:100%;min-width:900px;border-collapse:separate;border-spacing:0}
 .rz-top .rq{flex:1 1 220px}.rz-top .rq .inp{min-height:46px;font-size:16px;border-radius:12px}.rz-top .rq svg{width:20px;height:20px}
 .sb-nh-p span{color:var(--mut);font-weight:400}
 .sb-if{display:block;width:100%;min-height:520px;border:0;border-radius:10px;background:#efe9dc}
+/* toast s akcí Vrátit zpět */
+.toast.akc{pointer-events:auto;display:flex;align-items:center;gap:14px}
+.toast button{border:0;background:rgba(255,255,255,.16);color:#fff;font:inherit;font-weight:800;padding:7px 12px;border-radius:9px;cursor:pointer;white-space:nowrap}
+.toast button:hover{background:rgba(255,255,255,.28)}.toast button:focus-visible{outline:2px solid var(--sun);outline-offset:2px}
+/* podzáložky nastavení rezervací */
+.rnt-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.rnt-tabs button{border:0;border-bottom:3px solid transparent;background:none;font:inherit;font-weight:700;font-size:15px;color:var(--mut);padding:10px 14px;cursor:pointer;white-space:nowrap}
+.rnt-tabs button:hover{color:var(--deep)}.rnt-tabs button[aria-selected=true]{color:var(--deep);border-bottom-color:var(--c-pot)}
+/* Jak se rezervuje */
+.rjr-l{list-style:none;margin:0;padding:0}
+.rjr-l li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;padding:14px 0;border-top:1px solid var(--line)}
+.rjr-l li:first-child{border-top:0}.rjr-l b{display:block;font-size:15.5px}.rjr-l small{color:var(--mut);font-size:13.5px}
+.rjr-s{display:inline-flex;background:#ebe5d8;border-radius:12px;padding:3px;gap:2px}
+.rjr-s button{border:0;background:none;font:inherit;font-weight:700;font-size:14px;color:var(--mut);padding:8px 14px;border-radius:9px;cursor:pointer;min-height:38px}
+.rjr-s button:disabled{cursor:default}
+.rjr-s button[aria-checked=true]{background:#fff;color:var(--deep);box-shadow:0 1px 3px rgba(15,34,25,.18)}
+.rjr-s button.poptavka[aria-checked=true]{background:var(--c-popBg);color:#8a4f08;box-shadow:inset 0 0 0 1.5px var(--c-pop)}
+.rjr-s button.ihned[aria-checked=true]{background:var(--c-pot);color:#fff}
+.rjr-s button:focus-visible{outline:3px solid var(--sun);outline-offset:1px}
+.rjr-v{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:14px 0 0;padding:14px;background:#faf8f3;border-radius:12px;font-size:13.5px}
+.rjr-v dt{font-weight:800}.rjr-v dt.poptavka{color:#8a4f08}.rjr-v dt.ihned{color:var(--c-pot)}.rjr-v dd{margin:2px 0 0;color:var(--mut)}
+/* postup rezervace v detailu */
+.rp-kr{list-style:none;display:flex;margin:12px 0 14px;padding:0}
+.rp-kr li{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11.5px;font-weight:700;color:#a39c8c;text-align:center}
+.rp-kr li::before{content:"";position:absolute;top:11px;right:50%;width:100%;height:2px;background:#e3ddd0}
+.rp-kr li:first-child::before{display:none}
+.rp-kr i{position:relative;z-index:1;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;background:#fff;border:2px solid #e3ddd0}
+.rp-kr li.ho{color:var(--mut)}.rp-kr li.ho i{background:#e3ddd0;color:var(--deep)}.rp-kr li.ho::before,.rp-kr li.ted::before{background:#b9b2a3}
+.rp-kr li.ted{color:var(--deep)}.rp-kr li.ted i{background:var(--c-pot);border-color:var(--c-pot);color:#fff}
+.rp-kr li.ted.pop i{background:var(--c-pop);border-color:var(--c-pop)}.rp-kr li.ted.uby i,.rp-kr li.ted.odj i{background:var(--c-uby);border-color:var(--c-uby)}
+/* úkoly: stáří poptávky, nepřijeli */
+.ru-c{font-style:normal;color:#8a4f08;font-weight:700}.ru-c.dl{color:var(--err)}
+.ru-2{display:flex;gap:6px;flex:none}
+.ruk-nep{margin:16px 0 0}.ruk-nep .ruk{border-color:#e9c9a0;background:#fffaf2}.ruk-nep>p{font-size:13.5px;margin:8px 2px 0}
+/* tisk dne */
+#tisk{display:none}
+@media print{
+ html,body{background:#fff!important}
+ body>*:not(#tisk){display:none!important}
+ #tisk{display:block;font:12pt/1.4 Arial,sans-serif;color:#000}
+ #tisk h1{font-size:18pt;margin:0 0 10pt}#tisk h2{font-size:13pt;margin:14pt 0 5pt;border-bottom:1.5pt solid #000;padding-bottom:2pt}
+ #tisk table{width:100%;border-collapse:collapse}#tisk th,#tisk td{text-align:left;padding:5pt 6pt;border-bottom:.5pt solid #999;vertical-align:top;font-size:11pt}
+ #tisk th{font-size:9pt;text-transform:uppercase;color:#444}#tisk small{font-size:9.5pt;color:#444}
+ #tisk tr{break-inside:avoid}
+ .tk-ch{display:inline-block;width:11pt;height:11pt;border:1pt solid #000;vertical-align:-1pt}
+ .tk-ukl{display:flex;flex-wrap:wrap;gap:8pt 22pt;margin:6pt 0}.tk-ukl i{margin-right:6pt}
+ .tk-nic{color:#555;margin:4pt 0}.tk-pat{margin-top:18pt;font-size:9pt;color:#555}
+ @page{margin:14mm}
+}
