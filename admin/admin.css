@@ -546,3 +546,18 @@ table.rlt{width:100%;min-width:900px;border-collapse:separate;border-spacing:0}
 #main{min-width:0}
 @media(max-width:760px){.rlt tbody tr:not(.rl-m) td:nth-child(5){display:none}}
 .rn-leg::after{content:"přijíždí dnes";color:var(--mut);font-weight:500;margin-left:12px;padding-left:16px;background:radial-gradient(circle at 5px 50%,var(--sun) 4px,#fff 4.5px,#fff 5.5px,transparent 6px) no-repeat left center/12px 12px}
+
+/* ===== jednotné barvy stavů: plánek Dnes, kalendář, legendy, štítky ===== */
+:root{--c-uby:#173b2a;--c-pot:#1f6d77;--c-pop:#e08a1e;--c-popBg:#fdf0de}
+.rn.obs{background:var(--c-uby)!important;border-color:var(--c-uby)!important;color:#fff!important}
+.rn.ceka{background:var(--c-pot)!important;border-color:var(--c-pot)!important;color:#fff!important;box-shadow:none!important}
+.rn.popt{background:var(--c-popBg)!important;border:1.5px solid var(--c-pop)!important;color:var(--warn)!important}
+.rn-leg i{box-sizing:border-box;border:0;box-shadow:none}
+.rn-leg .obs{background:var(--c-uby)}
+.rn-leg .ceka{background:var(--c-pot);box-shadow:none}
+.rn-leg .popt{background:var(--c-popBg);box-shadow:inset 0 0 0 1.5px var(--c-pop)}
+.rk-b.uby{background:var(--c-uby);color:#fff;box-shadow:none}
+.rk-b.pot{background:var(--c-pot);color:#fff;box-shadow:none}
+.rk-b.pop{background:var(--c-popBg);color:var(--warn);box-shadow:inset 0 0 0 1.5px var(--c-pop)}
+.rs.pop::before{background:var(--c-pop)}.rs.pot::before{background:var(--c-pot)}.rs.uby::before{background:var(--c-uby)}
+.rk-leg .rs.pop{background:var(--c-popBg);color:var(--warn)}
