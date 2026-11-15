@@ -994,3 +994,5 @@ div.pv-s{cursor:default}
 .pjc-c{display:grid;grid-template-columns:1fr 150px;gap:12px;align-items:end;margin-top:4px}.pjc-c>div{display:flex;flex-direction:column;gap:2px;font-size:13.5px}.pjc-c b{font-size:15px}
 .pjc-z{display:flex;align-items:center;gap:8px;font-weight:700;margin-top:12px;cursor:pointer}
 @media(max-width:560px){.pjc-g,.pjc-g.t3{grid-template-columns:1fr}}
+
+.pjc-dq{margin-top:10px}.pjc-dp{margin-top:8px;padding:4px 14px 10px;border-radius:14px;background:#fdf0de;border:1px solid #f1d3a2}.pjc-dp p{margin:0;font-size:13.5px}
