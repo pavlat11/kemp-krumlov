@@ -3186,3 +3186,35 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 #rezervace .rz-x.ne:hover{border-color:var(--rz-line)}
 #rezervace .rz-x.ne .rz-st{visibility:hidden}
 #rezervace .rz-x.ne .rz-xne{color:#9a3b1e;font-weight:700}
+
+/* rezervace – lodě a doprava (půjčovna) */
+.rz-lod-l{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.rz-lod{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:14px 16px;border:1.5px solid #ece5d7;border-radius:18px;background:#fff;transition:border-color .2s,box-shadow .2s,background .2s}
+.rz-lod.on{border-color:#173b2a;background:#fbf8f2;box-shadow:0 10px 24px -16px #173b2a99}
+.rz-lod.busy{opacity:.55}
+.rz-lod .tx{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rz-lod .tx b{font-size:17px;color:#173b2a}
+.rz-lod .tx small{font-size:13px;color:#6b766f}
+.rz-lod .fr{font-style:normal;font-size:12px;font-weight:800;color:#2f8f5b}
+.rz-lod.busy .fr{color:#9a5a0c}
+.rz-lod .pr{text-align:right;display:flex;flex-direction:column;gap:1px}
+.rz-lod .pr strong{font-size:17px;color:#0b2419}
+.rz-lod .pr small{font-size:12px;color:#6b766f}
+.rz-lod .rz-st{grid-column:1/-1;justify-content:flex-end;margin-top:4px}
+.rz-lod-o{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px;padding:18px;border-radius:18px;background:#f7f3ea;border:1.5px solid #ece5d7}
+.rz-lf{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rz-lf>span{font-size:13px;font-weight:800;color:#0b2419}
+.rz-lf select{width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid #e2dacb;border-radius:14px;background:#fff;font:inherit;font-size:16px;color:#0b2419}
+.rz-lf select:focus{outline:none;border-color:#0b2419;box-shadow:0 0 0 4px rgba(244,166,74,.3)}
+.rz-lf .rz-st{margin-top:0}
+.rz-ldp{grid-column:1/-1;display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:#fff;border:1.5px solid #e2dacb;cursor:pointer}
+.rz-ldp input{width:22px;height:22px;margin:1px 0 0;accent-color:#173b2a;flex:none}
+.rz-ldp span{display:flex;flex-direction:column;gap:2px}
+.rz-ldp b{font-size:15px;color:#0b2419}
+.rz-ldp small{font-size:13px;color:#6b766f}
+.rz-ldp.ne{opacity:.6;cursor:default}
+.rz-lod-i{grid-column:1/-1;margin:0;font-size:13px;color:#6b766f}
+.rz-zal{margin:0 24px 6px;padding:10px 14px;border-radius:12px;background:#fdf0de;color:#7a4708;font-size:13.5px;font-weight:700}
+.rz-zal[hidden]{display:none}
+.rz-quick .rz-q0{border-style:dashed}
+@media(max-width:600px){.rz-lod-o{grid-template-columns:1fr;padding:14px}}

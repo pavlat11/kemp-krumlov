@@ -151,3 +151,22 @@ Po změně stavu, přesunu, prohození nebo smazání nabízí administrace něk
 ## Doplněk jen k určitému ubytování
 
 Položka doplňku v ceníku může mít `pro: ['stan','karavan']` (chybí = ke všemu). Na webu je doplněk zašedlý, když host vybral jen ubytování mimo `pro`. Server má při uložení rezervace doplněk mimo `pro` odmítnout nebo vynechat.
+
+## Půjčovna lodí, doprava osob a zálohy
+
+Jedna rezervace může obsahovat ubytování, lodě i dopravu (nebo jen lodě – pak má prázdná `mista` a `od`…`do` je první a poslední den půjčení).
+
+```
+rezervace.lode    = { den:"2027-07-13", dni:2, kusy:{kanoe:2,raft4:1}, odkud:"dop1", kam:"kemp" }
+rezervace.doprava = { misto:"dop1", osob:6, cas:"9:00" }        // doprava osob na místo vyplutí
+rezervace.platba  = { zaloha:1716, splatnost:"2027-06-20", stav:"ceka"|"zal"|"vse", kdy:čas }
+```
+
+- **Ceník**: kategorie `lode` (sloupec `a` = cena za loď a den při 1–2 dnech, `b` = od 3 dnů, `osob`) a `navoz` (`nav1`–`nav4`: jeden den / více dní × do 10 / 10 a více lodí; připočte se jednou). Doprava osob = cena místa × počet aut (8 osob na auto).
+- **Sklad** (`nastaveni.sklad`): `lode.<typ> = {ks, padla, vesty, barely}` a `vyb = {padla, vesty, barely}` (celkové počty). Výchozí hodnoty jsou v `KKR.SKLAD0`.
+- **Dostupnost**: vybavení blokuje každá nezrušená rezervace ve dnech `den … den+dni-1`. Server musí při vytvoření i úpravě ověřit totéž co `KKR.lodeChybi()` (typy lodí i pádla, vesty a barely) a při nedostatku vrátit chybu.
+- **Zálohy** (`nastaveni.zaloha = {zap, typ:"proc"|"castka"|"vse", hodnota, lhuta, ucet}`): rezervace z webu vznikne ve stavu `pop` s `platba.stav="ceka"` a splatností `dnes + lhuta` (nejpozději den příjezdu). Server hned pošle e-mail `zaloha`. Variabilní symbol = číslice z čísla rezervace.
+- **Záloha zaplacena** (tlačítko obsluhy): `platba.stav="zal"`, `stav="pot"`, server pošle e-mail `zaplaceno`. „Doplaceno celé“ = `platba.stav="vse"`.
+- **Propadnutí**: noční úloha zruší (`stav="zru"`) rezervace se `stav="pop"`, `platba.stav="ceka"` a `splatnost < dnes` a pošle e-mail `propadla`. V náhledu to dělá `KKR.auto()` při otevření administrace.
+- **Šablony**: nové typy `zaloha`, `zaplaceno`, `propadla` a pole `{lode} {doprava} {zaloha} {splatnost} {doplatek} {ucet} {vs}`. Řádek „Popisek: {pole}“ se vynechá, když je pole prázdné.
+- **QR platba** zatím není; až bude známé číslo účtu, stačí do e-mailu `zaloha` vložit obrázek s kódem SPD (účet, částka, VS).
