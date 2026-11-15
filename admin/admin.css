@@ -792,3 +792,6 @@ div.pv-s{cursor:default}
 .rn-mh{margin:26px 0 4px;padding-top:20px;border-top:1px solid var(--line)}
 .rn-mh h3{margin:0;font-size:15px;font-weight:800;color:var(--deep)}
 .rn-sg{margin-top:4px}
+.rz-top>.rz-seg button{display:inline-flex;align-items:center;gap:7px}
+.rz-top>.rz-seg button svg{flex:none;opacity:.75}.rz-top>.rz-seg button[aria-pressed=true] svg{opacity:1;color:var(--c-pot)}
+@media(max-width:700px){.rz-top>.rz-seg button span{display:none}.rz-top>.rz-seg button{padding-left:12px;padding-right:12px}}
