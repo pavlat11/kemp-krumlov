@@ -761,8 +761,14 @@ function rezervace(m,sekV){
       if(o==='tyd'&&!(r.od>=dnes&&r.od<tyd))return false;if(o==='min'&&!(r.do<dnes))return false;
       if(F.od&&r.do<F.od)return false;if(F.do&&r.od>F.do)return false;
       if(F.typ&&!typy(r)[F.typ])return false;if(F.zdroj&&(r.zdroj||'rucne')!==F.zdroj)return false;return true});
-    var poc={};L.forEach(function(r){poc[r.stav]=(poc[r.stav]||0)+1});var vse=L.length;
-    if(F.stav)L=L.filter(function(r){return r.stav===F.stav});radit(L);
+    /* rychlé filtry podle toho, co je s rezervací potřeba udělat: platba (zálohy) a průběh (potvrzení, ubytování, lodě) */
+    var zr=function(r){return r.stav==='zru'||r.stav==='blk'},pls=function(r){return r.platba?r.platba.stav:''};
+    var SF=[['Platba',[['zc','Čeká na zálohu','pop',function(r){return !zr(r)&&pls(r)==='ceka'}],['zz','Záloha zaplacena','pot',function(r){return !zr(r)&&pls(r)==='zal'}],['zv','Zaplaceno celé','uby',function(r){return !zr(r)&&pls(r)==='vse'}],['zm','Platí na místě','odj',function(r){return !zr(r)&&!r.platba}]]],
+      ['Průběh',[['pop','Čeká na potvrzení','pop',function(r){return r.stav==='pop'&&pls(r)!=='ceka'}],['pot','Potvrzené','pot',function(r){return r.stav==='pot'}],['uby','Ubytovaní','uby',function(r){return r.stav==='uby'}],
+        ['lr','Lodě k výdeji','pop',function(r){return !zr(r)&&LS(r)==='res'}],['lv','Lodě na vodě','pot',function(r){var x=LS(r);return !zr(r)&&(x==='vyd'||x==='cast')}],['odj','Dokončené','odj',function(r){return r.stav==='odj'}],['zru','Zrušené','zru',function(r){return r.stav==='zru'}],['blk','Blokace','blk',function(r){return r.stav==='blk'}]]]];
+    var poc={},SFm={};SF.forEach(function(g){g[1].forEach(function(x){SFm[x[0]]=x;poc[x[0]]=L.filter(x[3]).length})});var vse=L.length;
+    if(F.stav&&!SFm[F.stav])F.stav='';
+    if(F.stav)L=L.filter(SFm[F.stav][3]);radit(L);
     posl=L;
     var sel=function(f,l,O){return '<label class="rl-f"><span>'+l+'</span><select class="inp" data-f="'+f+'">'+O.map(function(o){return '<option value="'+o[0]+'"'+(F[f]===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label>'};
     var zmeneno=Object.keys(F0).some(function(k){return F[k]!==F0[k]});
@@ -775,8 +781,8 @@ function rezervace(m,sekV){
         (vicF||F.zdroj||F.od||F.do?sel('zdroj','Zdroj',[['','Web i obsluha'],['web','Z webu'],['rucne','Zadala obsluha']])+
         '<label class="rl-f"><span>Pobyt od</span><input type="date" class="inp" data-f="od" value="'+F.od+'"></label><label class="rl-f"><span>do</span><input type="date" class="inp" data-f="do" value="'+F.do+'"></label>':'<button type="button" class="btn sm gh" data-a="vicf">+ Další filtry</button>')+
         (zmeneno?'<button type="button" class="btn sm gh rl-x" data-a="frst">Zrušit filtry</button>':'')+'</div>'+
-        '<div class="rl-st" role="group" aria-label="Stav"><button type="button" class="rs vse'+(F.stav?'':' on')+'" data-fs="" aria-pressed="'+!F.stav+'">Všechny stavy <b>'+vse+'</b></button>'+
-        Object.keys(R.STAVY).filter(function(k){return poc[k]||F.stav===k}).map(function(k){return '<button type="button" class="rs '+k+(F.stav===k?' on':'')+'" data-fs="'+k+'" aria-pressed="'+(F.stav===k)+'">'+R.STAVY[k]+' <b>'+(poc[k]||0)+'</b></button>'}).join('')+'</div></section>'+
+        '<div class="rl-sf"><div class="rl-st" role="group" aria-label="Vše"><button type="button" class="rs vse'+(F.stav?'':' on')+'" data-fs="" aria-pressed="'+!F.stav+'">Všechny <b>'+vse+'</b></button></div>'+
+        SF.map(function(g){var X=g[1].filter(function(x){return poc[x[0]]||F.stav===x[0]});return X.length?'<div class="rl-st" role="group" aria-label="'+g[0]+'"><span class="rl-sn">'+g[0]+'</span>'+X.map(function(x){return '<button type="button" class="rs '+x[2]+(F.stav===x[0]?' on':'')+'" data-fs="'+x[0]+'" aria-pressed="'+(F.stav===x[0])+'">'+x[1]+' <b>'+poc[x[0]]+'</b></button>'}).join('')+'</div>':''}).join('')+'</div></section>'+
       '<div class="rl-sum"><span><b>'+L.length+'</b> '+pl(L.length,'rezervace','rezervace','rezervací')+'</span><span><b>'+noc+'</b> '+pl(noc,'noc','noci','nocí')+'</span><span><b>'+osb+'</b> '+pl(osb,'osoba','osoby','osob')+'</span><span><b>'+kc(kcs)+'</b> celkem</span>'+(L.length?'<button type="button" class="btn sm gh" data-a="csv">'+SV('<path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/>',16)+'Stáhnout do Excelu</button>'+tiskBtn('Tisk seznamu'):'')+'</div>'+tabulka(L);
   }
   /* ---- chytré hledání přes všechny rezervace: jméno, číslo, telefon, e-mail, místo, datum, stav, poznámka ---- */
