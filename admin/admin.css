@@ -714,3 +714,13 @@ table.rlt{width:100%;min-width:900px;border-collapse:separate;border-spacing:0}
 .rn-d.on .rn-dn{color:#cfe3d6}.rn-d.on .rn-dn strong{color:#fff}.rn-d.on .rn-db{background:rgba(255,255,255,.2)}.rn-d.on .rn-db i{background:#ffc978}
 .rn em{position:absolute;top:6px;right:6px;margin:0;width:auto;height:auto;font-size:10px;font-weight:800;line-height:1.5;padding:0 6px;border-radius:999px;background:var(--sun);color:var(--deep);box-shadow:none}
 .rn .rn-od{display:block;font-size:11px;color:#8a6a2c;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+/* pás dnů: rozpis volných míst podle typu */
+.rn-dny{grid-template-columns:repeat(14,minmax(84px,1fr))}
+.rn-d .rn-dv{border-top:0;padding-top:1px;gap:1px}
+.rn-d .rn-dv i{font-size:12px;padding:0 3px;color:var(--mut)}.rn-d .rn-dv i b{font-size:14px;color:#1c5a3a}
+.rn-d .rn-dv i.nic,.rn-d .rn-dv i.nic b{color:#b9b2a2;font-weight:600}
+/* zvýraznit volná místa */
+.btn.gh.rn-zv[aria-pressed=true]{background:#1c5a3a;color:#fff;border-color:#1c5a3a}
+.rn-w.zv .rn:not(.vol){filter:grayscale(1);opacity:.28}
+.rn-w.zv .rn.vol{background:#e4f3e8;border-color:#2e8b57;box-shadow:0 0 0 1.5px #2e8b57;color:#1c5a3a}
+.rn-w.zv .rn.vol b{color:#1c5a3a}
