@@ -3181,3 +3181,8 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 @keyframes aiHintM{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 @keyframes aiShine{from{background-position:120% 0}to{background-position:-120% 0}}
 .rz-norez{margin:10px 0 0;padding:10px 14px;border-radius:12px;background:#eef5ef;color:#24563a;font-size:14px}
+#rezervace .rz-x .rz-xne{font-style:normal;font-size:11.5px;color:var(--rz-mut);margin-top:2px}
+#rezervace .rz-x.ne{opacity:.45;cursor:not-allowed;background:#f6f3ec;border-style:dashed}
+#rezervace .rz-x.ne:hover{border-color:var(--rz-line)}
+#rezervace .rz-x.ne .rz-st{visibility:hidden}
+#rezervace .rz-x.ne .rz-xne{color:#9a3b1e;font-weight:700}

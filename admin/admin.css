@@ -795,3 +795,12 @@ div.pv-s{cursor:default}
 .rz-top>.rz-seg button{display:inline-flex;align-items:center;gap:7px}
 .rz-top>.rz-seg button svg{flex:none;opacity:.75}.rz-top>.rz-seg button[aria-pressed=true] svg{opacity:1;color:var(--c-pot)}
 @media(max-width:700px){.rz-top>.rz-seg button span{display:none}.rz-top>.rz-seg button{padding-left:12px;padding-right:12px}}
+.badge.ck-web{background:#e3eff1;color:var(--c-pot);font-weight:800}
+/* vazba doplněk → ubytování */
+.ct tr.ck-pro td{padding-top:0;border-top:0}
+.ck-pro td{font-size:13px}
+.ck-pl{font-weight:700;color:var(--mut);margin-right:8px}
+.ck-ch{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:4px 11px;margin:2px 4px 2px 0;font:inherit;font-size:13px;font-weight:700;color:#9a9384;cursor:pointer}
+.ck-ch.on{background:#e3f4e8;border-color:#6fbf8a;color:#17603a}
+.ck-ch:hover{border-color:var(--deep2)}
+.ck-pro small{color:var(--mut);margin-left:6px}

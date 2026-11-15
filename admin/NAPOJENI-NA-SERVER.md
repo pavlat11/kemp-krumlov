@@ -147,3 +147,7 @@ E-mail se posílá jako HTML (a text šablony zároveň jako textová verze). Gr
 ## Vrátit zpět
 
 Po změně stavu, přesunu, prohození nebo smazání nabízí administrace několik sekund „Vrátit zpět“. V náhledu se vrací celý stav rezervací (`KKR.obnov`). Na serveru stačí endpoint, který vrátí poslední změnu daného uživatele (např. `POST /api/rezervace/zpet` nad tabulkou historie změn).
+
+## Doplněk jen k určitému ubytování
+
+Položka doplňku v ceníku může mít `pro: ['stan','karavan']` (chybí = ke všemu). Na webu je doplněk zašedlý, když host vybral jen ubytování mimo `pro`. Server má při uložení rezervace doplněk mimo `pro` odmítnout nebo vynechat.
