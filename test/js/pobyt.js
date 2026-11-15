@@ -210,8 +210,8 @@ function lodFix(){const a=lodDays();if(!a.length){S.l.den='';return}
  const v=lodFree();LODE.forEach(p=>{if(S.l.kusy[p.k]>Math.max(0,v[p.k]||0))S.l.kusy[p.k]=Math.max(0,v[p.k]||0)})}
 const lodW=$('rzLode');let lodOk=false;
 if(lodW&&LODE.length&&REKA.length>1){lodOk=true;const t=x=>KL.t(x);
- lodW.innerHTML=`<div class="rz-nab" id="rzNab"><button type="button" class="rz-nb" data-nb="lod" aria-pressed="false"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c3.5 3.5 16.5 3.5 20 0M5 15l2.5-6h9L19 15M12 9V4"/></svg></span><span class="tx"><b>${t('Chci si půjčit lodě')}</b><small id="rzNbL"></small></span><em class="ck" aria-hidden="true"></em></button>
-  <button type="button" class="rz-nb" data-nb="dop" aria-pressed="false"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 16V7h12v9M14 10h4l4 4v2h-8"/><circle cx="6.5" cy="17" r="2"/><circle cx="17.5" cy="17" r="2"/></svg></span><span class="tx"><b>${t('Chci objednat dopravu')}</b><small id="rzNbD"></small></span><em class="ck" aria-hidden="true"></em></button></div>
+ const FA='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',nbK=(k,ico,nad,body)=>`<button type="button" class="rz-nb ${k}" data-nb="${k}" aria-pressed="false"><span class="rz-nb-t"><span class="ic">${ico}</span><span class="cn"><small>${t('od')}</small><b id="rzNbC-${k}"></b><i id="rzNbJ-${k}"></i></span></span><b class="nd">${t(nad)}</b><span class="pr" id="rzNbP-${k}"></span><ul>${body.map(x=>`<li>${FA}${t(x)}</li>`).join('')}</ul><span class="cta"><span class="a0">${t('Přidat k rezervaci')} +</span><span class="a1">${FA}${t('Přidáno')}</span></span></button>`;
+ lodW.innerHTML=`<div class="rz-nab" id="rzNab">${nbK('lod','<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 28c6 7 32 7 38 0M10 28l5-11h18l5 11M24 17V8M24 8l7 4-7 3M6 40c3 2 6 2 9 0s6-2 9 0 6 2 9 0 6-2 9 0"/></svg>','Sjeďte si Vltavu na lodi',['Pádla, vesty a barel v ceně','Lodě vám přivezeme na start','Končit můžete přímo v kempu'])}${nbK('dop','<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 32V14h24v18M28 20h9l7 8v4H28"/><circle cx="13" cy="34" r="4"/><circle cx="35" cy="34" r="4"/><path d="M9 20h6M19 20h4"/></svg>','Odvezeme vás na start',['Auto necháte v kempu','Vyjedeme v čas, který si vyberete','Až 8 osob v jednom autě'])}</div>
   <div class="rz-lod-l" id="rzLodL"></div><div class="rz-lod-o" id="rzLodO" hidden>
   <label class="rz-lf"><span>${t('Den vyplutí')}</span><select id="rzLden"></select></label>
   <div class="rz-lf"><span>${t('Na kolik dní')}</span><div id="rzLdni"></div></div>
@@ -228,7 +228,8 @@ if(lodW&&LODE.length&&REKA.length>1){lodOk=true;const t=x=>KL.t(x);
  $('rzLod').addEventListener('change',e=>{S.l.odkud=e.target.value;render()});
  $('rzLkam').addEventListener('change',e=>{S.l.kam=e.target.value;render()});
  $('rzNab').addEventListener('click',e=>{const b=e.target.closest('[data-nb]');if(!b)return;
-  if(b.dataset.nb==='lod'){S.l.chci=!S.l.chci;if(!S.l.chci)LODE.forEach(p=>S.l.kusy[p.k]=0)}else S.l.dopr=S.l.dopr===true?false:true;render()})
+  if(b.dataset.nb==='lod'){S.l.chci=!S.l.chci;if(!S.l.chci)LODE.forEach(p=>S.l.kusy[p.k]=0)}else S.l.dopr=S.l.dopr===true?false:true;render();
+  if(b.dataset.nb==='lod'&&S.l.chci)setTimeout(()=>$('rzLodL').scrollIntoView({behavior:'smooth',block:'nearest'}),80)})
 }
 else if(lodW){lodW.innerHTML='<p class="rz-norez">'+KL.t('Lodě si domluvte telefonicky.')+'</p>'}
 {const tx=(id,q)=>{const e=q?root.querySelector(q):$(id);if(e)e.textContent=KL.t(e.textContent.trim())};['rzLodH','rzLodS','rzSumLodT','rzVolH','rzVolS','rzDvH','rzDvS'].forEach(i=>tx(i));root.querySelectorAll('.rz-vc b,.rz-vc small,.rz-vc em').forEach(e=>{e.textContent=KL.t(e.textContent.trim())})}
@@ -264,16 +265,17 @@ function nocRender(){if(!nocW)return;const lod=S.mod==='lod';nocW.hidden=!lod;co
  setOpts($('rzNcO'),po.map(d=>`<option value="${iso(d)}">${fD(d)}${same(d,last)?' · '+KL.t('návrat z vody'):''}</option>`).join(''));$('rzNcO').value=iso(S.ou);
  const n=Math.round((S.ou-S.pr)/864e5),ch=nocChyba();$('rzNcI').textContent=ch||`${n} ${plural(n,'noc','noci','nocí')}`;$('rzNcI').classList.toggle('zle',!!ch)}
 function lodMod(){if(S.mod!=='lod'||!S.d0)return;if(S.nc&&S.pr&&S.ou&&S.ou>S.pr){S.from=S.pr;S.to=S.ou}else{S.from=S.d0;S.to=S.d0}S.l.den=iso(S.d0)}
-/* příklad ceny podle počtu osob: 2 lidé kanoe, víc lidí raft */
+/* příklad ceny podle počtu osob: do 2 lidí kanoe, víc lidí raft správné velikosti */
+const proOs=n=>KL.jazyk==='cs'?`${n} ${n===1?'osobu':n<5?'osoby':'osob'}`:`${n} ${plural(n,'osoba','osoby','osob')}`;
 function lodPriklad(){const os=Math.max(1,persons()),p=k=>LODE.find(x=>x.k===k);let t,n=1;
  if(os<=2)t=p('kanoe');else if(os<=4)t=p('raft4');else if(os<=6)t=p('raft6');else{t=p('raft8');n=Math.ceil(os/8)}
- t=t||LODE[0];if(!t)return '';return `${KL.t('Např. pro')} ${os} ${plural(os,'osoba','osoby','osob')}: ${n>1?n+'× ':''}${KL.male(KL.t(t.n))} ${fmt(n*KC.lod(t.k,1))} ${KL.t('za den')} · ${KL.t('pádla, vesty a barely v ceně')}`}
-function dopPriklad(){const m=REKA.find(x=>x.k!=='kemp'&&x.cena);if(!m)return '';const a=KR.aut(persons());return `${KL.t('Odvezeme vás z kempu na start, např.')} ${KL.t(m.n)} ${fmt(m.cena*a)} (${a} ${plural(a,'auto','auta','aut')})`}
+ t=t||LODE[0];if(!t)return null;return {cena:n*KC.lod(t.k,1),txt:`${KL.t('Pro')} ${proOs(os)}: ${n>1?n+'× ':''}${KL.male(KL.t(t.n))}`}}
+function dopPriklad(){const m=REKA.filter(x=>x.k!=='kemp'&&x.cena).sort((a,b)=>a.cena-b.cena)[0];if(!m)return null;const a=KR.aut(persons());return {cena:m.cena*a,txt:`${KL.t(m.n)} · ${a} ${plural(a,'auto','auta','aut')} ${KL.t('pro')} ${proOs(Math.max(1,persons()))}`}}
 const setOpts=(el,h)=>{if(el.__h!==h){el.innerHTML=h;el.__h=h}};
 function lodRender(){if(!lodOk)return;const v=lodFree(),n=nLodi(),oi=rIdx(S.l.odkud),uby=S.mod==='uby',nab=$('rzNab');
  nab.hidden=!uby;$('rzLodL').hidden=uby&&!S.l.chci;
  nab.querySelectorAll('[data-nb]').forEach(b=>{const on=b.dataset.nb==='lod'?S.l.chci:S.l.dopr===true;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
- $('rzNbL').textContent=lodPriklad();$('rzNbD').textContent=dopPriklad();
+ {const L=lodPriklad(),D=dopPriklad();if(L){$('rzNbC-lod').textContent=fmt(L.cena);$('rzNbJ-lod').textContent=KL.t('za loď a den');$('rzNbP-lod').textContent=L.txt}if(D){$('rzNbC-dop').textContent=fmt(D.cena);$('rzNbJ-dop').textContent=KL.t('za jízdu');$('rzNbP-dop').textContent=D.txt}}
  if(uby&&!S.l.chci){$('rzLodO').hidden=true;return}
  LODE.forEach(p=>{const q=S.l.kusy[p.k],f=Math.max(0,v[p.k]==null?0:v[p.k]);p.el.classList.toggle('on',q>0);p.el.classList.toggle('busy',f<=0&&!q);p.el.querySelector('.fr').textContent=!S.l.den?'':f<=0?KL.t('vše půjčené'):KL.t('volných')+' '+f;p.st.upd()});
  $('rzLodO').hidden=!n;if(!n)return;

@@ -3267,3 +3267,23 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-nc-i{grid-column:1/-1;margin:0;font-weight:800;font-size:14.5px;color:#173b2a}.rz-nc-i.zle{color:#b3261e}
 .rz-dv-kam{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:16px}
 @media(max-width:700px){.rz-nab,.rz-nc-d,.rz-dv-kam{grid-template-columns:1fr}.rz-nb{padding:16px}}
+
+/* nabídka lodí a dopravy – výrazné karty */
+.rz-nab{gap:16px}
+.rz-nab .rz-nb{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;border:0;border-radius:24px;overflow:hidden;background:#fff;box-shadow:0 0 0 2px #ece5d7,0 18px 36px -26px #0b241988;transition:transform .2s,box-shadow .2s}
+.rz-nab .rz-nb:hover{transform:translateY(-3px);box-shadow:0 0 0 2px #cdbf9f,0 24px 40px -24px #0b2419aa;border:0}
+.rz-nab .rz-nb.on{background:#fff;box-shadow:0 0 0 3px #173b2a,0 24px 40px -24px #173b2aaa}
+.rz-nb-t{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 22px;color:#fff}
+.rz-nb.lod .rz-nb-t{background:#12626f}.rz-nb.dop .rz-nb-t{background:#c9741a}
+.rz-nab .rz-nb .ic{width:72px;height:72px;border-radius:20px;background:rgba(255,255,255,.16);color:#fff}.rz-nab .rz-nb.on .ic{background:rgba(255,255,255,.16);color:#fff}.rz-nab .rz-nb .ic svg{width:46px;height:46px}
+.rz-nb .cn{display:flex;flex-direction:column;align-items:flex-end;text-align:right;line-height:1.1}
+.rz-nab .rz-nb .cn small{color:#fff;opacity:.85;font-size:13px;font-weight:700}.rz-nb .cn b{font-size:30px;font-weight:800;color:#fff;white-space:nowrap}.rz-nb .cn i{font-style:normal;font-size:13px;opacity:.9}
+.rz-nb .nd{font-size:22px;line-height:1.2;padding:18px 22px 0;color:#0b2419}
+.rz-nb .pr{padding:4px 22px 0;font-size:14.5px;font-weight:700;color:#5f6b63}
+.rz-nb ul{list-style:none;margin:0;padding:14px 22px 0;display:flex;flex-direction:column;gap:7px;font-size:15px;color:#24382e}
+.rz-nb li{display:flex;align-items:center;gap:9px}.rz-nb li svg{flex:none;width:18px;height:18px;padding:3px;border-radius:50%;background:#e6efe9;color:#173b2a;box-sizing:border-box}
+.rz-nb .cta{margin:18px 22px 22px;padding:14px 18px;border-radius:999px;background:#f4a64a;color:#0b2419;font-weight:800;font-size:16.5px;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;transition:background .2s}
+.rz-nb:hover .cta{background:#ffb866}
+.rz-nb .cta .a1{display:none;align-items:center;gap:8px}.rz-nb .cta .a1 svg{width:20px;height:20px}
+.rz-nb.on .cta{background:#173b2a;color:#fff}.rz-nb.on .cta .a0{display:none}.rz-nb.on .cta .a1{display:inline-flex}
+@media(max-width:700px){.rz-nb .cn b{font-size:26px}.rz-nb .nd{font-size:20px}}
