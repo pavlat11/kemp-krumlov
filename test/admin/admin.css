@@ -840,3 +840,14 @@ div.pv-s{cursor:default}
 .rsk-t td small{display:block;color:var(--mut);font-size:12.5px}.rsk-t .inp.num{width:84px}
 .rsk-v{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}.rsk-v .inp{max-width:120px}
 .rv-l .rl-h small{display:block}.rv-l .rl-h .rl-z{margin-top:3px}
+
+/* ---- doprava + tiskové sestavy podle částí ---- */
+.rd-dny{display:grid;grid-template-columns:repeat(14,minmax(62px,1fr));gap:4px;overflow-x:auto;margin-top:12px}
+.rd-dny button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 2px;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--deep)}
+.rd-dny button small{font-size:11.5px;color:var(--mut);white-space:nowrap}.rd-dny button b{font-size:17px}.rd-dny button i{font-style:normal;font-size:11px;color:var(--mut)}
+.rd-dny button.vik small{color:#8a4f08}.rd-dny button[aria-pressed=true]{background:var(--deep);border-color:var(--deep);color:#fff}.rd-dny button[aria-pressed=true] small,.rd-dny button[aria-pressed=true] i{color:#cfe0d6}
+.rd-cas{font-size:17px}
+.rd-m{list-style:none;margin:0;padding:0}.rd-m li{padding:10px 0;border-top:1px solid var(--line)}.rd-m li:first-child{border-top:0}
+.rd-m li div{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}.rd-m li b{font-size:15.5px}.rd-m li span{font-weight:700;color:var(--c-pot)}.rd-m li small{display:block;color:var(--mut);font-size:13.5px;margin-top:2px}
+@media print{.tk-sum{display:flex;flex-wrap:wrap;gap:4pt 22pt;margin:4pt 0;font-size:10.5pt}.tk-pod{display:inline-block;width:70pt;height:12pt;border-bottom:.6pt solid #000}}
+@media print{#tisk th{white-space:nowrap}}
