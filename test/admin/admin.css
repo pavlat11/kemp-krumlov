@@ -879,3 +879,17 @@ div.pv-s{cursor:default}
 .pct-s button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:#fff;font-size:18px;font-weight:700;cursor:pointer;color:var(--deep)}
 .pct-s small{min-width:34px}.pct-q{display:flex;gap:6px;margin-top:4px}.pct-e{color:#b3261e;font-weight:700;font-size:13.5px;min-height:1em;margin:6px 0 0}
 .rfl-p{margin:0 0 10px;font-size:13px}
+
+/* ceník rozdělený do bloků */
+.ckn{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:6px;padding:8px;margin:0 0 18px;border-radius:14px;background:rgba(246,242,234,.95);backdrop-filter:blur(8px);border:1px solid var(--line)}
+.ckn button{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border:0;border-radius:10px;background:transparent;font:inherit;font-weight:700;font-size:14px;color:var(--deep);cursor:pointer}
+.ckn button:hover{background:#fff}
+.ckg{display:flex;align-items:center;gap:14px;margin:30px 0 14px;padding:16px 20px;border-radius:16px;scroll-margin-top:80px}
+.ckg:first-of-type{margin-top:0}
+.ckg h2{margin:0;font-size:21px}.ckg p{margin:2px 0 0;font-size:14px;opacity:.85}
+.ckg-i{display:grid;place-items:center;width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,.18);flex:none}
+.ckg-obecne{background:#ece7dc;color:var(--deep)}.ckg-obecne .ckg-i{background:#fff}
+.ckg-kemp{background:#173b2a;color:#fff}.ckg-kemp h2{color:#fff}
+.ckg-pujc{background:#12414f;color:#fff}.ckg-pujc h2{color:#fff}
+.ckg-dop{background:#9a5a0c;color:#fff}.ckg-dop h2{color:#fff}
+.ck.ck-kemp{border-left:4px solid #173b2a}.ck.ck-pujc{border-left:4px solid #12414f}.ck.ck-dop{border-left:4px solid #9a5a0c}

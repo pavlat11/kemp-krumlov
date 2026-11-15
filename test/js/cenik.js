@@ -191,7 +191,7 @@ var R=window.KKR={
  LSTAV:{res:'Lodě rezervované',vyd:'Lodě vydané',cast:'Část lodí vrácena',vra:'Lodě vrácené'},
  lodeVen:function(r){var l=r&&r.lode,o={};if(!l||!l.vydano)return o;var k=l.vydano.kusy||{};Object.keys(k).forEach(function(x){o[x]=+k[x]||0});(l.vraceno||[]).forEach(function(v){Object.keys(v.kusy||{}).forEach(function(x){o[x]=(o[x]||0)-(+v.kusy[x]||0)})});Object.keys(o).forEach(function(x){if(o[x]<=0)delete o[x]});return o},
  lodeStav:function(r){var l=r&&r.lode;if(!l||!R.lodePocet(l))return '';if(!l.vydano)return 'res';var ven=R.lodeVen(r);return !Object.keys(ven).length?'vra':(l.vraceno||[]).length?'cast':'vyd'},
- lodeKusyTxt:function(k){var o=[];Object.keys(k||{}).forEach(function(x){var n=+k[x]||0;if(!n)return;var p=window.KKC&&KKC.p(x),V={padla:['pádlo','pádla','pádel'],vesty:['vesta','vesty','vest'],barely:['barel','barely','barelů']}[x];o.push(V?n+' '+(n===1?V[0]:n<5?V[1]:V[2]):n+'× '+(p?p.n:x))});return o.join(', ')},
+ lodeKusyTxt:function(k){var o=[];Object.keys(k||{}).sort(function(a,b){return (a in R.VYB)-(b in R.VYB)}).forEach(function(x){var n=+k[x]||0;if(!n)return;var p=window.KKC&&KKC.p(x),V={padla:['pádlo','pádla','pádel'],vesty:['vesta','vesty','vest'],barely:['barel','barely','barelů']}[x];o.push(V?n+' '+(n===1?V[0]:n<5?V[1]:V[2]):n+'× '+(p?p.n:x))});return o.join(', ')},
  lodeCelkem:function(){var S=R.sklad(),c=Object.assign({},S.vyb);Object.keys(S.lode).forEach(function(k){c[k]=+S.lode[k].ks||0});return c},
  /* volné kusy pro celé období (nejhorší den) */
  lodeVolno:function(den,dni,krome){var c=R.lodeCelkem(),v=Object.assign({},c);R.lodeDny({den:den,dni:dni}).forEach(function(d){var o=R.lodeObs(d,krome);Object.keys(c).forEach(function(k){v[k]=Math.min(v[k],c[k]-(o[k]||0))})});return v},
@@ -360,8 +360,30 @@ var R=window.KKR={
    LD.forEach(function(x,i){try{var l={den:dd(x[0]),dni:x[1],kusy:x[2],odkud:x[3],kam:x[4]},dp=x[5]?{misto:x[3],osob:x[5],cas:i%2?'9:00':'10:30'}:null,cn=R.cenaLodi(l).celkem+R.cenaDopravy(dp),os=0;Object.keys(x[2]).forEach(function(k){os+=x[2][k]*((KKC.p(k)||{}).osob||2)});
      var pb=R.novaPlatba(cn,l.den,dd(0));if(pb&&x[6]==='zal'){pb.stav='zal';pb.kdy=Date.now()}
      R.pridej({mista:[],od:l.den,do:dd(x[0]+x[1]-1),jmeno:J[(i*5+2)%J.length]+(i%3?'':' – vodáci'),stav:pb&&pb.stav==='ceka'?'pop':'pot',osoby:{dosp:Math.max(2,os-2),dite:Math.min(2,os-2>2?2:0),zak:0},telefon:'+420 73'+i+' 55'+i+' 10'+i,email:'vodak'+(i+1)+'@example.com',zdroj:'web',jazyk:i%4===3?'de':'cs',lode:l,doprava:dp,platba:pb,cena:cn,zprava:'Testovací data – půjčovna'});n++}catch(e){}})}
+  if(v<4){ /* 4. dávka: víc lodí a dopravy – minulé (vrácené, nevrácené po termínu), dnešní výdej, budoucí; doprava i bez lodí */
+   var JM=['Kratochvíl','Hoffmann','Pospíšilová','de Vries','Marek','Bauer','Horáková','Wagner','Bláha','Zeman','Krejčí','Becker','Urban','Peeters','Vacek','Richter','Šimek','Klein','Kadlec','Novotná','Beneš','Wolf','Sedláček','Hájek','Mertens','Vlček','Lang','Polák'];
+   var KP=function(k){var o=0;Object.keys(k).forEach(function(x){o+=k[x]*((KKC.p(x)||{}).osob||2)});return o};
+   /* [den od dnes, dní, lodě, odkud, kam, doprava?, čas, stan ve vlastním stanu (noci), stav lodí: 0 nic | 'vra' vráceno | 'ven' venku | 'cast' část vrácena] */
+   var L4=[[-6,1,{kanoe:3},'dop1','kemp',1,'9:00',0,'vra'],[-5,2,{raft6:2},'dop2','dop9',1,'10:00',2,'vra'],[-4,1,{kanoe:2,baraka:1},'dop4','kemp',0,'',0,'vra'],[-3,1,{raft4:1},'dop5','dop8',1,'11:00',0,'cast'],
+     [-2,1,{kanoe:2},'dop1','dop2',1,'9:30',0,'ven'],[-1,1,{raft8:1,kanoe:2},'dop2','kemp',1,'9:00',1,'vra'],[-1,2,{kanoe:4},'dop1','kemp',1,'8:30',0,'ven'],
+     [0,1,{kanoe:2},'dop1','kemp',1,'9:00',1,0],[0,1,{raft6:1},'dop3','kemp',1,'10:30',0,0],[0,1,{kanoe:5,raft4:1},'dop1','dop2',1,'9:00',0,'ven'],[0,3,{kanoe:2},'dop1','dop9',1,'8:30',0,'ven'],[0,1,{baraka:2},'kemp','dop8',0,'',2,0],
+     [1,1,{kanoe:3},'dop2','kemp',1,'9:30',1,0],[1,1,{raft8:2},'dop1','kemp',1,'9:00',0,0],[2,2,{kanoe:6},'dop1','dop9',1,'8:30',2,0],[2,1,{raft4:2,kanoe:1},'dop4','kemp',1,'10:00',0,0],[3,1,{kanoe:2},'dop5','kemp',0,'',1,0],
+     [4,1,{raft6:3},'dop1','kemp',1,'9:00',0,0],[5,1,{kanoe:8},'dop2','kemp',1,'9:30',2,0],[6,1,{raft4:1},'dop3','dop8',1,'11:00',0,0],[7,2,{kanoe:3,baraka:1},'dop1','kemp',1,'8:30',3,0],[9,1,{raft8:1},'dop2','kemp',1,'10:00',0,0],
+     [10,1,{kanoe:10},'dop1','kemp',1,'9:00',1,0],[12,1,{raft6:2},'dop4','dop9',1,'9:30',0,0],[14,3,{kanoe:4},'dop1','dop9',1,'8:30',2,0],[17,1,{kanoe:2,raft4:1},'dop2','kemp',1,'10:00',0,0],[20,1,{raft8:2},'dop1','kemp',1,'9:00',1,0],[24,1,{kanoe:3},'dop3','kemp',0,'',0,0]];
+   L4.forEach(function(x,i){try{var l={den:dd(x[0]),dni:x[1],kusy:x[2],odkud:x[3],kam:x[4]},os=KP(x[2]),dp=x[5]&&x[3]!=='kemp'?{misto:x[3],osob:os,cas:x[6],den:l.den}:null,st=x[7],cn=R.cenaLodi(l).celkem+R.cenaDopravy(dp),od=st?dd(x[0]-1):l.den,dk=st?dd(x[0]-1+st):dd(x[0]+x[1]-1);
+     if(st)cn+=st*(190+2*200);
+     var pb=R.novaPlatba(cn,l.den,dd(Math.min(0,x[0]-7)));if(pb&&(x[0]<=0||i%3))pb.stav='zal';
+     var r=R.pridej({mista:[],dalsi:{stan:st?1:0,karavan:0},od:od,do:dk<l.den&&!st?l.den:dk,jmeno:JM[i%JM.length],stav:st&&od<dd(0)?'uby':pb&&pb.stav==='ceka'?'pop':'pot',osoby:{dosp:Math.max(1,os-(os>3?2:0)),dite:os>3?2:0,zak:0},telefon:'+420 77'+(i%10)+' 4'+(10+i)+' '+(300+i*7),email:'host'+(i+1)+'@example.com',zdroj:i%4?'web':'obsluha',jazyk:i%5===4?'de':i%7===3?'en':'cs',lode:l,doprava:dp,platba:pb,cena:cn,zprava:'Testovací data – lodě a doprava'});
+     if(x[8]){var pt=R.lodePotreba(l),vd={kdy:Date.now()-Math.max(0,-x[0])*864e5-3600e3,kdo:'Obsluha',kusy:pt},vr=[];
+      if(x[8]==='vra')vr=[{kdy:vd.kdy+6*3600e3,kdo:'Obsluha',kusy:pt}];
+      if(x[8]==='cast'){var half={};Object.keys(pt).forEach(function(k){var h=Math.floor(pt[k]/2);if(h)half[k]=h});vr=[{kdy:vd.kdy+5*3600e3,kdo:'Obsluha',kusy:half}]}
+      var z={lode:Object.assign({},l,{vydano:vd,vraceno:vr})};if(x[8]==='vra'&&!st)z.stav='odj';if(x[8]==='vra'&&st&&x[0]+st<=0)z.stav='odj';R.uprav(r.id,z)}
+     n++}catch(e){}});
+   /* doprava bez lodí (vlastní lodě nebo jen výlet) */
+   [[0,'dop1','9:00',4,2],[1,'dop2','10:00',6,3],[3,'dop4','9:30',3,2],[5,'dop1','8:30',8,4],[8,'dop3','11:00',2,1],[11,'dop2','9:00',5,2]].forEach(function(x,i){try{var dp={misto:x[1],osob:x[3],cas:x[2],den:dd(x[0])},cn=R.cenaDopravy(dp)+x[4]*(190+x[3]*200);
+     R.pridej({mista:[],dalsi:{stan:1,karavan:0},od:dd(x[0]-1),do:dd(x[0]-1+x[4]),jmeno:JM[(i+11)%JM.length]+' (vlastní lodě)',stav:x[0]<=0?'uby':'pot',osoby:{dosp:x[3],dite:0,zak:0},telefon:'+420 60'+i+' 2'+(20+i)+' 5'+(10+i),email:'doprava'+(i+1)+'@example.com',zdroj:'web',jazyk:'cs',doprava:dp,cena:cn,zprava:'Testovací data – jen doprava, lodě mají vlastní'});n++}catch(e){}})}
   }finally{mem=null;pis(K,m0[K]);pis(KC,m0[KC])}
-  pis('kkt.rez.ukazka',3);return n}
+  pis('kkt.rez.ukazka',4);return n}
 };
-try{if(cti('kkt.rez.ukazka',0)<3)R.ukazka()}catch(e){}
+try{if(cti('kkt.rez.ukazka',0)<4)R.ukazka()}catch(e){}
 })();
