@@ -275,10 +275,3 @@ if(maObr)KKP.fotky.vse().then(function(a){
 }).catch(function(){[].forEach.call(document.querySelectorAll('img[data-kkp-ceka]'),function(i){i.removeAttribute('data-kkp-ceka')})});
 })();
 ;
-
-/* TESTOVACÍ VERZE – oddělená data (kkt.*), není vidět pro vyhledávače */
-(function(){try{
-var b=document.createElement('div');b.textContent='TESTOVACÍ VERZE';
-b.style.cssText='position:fixed;left:8px;bottom:8px;z-index:99999;background:#c0392b;color:#fff;font:700 11px/1 system-ui,sans-serif;letter-spacing:.08em;padding:5px 9px;border-radius:4px;opacity:.85;pointer-events:none';
-if(document.getElementById('kkt-znacka'))return;b.id='kkt-znacka';
-(document.body?Promise.resolve():new Promise(function(r){document.addEventListener('DOMContentLoaded',r)})).then(function(){document.body.appendChild(b)})}catch(e){}})();

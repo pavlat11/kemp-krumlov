@@ -283,10 +283,3 @@ KK.import=function(d){
 };
 KK.reset=function(){['texty','seo','cenik','galerie','historie','dtexty','ikony','obrazky','texty.en','texty.de','dtexty.en','dtexty.de','mena','jazyk','rezervace','rez.nast','rez.cislo'].forEach(LS.del);return tx('readwrite',function(s){s.clear()}).then(function(){return KK.obrazky.soubor.vymaz().catch(function(){})})};
 })();
-
-/* TESTOVACÍ VERZE – oddělená data (kkt.*), není vidět pro vyhledávače */
-(function(){try{var t=function(){if(document.title.indexOf('TEST · ')!==0)document.title='TEST · '+document.title};t();setInterval(t,1000);
-var b=document.createElement('div');b.textContent='TESTOVACÍ VERZE';
-b.style.cssText='position:fixed;left:8px;bottom:8px;z-index:99999;background:#c0392b;color:#fff;font:700 11px/1 system-ui,sans-serif;letter-spacing:.08em;padding:5px 9px;border-radius:4px;opacity:.85;pointer-events:none';
-if(document.getElementById('kkt-znacka'))return;b.id='kkt-znacka';
-(document.body?Promise.resolve():new Promise(function(r){document.addEventListener('DOMContentLoaded',r)})).then(function(){document.body.appendChild(b)})}catch(e){}})();
