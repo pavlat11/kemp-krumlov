@@ -1000,3 +1000,5 @@ div.pv-s{cursor:default}
 .rf-pn{margin:10px 0 0;padding:10px 14px;border-radius:12px;background:var(--c-popBg);color:#6b3f06;font-size:13.5px;line-height:1.5;border:1px solid #f1d3a2}.rf-pn.zle{background:#fdf1ef;border-color:#f0c2bd;color:#7d1a14}
 
 .rl-sf{display:flex;flex-direction:column;gap:8px;width:100%}.rl-sf .rl-st{align-items:center}.rl-sn{min-width:58px;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+
+.pk-z{display:flex;justify-content:center;gap:14px;margin-top:8px;font-size:12.5px}.pk-z .lnk{color:var(--mut);font-weight:600}.pk-z .lnk:hover{color:#b3261e}
