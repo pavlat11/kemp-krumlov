@@ -947,7 +947,7 @@ function rezervace(m,sekV){
       (b?'':'<label class="f">Telefon<input class="inp" name="telefon" type="tel" autocomplete="off"></label><label class="f">E-mail<input class="inp" name="email" type="email" autocomplete="off"></label>')+
       '<label class="f">'+(b?'Od':'Příjezd')+'<input class="inp" name="od" type="date" required></label><label class="f">'+(b?'Do (tento den už je volno)':'Odjezd')+'<input class="inp" name="do" type="date" required></label>'+
       (b?'':num('dosp','Dospělí',o.dosp,'nepovinné')+num('dite','Děti',(o.dite||0)+(o.zak||0),'nepovinné')+
-        '<fieldset class="f s2 rfst"><legend>Stav</legend><div class="rfst-g">'+(r&&(r.stav==='pop'||r.stav==='odj')?[r.stav,'pot','uby']:['pot','uby']).map(function(s){return '<label class="rfst-o '+s+'"><input type="radio" name="stav" value="'+s+'"><span>'+R.STAVY[s]+'</span></label>'}).join('')+'</div></fieldset>')+
+        '<fieldset class="f s2 rfst"><legend>Stav</legend><div class="rfst-g">'+(r&&r.stav==='odj'?['odj','pot','uby']:['pop','pot','uby']).map(function(s){return '<label class="rfst-o '+s+'"><input type="radio" name="stav" value="'+s+'"><span>'+R.STAVY[s]+'</span></label>'}).join('')+'</div><p class="rf-pn" id="rfpn" hidden></p></fieldset>')+
       '<fieldset class="s2 rmf"><legend>Místa <small>přeškrtnutá jsou v termínu obsazená</small></legend>'+(b?'<div class="row rm-vse"><button type="button" class="btn sm gh" data-vse="1">Vybrat celý kemp</button><button type="button" class="btn sm gh" data-vse="0">Zrušit výběr</button></div>':'')+'<div id="rmm"></div></fieldset>'+
       (b?'':'<details class="s2 rfl"'+(r&&r.lode?' open':'')+'><summary>Lodě a doprava osob<small id="rfls"></small></summary><p class="mut rfl-p">Doprava bez lodí: zaškrtněte dopravu, vyberte „Odkud“ jako místo, kam se jede, a den jako „Den vyplutí“.</p><div class="rfg">'+
         '<label class="f">Den vyplutí<input class="inp" name="lden" type="date"></label>'+num('ldni','Na kolik dní',r&&r.lode?r.lode.dni:1)+
@@ -967,6 +967,14 @@ function rezervace(m,sekV){
     var doprZ=function(){var l=lodeZ(),m=l?l.odkud:f.lod.value;if(!f.ldop.checked||!m||m==='kemp')return null;return {misto:m,osob:+f.ldos.value||((+f.dosp.value||0)+(+f.dite.value||0)),cas:f.lcas.value.trim(),den:l?l.den:(f.lden.value||f.od.value)}};
     var lodInfo=function(){if(b)return;var den=f.lden.value||f.od.value,dni=Math.max(1,Math.round(+f.ldni.value||1)),v=den?R.lodeVolno(den,dni,r&&r.id):{};$$('[data-lv]',f).forEach(function(e){var x=v[e.dataset.lv];e.textContent=x==null?'':' · volných '+Math.max(0,x)});var l=lodeZ(),ch=l?R.lodeChybi(l,r&&r.id):[];$('#rfls',f).textContent=l?' · '+R.lodePocet(l)+' '+pl(R.lodePocet(l),'loď','lodě','lodí')+(ch.length?' · chybí vybavení':''):' · žádné';$('#rfls',f).classList.toggle('zle',!!ch.length)};
     var rucne=!!(r&&r.cena);
+    /* poznámka ke stavu Poptávka: se zálohou přijde hostovi e-mail s výzvou k platbě */
+    var autoP=false,nota=function(){if(b)return;var pn=$('#rfpn',f),Z=R.zaloha(),pop=f.stav.value==='pop';
+      if(pop&&Z.zap&&!f.platba.value&&!(r&&r.platba)){f.platba.value='ceka';autoP=true}else if(!pop&&autoP&&f.platba.value==='ceka'){f.platba.value='';autoP=false}
+      if(!pop){pn.hidden=true;return}pn.hidden=false;var cn=+f.cena.value||0,zl=(r&&r.platba&&r.platba.zaloha)||R.zalohaCastka(cn),sp=(r&&r.platba&&r.platba.splatnost)||(f.od.value?R.splatnost(f.od.value,dnes):'');
+      pn.className='rf-pn'+(f.platba.value==='ceka'&&!f.email.value.trim()?' zle':'');
+      pn.innerHTML=f.platba.value==='ceka'?'<b>Hostovi přijde e-mail s výzvou k zaplacení zálohy'+(zl?' '+kc(zl):'')+(sp?' do '+KR(sp):'.')+'</b> Místa i lodě se mu do té doby drží. Až zaplatí, klikněte na „Záloha zaplacena“ a z poptávky se stane rezervace. Když nezaplatí včas, poptávka sama propadne.'+(f.email.value.trim()?'':' <b>Vyplňte e-mail hosta, jinak výzva nemá kam přijít.</b>')
+        :'Poptávka bez zálohy čeká na vaše potvrzení. Místa i lodě se hostovi zatím drží.'};
+    f.addEventListener('change',nota);f.addEventListener('input',function(e){if(e.target.name==='email'||e.target.name==='cena')nota()});setTimeout(nota,0);
     var spocti=function(){if(b||!window.KKC)return;var od=f.od.value,dk=f.do.value,nn=od&&dk&&od<dk?Math.round((D0(dk)-D0(od))/864e5):0,q={};
       Object.keys(vyb).forEach(function(k){var t=k.split('-')[0];q[t]=(q[t]||0)+1});q.stan=+d.stan||0;q.karavan=+d.karavan||0;q.os=+f.dosp.value||0;q.dite=+f.dite.value||0;
       var sum=0;for(var i=0;i<nn;i++){var h=KKC.hlavni(ADD(D0(od),i).getMonth())?'a':'b';Object.keys(q).forEach(function(k){if(q[k]&&KKC.p(k))sum+=KKC.v(k,h)*q[k]})}
@@ -991,7 +999,7 @@ function rezervace(m,sekV){
       if(!z.od||!z.do||z.od>z.do||(z.od===z.do&&!(zl&&bezM)))return ch(b?'Konec musí být po začátku.':'Odjezd musí být po příjezdu.',f.do);
       if(zl&&f.lod.value===f.lkam.value)return ch('Místo vyplutí a cíl jsou stejné.',f.lkam);
       if(b)z.stav='blk';else{z.lode=zl;z.doprava=doprZ();
-        var pv=f.platba.value,pb0=r&&r.platba;z.platba=pv?{zaloha:(pb0&&pb0.zaloha)||R.zalohaCastka(+f.cena.value||0)||0,splatnost:(pb0&&pb0.splatnost)||R.splatnost(z.od,dnes),stav:pv,kdy:pv==='ceka'?null:(pb0&&pb0.kdy)||Date.now()}:null;z.telefon=f.telefon.value.trim();z.email=f.email.value.trim();z.osoby={dosp:+f.dosp.value||0,dite:+f.dite.value||0,zak:0};z.dalsi={stan:+d.stan||0,karavan:+d.karavan||0};z.cena=+f.cena.value||0;z.stav=f.stav.value;if(!r&&pv==='ceka'&&z.stav==='pot')z.stav='pop'}
+        var pv=f.platba.value,pb0=r&&r.platba;if(!r&&f.stav.value==='pop'&&pv==='ceka'&&!f.email.value.trim())return ch('Vyplňte e-mail hosta – přijde na něj výzva k zaplacení zálohy.',f.email);z.platba=pv?{zaloha:(pb0&&pb0.zaloha)||R.zalohaCastka(+f.cena.value||0)||0,splatnost:(pb0&&pb0.splatnost)||R.splatnost(z.od,dnes),stav:pv,kdy:pv==='ceka'?null:(pb0&&pb0.kdy)||Date.now()}:null;z.telefon=f.telefon.value.trim();z.email=f.email.value.trim();z.osoby={dosp:+f.dosp.value||0,dite:+f.dite.value||0,zak:0};z.dalsi={stan:+d.stan||0,karavan:+d.karavan||0};z.cena=+f.cena.value||0;z.stav=f.stav.value;if(!r&&pv==='ceka'&&z.stav==='pot')z.stav='pop'}
       if(!z.mista.length&&(b||!(z.dalsi.stan||z.dalsi.karavan))&&!z.lode)return ch('Vyberte aspoň jedno místo nebo lodě.');
       if(!b&&f.ldop.checked&&!z.doprava)return ch('U dopravy vyberte místo, kam se jede (ne Kemp Krumlov).',f.lod);
       try{var x;if(r)x=zmen(r.id,z,'Upraveno');else{z.zdroj='rucne';z.kdo=ja.jmeno;x=R.pridej(z)}

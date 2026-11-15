@@ -996,3 +996,5 @@ div.pv-s{cursor:default}
 @media(max-width:560px){.pjc-g,.pjc-g.t3{grid-template-columns:1fr}}
 
 .pjc-dq{margin-top:10px}.pjc-dp{margin-top:8px;padding:4px 14px 10px;border-radius:14px;background:#fdf0de;border:1px solid #f1d3a2}.pjc-dp p{margin:0;font-size:13.5px}
+
+.rf-pn{margin:10px 0 0;padding:10px 14px;border-radius:12px;background:var(--c-popBg);color:#6b3f06;font-size:13.5px;line-height:1.5;border:1px solid #f1d3a2}.rf-pn.zle{background:#fdf1ef;border-color:#f0c2bd;color:#7d1a14}
