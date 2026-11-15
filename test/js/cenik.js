@@ -183,7 +183,15 @@ var R=window.KKR={
  /* kolik čeho rezervace potřebuje: {kanoe:2, padla:4, vesty:6, barely:2} */
  lodePotreba:function(l){var S=R.sklad(),o={padla:0,vesty:0,barely:0};Object.keys((l&&l.kusy)||{}).forEach(function(k){var n=+l.kusy[k]||0,t=S.lode[k];if(!n)return;o[k]=(o[k]||0)+n;if(t){o.padla+=n*(+t.padla||0);o.vesty+=n*(+t.vesty||0);o.barely+=n*(+t.barely||0)}});return o},
  /* obsazeno v jednom dni */
- lodeObs:function(den,krome){var o={};R.vse().forEach(function(r){if(r.stav==='zru'||r.id===krome||!r.lode||R.lodeDny(r.lode).indexOf(den)<0)return;var p=R.lodePotreba(r.lode);Object.keys(p).forEach(function(k){o[k]=(o[k]||0)+p[k]})});return o},
+ /* Vydané lodě se počítají podle toho, co je skutečně venku: dnes zbytek po vrácení, po termínu nevrácené kusy až do dneška */
+ lodeObs:function(den,krome){var o={},dnes=I(new Date());R.vse().forEach(function(r){if(r.stav==='zru'||r.id===krome||!r.lode||!R.lodePocet(r.lode))return;var dn=R.lodeDny(r.lode),v=r.lode.vydano,p=null;
+   if(v&&den===dnes&&den>=dn[0])p=R.lodeVen(r);else if(dn.indexOf(den)>=0)p=R.lodePotreba(r.lode);else if(v&&den>dn[dn.length-1]&&den<=dnes)p=R.lodeVen(r);
+   if(p)Object.keys(p).forEach(function(k){o[k]=(o[k]||0)+(+p[k]||0)})});return o},
+ /* výdej a vracení: lode.vydano={kdy,kdo,kusy}, lode.vraceno=[{kdy,kdo,kusy},…] (kusy = lodě i pádla, vesty, barely) */
+ LSTAV:{res:'Lodě rezervované',vyd:'Lodě vydané',cast:'Část lodí vrácena',vra:'Lodě vrácené'},
+ lodeVen:function(r){var l=r&&r.lode,o={};if(!l||!l.vydano)return o;var k=l.vydano.kusy||{};Object.keys(k).forEach(function(x){o[x]=+k[x]||0});(l.vraceno||[]).forEach(function(v){Object.keys(v.kusy||{}).forEach(function(x){o[x]=(o[x]||0)-(+v.kusy[x]||0)})});Object.keys(o).forEach(function(x){if(o[x]<=0)delete o[x]});return o},
+ lodeStav:function(r){var l=r&&r.lode;if(!l||!R.lodePocet(l))return '';if(!l.vydano)return 'res';var ven=R.lodeVen(r);return !Object.keys(ven).length?'vra':(l.vraceno||[]).length?'cast':'vyd'},
+ lodeKusyTxt:function(k){var o=[];Object.keys(k||{}).forEach(function(x){var n=+k[x]||0;if(!n)return;var p=window.KKC&&KKC.p(x),V={padla:['pádlo','pádla','pádel'],vesty:['vesta','vesty','vest'],barely:['barel','barely','barelů']}[x];o.push(V?n+' '+(n===1?V[0]:n<5?V[1]:V[2]):n+'× '+(p?p.n:x))});return o.join(', ')},
  lodeCelkem:function(){var S=R.sklad(),c=Object.assign({},S.vyb);Object.keys(S.lode).forEach(function(k){c[k]=+S.lode[k].ks||0});return c},
  /* volné kusy pro celé období (nejhorší den) */
  lodeVolno:function(den,dni,krome){var c=R.lodeCelkem(),v=Object.assign({},c);R.lodeDny({den:den,dni:dni}).forEach(function(d){var o=R.lodeObs(d,krome);Object.keys(c).forEach(function(k){v[k]=Math.min(v[k],c[k]-(o[k]||0))})});return v},
@@ -299,7 +307,7 @@ var R=window.KKR={
   Object.assign(r,z);pis(K,a);return r},
  /* ubytovaní hosté, kterým už uplynul den odjezdu, se sami přepnou na „Odjel“ (zapomenuté odhlášení); vrací počet */
  auto:function(dnes){var a=R.vse(),n=0;a.forEach(function(r){if(r.stav==='pop'&&r.platba&&r.platba.stav==='ceka'&&r.platba.splatnost&&r.platba.splatnost<dnes){r.stav='zru';r.hist=(r.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Propadla – záloha nepřišla do '+r.platba.splatnost}]).slice(-30);n++}
-  else if((r.stav==='pot'||r.stav==='pop')&&r.od&&r.od<dnes){r.stav='zru';r.hist=(r.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Automaticky zrušena – host nepřijel (příjezd '+r.od+')'}]).slice(-30);n++}
+  else if((r.stav==='pot'||r.stav==='pop')&&r.od&&r.od<dnes&&!(r.lode&&r.lode.vydano)){r.stav='zru';r.hist=(r.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Automaticky zrušena – host nepřijel (příjezd '+r.od+')'}]).slice(-30);n++}
   else if(r.stav==='uby'&&r.do&&r.do<dnes){r.stav='odj';r.hist=(r.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Automaticky odhlášen (odjezd '+r.do+' už uplynul)'}]).slice(-30);n++}});if(n)pis(K,a);return n},
  obnov:function(a){pis(K,a)}, /* vrácení poslední změny zpět (administrace) */
  smaz:function(id){pis(K,R.vse().filter(function(x){return x.id!==id}))},

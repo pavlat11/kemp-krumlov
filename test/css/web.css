@@ -3251,3 +3251,19 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-dv-cas button.on{background:#0b2419;border-color:#0b2419;color:#fff}
 .rz-dv-n{margin:12px 0 0;font-size:14px;font-weight:700;color:#7a4708}.rz-dv-n:empty{display:none}
 @media(max-width:700px){.rz-volba,.rz-dv-o,.rz-noci{grid-template-columns:1fr}.rz-vc{padding:20px}.rz-vc b{font-size:20px}}
+
+/* nabídka lodí a dopravy (krok 5), nocleh k lodím */
+.rz-nab{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.rz-nb{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;text-align:left;padding:18px 20px;border:2px solid #ece5d7;border-radius:20px;background:#fff;font:inherit;color:#0b2419;cursor:pointer;transition:border-color .2s,background .2s,box-shadow .2s}
+.rz-nb:hover{border-color:#cdbf9f}
+.rz-nb.on{border-color:#e08a1e;background:#fff4e4;box-shadow:0 14px 28px -20px #e08a1eaa}
+.rz-nb .ic{display:grid;place-items:center;width:52px;height:52px;border-radius:15px;background:#f1ece2;color:#173b2a}.rz-nb.on .ic{background:#f4a64a;color:#0b2419}.rz-nb .ic svg{width:28px;height:28px}
+.rz-nb .tx{display:flex;flex-direction:column;gap:4px;min-width:0}.rz-nb b{font-size:18px;line-height:1.25}.rz-nb small{font-size:13.5px;line-height:1.45;color:#5f6b63}
+.rz-nb .ck{width:28px;height:28px;border-radius:9px;border:2px solid #b9b1a0;background:#fff;position:relative}
+.rz-nb.on .ck{background:#0b2419;border-color:#0b2419}.rz-nb.on .ck::after{content:"";position:absolute;left:8px;top:3px;width:7px;height:13px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg)}
+.rz-nb:focus-visible{outline:3px solid #f4a64a;outline-offset:3px}
+.rz-noci{display:block;margin-bottom:16px}.rz-noci .rz-nb{width:100%}
+.rz-nc-d{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px;padding:18px;border-radius:18px;background:#f7f3ea;border:1.5px solid #ece5d7}
+.rz-nc-i{grid-column:1/-1;margin:0;font-weight:800;font-size:14.5px;color:#173b2a}.rz-nc-i.zle{color:#b3261e}
+.rz-dv-kam{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:16px}
+@media(max-width:700px){.rz-nab,.rz-nc-d,.rz-dv-kam{grid-template-columns:1fr}.rz-nb{padding:16px}}

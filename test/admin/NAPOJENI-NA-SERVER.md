@@ -170,3 +170,15 @@ rezervace.platba  = { zaloha:1716, splatnost:"2027-06-20", stav:"ceka"|"zal"|"vs
 - **Propadnutí**: noční úloha zruší (`stav="zru"`) rezervace se `stav="pop"`, `platba.stav="ceka"` a `splatnost < dnes` a pošle e-mail `propadla`. V náhledu to dělá `KKR.auto()` při otevření administrace.
 - **Šablony**: nové typy `zaloha`, `zaplaceno`, `propadla` a pole `{lode} {doprava} {zaloha} {splatnost} {doplatek} {ucet} {vs}`. Řádek „Popisek: {pole}“ se vynechá, když je pole prázdné.
 - **QR platba** zatím není; až bude známé číslo účtu, stačí do e-mailu `zaloha` vložit obrázek s kódem SPD (účet, částka, VS).
+
+### Výdej a vracení lodí
+```
+rezervace.lode.vydano  = { kdy:čas, kdo:"Jméno", kusy:{kanoe:2, padla:4, vesty:6, barely:2} }
+rezervace.lode.vraceno = [ { kdy:čas, kdo:"Jméno", kusy:{kanoe:1, padla:2} }, … ]   // vracení i po částech
+```
+- Stav lodí se odvozuje (`KKR.lodeStav`): `res` rezervované → `vyd` vydané → `cast` část vrácena → `vra` vše vrácené. Co je ještě venku: `KKR.lodeVen` (vydáno minus součet vráceného).
+- Dostupnost (`KKR.lodeObs`): u vydaných rezervací se dnes počítá jen to, co je skutečně venku, a nevrácené kusy po termínu blokují sklad až do dneška.
+- Rezervace jen s loděmi se po vrácení všeho přepne na `odj`. Vydané rezervace se automaticky neruší jako „host nepřijel“.
+
+### Doprava bez lodí
+`rezervace.doprava = { misto, osob, cas, den }` – `den` je den jízdy. Bez lodí si host vybere místo i den (z dní pobytu); s loděmi je místo = start plavby a den = den vyplutí.
