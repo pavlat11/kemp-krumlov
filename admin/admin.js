@@ -451,8 +451,8 @@ function rezervace(m){
     /* po překreslení zůstat tam, kde uživatel byl (stejná záložka) */
     var kO=$('.rk',box),kS=kO&&kTab===tab+'|'+q?[kO.scrollTop,kO.scrollLeft,window.scrollX,window.scrollY]:null,dO=$('.rn-dny',box),dS=dO&&kTab===tab+'|'+q?dO.scrollLeft:null;
     Promise.resolve().then(function(){sbNahled();hromBar();var k=$('.rk',box);if(kS&&k){k.scrollTop=kS[0];k.scrollLeft=kS[1];window.scrollTo(kS[2],kS[3])}var dn=$('.rn-dny',box);if(dS!=null&&dn)dn.scrollLeft=dS;kTab=tab+'|'+q});
-    box.innerHTML='<div class="rz-top"><h1>Rezervace</h1><div class="rz-seg" role="group" aria-label="Zobrazení">'+[['dnes','Plánek'],['kal','Kalendář'],['sez','Seznam'],['nas','Nastavení']].map(function(t){return '<button type="button" aria-pressed="'+(!q&&tab===t[0])+'" data-tab="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div>'+
-      '<label class="rq"><span class="sr">Hledat v rezervacích</span>'+SV(IC.seo,18)+'<input type="search" id="rq" class="inp" placeholder="Hledat jméno, telefon, chatku, datum…" value="'+esc(q)+'" autocomplete="off"></label>'+
+    box.innerHTML='<div class="rz-top"><h1>Rezervace</h1>'+
+'<label class="rq"><span class="sr">Hledat v rezervacích</span>'+SV(IC.seo,18)+'<input type="search" id="rq" class="inp" placeholder="Hledat jméno, telefon, chatku, datum…" value="'+esc(q)+'" autocomplete="off"></label>'+'<div class="rz-seg" role="group" aria-label="Zobrazení">'+[['dnes','Plánek'],['kal','Kalendář'],['sez','Seznam'],['nas','Nastavení']].map(function(t){return '<button type="button" aria-pressed="'+(!q&&tab===t[0])+'" data-tab="'+t[0]+'">'+t[1]+'</button>'}).join('')+'</div>'+
       '<div class="row rz-ak"><button type="button" class="btn pri" data-a="nova">+ Nová rezervace</button></div></div>'+
       (q?vysledky(A):tab==='kal'?kal(akt):tab==='sez'?sez(A):tab==='nas'?nas():prehledDnes(akt));
     if(!dd.hidden){if(najdi(dd.dataset.id))detail(dd.dataset.id);else{dd.hidden=true}}
