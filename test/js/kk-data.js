@@ -72,7 +72,7 @@ KK.auth={
     var x=seznamU().filter(function(y){return y.id===s.id})[0];
     if(!x||x.aktivni===false){LS.del('session');return null}
     s.jmeno=x.jmeno;s.role=x.role;s.vychozi=!!x.vychozi;s.login=x.login;s.email=x.email||'';return s},
-  muze:function(sekce){var s=KK.auth.meSync();if(!s)return false;if(s.role==='admin')return true;if(sekce==='uzivatele')return false;if(sekce==='ucet')return true;var x=seznamU().filter(function(y){return y.id===s.id})[0];var p=x?KK.prava.uzivatel(x):(KK.prava.vse()[s.role]||{});return !!p[sekce]},
+  muze:function(sekce){if(sekce==='ubytovani'||sekce==='pujcovna'||sekce==='doprava')sekce='rezervace';var s=KK.auth.meSync();if(!s)return false;if(s.role==='admin')return true;if(sekce==='uzivatele')return false;if(sekce==='ucet')return true;var x=seznamU().filter(function(y){return y.id===s.id})[0];var p=x?KK.prava.uzivatel(x):(KK.prava.vse()[s.role]||{});return !!p[sekce]},
   zmenHeslo:function(stare,nove){var s=KK.auth.meSync();if(!s)return Promise.reject(new Error('Nejste přihlášen.'));
     var e=kontrolaHesla(nove);if(e)return Promise.reject(new Error(e));
     var u=seznamU(),x=u.filter(function(y){return y.id===s.id})[0];

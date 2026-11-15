@@ -3218,3 +3218,36 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-zal[hidden]{display:none}
 .rz-quick .rz-q0{border-style:dashed}
 @media(max-width:600px){.rz-lod-o{grid-template-columns:1fr;padding:14px}}
+
+/* rezervace – volba na začátku, nocleh k lodím, doprava jako vlastní krok */
+#rezervace [hidden]{display:none!important}
+.rz-volba{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.rz-vc{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;padding:26px 24px;border:2px solid #ece5d7;border-radius:24px;background:#fff;font:inherit;color:#0b2419;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .2s,background .2s}
+.rz-vc:hover,.rz-vc.on{border-color:#173b2a;background:#fbf8f2;box-shadow:0 16px 30px -20px #173b2a99;transform:translateY(-2px)}
+.rz-vc .ic{display:grid;place-items:center;width:64px;height:64px;border-radius:18px;background:#fff4e4;color:#b56a10}.rz-vc .ic svg{width:34px;height:34px}
+.rz-vc b{font-size:22px;line-height:1.2}.rz-vc small{font-size:14.5px;line-height:1.5;color:#6b766f}
+.rz-vc em{margin-top:8px;font-style:normal;font-weight:800;font-size:15px;color:#fff;background:#f4a64a;border-radius:999px;padding:10px 18px}
+.rz-vc:focus-visible,.rz-dv-c:focus-visible,.rz-nc:focus-visible{outline:3px solid #f4a64a;outline-offset:3px}
+#rezervace.na-volbe .rz-bar{display:none}
+#rezervace.mod-lod .rz-calinfo,#rezervace.mod-lod .rz-hint{display:none}
+.rz-noci{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.rz-nc{display:flex;flex-direction:column;gap:3px;text-align:left;padding:16px 18px 16px 52px;border:2px solid #ece5d7;border-radius:18px;background:#fff;font:inherit;color:#0b2419;cursor:pointer;position:relative;transition:.2s}
+.rz-nc::before{content:"";position:absolute;left:18px;top:50%;width:22px;height:22px;margin-top:-11px;border-radius:7px;border:2px solid #b9b1a0;background:#fff}
+.rz-nc.on{border-color:#173b2a;background:#fbf8f2}.rz-nc.on::before{background:#173b2a;border-color:#173b2a;box-shadow:inset 0 0 0 4px #fff}
+.rz-nc b{font-size:16px}.rz-nc small{font-size:13px;color:#6b766f}.rz-nc:disabled{opacity:.5;cursor:default}
+.rz-dv-tr{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:14px 18px;border-radius:16px;background:#0b2419;color:#fff;margin-bottom:16px;font-size:15px}
+.rz-dv-tr b{font-size:18px;color:#ffc978}.rz-dv-tr i{font-style:normal;color:#9fc2ad}.rz-dv-tr small{margin-left:auto;color:#9fc2ad;font-size:13.5px}
+.rz-dv-o{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.rz-dv-c{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:22px;border:2px solid #ece5d7;border-radius:22px;background:#fff;font:inherit;color:#0b2419;cursor:pointer;position:relative;transition:border-color .2s,box-shadow .2s,background .2s}
+.rz-dv-c::after{content:"";position:absolute;right:18px;top:18px;width:24px;height:24px;border-radius:50%;border:2px solid #b9b1a0;background:#fff}
+.rz-dv-c.on{border-color:#173b2a;background:#fbf8f2;box-shadow:0 14px 28px -18px #173b2a99}.rz-dv-c.on::after{border-color:#173b2a;background:#173b2a;box-shadow:inset 0 0 0 5px #fff}
+.rz-dv-c.ano.on{border-color:#e08a1e;background:#fff4e4}.rz-dv-c.ano.on::after{border-color:#e08a1e;background:#e08a1e}
+.rz-dv-c .ic{display:grid;place-items:center;width:56px;height:56px;border-radius:16px;background:#f1ece2;color:#173b2a}.rz-dv-c.ano .ic{background:#fff4e4;color:#b56a10}.rz-dv-c .ic svg{width:30px;height:30px}
+.rz-dv-c b{font-size:19px;line-height:1.25}.rz-dv-c small{font-size:14px;color:#6b766f;line-height:1.45}.rz-dv-c em{font-style:normal;font-weight:800;font-size:20px;margin-top:6px}
+.rz-dv-c:disabled{opacity:.55;cursor:default}
+.rz-dv-cas{margin-top:16px;padding:18px;border-radius:18px;background:#fff4e4;border:2px solid #f4a64a}
+.rz-dv-cas>b{display:block;font-size:16px;margin-bottom:10px;color:#0b2419}.rz-dv-cas>div{display:flex;flex-wrap:wrap;gap:8px}
+.rz-dv-cas button{min-width:66px;padding:10px 12px;border:1.5px solid #e2c898;border-radius:12px;background:#fff;font:inherit;font-weight:800;font-size:15px;color:#0b2419;cursor:pointer}
+.rz-dv-cas button.on{background:#0b2419;border-color:#0b2419;color:#fff}
+.rz-dv-n{margin:12px 0 0;font-size:14px;font-weight:700;color:#7a4708}.rz-dv-n:empty{display:none}
+@media(max-width:700px){.rz-volba,.rz-dv-o,.rz-noci{grid-template-columns:1fr}.rz-vc{padding:20px}.rz-vc b{font-size:20px}}
