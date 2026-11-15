@@ -725,3 +725,48 @@ table.rlt{width:100%;min-width:900px;border-collapse:separate;border-spacing:0}
 .rn-w.zv .rn.vol{background:#e4f3e8;border-color:#2e8b57;box-shadow:0 0 0 1.5px #2e8b57;color:#1c5a3a}
 .rn-w.zv .rn.vol b{color:#1c5a3a}
 div.pv-s{cursor:default}
+/* === plánek v2: tabulka dnů, zelená volná, klidnější obsazená, štítky skupin === */
+.rn-dl span{font-weight:500;color:#a39c8c}
+.rn-dny{display:block;overflow:visible;padding:0;margin:0 0 16px}
+.rn-tb{width:100%;border-collapse:separate;border-spacing:3px;table-layout:fixed}
+.rn-tb th,.rn-tb td{padding:0;text-align:center}
+.rn-tb thead th:first-child,.rn-tb tbody th{width:78px}
+.rn-tb button{display:block;width:100%;border:0;background:none;font:inherit;color:inherit;cursor:pointer;padding:0}
+.rn-tb thead button{padding:5px 0 6px;border-radius:9px;font-size:13px;font-weight:800;color:var(--deep);line-height:1.15}
+.rn-tb thead button small{display:block;font-size:11px;font-weight:700;color:var(--mut)}
+.rn-tb thead th.we button{background:#f3eee3}
+.rn-tb thead th.on button{background:var(--deep);color:#fff}.rn-tb thead th.on button small{color:#cfe3d6}
+.rn-tb thead button:hover{background:#ebe5d8}.rn-tb thead th.on button:hover{background:var(--deep)}
+.rn-tb tbody th{text-align:left;font-size:13px;font-weight:700;color:var(--deep);padding-right:6px;white-space:nowrap}
+.rn-tb tbody th small{font-weight:500;color:var(--mut);font-size:11.5px;margin-left:4px}
+.rn-tb td button{height:32px;border-radius:8px;font-size:15px;font-weight:800}
+.rn-tb td.b3 button{background:#d9eedf;color:#1c5a3a}
+.rn-tb td.b2 button{background:#ecf4dc;color:#3f6212}
+.rn-tb td.b1 button{background:#fdebd0;color:#9a5a0c}
+.rn-tb td.b0 button{background:#f9e0dc;color:#b3261e;font-weight:700}
+.rn-tb td.on button{box-shadow:inset 0 0 0 2px var(--deep)}
+.rn-tb td button:hover{filter:brightness(.95)}
+@media(max-width:900px){.rn-dny{overflow-x:auto}.rn-tb{min-width:760px}}
+/* volná místa zeleně */
+.rn.vol{background:#eef7f0!important;border:1.5px solid #9fcdae!important}
+.rn.vol .rn-c{color:#1c5a3a!important}.rn.vol b{color:#2e7d4f!important;font-weight:700!important}
+.rn.vol:hover{background:#e0f1e5!important;border-color:#2e8b57!important}
+.rn-leg .vol{background:#eef7f0!important;box-shadow:inset 0 0 0 1.5px #9fcdae!important;border:0!important}
+/* obsazená klidněji: světlý podklad s barevným proužkem */
+.rn.obs{background:#e4ebe6!important;border-color:#e4ebe6!important;color:var(--deep)!important;box-shadow:inset 4px 0 0 var(--c-uby)!important}
+.rn.ceka{background:#e2eef0!important;border-color:#e2eef0!important;color:#12414f!important;box-shadow:inset 4px 0 0 var(--c-pot)!important}
+.rn.obs,.rn.ceka{padding-left:12px!important}
+.rn.obs small,.rn.ceka small{opacity:1}
+.rn-leg .obs{background:#e4ebe6!important;box-shadow:inset 3px 0 0 var(--c-uby)!important}
+.rn-leg .ceka{background:#e2eef0!important;box-shadow:inset 3px 0 0 var(--c-pot)!important}
+.rn .rn-zo{color:#9a5a0c;font-weight:700}
+/* štítek volných u skupiny */
+.rn-s h3 .rn-gv{display:inline-block;align-self:flex-start;margin-top:3px;padding:2px 9px;border-radius:999px;background:#d9eedf;color:#1c5a3a;font-weight:800;font-size:12.5px}
+.rn-s h3 .rn-gv small{font-weight:500;color:#4d7a5f}
+.rn-s h3 .rn-gv.nic{background:#efebe3;color:#8a8473}.rn-s h3 .rn-gv.nic small{display:none}
+/* zvýraznit volná: obsazené ještě víc utlumit */
+.rn-w.zv .rn:not(.vol){opacity:.35}
+.rn.obs{background:#d3e0d7!important;border-color:#d3e0d7!important}
+.rn-leg .obs{background:#d3e0d7!important}
+.rn em{top:auto!important;bottom:5px!important;right:5px!important}
+.rn:has(em) small{max-width:calc(100% - 58px)}
