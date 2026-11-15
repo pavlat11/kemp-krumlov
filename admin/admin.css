@@ -784,3 +784,7 @@ div.pv-s{cursor:default}
 /* lehké podbarvení plánku, když je vybraný dnešek */
 .rn-w .rn-s{border-radius:0;padding-left:12px;margin-left:-12px;box-shadow:inset 3px 0 0 transparent;transition:box-shadow .2s}
 .rn-w.jd .rn-s{box-shadow:inset 3px 0 0 #f5c98a}
+/* chatky vpravo nahoře | dole v jednom řádku */
+.rn-del{display:block;width:2px;justify-self:center;align-self:stretch;background:repeating-linear-gradient(180deg,#cdc5b4 0 5px,transparent 5px 9px);border-radius:2px}
+.rn-s h3 .rn-sub{font-size:12px;font-weight:500;color:var(--mut)}
+@media(max-width:1100px){.rn-del{display:none}}
