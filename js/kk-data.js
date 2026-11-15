@@ -42,13 +42,15 @@ function otisk(sul,heslo){var t=sul+'|'+heslo;
 function novaSul(){var a=new Uint8Array(12);(window.crypto||{}).getRandomValues?crypto.getRandomValues(a):a.forEach(function(_,i){a[i]=Math.random()*256|0});return hex(a)}
 function seznamU(){var u=LS.get('uzivatele',null);if(!u||!u.length){u=[{id:'u1',jmeno:'Správce',login:'admin',email:'',role:'admin',aktivni:true,vychozi:true,vytvoren:Date.now()}];LS.set('uzivatele',u)}return u}
 function ulozU(u){LS.set('uzivatele',u)}
-function verejny(x){return{id:x.id,jmeno:x.jmeno,login:x.login,email:x.email||'',role:x.role,aktivni:x.aktivni!==false,vychozi:!!x.vychozi,posledni:x.posledni||null,vytvoren:x.vytvoren||null}}
+function verejny(x){return{id:x.id,jmeno:x.jmeno,login:x.login,email:x.email||'',role:x.role,prava:KK.prava.uzivatel(x),aktivni:x.aktivni!==false,vychozi:!!x.vychozi,posledni:x.posledni||null,vytvoren:x.vytvoren||null}}
 function overHeslo(u,heslo){if(u.vychozi&&!u.hash)return Promise.resolve(heslo==='kemp');return otisk(u.sul,heslo).then(function(h){return h===u.hash})}
 function nastavHeslo(u,heslo){u.sul=novaSul();return otisk(u.sul,heslo).then(function(h){u.hash=h;delete u.vychozi;return u})}
 function kontrolaHesla(h){if(!h||h.length<8)return 'Heslo musí mít aspoň 8 znaků.';return ''}
 function aktivniSpravci(u){return u.filter(function(x){return x.role==='admin'&&x.aktivni!==false})}
 KK.prava={
   vse:function(){var p=LS.get('prava',null)||{};var o={};Object.keys(PRAVA0).forEach(function(r){o[r]=Object.assign({},PRAVA0[r],p[r]||{});o[r].prehled=1});return o},
+  /* práva jednoho účtu: vlastní nastavení u uživatele (x.prava), jinak výchozí podle role */
+  uzivatel:function(x){var o=Object.assign({},(KK.prava.vse()[x.role]||{}),x.prava||{});o.prehled=1;return o},
   uloz:function(p){LS.set('prava',p);historie('Práva','upravena práva obsluhy');return Promise.resolve(KK.prava.vse())}
 };
 KK.auth={
@@ -70,7 +72,7 @@ KK.auth={
     var x=seznamU().filter(function(y){return y.id===s.id})[0];
     if(!x||x.aktivni===false){LS.del('session');return null}
     s.jmeno=x.jmeno;s.role=x.role;s.vychozi=!!x.vychozi;s.login=x.login;s.email=x.email||'';return s},
-  muze:function(sekce){var s=KK.auth.meSync();if(!s)return false;if(s.role==='admin')return true;if(sekce==='uzivatele')return false;if(sekce==='ucet')return true;var p=KK.prava.vse()[s.role]||{};return !!p[sekce]},
+  muze:function(sekce){var s=KK.auth.meSync();if(!s)return false;if(s.role==='admin')return true;if(sekce==='uzivatele')return false;if(sekce==='ucet')return true;var x=seznamU().filter(function(y){return y.id===s.id})[0];var p=x?KK.prava.uzivatel(x):(KK.prava.vse()[s.role]||{});return !!p[sekce]},
   zmenHeslo:function(stare,nove){var s=KK.auth.meSync();if(!s)return Promise.reject(new Error('Nejste přihlášen.'));
     var e=kontrolaHesla(nove);if(e)return Promise.reject(new Error(e));
     var u=seznamU(),x=u.filter(function(y){return y.id===s.id})[0];
@@ -85,7 +87,7 @@ KK.uzivatele={
     if(!/^[a-z0-9._@-]{3,}$/i.test(login))return Promise.reject(new Error('Přihlašovací jméno: aspoň 3 znaky, bez mezer a diakritiky.'));
     if(u.some(function(y){return y.login.toLowerCase()===login.toLowerCase()}))return Promise.reject(new Error('Toto přihlašovací jméno už existuje.'));
     var e=kontrolaHesla(z.heslo);if(e)return Promise.reject(new Error(e));
-    var x={id:'u'+Date.now().toString(36),jmeno:z.jmeno.trim(),login:login,email:String(z.email||'').trim(),role:KK.ROLE[z.role]?z.role:'obsluha',aktivni:true,vytvoren:Date.now()};
+    var x={id:'u'+Date.now().toString(36),jmeno:z.jmeno.trim(),login:login,email:String(z.email||'').trim(),role:KK.ROLE[z.role]?z.role:'obsluha',aktivni:true,vytvoren:Date.now()};if(z.prava&&typeof z.prava==='object'){x.prava={};Object.keys(KK.SEKCE).forEach(function(k){if(k!=='prehled')x.prava[k]=z.prava[k]?1:0})}
     return nastavHeslo(x,z.heslo).then(function(){u.push(x);ulozU(u);historie('Uživatelé','přidán '+x.jmeno+' ('+KK.ROLE[x.role]+')');return verejny(x)})},
   uprav:function(id,z,sebe){if(!sebe&&!KK.auth.muze('uzivatele'))return Promise.reject(new Error('Uživatele spravuje jen správce.'));
     var u=seznamU(),x=u.filter(function(y){return y.id===id})[0];if(!x)return Promise.reject(new Error('Uživatel neexistuje.'));
@@ -94,6 +96,7 @@ KK.uzivatele={
     if(z.email!=null)x.email=String(z.email).trim();
     if(!sebe&&z.role!=null&&KK.ROLE[z.role])x.role=z.role;
     if(!sebe&&z.aktivni!=null)x.aktivni=!!z.aktivni;
+    if(!sebe&&z.prava&&typeof z.prava==='object'){x.prava={};Object.keys(KK.SEKCE).forEach(function(k){if(k!=='prehled')x.prava[k]=z.prava[k]?1:0})}
     if(!aktivniSpravci(u).length){var p=JSON.parse(pred);x.role=p.role;x.aktivni=p.aktivni;return Promise.reject(new Error('Musí zůstat aspoň jeden aktivní správce.'))}
     ulozU(u);if(!sebe)historie('Uživatelé','upraven '+x.jmeno);return Promise.resolve(verejny(x))},
   noveHeslo:function(id,heslo){if(!KK.auth.muze('uzivatele'))return Promise.reject(new Error('Uživatele spravuje jen správce.'));

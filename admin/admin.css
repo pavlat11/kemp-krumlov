@@ -804,3 +804,9 @@ div.pv-s{cursor:default}
 .ck-ch.on{background:#e3f4e8;border-color:#6fbf8a;color:#17603a}
 .ck-ch:hover{border-color:var(--deep2)}
 .ck-pro small{color:var(--mut);margin-left:6px}
+/* uživatelé: práva u účtu */
+.up-t{max-width:320px}.up-c{display:inline-block;margin:1px 4px 1px 0;padding:2px 8px;border-radius:999px;background:#eef2ef;font-size:12px;font-weight:700;color:var(--deep)}
+.up-v{font-size:12.5px;font-weight:800;color:var(--c-pot)}
+.up-f{border:1px solid var(--line);border-radius:12px;padding:10px 12px 12px;margin:0}
+.up-f legend{font-weight:700;padding:0 4px}.up-f legend small{display:block;font-weight:400;color:var(--mut);font-size:12.5px}
+.up-f[hidden]{display:none}
