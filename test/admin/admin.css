@@ -605,11 +605,11 @@ table.rlt{width:100%;min-width:900px;border-collapse:separate;border-spacing:0}
 .ptj-b{display:flex;gap:10px;margin-top:20px}.ptj-b .btn{flex:1;justify-content:center;min-height:44px}
 .btn.dan2{background:var(--err);border-color:var(--err);color:#fff}.btn.dan2:hover{filter:brightness(.92);color:#fff}
 @media(max-width:420px){.ptj-b{flex-direction:column-reverse}}
-.ck-kemp td{padding:2px 4px!important;border:0!important}
-.ck-kemp span{display:flex;align-items:center;gap:8px;color:var(--mut);font-size:12.5px}
-.ck-kemp span::before,.ck-kemp span::after{content:"";flex:1;height:1px;background:repeating-linear-gradient(90deg,#cfc7b6 0 6px,transparent 6px 10px)}
-.ck-kemp b{color:var(--deep);font-size:13px;white-space:nowrap}.ck-kemp i{font-style:normal;color:#c98a2b;font-size:11px}.ck-kemp small{font-size:12.5px;white-space:nowrap}
-@media(max-width:700px){.ck-kemp small{display:none}}
+.ct tr.ck-kemp td{padding:2px 4px!important;border:0!important}
+.ct tr.ck-kemp span{display:flex;align-items:center;gap:8px;color:var(--mut);font-size:12.5px}
+.ct tr.ck-kemp span::before,.ct tr.ck-kemp span::after{content:"";flex:1;height:1px;background:repeating-linear-gradient(90deg,#cfc7b6 0 6px,transparent 6px 10px)}
+.ct tr.ck-kemp b{color:var(--deep);font-size:13px;white-space:nowrap}.ct tr.ck-kemp i{font-style:normal;color:#c98a2b;font-size:11px}.ct tr.ck-kemp small{font-size:12.5px;white-space:nowrap}
+@media(max-width:700px){.ct tr.ck-kemp small{display:none}}
 /* šablony e-mailů */
 .sb-l{display:flex;flex-direction:column;gap:5px;font-weight:700;font-size:13.5px;margin-top:12px}
 .sb-l .inp{font-weight:400}.sb-l textarea{min-height:260px;font-family:inherit;line-height:1.5;resize:vertical}
@@ -1097,3 +1097,11 @@ main:has(.rz-lay){max-width:1720px}
 .slv .slv-r{margin-top:8px}.slv .ck-ch{padding:4px 10px}
 
 .slv .ck-ch.dim{opacity:.45}.slv-sep{width:1px;height:22px;background:var(--line);margin:0 4px}
+
+/* vazba osoba / doplněk → ubytování: rámeček přímo pod položkou, s jejím názvem */
+.ct tr.ck-pro td{padding:0 4px 12px}
+.ck-vaz{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;margin:-2px 0 0 18px;padding:8px 12px;border-radius:0 0 12px 12px;background:#f4f8f5;border:1px solid #d7e6dc;border-top:0;border-left:3px solid #6fbf8a;position:relative}
+.ck-vaz::before{content:"";position:absolute;left:-14px;top:-8px;width:12px;height:22px;border-left:2px solid #c7dccd;border-bottom:2px solid #c7dccd;border-bottom-left-radius:8px}
+.ck-vaz .ck-pl{font-weight:600;color:#3d4a42;margin-right:4px;font-size:13px}.ck-vaz .ck-pl b{color:var(--deep);font-weight:800}
+.ck-vaz small{flex-basis:100%;color:var(--mut);margin:2px 0 0;font-size:12px}
+.ct tr.ck-mam td{padding-bottom:0}
