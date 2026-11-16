@@ -97,14 +97,17 @@ function ptej(txt,o){o=o||{};return new Promise(function(res){
 /* dialog s počty kusů: pol=[[klíč,název,výchozí,max,popisek]] → Promise({klíč:počet}|null) */
 function pocty(nad,txt,pol,ok){return new Promise(function(res){
   var d=document.createElement('dialog'),hot=false;d.className='dlg ptj pct';d.setAttribute('aria-labelledby','pcth');
-  d.innerHTML='<form method="dialog" novalidate><h2 id="pcth">'+esc(nad)+'</h2>'+(txt?'<p>'+esc(txt)+'</p>':'')+'<div class="pct-g">'+pol.map(function(x){return '<label class="pct-r"><span><b>'+esc(x[1])+'</b>'+(x[4]?'<small>'+esc(x[4])+'</small>':'')+'</span><span class="pct-s"><button type="button" data-d="-1" aria-label="Méně – '+esc(x[1])+'">−</button><input class="inp" type="number" min="0" max="'+x[3]+'" inputmode="numeric" name="'+x[0]+'" value="'+x[2]+'"><button type="button" data-d="1" aria-label="Více – '+esc(x[1])+'">+</button><small>z '+x[3]+'</small></span></label>'}).join('')+'</div>'+
-    '<div class="pct-q"><button type="button" class="btn sm gh" data-q="max">Vše</button><button type="button" class="btn sm gh" data-q="0">Nic</button></div><p class="pct-e" role="alert"></p>'+
+  d.innerHTML='<form method="dialog" novalidate><h2 id="pcth">'+esc(nad)+'</h2>'+(txt?'<p>'+esc(txt)+'</p>':'')+'<div class="pct-g">'+pol.map(function(x){return '<label class="pct-r"><span><b>'+esc(x[1])+'</b>'+(x[4]?'<small>'+esc(x[4])+'</small>':'')+'</span><span class="pct-s"><button type="button" data-d="-1" aria-label="Méně – '+esc(x[1])+'">−</button><input class="inp" type="number" min="0" max="'+x[3]+'" inputmode="numeric" name="'+x[0]+'" value="'+x[2]+'" data-all="'+x[2]+'"><button type="button" data-d="1" aria-label="Více – '+esc(x[1])+'">+</button><small>z '+x[3]+'</small></span></label>'}).join('')+'</div>'+
+    '<div class="pct-q"><button type="button" class="btn sm gh on" data-q="max" aria-pressed="true">Vše</button><button type="button" class="btn sm gh" data-q="0">Nic</button></div><p class="pct-e" role="alert"></p>'+
     '<div class="ptj-b"><button type="button" class="btn gh" data-n>Zrušit</button><button type="submit" class="btn pri">'+esc(ok||'Uložit')+'</button></div></form>';
   document.body.appendChild(d);var f=$('form',d);
+  /* „Vše“ = všechno z rezervace (výdej) nebo všechno, co má host u sebe (vrácení); je předvybrané */
+  var vseOn=function(){var a=$$('input',f).every(function(i){return +i.value===+i.dataset.all}),z=$$('input',f).every(function(i){return !+i.value});var bv=$('[data-q=max]',f),bn=$('[data-q="0"]',f);bv.classList.toggle('on',a);bv.setAttribute('aria-pressed',a);bn.classList.toggle('on',z);bn.setAttribute('aria-pressed',z)};
+  f.addEventListener('input',vseOn);
   var konec=function(v){if(hot)return;hot=true;try{d.close()}catch(e){}d.remove();res(v)};
   d.addEventListener('click',function(e){var b=e.target.closest('button');if(e.target===d){konec(null);return}if(!b)return;
-    if(b.dataset.d){var i=b.parentNode.querySelector('input');i.value=Math.max(0,Math.min(+i.max,(+i.value||0)+(+b.dataset.d)))}
-    if(b.dataset.q)$$('input',f).forEach(function(i){i.value=b.dataset.q==='max'?i.max:0});
+    if(b.dataset.d){var i=b.parentNode.querySelector('input');i.value=Math.max(0,Math.min(+i.max,(+i.value||0)+(+b.dataset.d)))}if(b.dataset.d)vseOn();
+    if(b.dataset.q)$$('input',f).forEach(function(i){i.value=b.dataset.q==='max'?i.dataset.all:0});vseOn()
     if(b.hasAttribute('data-n'))konec(null)});
   f.addEventListener('submit',function(e){e.preventDefault();var o={},n=0,zle=null;$$('input',f).forEach(function(i){var v=Math.round(+i.value||0);if(v<0||v>+i.max)zle=zle||i;o[i.name]=v;n+=v});
     if(zle){$('.pct-e',f).textContent='Počet nemůže být větší než '+zle.max+'.';zle.focus();return}if(!n){$('.pct-e',f).textContent='Zadejte aspoň jeden kus.';return}konec(o)});
