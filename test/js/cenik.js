@@ -109,7 +109,17 @@ var KKC=window.KKC={
     return {hodnota:v+z,podminky:a.join(', ')}},
   /* z čeho se sleva počítá: _uby = celé ubytování, _lode = půjčovné lodí (i návoz), _dop = doprava osob, jinak klíč ubytování */
   slevaZ:function(k){return k==='_uby'?'ubytování':k==='_lode'?'lodě':k==='_dop'?'doprava':(mapa[k]?mapa[k].n.toLowerCase():k)},
-  slevyText:function(){return KKC.slevy().filter(function(x){return x.web!==0}).map(function(x){var d=KKC.slevaPopis(x);return (d.podminky||x.n)+' '+d.hodnota}).join(' · ')},
+  /* popis slevy v jazyce webu (cs = slevaPopis; en/de = vlastní slovník) */
+  slevaPopisJ:function(x,j){if(!j||j==='cs')return KKC.slevaPopis(x);
+    var W={en:{od:'from',z:{noci:['night','nights'],osob:['person','people'],mist:['place in total','places in total'],chatka:['cabin','cabins'],podsad:['tent on platform','tents on platform'],teepee:['teepee','teepees'],stan:['own tent','own tents'],karavan:['caravan','caravans'],lodi:['boat','boats']},hl:'in main season',mimo:'outside main season',pr:'arrival',pd:'from',pdo:'until',uby:'accommodation',lode:'boats',dop:'transport',noc:'/ night'},
+      de:{od:'ab',z:{noci:['Nacht','Nächten'],osob:['Person','Personen'],mist:['Platz insgesamt','Plätzen insgesamt'],chatka:['Hütte','Hütten'],podsad:['Zelt auf Podest','Zelten auf Podest'],teepee:['Teepee','Teepees'],stan:['eigenem Zelt','eigenen Zelten'],karavan:['Wohnwagen','Wohnwagen'],lodi:['Boot','Booten']},hl:'in der Hauptsaison',mimo:'außerhalb der Hauptsaison',pr:'Anreise',pd:'ab',pdo:'bis',uby:'Unterkunft',lode:'Boote',dop:'Transport',noc:'/ Nacht'}}[j];if(!W)return KKC.slevaPopis(x);
+    var p=x.pod||{},dt=function(d){return d.split('-').reverse().slice(0,2).join('.')+'.'},
+      a=KKC.POD.filter(function(d){return +p[d[0]]>0}).map(function(d){var f=W.z[d[0]]||[d[0],d[0]];return W.od+' '+p[d[0]]+' '+(p[d[0]]==1?f[0]:f[1])});
+    if(x.sez==='hlavni')a.push(W.hl);if(x.sez==='mimo')a.push(W.mimo);if(x.od||x.do)a.push(W.pr+' '+(x.od?W.pd+' '+dt(x.od):'')+(x.do?' '+W.pdo+' '+dt(x.do):''));
+    var v=x.typ==='kc'?'−'+fmt(+x.h||0)+' Kč':x.typ==='noc'?'−'+fmt(+x.h||0)+' Kč '+W.noc:'−'+(+x.h||0)+' %',
+      Z={_uby:W.uby,_lode:W.lode,_dop:W.dop},z=x.na&&x.na.length&&!(x.na.length===1&&x.na[0]==='_uby')?' ('+x.na.map(function(k){return Z[k]||KKC.slevaZ(k)}).join(', ')+')':'';
+    return {hodnota:v+z,podminky:a.join(', ')}},
+  slevyText:function(){var j=window.KKL&&KKL.jazyk||'cs';return KKC.slevy().filter(function(x){return x.web!==0}).map(function(x){var d=KKC.slevaPopisJ(x,j);return (d.podminky||x.n)+' '+d.hodnota}).join(' · ')},
   /* výpočet slevy pobytu. o = {noci, q:{klíč:počet}, sumK:{klíč:Kč za celý pobyt}, od:'RRRR-MM-DD', lodi}
      platí nejvyšší jedna sleva + všechny, které se smí sčítat; sleva nikdy nepřesáhne cenu */
   slevaPobyt:function(o){o=o||{};var q=o.q||{},sk=Object.assign({},o.sumK||{}),n=+o.noci||0,c=function(k){return +q[k]||0},tot=0,osob=0,mist=0;
