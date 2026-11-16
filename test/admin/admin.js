@@ -1517,6 +1517,16 @@ function nastaveni(m){
 }
 
 /* ---------- SEZÓNA: uzavření a archiv (jen Správce, potvrzuje se heslem) ---------- */
+function sHeslem(o){return new Promise(function(res){var d=document.createElement('dialog'),hot=false;d.className='dlg ptj nb szn-d';d.setAttribute('aria-labelledby','sznh');
+  d.innerHTML='<form method="dialog" novalidate><div class="ptj-i" aria-hidden="true">!</div><h2 id="sznh">'+esc(o.nadpis)+'</h2>'+o.txt.map(function(t){return '<p>'+t+'</p>'}).join('')+
+   (o.varovani?'<label class="szn-c"><input type="checkbox" class="cb" name="vim"> '+esc(o.varovani)+'</label>':'')+
+   '<label class="f">Vaše heslo<input class="inp" type="password" name="h" autocomplete="current-password" required></label><p class="szn-e" role="alert" hidden></p>'+
+   '<div class="ptj-b"><button type="button" class="btn gh" data-n>Zrušit</button><button type="submit" class="btn dan2">'+esc(o.ok)+'</button></div></form>';
+  document.body.appendChild(d);var f=$('form',d),er=$('.szn-e',d),konec=function(v){if(hot)return;hot=true;try{d.close()}catch(e){}d.remove();res(v)},chyba=function(t,el){er.textContent=t;er.hidden=false;if(el)el.focus()};
+  $('[data-n]',d).addEventListener('click',function(){konec(false)});d.addEventListener('cancel',function(e){e.preventDefault();konec(false)});
+  f.addEventListener('submit',function(e){e.preventDefault();if(f.vim&&!f.vim.checked)return chyba('Potvrďte, že víte o nevyřízených rezervacích.',f.vim);if(!f.h.value)return chyba('Zadejte své heslo.',f.h);
+   var b=$('[type=submit]',d);b.disabled=true;KK.auth.overSebe(f.h.value).then(function(ok){b.disabled=false;if(!ok){f.h.value='';return chyba('Heslo nesouhlasí.',f.h)}konec(true)})});
+  d.showModal();(f.vim||f.h).focus()})}
 function sezona(box){var R=window.KKR,kc=function(n){return Math.round(n||0).toLocaleString('cs-CZ').replace(/\s/g,' ')+' Kč'},
   stahni=function(data,nazev){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,1)],{type:'application/json'}));a.download=nazev;document.body.appendChild(a);a.click();a.remove()},
   F=function(t){return new Date(t).toLocaleString('cs-CZ',{day:'numeric',month:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'})},
@@ -1531,16 +1541,6 @@ function sezona(box){var R=window.KKR,kc=function(n){return Math.round(n||0).toL
     '<div class="row"><button type="button" class="btn dan" id="sznU">Uzavřít sezónu '+vyb+'…</button></div>':'<p class="mut">Zatím nejsou žádné rezervace.</p>')+
    '<h3 class="szn-t">Archiv sezón</h3>'+(AR.length?'<ul class="szn-a">'+AR.map(function(y){var x=ar[y];return '<li><div><b>Sezóna '+y+'</b><small>uzavřeno '+F(x.uzavreno)+(x.kdo?' · '+esc(x.kdo):'')+' · '+x.souhrn.rezervaci+' rezervací · '+kc(x.souhrn.trzby)+'</small></div><button type="button" class="btn sm gh" data-ast="'+y+'">Stáhnout</button><button type="button" class="btn sm gh" data-aob="'+y+'">Vrátit do rezervací…</button></li>'}).join('')+'</ul>':'<p class="mut">Zatím žádná uzavřená sezóna.</p>')+'</div>'}
  /* dialog s heslem: o={nadpis,txt:[odstavce],ok,varovani} → Promise(true|false) */
- function sHeslem(o){return new Promise(function(res){var d=document.createElement('dialog'),hot=false;d.className='dlg ptj nb szn-d';d.setAttribute('aria-labelledby','sznh');
-  d.innerHTML='<form method="dialog" novalidate><div class="ptj-i" aria-hidden="true">!</div><h2 id="sznh">'+esc(o.nadpis)+'</h2>'+o.txt.map(function(t){return '<p>'+t+'</p>'}).join('')+
-   (o.varovani?'<label class="szn-c"><input type="checkbox" class="cb" name="vim"> '+esc(o.varovani)+'</label>':'')+
-   '<label class="f">Vaše heslo<input class="inp" type="password" name="h" autocomplete="current-password" required></label><p class="szn-e" role="alert" hidden></p>'+
-   '<div class="ptj-b"><button type="button" class="btn gh" data-n>Zrušit</button><button type="submit" class="btn dan2">'+esc(o.ok)+'</button></div></form>';
-  document.body.appendChild(d);var f=$('form',d),er=$('.szn-e',d),konec=function(v){if(hot)return;hot=true;try{d.close()}catch(e){}d.remove();res(v)},chyba=function(t,el){er.textContent=t;er.hidden=false;if(el)el.focus()};
-  $('[data-n]',d).addEventListener('click',function(){konec(false)});d.addEventListener('cancel',function(e){e.preventDefault();konec(false)});
-  f.addEventListener('submit',function(e){e.preventDefault();if(f.vim&&!f.vim.checked)return chyba('Potvrďte, že víte o nevyřízených rezervacích.',f.vim);if(!f.h.value)return chyba('Zadejte své heslo.',f.h);
-   var b=$('[type=submit]',d);b.disabled=true;KK.auth.overSebe(f.h.value).then(function(ok){b.disabled=false;if(!ok){f.h.value='';return chyba('Heslo nesouhlasí.',f.h)}konec(true)})});
-  d.showModal();(f.vim||f.h).focus()})}
  box.addEventListener('change',function(e){if(e.target.id==='sznR'){vyb=box.__rok=+e.target.value;kresli()}});
  box.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var ja=(KK.auth.meSync()||{}).jmeno||'';
   if(b.id==='sznU'){var K=R.sezonaKontrola(vyb),pr=K.uby.length+K.lode.length+K.budouci.length,dalsi=String(vyb+1).slice(2);
