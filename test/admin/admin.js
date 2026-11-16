@@ -910,7 +910,7 @@ function rezervace(m,sekV){
       '<div class="rtk" role="group" aria-label="Co je potřeba udělat">'+UK.map(function(u){var n=poc[u[0]],on=F.stav===u[0];
         return '<button type="button" class="rtk-t '+u[3]+(n?'':' nic')+(on?' on':'')+(u[4]?' hot':'')+'" data-fs="'+u[0]+'" aria-pressed="'+on+'"><b>'+n+'</b><span>'+u[1]+'</span><small>'+(n?u[2]:'vše hotovo')+'</small></button>'}).join('')+'</div>'+
 
-      '<div class="rl-sum">'+(F.stav?'<button type="button" class="rl-akt" data-fs="" title="Zrušit filtr stavu">'+SFm[F.stav][1]+' <span aria-hidden="true">×</span><span class="sr">zrušit filtr</span></button>':'')+'<span><b>'+L.length+'</b> '+pl(L.length,'rezervace','rezervace','rezervací')+'</span><span><b>'+noc+'</b> '+pl(noc,'noc','noci','nocí')+'</span><span><b>'+osb+'</b> '+pl(osb,'osoba','osoby','osob')+'</span><span><b>'+kc(kcs)+'</b> celkem</span>'+(L.length?'<button type="button" class="btn sm gh" data-a="csv">'+SV('<path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/>',16)+'Stáhnout do Excelu</button>'+tiskBtn('Tisk seznamu'):'')+'</div>'+tabulka(L);
+      '<div class="rl-sum">'+(F.stav?'<button type="button" class="rl-akt" data-fs="" title="Zrušit filtr stavu">'+SFm[F.stav][1]+' <span aria-hidden="true">×</span><span class="sr">zrušit filtr</span></button>':'')+'<span class="sp"></span>'+(L.length?'<button type="button" class="btn sm gh" data-a="csv">'+SV('<path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/>',16)+'Stáhnout do Excelu</button>'+tiskBtn('Tisk seznamu'):'')+'</div>'+tabulka(L);
   }
   /* ---- chytré hledání přes všechny rezervace: jméno, číslo, telefon, e-mail, místo, datum, stav, poznámka ---- */
   function hledej(A,dotaz){
