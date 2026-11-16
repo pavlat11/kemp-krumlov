@@ -1205,3 +1205,26 @@ main:has(.rz-lay){max-width:1720px}
 .rr-nas{display:inline-flex;align-items:center;gap:6px}.rr-nas .btn{display:inline-flex;align-items:center;gap:6px}
 @media(max-width:900px){.rlb-f{margin-left:0}}
 .rlb-p .rl-f{flex-direction:row;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;font-weight:700}.rlb-p .rl-f>span{display:inline!important;position:static!important;width:auto!important;height:auto!important;clip:auto!important}
+
+/* v114: skupiny rezervací (chatky, stany, teepee, karavany, lodě, doprava) + kompaktní úkoly */
+.rlb{display:grid;gap:12px}
+.rsk{display:flex;flex-wrap:wrap;gap:14px 18px;align-items:flex-end}
+.rsk-g small{display:block;font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin:0 0 5px 2px}
+.rsk-g>div{display:flex;gap:6px;flex-wrap:wrap}
+.rsk-g:not(:first-child){padding-left:18px;border-left:1.5px solid var(--line)}
+.rsk-b{display:flex;align-items:center;gap:9px;padding:8px 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:inherit;color:var(--ink);cursor:pointer}
+.rsk-b b{font-size:20px;font-weight:800;line-height:1}.rsk-b span{font-size:14px;font-weight:700}
+.rsk-b.ubyt b{color:#2f7a4f}.rsk-b.lode b{color:#1f6d77}.rsk-b.doprava b{color:#c27317}
+.rsk-b.nic{opacity:.55}.rsk-b:hover{border-color:var(--deep2)}
+.rsk-b.on{color:#fff;border-color:transparent;background:var(--deep)}.rsk-b.on b{color:#fff}
+.rsk-b.ubyt.on{background:#2f7a4f}.rsk-b.lode.on{background:#1f6d77}.rsk-b.doprava.on{background:#c27317}
+.rsk-b:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.rtk{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 6px}
+.rtk>small{font-size:12.5px;font-weight:800;color:var(--mut);margin-right:2px}
+.rtk-t{display:inline-flex;grid-template-columns:none;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font:inherit;cursor:pointer;text-align:left}
+.rtk-t::before{display:none}
+.rtk-t b{grid-row:auto;font-size:15px;min-width:0;line-height:1.2}.rtk-t span{font-size:13.5px;font-weight:700}
+.rtk-t em{font-style:normal;font-size:12.5px;font-weight:800;color:#b8650e}.rtk-t.b em{color:#1f6d77}
+.rtk-t.w b{color:#b8650e}.rtk-t.b b{color:#1f6d77}
+.rtk-t.nic{background:#f7f4ee;border-style:solid}.rtk-t.nic b{color:#a7aea9}
+@media(max-width:700px){.rsk-g:not(:first-child){padding-left:0;border-left:0}}
