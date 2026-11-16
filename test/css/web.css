@@ -3312,3 +3312,30 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-row .bd.mo{background:#fff4e2;color:#8a4f0c}
 .rz-row.mo-ne{opacity:.55}.rz-row.mo-ne .rz-st{pointer-events:none;filter:grayscale(1)}
 .rz-row.mo-ne .bd.mo{opacity:1;font-weight:800}
+
+/* rezervační průvodce v2: spojené kroky, hláška u tlačítek, shrnutí před odesláním */
+#rezervace .rz-main>.rz-warn{margin:0 40px 14px;display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:14.5px;border:1.5px solid #f3c4b3;animation:rzIn .25s ease}
+#rezervace .rz-main>.rz-warn::before{content:"!";flex:none;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#a23b1e;color:#fff;font-weight:800;font-size:13px}
+#rezervace.wiz .rz-step.par{min-height:0}
+#rezervace.wiz .rz-step.sub{padding-top:14px;animation:none}
+#rezervace.wiz .rz-step.sub .rz-num{display:none}
+#rezervace.wiz .rz-step.sub .rz-sh{margin-bottom:16px;padding-top:22px;border-top:1.5px solid var(--rz-line)}
+#rezervace.wiz .rz-step.sub .rz-sh b{font-size:21px}
+#rezervace.wiz .rz-step.par[data-k=kdo]{padding-bottom:6px}
+#rezervace.wiz .rz-step.par[data-k=kdo] .rz-sh{margin-bottom:16px}
+#rezervace.wiz .rz-step.par[data-k=kdo] .rz-pc{flex-direction:row;flex-wrap:wrap;align-items:center;text-align:left;gap:4px 10px;padding:12px 14px;border-radius:16px}
+#rezervace.wiz .rz-step.par[data-k=kdo] .rz-pc .ic{display:none}
+#rezervace.wiz .rz-step.par[data-k=kdo] .rz-pc .tx{flex:1;min-width:90px;display:flex;flex-direction:column}
+#rezervace .rz-row .tg .bd.zle{background:#fde8e4;color:#a23b1e}
+.rz-rek{margin:0 0 22px;padding:18px 20px;border-radius:18px;background:#f8f5ee;border:1.5px solid var(--rz-line)}
+.rz-rek h3{margin:0 0 8px;font-size:15px;font-weight:800;color:#0b2419}
+.rz-rek dl{margin:0}
+.rz-rek dl>div{display:grid;grid-template-columns:130px minmax(0,1fr) auto;gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px solid #e9e2d3;font-size:14.5px}
+.rz-rek dt{color:var(--rz-mut);font-weight:600}.rz-rek dd{margin:0;font-weight:700;color:#0b2419}
+.rz-rek button{border:0;background:none;padding:2px 4px;font:inherit;font-size:13px;font-weight:700;color:#b0661a;text-decoration:underline;cursor:pointer}
+.rz-rek-c{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0 0;font-size:15px;font-weight:700}
+.rz-rek-c b{font-size:24px;font-weight:800;color:#0b2419}.rz-rek-c small{font-weight:600;color:#2f7d4c;margin-left:6px}
+.rz-rek-z{margin:10px 0 0;padding:10px 14px;border-radius:12px;background:#fdf0dc;color:#7a4a0c;font-size:14px;font-weight:600}
+.rz-rek-k{margin:0 0 12px;font-size:17px;font-weight:800;color:#0b2419}
+@media(max-width:900px){#rezervace .rz-main>.rz-warn{margin:0 18px 12px}.rz-rek{padding:14px}.rz-rek dl>div{grid-template-columns:1fr auto}.rz-rek dt{grid-column:1/-1;font-size:12.5px;margin-bottom:-6px}}
+#rezervace .rz-row .rt .pr strong{white-space:nowrap}.rz-rek-c small{white-space:nowrap}
