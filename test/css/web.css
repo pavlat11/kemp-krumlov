@@ -3307,3 +3307,8 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 #pela .pq-inc li{display:flex;align-items:center;gap:8px}#pela .pq-inc svg{color:#ffd23f;flex:none}
 #pela .pq-inc .pq-open{margin-left:auto}#pela .pq-inc .pq-open b{color:#fff}
 @media(max-width:700px){#pela .pq-inc .pq-open{margin-left:0}}
+
+/* ubytování jen pro skupiny od X osob */
+.rz-row .bd.mo{background:#fff4e2;color:#8a4f0c}
+.rz-row.mo-ne{opacity:.55}.rz-row.mo-ne .rz-st{pointer-events:none;filter:grayscale(1)}
+.rz-row.mo-ne .bd.mo{opacity:1;font-weight:800}

@@ -49,7 +49,7 @@ const BT=[
  {k:'teepee',n:'Teepee',c:'#d58a2c',bd:'Omezená kapacita',pr:'od <strong>700 Kč</strong>',s:'zážitek pro rodiny s dětmi',cap:4,img:'img/teepee-640.webp',per:'za noc',bed:'4 lůžka'},
  {k:'podsad',n:'Podsadový stan',c:'#2a7c86',bd:'Omezená kapacita',pr:'<strong>300 Kč</strong>',s:'už postavený, stačí přijet',cap:2,img:'img/podsadovy-640.webp',per:'za noc',bed:'2 lůžka'}];
 const TYPES=KC.kat('ubytovani').filter(p=>p.rez!==0&&p.skryt!==1).map(p=>{const b=BT.find(x=>x.k===p.k)||{k:p.k,n:p.n,c:'#6b766f',bd:p.luzka?'Omezená kapacita':'',s:p.pozn||'',img:'img/kemp_reprezentativni-640.webp',per:'za noc'};
- return Object.assign({},b,{pr:prOd(p.k),cap:p.luzka||undefined,bed:p.luzka?p.luzka+' '+(p.luzka<5?'lůžka':'lůžek'):(b.bed||'vlastní spaní'),s:b.k===p.k&&BT.some(x=>x.k===p.k)?b.s:(p.pozn||'')})});
+ return Object.assign({},b,{minOs:+p.minOs||0,pr:prOd(p.k),cap:p.luzka||undefined,bed:p.luzka?p.luzka+' '+(p.luzka<5?'lůžka':'lůžek'):(b.bed||'vlastní spaní'),s:b.k===p.k&&BT.some(x=>x.k===p.k)?b.s:(p.pozn||'')})});
 const UNIT0={stan:['Počet stanů','stan','stany','stanů'],karavan:['Počet karavanů','karavan','karavany','karavanů'],chatka:['Počet chatek','chatka','chatky','chatek'],teepee:['Počet teepee','teepee','teepee','teepee'],podsad:['Počet podsadových stanů','podsadový stan','podsadové stany','podsadových stanů']};
 const UNIT=Object.assign({},UNIT0);TYPES.forEach(t=>{if(!UNIT[t.k]){const n=KL.male(KL.t(t.n));UNIT[t.k]=['Počet',n,n,n]}});
 const EXTRAS=KC.kat('doplnky').filter(p=>p.rez!==0&&p.skryt!==1).map(p=>({k:p.k,n:p.n,pro:(p.pro||[]).filter(k=>TYPES.some(t=>t.k===k)),s:KC.t(p.k,'a')+(p.pozn?' / '+p.pozn.replace(/^za /,''):' / noc')}));
@@ -162,8 +162,8 @@ PEOPLE.forEach(r=>{const c=document.createElement('div');c.className='rz-pc';
 
 /* ---------- ubytování ---------- */
 TYPES.forEach(t=>{const b=document.createElement('div');b.className='rz-row';b.style.setProperty('--c',t.c);
- b.innerHTML=`<span class="ph" style="background-image:url(${t.img})"><i class="n"></i></span><span class="tx"><b>${t.n}</b><small>${t.s}</small><span class="tg"><em>${t.bed}</em><em class="bd ${t.bc||''}">${t.bd}</em></span></span><span class="rt"><span class="pr">${t.per}<strong>${t.pr.replace(/<\/?strong>/g,'')}</strong></span></span>`;
- const st=stepper(()=>S.q[t.k],v=>{if(v>S.q[t.k]&&!freeK(t.k)){warn(KL.t(t.n)+' '+KL.t('je ve vybraném termínu obsazená, zkuste jiné ubytování.'));return}if(MISTA[t.k]){if(!setCount(t.k,v))warn(KL.t('Více volných míst tohoto typu ve vašem termínu nemáme.'));t.open=true}else S.q[t.k]=v;if(t.k==='karavan'&&v&&('elek' in S)&&!S.elek)S.elek=1},()=>0,MAXQ[t.k]||20);b.querySelector('.rt').append(st);t.st=st;
+ b.innerHTML=`<span class="ph" style="background-image:url(${t.img})"><i class="n"></i></span><span class="tx"><b>${t.n}</b><small>${t.s}</small><span class="tg"><em>${t.bed}</em><em class="bd ${t.bc||''}">${t.bd}</em>${t.minOs?`<em class="bd mo">${KL.t('jen pro skupiny od')} ${t.minOs} ${KL.t('osob')}</em>`:''}</span></span><span class="rt"><span class="pr">${t.per}<strong>${t.pr.replace(/<\/?strong>/g,'')}</strong></span></span>`;
+ const st=stepper(()=>S.q[t.k],v=>{if(v>S.q[t.k]&&t.minOs&&persons()<t.minOs){warn(KL.t(t.n)+': '+KL.t('rezervace jen pro skupiny od')+' '+t.minOs+' '+KL.t('osob')+'.');return}if(v>S.q[t.k]&&!freeK(t.k)){warn(KL.t(t.n)+' '+KL.t('je ve vybraném termínu obsazená, zkuste jiné ubytování.'));return}if(MISTA[t.k]){if(!setCount(t.k,v))warn(KL.t('Více volných míst tohoto typu ve vašem termínu nemáme.'));t.open=true}else S.q[t.k]=v;if(t.k==='karavan'&&v&&('elek' in S)&&!S.elek)S.elek=1},()=>0,MAXQ[t.k]||20);b.querySelector('.rt').append(st);t.st=st;
  $('rzTypes').append(b);t.el=b});
 /* typy, které se nerezervují – jen informace */
 {const NR=KC.kat('ubytovani').filter(p=>p.rez===0&&p.skryt!==1);if(NR.length){const d=document.createElement('p');d.className='rz-norez';d.innerHTML='<b>'+KL.t('Bez rezervace – stačí přijet:')+'</b> '+NR.map(p=>KL.t(p.n)).join(', ');$('rzTypes').after(d)}}
@@ -177,7 +177,7 @@ TYPES.forEach(t=>{if(!MISTA[t.k])return;const b=t.el,ch=t.k==='chatka';b.classLi
  p.addEventListener('click',e=>{e.stopPropagation();const x=e.target.closest('.rz-cn');if(!x||x.disabled)return;const n=+x.dataset.n,c=S.c[t.k],i=c.indexOf(n);if(i>=0)c.splice(i,1);else c.push(n);c.sort((a,z)=>a-z);S.q[t.k]=c.length;render()});
  b.append(p);t.pick=p;t.cns=[...p.querySelectorAll('.rz-cn')];
  b.addEventListener('click',e=>{if(e.target.closest('.rz-st,.rz-pick'))return;t.open=!t.open;render()})});
-function setType(k){const t=TYPES.find(x=>x.k===k);if(!t)return;TYPES.forEach(x=>{S.q[x.k]=0;if(S.c[x.k])S.c[x.k]=[]});const q=Math.min(MAXQ[k]||20,t.cap?Math.max(1,Math.ceil(persons()/t.cap)):1);if(MISTA[k]){setCount(k,q);t.open=true}else S.q[k]=q;if(k==='karavan'&&('elek' in S)&&!S.elek)S.elek=1;render()}
+function setType(k){const t=TYPES.find(x=>x.k===k);if(!t||t.minOs&&persons()<t.minOs)return;TYPES.forEach(x=>{S.q[x.k]=0;if(S.c[x.k])S.c[x.k]=[]});const q=Math.min(MAXQ[k]||20,t.cap?Math.max(1,Math.ceil(persons()/t.cap)):1);if(MISTA[k]){setCount(k,q);t.open=true}else S.q[k]=q;if(k==='karavan'&&('elek' in S)&&!S.elek)S.elek=1;render()}
 const uWrap=$('rzUnits');uWrap.hidden=true;
 
 /* ---------- doplňky ---------- */
@@ -295,7 +295,8 @@ function compute(){const nights=nightsList(),L=[],sk={},qk={};let sum=0;
  /* skupiny osob mají svou cenu jen u ubytování, ke kterému patří (ceník → Osoby → Platí pro); jinak se počítají jako dospělý */
  const typy=SEL().map(t=>t.k),ok=k=>KC.osobaPlati?KC.osobaPlati(k,typy):true;
  const ad=S.dosp+(ok('dite')?0:S.dite)+(ok('zak')?0:S.zak)+OS_VLASTNI.reduce((a,p)=>a+(ok(p.k)?0:(S[p.k]||0)),0);
- add(`${ad}× ${plural(ad,'dospělý','dospělí','dospělých')}`,'os',ad);
+ /* Osoba se neplatí u ubytování, kde je v ceně (ceník → Osoba → se platí u) */
+ if(ok('os'))add(`${ad}× ${plural(ad,'dospělý','dospělí','dospělých')}`,'os',ad);
  if(ok('dite'))add(`${S.dite}× ${plural(S.dite,'dítě','děti','dětí')}`,'dite',S.dite);
  if(ok('zak'))add(`${S.zak}× ${plural(S.zak,'žák','žáci','žáků')}`,'zak',S.zak);
  OS_VLASTNI.forEach(p=>{if(ok(p.k))add(`${S[p.k]||0}× ${KL.male(KL.t(p.n))}`,p.k,S[p.k]||0)});
@@ -320,7 +321,7 @@ const typeTxt=()=>SEL().map(t=>`${S.q[t.k]}× ${KL.male(KL.t(t.n))}${cis(t.k)}`)
 const dateTxt=()=>S.mod==='lod'?(S.d0?`${fD(S.d0)}${S.l.dni>1?' – '+fD(addD(S.d0,S.l.dni-1)):''} · ${KL.t('lodě')}${R.n?' · '+R.n+' '+plural(R.n,'noc','noci','nocí'):''}`:KL.t('vyberte den')):!S.from?'vyberte termín':denMod()?`${fD(S.from)} · ${KL.t('bez noclehu')}`:S.from&&S.to?`${fD(S.from)} – ${fD(S.to)} · ${R.n} ${plural(R.n,'noc','noci','nocí')}`:'vyberte odjezd';
 
 /* doplněk jen k určitému ubytování (ceník: pro) – jinak zašedlý */
-function xLimit(){const selT=SEL().map(t=>t.k);EXTRAS.forEach(x=>{const ne=x.pro.length&&selT.length&&!selT.some(k=>x.pro.includes(k));if(ne&&S[x.k])S[x.k]=0;x.el.classList.toggle('ne',!!ne);x.el.setAttribute('aria-disabled',!!ne);x.el.tabIndex=ne?-1:0})}
+function xLimit(){TYPES.forEach(t=>{if(!t.el)return;const ne=t.minOs&&persons()<t.minOs;if(ne&&S.q[t.k]){S.q[t.k]=0;if(S.c[t.k])S.c[t.k]=[]}t.el.classList.toggle('mo-ne',!!ne)});const selT=SEL().map(t=>t.k);EXTRAS.forEach(x=>{const ne=x.pro.length&&selT.length&&!selT.some(k=>x.pro.includes(k));if(ne&&S[x.k])S[x.k]=0;x.el.classList.toggle('ne',!!ne);x.el.setAttribute('aria-disabled',!!ne);x.el.tabIndex=ne?-1:0})}
 function render(){Object.keys(MISTA).forEach(k=>{S.c[k]=S.c[k].filter(n=>freeU(k,n));if(k in S.q)S.q[k]=S.c[k].length});lodMod();if(denMod()){TYPES.forEach(t=>{S.q[t.k]=0;if(S.c[t.k])S.c[t.k]=[]});EXTRAS.forEach(x=>{S[x.k]=0})}lodFix();xLimit();R=compute();lodRender();dopRender();nocRender();const pending=S.from&&!S.to;if(S.to&&!$('rzWarn').hidden)warn(KL.t(''));
  paintCal();
  $('rzFromT').textContent=S.from?fD(S.from):'vyberte';$('rzFromT').classList.toggle('wait',!S.from);

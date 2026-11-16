@@ -92,7 +92,7 @@ var KKC=window.KKC={
   /* jen procentní sleva podle nocí (starší volání) */
   sleva:function(n){var s=0;KKC.slevy().forEach(function(x){var p=x.pod||{},ok=x.typ==='proc'&&!(x.na&&x.na.length)&&Object.keys(p).every(function(k){return k==='noci'?n>=p.noci:!p[k]});if(ok&&+x.h>s)s=+x.h});return s/100},
   /* skupina osob (dítě, žák, senior…) má vlastní cenu jen u ubytování, ke kterému je přiřazená (pole pro); jinak se počítá jako Osoba */
-  osobaPlati:function(k,typy){var p=mapa[k];if(!p||!p.pro||!p.pro.length||!typy||!typy.length)return true;return typy.every(function(t){return p.pro.indexOf(t)>=0})},
+  osobaPlati:function(k,typy){var p=mapa[k];if(!p||!p.pro||!p.pro.length||!typy||!typy.length)return true;var j=function(t){return p.pro.indexOf(t)>=0};return k==='os'?typy.some(j):typy.every(j)},
   slevy:function(){return (C.slevy||[]).filter(function(x){return x&&x.zap!==0})},
   POD:[['noci','nocí','noci'],['osob','osob','osoby'],['mist','míst celkem','místa celkem'],['chatka','chatek','chatky'],['podsad','podsadových stanů','podsadového stanu'],['teepee','teepee','teepee'],['stan','vlastních stanů','vlastního stanu'],['karavan','karavanů','karavanu'],['lodi','lodí','lodi']],
   /* popis podmínek a výše slevy česky (administrace, ceník na webu) */
