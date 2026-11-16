@@ -291,5 +291,23 @@ KK.import=function(d){
     return KK.obrazky.soubor.vymaz().then(function(){return otx('readwrite',function(s){(d.obrazkySoubory||[]).forEach(function(o){s.put({id:o.id,blob:zDat(o.data),kdy:Date.now()})})})});
   }).then(function(){historie('Záloha','obnovena ze souboru')});
 };
-KK.reset=function(){['texty','seo','cenik','galerie','historie','dtexty','ikony','obrazky','texty.en','texty.de','dtexty.en','dtexty.de','mena','jazyk','rezervace','rez.nast','rez.cislo','rez.archiv'].forEach(LS.del);return tx('readwrite',function(s){s.clear()}).then(function(){return KK.obrazky.soubor.vymaz().catch(function(){})})};
+/* Části, které lze vrátit do původní podoby nezávisle (klíče v localStorage). */
+KK.RESET_SKUPINY={
+  texty:['texty','dtexty','texty.en','texty.de','dtexty.en','dtexty.de','historie','jazyk'],
+  seo:['seo'],
+  cenik:['cenik','mena'],
+  galerie:['galerie','ikony'],
+  fotky:['obrazky'],
+  rezervace:['rezervace','rez.nast','rez.cislo'],
+  archiv:['rez.archiv']
+};
+/* vyber = pole názvů skupin; bez argumentu se vrátí vše. */
+KK.reset=function(vyber){
+  var skup=vyber||Object.keys(KK.RESET_SKUPINY),klice=[];
+  skup.forEach(function(s){klice=klice.concat(KK.RESET_SKUPINY[s]||[])});
+  klice.forEach(LS.del);
+  var p=Promise.resolve();
+  if(skup.indexOf('fotky')>=0)p=tx('readwrite',function(s){s.clear()}).then(function(){return KK.obrazky.soubor.vymaz().catch(function(){})});
+  return p.then(function(){});
+};
 })();

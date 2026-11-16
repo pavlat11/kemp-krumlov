@@ -1478,17 +1478,31 @@ function ucet(m){
     KK.auth.zmenHeslo(hf.stare.value,hf.nove.value).then(function(){toast('Heslo změněno.');shell(KK.auth.meSync())}).catch(function(x){er.textContent=x.message;er.hidden=false})});
 }
 
+/* Části, které lze v „Začít znovu“ vrátit do původní podoby: [klíč, název, popis, výchozí zaškrtnutí] */
+var RS_SKUPINY=[
+  ['texty','Texty a překlady','Texty webu, překlady a historie úprav',true],
+  ['seo','SEO','Nadpisy, popisy a klíčová slova pro vyhledávače',true],
+  ['cenik','Ceník a kapacity','Ceny, měna a kapacity',true],
+  ['galerie','Galerie a ikony','Složení galerie a vlastní ikony',true],
+  ['fotky','Nahrané fotky','Obrázky, které jste na web nahráli',true],
+  ['rezervace','Rezervace a nastavení','Smaže všechny rezervace a jejich nastavení (pozor)',false],
+  ['archiv','Archiv sezón','Smaže uzavřené sezóny (pozor)',false]];
 function nastaveni(m){
   m.innerHTML='<div class="ph"><div><h1>Nastavení a záloha</h1><p>Záloha obsahuje všechny upravené texty a překlady, vyměněné fotky a ikony na webu, ceník, SEO i fotky z galerie. Hodí se i pro přenesení na server.</p></div></div>'+
   '<div class="grid g2"><div class="card"><h2>Kde jsou data</h2><p><span class="badge warn">Náhled</span> Vše je uložené jen v tomto prohlížeči. Jiný počítač ani návštěvníci webu změny neuvidí.</p><p class="mut">Po spuštění na serveru se data budou ukládat do databáze a uvidí je všichni. Zálohu odsud pak jde na server nahrát.</p></div>'+
   '<div class="card"><h2>Záloha</h2><p class="mut">Stáhne soubor .json se všemi úpravami.</p><div class="row"><button class="btn pri" id="ex">Stáhnout zálohu</button><label class="btn gh" for="im">Nahrát zálohu</label><input type="file" id="im" accept=".json,application/json" hidden></div></div>'+
-  '<div class="card"><h2>Začít znovu</h2><p class="mut">Smaže všechny úpravy textů, SEO i galerii a vrátí web do původní podoby.</p><button class="btn dan" id="rs">Smazat všechny úpravy</button></div></div>'+
+  '<div class="card"><h2>Začít znovu</h2><p class="mut">Vyberte, co se má vrátit do původní podoby. Co nezaškrtnete, zůstane beze změny.</p><form id="rsf">'+RS_SKUPINY.map(function(s){return '<label class="szn-c"><input type="checkbox" class="cb" name="rs" value="'+s[0]+'"'+(s[3]?' checked':'')+'> <span><b>'+s[1]+'</b><small class="mut" style="display:block">'+s[2]+'</small></span></label>'}).join('')+'</form><div class="row" style="margin-top:12px"><button class="btn dan" id="rs" type="button">Smazat vybrané</button></div></div></div>'+
   (window.KKR&&KK.auth.muze('uzivatele')?'<div id="szn"></div>':'');
   $('#ex').addEventListener('click',function(){KK.export().then(function(d){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:'application/json'}));a.download='kemp-krumlov-zaloha-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Záloha stažena.')})});
   $('#im').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var inpZ=e.target;ptej('Nahrát zálohu?\n\nSoučasné úpravy webu, ceník i rezervace se přepíšou obsahem souboru.',{ok:'Nahrát zálohu',nebezp:1}).then(function(ok){if(!ok){inpZ.value='';return}
     f.text().then(function(t){return KK.import(JSON.parse(t))}).then(function(){ZDROJ=null;toast('Záloha obnovena.')}).catch(function(x){toast(x.message||'Soubor nejde načíst.',1)});inpZ.value=''})});
   if($('#szn'))sezona($('#szn'));
-  $('#rs').addEventListener('click',function(){ptej('Smazat všechny úpravy?\n\nWeb, ceník i nastavení se vrátí do původní podoby. Nejde to vrátit.',{ok:'Smazat vše',nebezp:1}).then(function(ok){if(ok)KK.reset().then(function(){toast('Vše vráceno do původní podoby.')})})});
+  function vybrane(){return [].slice.call(m.querySelectorAll('#rsf input:checked')).map(function(i){return i.value})}
+  function stavTlacitka(){$('#rs').disabled=!vybrane().length}
+  $('#rsf').addEventListener('change',stavTlacitka);stavTlacitka();
+  $('#rs').addEventListener('click',function(){var v=vybrane();if(!v.length)return;
+    var nazvy=RS_SKUPINY.filter(function(s){return v.indexOf(s[0])>=0}).map(function(s){return '– '+s[1]}).join('\n');
+    ptej('Smazat vybrané části?\n\n'+nazvy+'\n\nNejde to vrátit.',{ok:'Smazat vybrané',nebezp:1}).then(function(ok){if(ok)KK.reset(v).then(function(){toast('Vybrané části jsou vráceny do původní podoby.')})})});
 }
 
 /* ---------- SEZÓNA: uzavření a archiv (jen Správce, potvrzuje se heslem) ---------- */
