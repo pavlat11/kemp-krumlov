@@ -1301,3 +1301,8 @@ main:has(.rz-lay){max-width:1720px}
 .rzr.zm-n{animation:zmFl 1.2s ease}
 @keyframes zmFl{0%{background:#dff1e5}100%{background:#fff}}
 .rzr.zm .rr-h,.rzr.zm .rsp{opacity:1}
+
+.pk-c.zm{position:relative;box-shadow:0 0 0 2px #2f7a4f,0 10px 22px -16px #2f7a4f}
+.pk-c.zm::after{content:"✓ Změněno";position:absolute;top:-9px;right:12px;padding:2px 9px;border-radius:999px;background:#2f7a4f;color:#fff;font-size:11px;font-weight:800}
+.pk-c.zm-n{animation:zmFl 1.2s ease}
+.pk-t.ok{color:#2f7a4f;font-weight:800}
