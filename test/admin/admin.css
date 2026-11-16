@@ -1293,3 +1293,11 @@ main:has(.rz-lay){max-width:1720px}
 .rr-bb .rr-e:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
 .rr-bb .rr-e.rr-z.sel{background:#0b2419;color:#fff;box-shadow:none}@media(max-width:900px){.rr-bb .rr-e.rr-z span{display:inline}}
 .rr-c{min-width:0}.rr-c .rl-c{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+
+/* změněná rezervace zůstává na místě, zvýrazněná */
+.rzr.zm{box-shadow:0 0 0 2px #2f7a4f,0 10px 26px -18px #2f7a4f}
+.rzr.zm .rr-h{position:relative}
+.rzr.zm .rr-h::after{content:"✓ Změněno";position:absolute;top:8px;left:50%;transform:translateX(-50%);padding:2px 10px;border-radius:999px;background:#2f7a4f;color:#fff;font-size:11.5px;font-weight:800}
+.rzr.zm-n{animation:zmFl 1.2s ease}
+@keyframes zmFl{0%{background:#dff1e5}100%{background:#fff}}
+.rzr.zm .rr-h,.rzr.zm .rsp{opacity:1}
