@@ -1048,3 +1048,6 @@ main:has(.rz-lay){max-width:1720px}
 .ubq-b{min-width:44px;height:36px;padding:0 10px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:700;font-size:14px;color:var(--deep);cursor:pointer}
 .ubq-b:hover{border-color:#2f7a4f}.ubq-b.on{background:#2f7a4f;border-color:#2f7a4f;color:#fff}.ubq-b:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
 @media(max-width:560px){.ubq-g{grid-template-columns:1fr}.ubq-g>span{flex-direction:row;gap:8px;align-items:baseline}}
+
+/* horní lišta: hledání se zúží, ať se tlačítka vejdou do řádku */
+.rz-top .rq{flex:1 1 150px;min-width:140px}.rz-top .rz-ak{margin-left:auto}
