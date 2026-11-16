@@ -256,6 +256,10 @@ window.KK_PREKLADY={
 },
 "dtexty": {
 "Zobrazit ceník 2026": "Show price list 2026",
+"Na kdy si chcete půjčit loď?": "When do you want to rent a boat?",
+"Klikněte na den vyplutí a pak na den vrácení. Na jeden den klikněte na stejný den dvakrát.": "Click the launch day, then the return day. For a single day, click the same day twice.",
+"Vyberte v kalendáři den vrácení. Na jeden den klikněte na stejný den znovu.": "Choose the return day in the calendar. For one day, click the same day again.",
+"Vrácení": "Return",
 "Oblíbené": "Popular",
 "Pohodlně": "Easy",
 "Bez starostí o auto": "No car worries",
@@ -1304,6 +1308,10 @@ window.KK_PREKLADY={
 },
 "dtexty": {
 "Zobrazit ceník 2026": "Preisliste 2026 anzeigen",
+"Na kdy si chcete půjčit loď?": "Wann möchten Sie ein Boot mieten?",
+"Klikněte na den vyplutí a pak na den vrácení. Na jeden den klikněte na stejný den dvakrát.": "Klicken Sie auf den Starttag und dann auf den Rückgabetag. Für einen Tag zweimal auf denselben Tag klicken.",
+"Vyberte v kalendáři den vrácení. Na jeden den klikněte na stejný den znovu.": "Wählen Sie im Kalender den Rückgabetag. Für einen Tag denselben Tag erneut anklicken.",
+"Vrácení": "Rückgabe",
 "Oblíbené": "Beliebt",
 "Pohodlně": "Bequem",
 "Bez starostí o auto": "Ohne Sorge ums Auto",
