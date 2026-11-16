@@ -786,7 +786,7 @@ function rezervace(m,sekV){
     var vse=[],obs={};skupiny().forEach(function(g){g.c.forEach(function(c){vse.push(g.k+'-'+c)})});
     R.vse().forEach(function(r){if(r.stav==='zru')return;if(r.od<=denP&&denP<r.do)(r.mista||[]).forEach(function(m){obs[m]=1})});
     var vol=vse.filter(function(m){return !obs[m]}).length;
-    var h='<section class="card rv pk"><div class="row rv-h"><h2 style="margin:0">'+(jeDnes?'Dnes':DNY[d0.getDay()]+' '+KR(denP))+'</h2><span class="mut">'+['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota'][d0.getDay()].toLowerCase()+' '+d0.getDate()+'. '+(d0.getMonth()+1)+'. '+d0.getFullYear()+'</span><span class="sp"></span>'+denNav()+tiskBtn('Tisk ubytování')+'</div>'+
+    var h='<section class="card rv pk"><div class="row rv-h"><h2 style="margin:0">'+(jeDnes?'Dnes':DNY[d0.getDay()]+' '+KR(denP))+'</h2><span class="mut">'+['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota'][d0.getDay()].toLowerCase()+' '+d0.getDate()+'. '+(d0.getMonth()+1)+'. '+d0.getFullYear()+'</span><span class="sp"></span>'+denNav()+'<button type="button" class="btn sm" data-a="tisk" data-co="ubyt">'+SV('<path d="M3 11 12 4l9 7M5 10v10h14V10"/>',16)+'Kdo je ubytován</button>'+tiskBtn('Tisk příjezdů a odjezdů')+'</div>'+
       '<div class="pk-sum"><div class="pk-s vyd"><b>'+PR.length+'</b><span>přijíždí</span><small>'+osb(PR)+' '+pl(osb(PR),'osoba','osoby','osob')+'</small></div>'+
       '<div class="pk-s ven"><b>'+OD.length+'</b><span>odjíždí</span><small>'+(po?po+' po termínu':'k odhlášení')+'</small></div>'+
       '<div class="pk-s zu"><b>'+ZU.length+'</b><span>zůstává</span><small>'+osb(ZU)+' '+pl(osb(ZU),'host','hosté','hostů')+'</small></div>'+
@@ -1058,6 +1058,13 @@ function rezervace(m,sekV){
         '<h2>Odjíždí ('+odj.length+')</h2>'+TB(odj,[M,JJ,T,O,PZ],raz)+
         '<h2>Úklid po odjezdu ('+ukl.length+')</h2>'+(ukl.length?'<p class="tk-ukl">'+ukl.map(function(u){return '<span><i class="tk-ch"></i>'+esc(u)+'</span>'}).join('')+'</p>':'<p class="tk-nic">Nic.</p>')+
         '<h2>Zůstávají ('+zus.length+')</h2>'+(zus.length?'<ul class="tk-zus">'+zus.sort(raz).map(function(r){return '<li><b>'+esc(kratM(r))+'</b> '+esc(r.jmeno)+' <small>'+os(r)+' os. · do '+KR(r.do)+'</small></li>'}).join('')+'</ul>':'<p class="tk-nic">Nikdo.</p>')}
+    else if(co==='ubyt'){
+      /* kdo v kempu spí tu noc: po místech, s osobami, termínem, telefonem a doplatkem; volná místa na konci */
+      var nc=vse.filter(function(r){return !JL(r)&&r.od<=x&&x<r.do}),wq=function(r){var m=(r.mista||[])[0];return m?({chatka:0,podsad:1,teepee:2}[m.split('-')[0]]||0):3},rz=function(a,b){return wq(a)-wq(b)||kratM(a).localeCompare(kratM(b),'cs',{numeric:true})},sumO=0;nc.forEach(function(r){sumO+=KKC.osobPocet(r.osoby)});
+      var obs={};nc.forEach(function(r){(r.mista||[]).forEach(function(m){obs[m]=1})});var vol=[];skupiny().forEach(function(g){g.c.forEach(function(c){var k=g.k+'-'+c;if(!obs[k]&&R.vyp().indexOf(k)<0)vol.push(R.nazev(k).replace('Podsadový stan','Stan'))})});
+      h='<h1>Kdo je ubytován · noc '+den+' → '+KR(ISO(ADD(D0(x),1)))+'</h1><p class="tk-sum"><span>Rezervací: <b>'+nc.length+'</b></span><span>Hostů: <b>'+sumO+'</b></span><span>Volných míst: <b>'+vol.length+'</b></span></p>'+
+        TB(nc,[['Místo',function(r){return '<b>'+esc(kratM(r))+'</b>'}],['Host',function(r){return '<b>'+esc(r.jmeno)+'</b>'}],O,['Termín',function(r){return KR(r.od)+' – '+KR(r.do)+(r.od===x?' <small>(přijede)</small>':r.do===ISO(ADD(D0(x),1))?' <small>(zítra odjede)</small>':'')}],['Stav',function(r){return r.stav==='uby'?'ubytován':r.stav==='odj'?'odjel':'čeká na příjezd'}],T,PL,PZ],rz)+
+        '<h2>Volná místa ('+vol.length+')</h2>'+(vol.length?'<p class="tk-ukl">'+vol.map(function(u){return '<span>'+esc(u)+'</span>'}).join('')+'</p>':'<p class="tk-nic">Plno.</p>')}
     else if(co==='lod'){
       var X=denLode(vse,x),cel={padla:0,vesty:0,barely:0},kus={};X.vyd.forEach(function(r){var p=R.lodePotreba(r.lode);Object.keys(p).forEach(function(k){if(k in cel)cel[k]+=p[k];else kus[k]=(kus[k]||0)+p[k]})});
       var VB=function(k){return [R.VYB[k],function(r){return R.lodePotreba(r.lode)[k]}]},LO=['Lodě',function(r){return '<b>'+esc(LK(r))+'</b>'}];
