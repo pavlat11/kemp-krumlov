@@ -1412,7 +1412,7 @@ main:has(.rz-lay){max-width:1720px}
 .rdn-fc{overflow:hidden}
 .rdn-fo{border-top:1px solid #f0ebdf}
 /* Odhlásit hosta – výrazná vlastní barva */
-.rp-a[data-st="odj"],.rpan .rp-a[data-st="odj"]{background:#b4532a;border-color:#b4532a;color:#fff}
-.rp-a[data-st="odj"]:hover,.rpan .rp-a[data-st="odj"]:hover{background:#963f1b;border-color:#963f1b;color:#fff}
-.rs-a .btn[data-st="odj"],.pk-z .btn[data-st="odj"]{background:#b4532a;border-color:#b4532a;color:#fff}
-.rs-a .btn[data-st="odj"]:hover,.pk-z .btn[data-st="odj"]:hover{background:#963f1b;border-color:#963f1b;color:#fff}
+.rp-a[data-st="odj"],.rpan .rp-a[data-st="odj"]{background:#3d5a80;border-color:#3d5a80;color:#fff}
+.rp-a[data-st="odj"]:hover,.rpan .rp-a[data-st="odj"]:hover{background:#2f4766;border-color:#2f4766;color:#fff}
+.rs-a .btn[data-st="odj"],.pk-z .btn[data-st="odj"]{background:#3d5a80;border-color:#3d5a80;color:#fff}
+.rs-a .btn[data-st="odj"]:hover,.pk-z .btn[data-st="odj"]:hover{background:#2f4766;border-color:#2f4766;color:#fff}
