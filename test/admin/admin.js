@@ -199,13 +199,51 @@ function galerie(m){
     var vyber={};
     m.innerHTML='<div class="ph"><div><h1>Galerie</h1><p>Nahrajte více fotek najednou, upravte popisky a kategorie a přetažením změňte pořadí. Prvních 9 fotek vidí návštěvník hned, ostatní po kliknutí na „Zobrazit další fotky“.</p></div><a class="btn gh" href="'+WEB+'#galerie" target="_blank" rel="noopener">Zobrazit na webu '+SV(IC.ven,16)+'</a></div>'+
     '<div class="drop" id="dz" tabindex="0" role="button" aria-describedby="dzh">'+SV(IC.upl,34)+'<b>Přetáhněte sem fotky</b><span class="mut" id="dzh">nebo je vyberte z počítače či telefonu · JPG, PNG, WebP · fotky se automaticky zmenší a převedou do WebP</span>'+
-    '<div class="row"><label class="row" style="font-weight:600" for="dk">Kategorie nových fotek</label><select id="dk" class="inp" style="width:auto;min-height:40px">'+katOpts('')+'</select><button type="button" class="btn pri sm" id="dv">Vybrat fotky</button></div>'+
+    '<div class="row"><label class="row" style="font-weight:600" for="dk">Kategorie nových fotek</label><select id="dk" class="inp" style="width:auto;min-height:40px">'+katOpts('')+'</select><button type="button" class="btn sm gh" id="gkat">'+SV('<path d="M12 5v14M5 12h14"/>',16)+'Kategorie</button><button type="button" class="btn pri sm" id="dv">Vybrat fotky</button></div>'+
     '<input type="file" id="df" accept="image/*" multiple hidden></div><ul class="up-list" id="ul" aria-live="polite"></ul>'+
     '<div class="gtools"><label class="row" style="font-weight:600"><input type="checkbox" id="ga" style="width:18px;height:18px;accent-color:#f4a64a"> Vybrat vše</label><span id="gs" class="mut"></span><span class="sp"></span>'+
     '<span class="row" id="gb" hidden><label class="sr" for="gk">Změnit kategorii vybraných</label><select id="gk" class="inp" style="width:auto;min-height:36px"><option value="-">Změnit kategorii…</option>'+katOpts(null)+'</select><button type="button" class="btn sm gh" data-h="0">Skrýt</button><button type="button" class="btn sm gh" data-h="1">Zobrazit</button><button type="button" class="btn sm dan" id="gd">Smazat</button></span></div>'+
     '<div class="ggrid" id="gg" role="list"></div>';
     var gg=$('#gg'),df=$('#df'),dz=$('#dz');
-    function katOpts(sel){return (sel===null?'':'')+'<option value=""'+(sel===''?' selected':'')+'>Bez kategorie</option>'+Object.keys(KK.KATEGORIE).map(function(k){return '<option value="'+k+'"'+(sel===k?' selected':'')+'>'+KK.KATEGORIE[k]+'</option>'}).join('')}
+    function katOpts(sel){return '<option value=""'+(sel===''?' selected':'')+'>Bez kategorie</option>'+KK.galKat.vse().map(function(k){return '<option value="'+esc(k.k)+'"'+(sel===k.k?' selected':'')+'>'+esc(k.n)+'</option>'}).join('')+'<option value="+">+ Nová kategorie…</option>'}
+    /* znovu naplnit všechny výběry kategorií po změně */
+    function katObnov(){$('#dk').innerHTML=katOpts($('#dk').value==='+'?'':$('#dk').value);$('#gk').innerHTML='<option value="-">Změnit kategorii…</option>'+katOpts(null);kresli()}
+    /* nová kategorie – jen název, vrátí klíč */
+    function katNova(){return ptej('Nová kategorie\n\nNapište název, jak ho uvidí návštěvník (např. Řeka v zimě, Akce, Okolí).',{pole:'',ok:'Přidat'}).then(function(n){n=(n||'').trim();if(!n)return null;
+      var K=KK.galKat.vse(),je=K.filter(function(x){return x.n.toLowerCase()===n.toLowerCase()})[0];if(je){toast('Kategorie „'+n+'“ už existuje.');return je.k}
+      var k=KK.galKat.novyKlic();K.push({k:k,n:n});KK.galKat.uloz(K);toast('Kategorie „'+n+'“ přidána.');return k})}
+    /* správa kategorií: přejmenovat (i anglicky a německy), přidat, smazat, pořadí */
+    function katSprava(){var K=KK.galKat.vse(),d=document.createElement('dialog');d.className='dlg gkd';d.setAttribute('aria-labelledby','gkdh');
+      var poc=function(k){return fotky.filter(function(f){return f.kat===k}).length};
+      var radek=function(k,i){return '<li data-k="'+esc(k.k)+'"><div class="gkd-n"><label><span class="sr">Název česky</span><input class="inp" data-p="n" value="'+esc(k.n)+'" placeholder="Název česky" autocomplete="off"></label>'+
+        '<span class="gkd-c">'+poc(k.k)+' '+pl(poc(k.k),'fotka','fotky','fotek')+'</span>'+
+        '<button type="button" class="btn ic gh" data-m="-1" aria-label="Posunout nahoru"'+(i?'':' disabled')+'>'+SV('<path d="m6 15 6-6 6 6"/>',16)+'</button><button type="button" class="btn ic gh" data-m="1" aria-label="Posunout dolů"'+(i<K.length-1?'':' disabled')+'>'+SV('<path d="m6 9 6 6 6-6"/>',16)+'</button>'+
+        '<button type="button" class="btn ic dan" data-x aria-label="Smazat kategorii '+esc(k.n)+'">'+SV(IC.kos,16)+'</button></div>'+
+        '<div class="gkd-t"><label><span>EN</span><input class="inp" data-p="en" value="'+esc(k.en||'')+'" placeholder="'+(k.t?'podle překladu webu':'anglicky')+'" autocomplete="off"></label><label><span>DE</span><input class="inp" data-p="de" value="'+esc(k.de||'')+'" placeholder="'+(k.t?'podle překladu webu':'německy')+'" autocomplete="off"></label></div></li>'};
+      var nakresli=function(){$('ol',d).innerHTML=K.map(radek).join('')||'<li class="mut">Zatím žádná kategorie.</li>'};
+      var sber=function(){$$('li[data-k]',d).forEach(function(li){var k=K.filter(function(x){return x.k===li.dataset.k})[0];$$('[data-p]',li).forEach(function(i){k[i.dataset.p]=i.value.trim()})})};
+      d.innerHTML='<form method="dialog" novalidate><h2 id="gkdh">Kategorie galerie</h2><p class="mut" style="margin:-6px 0 12px">Návštěvník na webu vidí jen kategorie, ve kterých je aspoň jedna fotka. Překlad EN/DE můžete nechat prázdný – použije se český název.</p>'+
+        '<ol class="gkd-l"></ol><button type="button" class="btn sm" data-add>'+SV('<path d="M12 5v14M5 12h14"/>',16)+'Přidat kategorii</button><p class="err" hidden></p>'+
+        '<div class="ptj-b"><button type="button" class="btn gh" data-z>Zrušit</button><button type="submit" class="btn pri">Uložit</button></div></form>';
+      document.body.appendChild(d);nakresli();var smaz=[];
+      var zavri=function(){try{d.close()}catch(e){}d.remove()};
+      d.addEventListener('cancel',function(e){e.preventDefault();zavri()});
+      $('[data-z]',d).addEventListener('click',zavri);
+      d.addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.type==='submit')return;sber();
+        if(b.hasAttribute('data-add')){K.push({k:KK.galKat.novyKlic(),n:''});nakresli();var ins=$$('[data-p="n"]',d);ins[ins.length-1].focus();return}
+        var li=b.closest('li[data-k]');if(!li)return;var ix=K.findIndex(function(x){return x.k===li.dataset.k});
+        if(b.dataset.m){var j=ix+(+b.dataset.m);var t=K[ix];K[ix]=K[j];K[j]=t;nakresli();var nb=$('li[data-k="'+t.k+'"] [data-m="'+b.dataset.m+'"]',d);(nb&&!nb.disabled?nb:$('li[data-k="'+t.k+'"] input',d)).focus();return}
+        if(b.hasAttribute('data-x')){var n=poc(K[ix].k),jm=K[ix].n||'bez názvu';
+          var ok=function(){smaz.push(K[ix].k);K.splice(ix,1);nakresli()};
+          if(!n){ok();return}
+          d.close();ptej('Smazat kategorii „'+jm+'“?\n\n'+n+' '+pl(n,'fotka v ní zůstane','fotky v ní zůstanou','fotek v ní zůstane')+' v galerii jako Bez kategorie.',{ok:'Smazat',nebezp:1}).then(function(y){d.showModal();if(y)ok()})}});
+      $('form',d).addEventListener('submit',function(e){e.preventDefault();sber();var er=$('.err',d);
+        var prazdne=K.filter(function(x){return !x.n})[0];if(prazdne){er.textContent='Vyplňte název u každé kategorie (nebo ji smažte).';er.hidden=false;$('li[data-k="'+prazdne.k+'"] [data-p="n"]',d).focus();return}
+        var jm={},dup=K.filter(function(x){var l=x.n.toLowerCase();if(jm[l])return true;jm[l]=1})[0];if(dup){er.textContent='Kategorie „'+dup.n+'“ je tam dvakrát.';er.hidden=false;return}
+        K.forEach(function(x){if(!x.en)delete x.en;if(!x.de)delete x.de});KK.galKat.uloz(K);
+        var zm=fotky.filter(function(f){return f.kat&&smaz.indexOf(f.kat)>=0});
+        Promise.all(zm.map(function(f){f.kat='';return KK.galerie.uprav(f.id,{kat:''})})).then(function(){zavri();katObnov();toast('Kategorie uloženy.'+(zm.length?' '+zm.length+' '+pl(zm.length,'fotka je','fotky jsou','fotek je')+' bez kategorie.':''))})});
+      d.showModal();var f0=$('[data-p="n"]',d);if(f0)f0.focus()}
     function kresli(){
       urls.forEach(function(x){if(x.indexOf('blob:')===0)URL.revokeObjectURL(x)});urls=[];var vis=0;
       gg.innerHTML=fotky.map(function(f,i){var on=f.viditelna!==false;if(on)vis++;var p=on?vis:0;
@@ -224,6 +262,7 @@ function galerie(m){
     function F(i){return fotky.find(function(f){return f.id===i})}
     gg.addEventListener('change',function(e){var i=id(e),a=e.target.dataset.a;if(!i)return;
       if(a==='sel'){if(e.target.checked)vyber[i]=1;else delete vyber[i];kresli();return}
+      if(a==='kat'&&e.target.value==='+'){var sel=e.target,pv=F(i).kat||'';katNova().then(function(k){if(!k){sel.value=pv;return}F(i).kat=k;KK.galerie.uprav(i,{kat:k}).then(function(){katObnov()})});return}
       if(a==='popis'||a==='kat'){var z={};z[a]=e.target.value;Object.assign(F(i),z);KK.galerie.uprav(i,z).then(function(){toast(a==='popis'?'Popisek uložen.':'Kategorie uložena.')})}});
     gg.addEventListener('click',function(e){var b=e.target.closest('button[data-a]');if(!b)return;var i=id(e),ix=fotky.findIndex(function(f){return f.id===i}),a=b.dataset.a;
       if(a==='vl'||a==='vp'){var j=ix+(a==='vl'?-1:1);var t=fotky[ix];fotky[ix]=fotky[j];fotky[j]=t;uloz_poradi().then(function(){kresli();var nb=$('.gc[data-id="'+i+'"] [data-a="'+a+'"]');if(nb&&!nb.disabled)nb.focus();else{nb=$('.gc[data-id="'+i+'"] input');if(nb)nb.focus()}})}
@@ -239,7 +278,9 @@ function galerie(m){
       var from=fotky.findIndex(function(f){return f.id===dragId}),to=fotky.findIndex(function(f){return f.id===c.dataset.id});var x=fotky.splice(from,1)[0];fotky.splice(to,0,x);uloz_poradi().then(function(){kresli();toast('Pořadí uloženo.')})});
     /* hromadné akce */
     $('#ga').addEventListener('change',function(e){vyber={};if(e.target.checked)fotky.forEach(function(f){vyber[f.id]=1});kresli()});
-    $('#gk').addEventListener('change',function(e){var k=e.target.value;if(k==='-')return;var ids=Object.keys(vyber);Promise.all(ids.map(function(i){F(i).kat=k;return KK.galerie.uprav(i,{kat:k})})).then(function(){toast('Kategorie změněna u '+ids.length+' '+pl(ids.length,'fotky','fotek','fotek')+'.');e.target.value='-';kresli()})});
+    $('#gkat').addEventListener('click',katSprava);
+    $('#dk').addEventListener('change',function(e){if(e.target.value!=='+')return;katNova().then(function(k){katObnov();$('#dk').value=k||''})});
+    $('#gk').addEventListener('change',function(e){var k=e.target.value;if(k==='-')return;if(k==='+'){katNova().then(function(k2){if(!k2){e.target.value='-';return}var ids=Object.keys(vyber);Promise.all(ids.map(function(i){F(i).kat=k2;return KK.galerie.uprav(i,{kat:k2})})).then(function(){katObnov();toast('Kategorie nastavena u '+ids.length+' '+pl(ids.length,'fotky','fotek','fotek')+'.')})});return}var ids=Object.keys(vyber);Promise.all(ids.map(function(i){F(i).kat=k;return KK.galerie.uprav(i,{kat:k})})).then(function(){toast('Kategorie změněna u '+ids.length+' '+pl(ids.length,'fotky','fotek','fotek')+'.');e.target.value='-';kresli()})});
     $$('#gb [data-h]').forEach(function(b){b.addEventListener('click',function(){var v=b.dataset.h==='1',ids=Object.keys(vyber);Promise.all(ids.map(function(i){F(i).viditelna=v;return KK.galerie.uprav(i,{viditelna:v})})).then(function(){toast(v?'Fotky jsou na webu.':'Fotky jsou skryté.');kresli()})})});
     $('#gd').addEventListener('click',function(){var ids=Object.keys(vyber);ptej('Smazat '+ids.length+' '+pl(ids.length,'fotku','fotky','fotek')+'?\n\nZmizí z galerie na webu. Nejde to vrátit.',{ok:'Smazat',nebezp:1}).then(function(ok){if(!ok)return;KK.galerie.smaz(ids).then(function(){fotky=fotky.filter(function(f){return !vyber[f.id]});vyber={};return uloz_poradi()}).then(function(){kresli();toast('Smazáno.')})})});
     /* nahrávání */

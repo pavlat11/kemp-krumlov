@@ -42,13 +42,14 @@ if(s){
 }
 
 function nactiSkript(src){return new Promise(function(ok,no){var e=document.createElement('script');e.src=BASE+src;e.onload=ok;e.onerror=no;document.body.appendChild(e)})}
-function nactiData(){return window.KK&&KK.galerie?Promise.resolve():nactiSkript('js/kk-data.js?v=8')}
+function nactiData(){return window.KK&&KK.galerie?Promise.resolve():nactiSkript('js/kk-data.js?v=9')}
 
 /* 3) galerie z administrace */
 if(get('galerie'))document.addEventListener('DOMContentLoaded',function(){
   nactiData().then(function(){return KK.galerie.seznam()}).then(function(f){
     f=f.filter(function(x){return x.viditelna!==false});
     if(f.length&&window.KKGalerie)KKGalerie.vykresli(f.map(function(x){return{src:KK.galerie.url(x),nahled:KK.galerie.url(x,true),popis:x.popis,kat:x.kat,w:x.w,h:x.h}}));
+    if(f.length&&window.KKGalerie&&KKGalerie.filtry&&get('galerie.kat'))KKGalerie.filtry(KK.galKat.vse(),f);
   }).catch(function(){});
 });
 
@@ -166,12 +167,12 @@ lb.querySelector('.gl-x').addEventListener('click',close);lb.querySelector('.gl-
 lb.addEventListener('click',function(e){if(e.target===lb)close()});
 addEventListener('keydown',function(e){if(lb.hidden)return;if(e.key==='Escape')close();else if(e.key==='ArrowLeft')show(cur-1);else if(e.key==='ArrowRight')show(cur+1)});
 var sx=null;lb.addEventListener('touchstart',function(e){sx=e.touches[0].clientX},{passive:true});lb.addEventListener('touchend',function(e){if(sx===null)return;var d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>45)show(cur+(d<0?1:-1));sx=null});
-r.querySelectorAll('.gl-f button').forEach(function(b){b.addEventListener('click',function(){
+var glf=r.querySelector('.gl-f');if(glf)glf.addEventListener('click',function(e){var b=e.target.closest('button[data-f]');if(!b)return;(function(){
   r.querySelectorAll('.gl-f button').forEach(function(x){x.classList.toggle('on',x===b)});filtr=b.dataset.f;
   grid.classList.toggle('all',filtr==='all');
   if(filtr!=='all')grid.classList.remove('lim');else if(mb&&mb.getAttribute('aria-expanded')!=='true')grid.classList.add('lim');
   it().forEach(function(x){x.classList.toggle('hide',filtr!=='all'&&x.dataset.c!==filtr)});priprav();
-})});
+})()});
 priprav();
 /* vykreslení z dat (administrace / server) */
 var esc=function(s){return String(s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
@@ -179,6 +180,16 @@ window.KKGalerie={vykresli:function(f){
   grid.innerHTML=f.map(function(x){return '<figure class="gl-i" data-c="'+esc(x.kat)+'"><button type="button" aria-label="Zvětšit: '+esc(x.popis||'fotka')+'"><img src="'+esc(x.nahled||x.src)+'" data-full="'+esc(x.src)+'" alt="'+esc(x.popis)+'" loading="lazy" decoding="async" width="'+(x.w||1536)+'" height="'+(x.h||1024)+'"></button>'+(x.popis?'<figcaption>'+esc(x.popis)+'</figcaption>':'')+'</figure>'}).join('');
   if(mb&&mb.getAttribute('aria-expanded')!=='true')grid.classList.add('lim');
   it().forEach(function(x){x.classList.toggle('hide',filtr!=='all'&&x.dataset.c!==filtr)});priprav();
+},
+/* filtry podle kategorií z administrace – jen ty, ve kterých je aspoň jedna fotka */
+filtry:function(K,fotky){if(!glf||!K)return;var get=function(k){try{var v=localStorage.getItem('kkt.'+k);return v?JSON.parse(v):null}catch(e){return null}};var L=window.KK_LANG||'cs',ma={};(fotky||[]).forEach(function(x){if(x.kat)ma[x.kat]=1});
+  var V={ubyt:'Ubytování',reka:'U řeky',vecer:'Večery'},vse=glf.querySelector('[data-f="all"]');
+  K=K.filter(function(k){return ma[k.k]});if(filtr!=='all'&&!ma[filtr])filtr='all';
+  var VP=window.KK_PREKLADY&&KK_PREKLADY[L],T=L==='cs'?(get('texty')||{}):Object.assign({},VP&&VP.texty||{},get('texty.'+L)||{});
+  glf.innerHTML=(vse?vse.outerHTML:'<button type="button" data-f="all">Vše</button>')+K.map(function(k){var t=k.t&&V[k.k]===k.n?k.t:'',n=L!=='cs'&&k[L]?k[L]:t&&T[t]?T[t]:k.n;
+    return '<button type="button" data-f="'+esc(k.k)+'"'+(t?' data-t="'+t+'"':'')+'>'+esc(String(n).replace(/<[^>]*>/g,''))+'</button>'}).join('');
+  glf.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x.dataset.f===filtr)});
+  if(filtr==='all')grid.classList.toggle('all',true);
 }};
 })();
 ;

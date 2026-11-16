@@ -179,7 +179,15 @@ KK.cenik={
 var DBN='kkt-admin',DBV=1,_db=null;
 function db(){if(_db)return _db;_db=new Promise(function(ok,no){var r=indexedDB.open(DBN,DBV);r.onupgradeneeded=function(){var d=r.result;if(!d.objectStoreNames.contains('fotky'))d.createObjectStore('fotky',{keyPath:'id'})};r.onsuccess=function(){ok(r.result)};r.onerror=function(){no(r.error)}});return _db}
 function tx(mode,fn){return db().then(function(d){return new Promise(function(ok,no){var t=d.transaction('fotky',mode),s=t.objectStore('fotky'),res=fn(s);t.oncomplete=function(){ok(res&&res.result!==undefined?res.result:res)};t.onerror=function(){no(t.error)}})})}
-KK.KATEGORIE={ubyt:'Ubytování',reka:'U řeky',vecer:'Večery'};
+/* kategorie galerie – výchozí tři, další si obsluha přidá v Galerii; n = česky, en/de = překlad (prázdné → česky) */
+KK.galKat={
+  VYCHOZI:[{k:'ubyt',n:'Ubytování',t:'galerie.5'},{k:'reka',n:'U řeky',t:'galerie.6'},{k:'vecer',n:'Večery',t:'galerie.7'}],
+  vse:function(){var a=LS.get('galerie.kat',null);return (a&&a.length?a:KK.galKat.VYCHOZI).map(function(x){return Object.assign({},x)})},
+  uloz:function(a){a=(a||[]).filter(function(x){return x&&x.k&&String(x.n||'').trim()});LS.set('galerie.kat',a);KK.KATEGORIE=KK.galKat.mapa();historie('Galerie','kategorie upraveny');return a},
+  mapa:function(){var m={};KK.galKat.vse().forEach(function(x){m[x.k]=x.n});return m},
+  novyKlic:function(){return 'k'+Date.now().toString(36)}
+};
+KK.KATEGORIE=KK.galKat.mapa();
 KK.galerie={
   aktivni:function(){return !!LS.get('galerie',null)},
   seznam:function(){
