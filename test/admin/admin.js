@@ -1513,7 +1513,7 @@ function nastaveni(m){
   $('#rsf').addEventListener('change',stavTlacitka);stavTlacitka();
   $('#rs').addEventListener('click',function(){var v=vybrane();if(!v.length)return;
     var nazvy=RS_SKUPINY.filter(function(s){return v.indexOf(s[0])>=0}).map(function(s){return '– '+s[1]}).join('\n');
-    ptej('Smazat vybrané části?\n\n'+nazvy+'\n\nNejde to vrátit.',{ok:'Smazat vybrané',nebezp:1}).then(function(ok){if(ok)KK.reset(v).then(function(){toast('Vybrané části jsou vráceny do původní podoby.')})})});
+    sHeslem({nadpis:'Smazat vybrané části?',ok:'Smazat vybrané',txt:['Smažou se tyto části:<br><b>'+nazvy.split('\n').join('<br>')+'</b>','Nejde to vrátit.']}).then(function(ok){if(ok)KK.reset(v).then(function(){toast('Vybrané části jsou vráceny do původní podoby.')}).catch(function(x){toast(x.message||'Vybrané části se nepodařilo smazat.',1)})})});
 }
 
 /* ---------- SEZÓNA: uzavření a archiv (jen Správce, potvrzuje se heslem) ---------- */
