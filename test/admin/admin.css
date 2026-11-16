@@ -1369,5 +1369,8 @@ main:has(.rz-lay){max-width:1720px}
 .rdn-h summary span{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#3d4a42}
 .rdn-h summary small{flex:1;min-width:0;font-size:12.5px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
 .rdn-h summary:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
-.rdn-h[open] summary small{visibility:hidden}
 .rdn-h .rp-hi{margin:2px 16px 8px 22px}
+.rdn-h .rp-hi li{padding-bottom:12px}.rdn-h .rp-hi li:last-child{padding-bottom:4px}
+.rdn-h .rp-hi ul{list-style:none;margin:3px 0 2px;padding:0}
+.rdn-h .rp-hi ul li{padding:1px 0;font-size:13px;color:var(--deep2);overflow-wrap:anywhere}
+.rdn-h .rp-hi ul li::before{display:none}
