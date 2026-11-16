@@ -1115,23 +1115,23 @@ function rezervace(m,sekV){
     /* propojené rezervace (pobyt rozdělený na noc před / noc po) – proklik */
     var SP=R.vse().filter(function(x){return x.id!==r.id&&(x.id===r.spoj||x.spoj===r.id||(r.spoj&&x.spoj===r.spoj))});
     if(SP.length)h+='<div class="rdx-sp"><span>Propojený pobyt:</span>'+SP.map(function(x){return '<button type="button" data-sp="'+x.id+'">'+esc(x.cislo||'')+' · '+KR(x.od)+' – '+KR(x.do)+' · '+esc(R.STAVY[x.stav]||'')+'</button>'}).join('')+'</div>';
+    /* osa průběhu u každé části zvlášť – hotové kroky zeleně, další krok obtažený, zbytek šedě */
+    var osa=function(nad,K,hot,pozn){return '<div class="rdn-o"><span>'+nad+'</span><ol aria-label="'+nad+': hotovo '+hot+' z '+K.length+'">'+K.map(function(t,i){return '<li class="'+(i<hot?'ok':i===hot?'dal':'')+'">'+(i<hot?'<i>'+FJ+'</i>':'<i></i>')+'<em>'+t+(i<hot?'<span class="sr"> – hotovo</span>':'')+'</em></li>'}).join('')+'</ol>'+(pozn?'<small>'+pozn+'</small>':'')+'</div>'},
+      bezO=b||r.stav==='zru',ls0=LS(r),
+      oP=bezO||!maUby(r)?'':osa('Průběh',['Přijato','Potvrzeno','Ubytován','Odjel'],({pop:1,pot:2,uby:3,odj:4})[r.stav]||1),
+      oL=bezO||!LK(r)?'':osa('Průběh',['Rezervováno','Vydáno','Vráceno'],ls0==='vra'?3:ls0==='vyd'||ls0==='cast'?2:1,ls0==='cast'?'část lodí je už vrácená':''),
+      oPl=bezO||!r.platba?'':osa('Průběh',['Záloha','Doplaceno'],r.platba.stav==='vse'?2:r.platba.stav==='zal'?1:0);
     /* to hlavní na jednom místě: kdy, kde, kdo, kontakt */
     var kon=[r.telefon?'<a href="tel:'+esc(r.telefon.replace(/\s/g,''))+'">'+esc(r.telefon)+'</a>':'',r.email?'<a href="mailto:'+esc(r.email)+'">'+esc(r.email)+'</a>':''].filter(Boolean);
-    h+='<ul class="rdn-f">'+(JL(r)&&r.lode?fakt('ka','Termín',KR(r.lode.den)+' '+r.lode.den.slice(0,4),dniL(r)+' '+pl(dniL(r),'den','dny','dní')+' · jen lodě'):fakt('ka','Termín',KR(r.od)+' – '+KR(r.do)+' '+r.do.slice(0,4),n+' '+pl(n,'noc','noci','nocí')))+
-      (b||maUby(r)?fakt('ub','Místo',esc(mistaTxt(r))):'')+(b?'':fakt('os','Osoby',esc(KKC.osobyTxt(o))))+(kon.length?fakt('tel','Kontakt',kon[0],kon[1]||''):'')+'</ul>';
+    h+='<div class="rdn-fc"><ul class="rdn-f">'+(JL(r)&&r.lode?fakt('ka','Termín',KR(r.lode.den)+' '+r.lode.den.slice(0,4),dniL(r)+' '+pl(dniL(r),'den','dny','dní')+' · jen lodě'):fakt('ka','Termín',KR(r.od)+' – '+KR(r.do)+' '+r.do.slice(0,4),n+' '+pl(n,'noc','noci','nocí')))+
+      (b||maUby(r)?fakt('ub','Místo',esc(mistaTxt(r))):'')+(b?'':fakt('os','Osoby',esc(KKC.osobyTxt(o))))+(kon.length?fakt('tel','Kontakt',kon[0],kon[1]||''):'')+'</ul>'+(oP?'<div class="rdn-fo">'+oP+'</div>':'')+'</div>';
     if(r.zprava)h+='<div class="rdn-n"><small>'+SV(IK.po,14)+'Poznámka</small><p>'+esc(r.zprava)+'</p></div>';
-    /* osa průběhu – co už je hotové (zeleně) a co teprve přijde; řádek pro pobyt, lodě a platbu */
-    if(!b&&r.stav!=='zru'){var osa=function(nad,K,hot,pozn){return '<div class="rdn-o"><span>'+nad+'</span><ol aria-label="'+nad+': hotovo '+hot+' z '+K.length+'">'+K.map(function(t,i){return '<li class="'+(i<hot?'ok':i===hot?'dal':'')+'">'+(i<hot?'<i>'+FJ+'</i>':'<i></i>')+'<em>'+t+(i<hot?'<span class="sr"> – hotovo</span>':'')+'</em></li>'}).join('')+'</ol>'+(pozn?'<small>'+pozn+'</small>':'')+'</div>'},OS='',ls0=LS(r),pp=r.platba;
-      if(maUby(r))OS+=osa('Pobyt',['Přijato','Potvrzeno','Ubytován','Odjel'],({pop:1,pot:2,uby:3,odj:4})[r.stav]||1);
-      if(LK(r))OS+=osa('Lodě',['Rezervováno','Vydáno','Vráceno'],ls0==='vra'?3:ls0==='vyd'||ls0==='cast'?2:1,ls0==='cast'?'část lodí je už vrácená':'');
-      OS+=pp?osa('Platba',['Záloha','Doplaceno'],pp.stav==='vse'?2:pp.stav==='zal'?1:0):osa('Platba',['Zaplaceno na místě'],0);
-      h+='<section class="rdn-os" aria-label="Průběh rezervace">'+OS+'</section>'}
     /* hlavní akce – co je teď na řadě */
     h+=(JL(r)&&lodBtn(r)&&!(r.stav==='pop'&&r.platba&&r.platba.stav==='ceka')?lodBtn(r).replace('btn sm pri','btn pri rp-a'):r.stav==='pop'&&r.platba&&r.platba.stav==='ceka'?'<button type="button" class="btn pri rp-a" data-zp="zal">Záloha zaplacena – potvrdit</button><button type="button" class="btn sm gh rp-a2" data-st="pot">Potvrdit bez zálohy</button>':ak?'<button type="button" class="btn pri rp-a" data-st="'+ak[0]+'">'+ak[1]+'</button>':'');
     /* PLATBA – jako účtenka: položky, celkem, zaplaceno, zbývá */
     if(!b){var p=r.platba,ce=+r.cena||0,zp=!p?0:p.stav==='vse'?ce:p.stav==='zal'?Math.min(ce,+p.zaloha||0):0,dop=Math.max(0,ce-zp),pr=ce?Math.round(zp/ce*100):0,
         rad=function(cls,a,c,pod){return '<div class="'+cls+'"><dt>'+a+(pod?'<small>'+pod+'</small>':'')+'</dt><dd>'+c+'</dd></div>'};
-      h+=blk('pl','pl','Platba',p?'':'<span class="rpl">na místě</span>','<dl class="rdn-u">'+
+      h+=blk('pl','pl','Platba',p?'':'<span class="rpl">na místě</span>',oPl+'<dl class="rdn-u">'+
         (cL||cD?(cU?rad('','Ubytování',kc(cU)):'')+(cL?rad('','Lodě',kc(cL)):'')+(cD?rad('','Doprava',kc(cD)):''):'')+
         rad('cel','Celkem',kc(ce))+
         (zp?rad('zap',p.stav==='vse'?'Zaplaceno':'Zaplacena záloha','− '+kc(zp),p.kdy?cas(p.kdy):''):'')+
@@ -1143,7 +1143,7 @@ function rezervace(m,sekV){
     /* LODĚ */
     if(LK(r)){var x=LS(r);
       h+=blk('lo','lo','Lodě',lsBdg(r),
-        kv([['Lodě','<b>'+esc(LK(r))+'</b>',vybTxt(r.lode)],['Kdy',KR(r.lode.den)+' '+r.lode.den.slice(0,4)+' · '+dniL(r)+' '+pl(dniL(r),'den','dny','dní'),dniL(r)>1?'vrátit '+KR(posD(r)):''],['Trasa',esc(R.mistoN(r.lode.odkud))+' → '+esc(R.mistoN(r.lode.kam))],
+        oL+kv([['Lodě','<b>'+esc(LK(r))+'</b>',vybTxt(r.lode)],['Kdy',KR(r.lode.den)+' '+r.lode.den.slice(0,4)+' · '+dniL(r)+' '+pl(dniL(r),'den','dny','dní'),dniL(r)>1?'vrátit '+KR(posD(r)):''],['Trasa',esc(R.mistoN(r.lode.odkud))+' → '+esc(R.mistoN(r.lode.kam))],
           r.lode.vydano?['Vydáno',esc(R.lodeKusyTxt(r.lode.vydano.kusy)),cas(r.lode.vydano.kdy)+(r.lode.vydano.kdo?' · '+esc(r.lode.vydano.kdo):'')]:null].concat((r.lode.vraceno||[]).map(function(v,i){return ['Vráceno'+((r.lode.vraceno.length>1)?' '+(i+1)+'.':''),esc(R.lodeKusyTxt(v.kusy)),cas(v.kdy)+(v.kdo?' · '+esc(v.kdo):'')]})).concat([x==='vyd'||x==='cast'?['Ještě venku','<b>'+esc(R.lodeKusyTxt(R.lodeVen(r)))+'</b>','vrátit '+KR(posD(r))+(posD(r)<dnes?' – <b class="zle">po termínu</b>':'')]:null]))+
         (function(t){return t?'<div class="rp-pl">'+t+'</div>':''})((lodBtn(r)&&!JL(r)?lodBtn(r):'')+(r.lode.vydano&&r.stav!=='zru'?((r.lode.vraceno||[]).length?'<button type="button" class="btn sm gh" data-lzr="1">Zrušit poslední vrácení</button>':'')+'<button type="button" class="btn sm gh" data-lzv="1">Zrušit výdej</button>':'')))}
     /* DOPRAVA */

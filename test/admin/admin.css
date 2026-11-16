@@ -1332,7 +1332,8 @@ main:has(.rz-lay){max-width:1720px}
 
 /* detail rezervace – přehledná verze: každý údaj jen jednou, shora dolů „kdo a kdy → co udělat → peníze → lodě → doprava“ */
 .rdx-h{padding-bottom:2px}
-.rdn-f{list-style:none;margin:14px 0 12px;padding:4px 14px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.rdn-fc{margin:14px 0 12px;padding:4px 14px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.rdn-f{list-style:none;margin:0;padding:0}
 .rdn-f li{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-top:1px solid #f0ebdf}
 .rdn-f li:first-child{border-top:0}
 .rdn-i{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:#f1eee6;color:#3d4a42}
@@ -1376,11 +1377,6 @@ main:has(.rz-lay){max-width:1720px}
 .rdn-h .rp-hi ul li::before{display:none}
 .rtk-t.g b{color:#2f7a4f}.rtk-t.g::before{color:#2f7a4f;opacity:1}.rtk-t.g.nic small{color:var(--mut)}
 /* detail rezervace – osa průběhu: hotové kroky zeleně s fajfkou, další krok obtažený, zbytek šedě */
-.rdn-os{margin:0 0 12px;padding:6px 14px;background:#fff;border:1px solid var(--line);border-radius:14px}
-.rdn-o{display:grid;grid-template-columns:58px 1fr;align-items:start;gap:0 8px;padding:10px 0 8px;border-top:1px solid #f0ebdf}
-.rdn-o:first-child{border-top:0}
-.rdn-o>span{padding-top:2px;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#3d4a42}
-.rdn-o>small{grid-column:2;margin-top:4px;font-size:12.5px;color:var(--mut);text-align:center}
 .rdn-o ol{list-style:none;margin:0;padding:0;display:flex}
 .rdn-o li{position:relative;flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
 .rdn-o li::before{content:"";position:absolute;top:9px;right:50%;width:100%;height:2px;background:#e3ddcf}
@@ -1393,3 +1389,8 @@ main:has(.rz-lay){max-width:1720px}
 .rdn-o em{font-style:normal;font-size:12px;line-height:1.2;color:#8b918c;overflow-wrap:anywhere}
 .rdn-o li.ok em{color:#2f7a4f;font-weight:700}
 .rdn-o li.dal em{color:var(--deep);font-weight:700}
+.rdn-o{padding:2px 0 4px}
+.rdn-o>span{display:none}
+.rdn-o>small{display:block;margin-top:4px;font-size:12.5px;color:var(--mut);text-align:center}
+.rdn-fo{padding:12px 0 8px;border-top:1px solid #f0ebdf}
+.rdx-b .rdn-o{margin:0 0 12px;padding:0 0 12px;border-bottom:1px solid #f0ebdf}
