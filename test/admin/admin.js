@@ -1485,7 +1485,7 @@ function zaznam(m){
   var Z=KK.historie();
   function kresli(){var q=($('#zq',m).value||'').trim().toLowerCase();
     var sez=Z.filter(function(z){return !q||(z.co+' '+z.popis+' '+z.kdo).toLowerCase().indexOf(q)>=0});
-    $('#zl',m).innerHTML=sez.length?sez.map(function(z){return '<li><div><b>'+esc(z.co)+'</b> '+esc(z.popis)+'<small>'+F(z.kdy)+(z.kdo?' · '+esc(z.kdo):'')+'</small></div></li>'}).join(''):'<li class="mut">Žádné záznamy.</li>'}
+    $('#zl',m).innerHTML=sez.length?sez.map(function(z){return '<li><div><b>'+esc(z.co)+'</b> '+esc(z.popis)+'<small>'+new Date(z.kdy).toLocaleString('cs-CZ',{day:'numeric',month:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'})+(z.kdo?' · '+esc(z.kdo):'')+'</small></div></li>'}).join(''):'<li class="mut">Žádné záznamy.</li>'}
   $('#zq',m).addEventListener('input',kresli);kresli();
 }
 /* Části, které lze v „Začít znovu“ vrátit do původní podoby: [klíč, název, popis, výchozí zaškrtnutí] */
