@@ -67,7 +67,7 @@ if('IntersectionObserver' in window&&!reduce){
 else rs.forEach(function(el){el.classList.add('in')});
 
 /* karty lodí: ceny a nabídka podle ceníku (stejná data jako rezervace a administrace) */
-var T=function(x){return window.KL&&KL.t?KL.t(x):x},fk=function(v){return (+v||0).toLocaleString('cs-CZ')+' Kč'};
+var T=function(x){return window.KKL&&KKL.t?KKL.t(x):x},DEN=function(){return window.KKL&&KKL.pl?KKL.pl(1,'den','dny','dní'):'den'},fk=function(v){return (+v||0).toLocaleString('cs-CZ')+' Kč'};
 function lodeKarty(){var box=$('pqLode');if(!box||!window.KKC)return;
  var L=KKC.kat('lode').filter(function(p){return p.skryt!==1&&p.rez!==0});if(!L.length)return;
  var vz=box.querySelectorAll('.pq-c'),ik={};[].forEach.call(vz,function(c){var b=c.querySelector('[data-rzlod]');if(b)ik[b.dataset.rzlod]=c.querySelector('.pq-ic').innerHTML});
@@ -75,7 +75,7 @@ function lodeKarty(){var box=$('pqLode');if(!box||!window.KKC)return;
  var best=null,bv=1e9;L.forEach(function(p){var v=(+p.a||0)/(+p.osob||1);if(p.osob&&v<bv){bv=v;best=p.k}});
  box.innerHTML=L.map(function(p){var b=p.b==null?p.a:p.b;
   return '<article class="pq-c'+(p.k===best?' top':'')+'">'+(p.k===best?'<span class="pq-tag">'+T('Nejlevnější na osobu')+'</span>':'')+'<div class="pq-ic">'+ikona(p)+'</div><h4>'+T(p.n)+'</h4><p class="pq-o">'+T(p.pozn||'')+'</p>'+
-   '<div class="pq-p"><span><b>'+fk(p.a)+'</b> / '+T('den')+'</span>'+(b!==p.a?'<small>'+T('od 3 dnů')+' '+fk(b)+' / '+T('den')+'</small>':'')+'</div>'+
+   '<div class="pq-p"><span><b>'+fk(p.a)+'</b> / '+DEN()+'</span>'+(b!==p.a?'<small>'+T('od 3 dnů')+' '+fk(b)+' / '+DEN()+'</small>':'')+'</div>'+
    '<a class="pq-b" href="#rezervace" data-rzlod="'+p.k+'">'+T('Rezervovat')+'</a></article>'}).join('')}
 lodeKarty();window.KKPela={render:lodeKarty};
 

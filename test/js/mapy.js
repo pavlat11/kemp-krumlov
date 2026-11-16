@@ -599,7 +599,7 @@ function render(o){if(!o){card.hidden=true;return}
    ${PH[o.k]?`<div class="ph" style="background-image:url(${PH[o.k]})">${BDG[o.k]?`<span class="bdg">${BDG[o.k]}</span>`:''}</div>`:''}
    <div class="bd"><div class="t"><i>${icon(o.k,24)}</i><h3>${o.n}</h3></div><p>${o.d}</p>
    <ul class="${chips?'chips':''}">${o.li.map(t=>`<li>${t}</li>`).join('')}</ul>
-   ${o.price?`<div class="row2"><div class="pb"><span class="price">${o.price}</span>${un}</div><a href="#rezervace" class="btn btn-sun">Poptat pobyt</a></div>`:''}
+   ${o.price?`<div class="row2"><div class="pb"><span class="price">${o.price}</span>${un}</div><a href="#rezervace" class="btn btn-sun">Rezervovat</a></div>`:''}
    <div class="am-nav"><button type="button" data-d="-1">${ar('M15 6l-6 6 6 6')}<span>${prev.n}</span></button><button type="button" data-d="1"><span>${next.n}</span>${ar('M9 6l6 6-6 6')}</button></div></div>`;
   card.querySelector('.am-x').onclick=()=>select(null);
   card.querySelectorAll('.am-nav button').forEach(b=>b.onclick=()=>select(+b.dataset.d<0?prev:next))}
@@ -734,6 +734,7 @@ TILES.forEach(function(k,i){var o=Z[k];if(!o)return;var b=document.createElement
 PILLS.forEach(function(k,i){var o=Z[k];if(!o)return;var b=document.createElement('button');b.type='button';b.className='ai-pill';b.style.setProperty('--c',o.c);b.style.setProperty('--i',i+4);b.dataset.k=k;
  b.innerHTML='<i>'+icon(k,14)+'</i>'+o.n;b.addEventListener('click',function(){reveal(k)});pills.appendChild(b)});
 intro.querySelector('.ai-n-places').textContent=Object.keys(Z).length;
+{const dr=intro.querySelector('.ai-n-druhy');if(dr&&window.KKC){const n=KKC.kat('ubytovani').filter(p=>p.skryt!==1).length;dr.textContent=n;const l=dr.nextSibling;if(l&&l.nodeType===3)l.data=window.KKL?KKL.t(n>=2&&n<=4?'druhy ubytování':'druhů ubytování'):l.data}}
 /* pulzující značky na pozadí */
 var DOTS=[[7,18,'#b6513e',0],[13,72,'#d58a2c',.8],[27,88,'#2a7c86',1.6],[41,9,'#4b8a5a',.4],[60,91,'#1f6f9a',2.2],[76,12,'#e0912f',1.2],[90,64,'#5d6fb8',.2],[93,28,'#b6513e',2],[4,46,'#5d6fb8',1.4]];
 var dotsEl=intro.querySelector('.ai-dots');
