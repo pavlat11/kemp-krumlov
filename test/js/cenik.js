@@ -183,6 +183,20 @@ if(P&&P.euraPovolena&&!P.EDIT){
 /* ---- 4) cenové rozpětí pro Google (strukturovaná data) ---- */
 var ldk=document.getElementById('ld-kemp');if(ldk)try{var jl=JSON.parse(ldk.textContent);jl.priceRange=KKC.rozpeti();ldk.textContent=JSON.stringify(jl)}catch(e){}
 var dh=document.querySelector('.rz-disc-hint');if(dh)dh.textContent=KKC.slevyText()?L('Sleva:')+' '+KKC.slevyText():'';
+/* ---- 5) otevírací doba a hlavní sezóna v textech webu podle ceníku (i po přeložení do EN/DE) ---- */
+var sezTexty=function(){var Z=C.sezona||{},md=function(x){var p=String(x||'').split('-');return [+p[0],+p[1]]},o=md(Z.otevrenoOd),c=md(Z.otevrenoDo);
+  var MS=function(m,kr){var d=new Date(2020,m-1,1);return d.toLocaleString(JZ==='en'?'en-GB':JZ==='de'?'de-DE':'cs-CZ',{month:kr?'short':'long'}).replace('.','')};
+  var dt=function(x){return JZ==='en'?x[1]+' '+MS(x[0],1):x[1]+'. '+x[0]+'.'};
+  var rozsah=Z.celorocne?({cs:'celoročně',en:'all year',de:'ganzjährig'})[JZ]||'celoročně':dt(o)+' – '+dt(c);
+  var mes=JZ==='cs'?KKC.mesic[Z.hlavniOd-1]+'–'+KKC.mesic[Z.hlavniDo-1]:MS(Z.hlavniOd)+'–'+MS(Z.hlavniDo);
+  var reD=/\b1\.\s?5\.\s?–\s?1\.\s?10\.|\b1 May – 1 Oct/g,reM=/červen–srpen|June–August|Juni–August/g;
+  var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),n,zm=[];while(n=w.nextNode()){if(n.parentElement&&n.parentElement.closest('script,style,#kke,.kke-ui'))continue;var t=n.textContent;if(reD.test(t)||reM.test(t))zm.push(n);reD.lastIndex=0;reM.lastIndex=0}
+  zm.forEach(function(x){x.textContent=x.textContent.replace(reD,rozsah).replace(reM,mes)});
+  var hi=document.querySelector('#rezervace .rz-hint .rz-lg.hi');if(hi&&!HZ){hi.hidden=true;if(hi.nextElementSibling)hi.nextElementSibling.hidden=true}
+  if(ldk)try{var j2=JSON.parse(ldk.textContent);(Array.isArray(j2.openingHoursSpecification)?j2.openingHoursSpecification:j2.openingHoursSpecification?[j2.openingHoursSpecification]:[]).forEach(function(s){var y=String(s.validFrom||new Date().getFullYear()).slice(0,4);if(s.validFrom)s.validFrom=y+'-'+Z.otevrenoOd;if(s.validThrough)s.validThrough=y+'-'+Z.otevrenoDo});ldk.textContent=JSON.stringify(j2)}catch(e){}};
+KKC.sezTexty=sezTexty;
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sezTexty);else sezTexty();
+addEventListener('load',function(){setTimeout(sezTexty,50)});
 })();
 
 /* ---------------- REZERVACE: místa, obsazenost, ukládání ----------------

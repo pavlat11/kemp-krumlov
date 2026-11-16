@@ -540,7 +540,7 @@ if(window.KKC){var FRK={dop1:.045,dop2:.14,dop3:.235,dop4:.33,dop5:.43,dop6:.535
  pol.forEach(function(v,i){if(v!=null)return;var a=null,b=null,ia=i,ib=i;
   while(ia>0&&a==null){ia--;a=pol[ia]}while(ib<pol.length-1&&b==null){ib++;b=pol[ib]}
   if(a==null)a=0.01;if(b==null)b=0.99;pol[i]=a+(b-a)*(i-ia)/Math.max(1,(ib-ia)||1)});
- STOPS=[];FR=[];vse.forEach(function(p,i){if(p.skryt===1)return;STOPS.push([p.n,KKC.v(p.k,'a'),p.k]);FR.push(Math.min(.99,Math.max(.01,pol[i])))});
+ STOPS=[];FR=[];vse.forEach(function(p,i){if(p.skryt===1)return;STOPS.push([p.n,KKC.v(p.k,'a'),p.k]);FR.push(Math.min(.99,Math.max(.01,pol[i])))});if(STOPS[0]){var e1=document.getElementById('dpPrice'),e2=document.getElementById('dpPer'),e3=document.getElementById('dpName');if(e1)e1.textContent=fmt(STOPS[0][1]);if(e2)e2.textContent=fmt(STOPS[0][1]/8);if(e3)e3.textContent=STOPS[0][0]}
  var chW=sec.querySelector('.dp-chips');if(chW)chW.innerHTML=STOPS.map(function(x,i){return '<button type="button" class="dp-chip" data-i="'+i+'"><span class="dp-dot"></span><b>'+x[0].replace(/[&<>]/g,'')+'</b><em>'+KKC.t(x[2],'a')+'</em></button>'}).join('');}
 function rp(f){return rv.getPointAtLength(RL*f)}
 /* ---------- zastávky na řece, popisek vlevo ---------- */
