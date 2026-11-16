@@ -88,6 +88,13 @@ var KKC=window.KKC={
   /* cena lodi za den: do 2 dnů sloupec a, od 3 dnů sloupec b */
   lod:function(k,dni){var p=mapa[k];if(!p)return 0;return dni>=3&&p.b!=null?+p.b||0:+p.a||0},
   kat:function(kat){return C.polozky.filter(function(p){return p.kat===kat})},
+  /* osoby podle ceníku: rk = klíč v rezervaci (Osoba → dosp), jméno a popis se berou z ceníku (přejmenování se projeví všude) */
+  osobyTypy:function(vse){return KKC.kat('osoby').filter(function(p){return vse||p.skryt!==1}).map(function(p){return {k:p.k,rk:p.k==='os'?'dosp':p.k,n:p.n,pozn:p.pozn||''}})},
+  osobPocet:function(o){o=o||{};var n=0;Object.keys(o).forEach(function(k){n+=+o[k]||0});return n},
+  osobyTxt:function(o,kr){o=o||{};var V={dosp:['Osoba',['dospělý','dospělí','dospělých'],'dosp.'],dite:['Dítě',['dítě','děti','dětí'],'dítě'],zak:['Žák ve stanu',['žák','žáci','žáků'],'žák']},T=KKC.osobyTypy(1),ut={},out=[];
+    var P=function(n,a){return n===1?a[0]:n>=2&&n<=4?a[1]:a[2]};
+    T.forEach(function(t){ut[t.rk]=1;var n=+o[t.rk]||0;if(!n)return;var v=V[t.rk];out.push(v&&t.n===v[0]?n+' '+(kr&&t.rk==='dosp'?v[2]:P(n,v[1])):n+'× '+t.n.toLowerCase())});
+    Object.keys(o).forEach(function(k){if(!ut[k]&&+o[k])out.push(o[k]+'× '+k)});return out.join(', ')||'–'},
   minUbyt:function(){var v=KKC.kat('ubytovani').filter(function(p){return p.rez!==0}).map(function(p){return KKC.v(p.k,'min')});return v.length?Math.min.apply(null,v):0},
   /* jen procentní sleva podle nocí (starší volání) */
   sleva:function(n){var s=0;KKC.slevy().forEach(function(x){var p=x.pod||{},ok=x.typ==='proc'&&!(x.na&&x.na.length)&&Object.keys(p).every(function(k){return k==='noci'?n>=p.noci:!p[k]});if(ok&&+x.h>s)s=+x.h});return s/100},
@@ -311,7 +318,7 @@ var R=window.KKR={
   var nc=r.od&&r.do?R.noci(r.od,r.do).length:0,o=r.osoby||{},dt=(o.dite||0)+(o.zak||0);
   var mi=(r.mista||[]).map(function(m){var p=m.split('-');return p[0]==='chatka'?W.ch+' '+p[1]:p[0]==='podsad'?W.ps+' '+p[1]:'Teepee'});var dl=r.dalsi||{};if(+dl.stan)mi.push(dl.stan+'× '+W.st);if(+dl.karavan)mi.push(dl.karavan+'× '+W.kr);
   var pl=r.platba||{},KcT=function(n){return n?String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+' Kč':''};
-  var h={jmeno:r.jmeno||'',cislo:r.cislo||'',od:F(r.od),do:F(r.do),noci:nc?nc+' '+P(nc,W.n):({cs:'bez noclehu',en:'no overnight stay',de:'ohne Übernachtung'}[j]||'bez noclehu'),mista:mi.join(', '),osoby:(o.dosp||0)+' '+W.d+(dt?', '+dt+' '+P(dt,W.k):''),cena:KcT(r.cena),lode:R.lodeTxt(r.lode,j),doprava:R.dopravaTxt(r.doprava,j),zaloha:KcT(pl.zaloha),splatnost:F(pl.splatnost),doplatek:pl.zaloha&&r.cena>pl.zaloha?KcT(r.cena-pl.zaloha):'',ucet:R.zaloha().ucet||'',vs:String(r.cislo||'').replace(/\D/g,''),telefon:r.telefon||'',email:r.email||'',zprava:r.zprava||'–',stav:r.stav==='pop'?W.pop:W.pot};
+  var h={jmeno:r.jmeno||'',cislo:r.cislo||'',od:F(r.od),do:F(r.do),noci:nc?nc+' '+P(nc,W.n):({cs:'bez noclehu',en:'no overnight stay',de:'ohne Übernachtung'}[j]||'bez noclehu'),mista:mi.join(', '),osoby:j==='cs'&&window.KKC?KKC.osobyTxt(o):(o.dosp||0)+' '+W.d+(dt?', '+dt+' '+P(dt,W.k):''),cena:KcT(r.cena),lode:R.lodeTxt(r.lode,j),doprava:R.dopravaTxt(r.doprava,j),zaloha:KcT(pl.zaloha),splatnost:F(pl.splatnost),doplatek:pl.zaloha&&r.cena>pl.zaloha?KcT(r.cena-pl.zaloha):'',ucet:R.zaloha().ucet||'',vs:String(r.cislo||'').replace(/\D/g,''),telefon:r.telefon||'',email:r.email||'',zprava:r.zprava||'–',stav:r.stav==='pop'?W.pop:W.pot};
   /* řádek „Popisek: {pole}“ se vynechá, když je pole prázdné (rezervace bez lodí, bez ubytování…) */
   return String(txt||'').split('\n').filter(function(ln){var m=/^[^:{}\n]{1,40}:\s*\{(\w+)\}\s*$/.exec(ln);return !(m&&m[1] in h&&h[m[1]]==='')}).join('\n').replace(/\{(\w+)\}/g,function(a,k){return k in h?h[k]:a})},
  /* grafická podoba e-mailu (HTML, inline styly kvůli e-mailovým klientům). Server ji použije stejně – text šablony se jen vloží do rámu. */

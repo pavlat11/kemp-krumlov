@@ -55,6 +55,8 @@ const UNIT=Object.assign({},UNIT0);TYPES.forEach(t=>{if(!UNIT[t.k]){const n=KL.m
 const EXTRAS=KC.kat('doplnky').filter(p=>p.rez!==0&&p.skryt!==1).map(p=>({k:p.k,n:p.n,pro:(p.pro||[]).filter(k=>TYPES.some(t=>t.k===k)),s:KC.t(p.k,'a')+(p.pozn?' / '+p.pozn.replace(/^za /,''):' / noc')}));
 EXTRAS.forEach(x=>{if(!ICO[x.k])ICO[x.k]='<path d="M12 5v14M5 12h14"/>'});
 const PEOPLE=[{k:'dosp',n:'Dospělí',s:'od 15 let',min:1},{k:'dite',n:'Děti',s:'do 15 let',min:0},{k:'zak',n:'Žáci a studenti',s:'zvýhodněně jen ve vlastním stanu',min:0}].filter(x=>x.k==='dosp'||!(KC.p(x.k)||{}).skryt);
+/* přejmenované osoby v ceníku: název a popis z ceníku */
+const OS_VYCH={dosp:['os','Osoba'],dite:['dite','Dítě'],zak:['zak','Žák ve stanu']};PEOPLE.forEach(x=>{const v=OS_VYCH[x.k],p=v&&KC.p(v[0]);if(p&&p.n&&p.n!==v[1]){x.n=p.n;x.s=p.pozn||'';x.jm=1}});
 /* vlastní typy osob z ceníku (např. senior, ZTP) */
 const OS_VLASTNI=KC.kat('osoby').filter(p=>!['os','dite','zak'].includes(p.k)&&p.skryt!==1);
 OS_VLASTNI.forEach(p=>{PEOPLE.push({k:p.k,n:p.n,s:p.pozn||'',min:0,vl:1});if(!ICO[p.k])ICO[p.k]=ICO.dosp});
@@ -337,7 +339,7 @@ function dolu(el){setTimeout(()=>{if(!el||el.hidden||!el.offsetParent)return;con
 function warn(msg){const w=$('rzWarn');w.textContent=msg;w.hidden=!msg;clearTimeout(warnT);if(msg){warnT=setTimeout(()=>{w.hidden=true},8000)}}
 {const bar=root.querySelector('.rz-bar'),w=$('rzWarn');if(bar&&w)bar.before(w)}
 const extrasTxt=()=>EXTRAS.filter(x=>S[x.k]).map(x=>`${S[x.k]>1?S[x.k]+'× ':''}${KL.male(KL.t(x.n))}`).join(', ');
-const peopleTxt=()=>{const a=[`${S.dosp} ${plural(S.dosp,'dospělý','dospělí','dospělých')}`];if(S.dite)a.push(`${S.dite} ${plural(S.dite,'dítě','děti','dětí')}`);if(S.zak)a.push(`${S.zak} ${plural(S.zak,'žák','žáci','žáků')}`);OS_VLASTNI.forEach(p=>{if(S[p.k])a.push(`${S[p.k]}× ${KL.male(KL.t(p.n))}`)});return a.join(', ')};
+const peopleTxt=()=>{const J=k=>PEOPLE.find(x=>x.k===k&&x.jm),a=[];const pp=(k,f)=>{if(!S[k]&&k!=='dosp')return;const j=J(k);a.push(j?`${S[k]}× ${KL.male(KL.t(j.n))}`:f())};pp('dosp',()=>`${S.dosp} ${plural(S.dosp,'dospělý','dospělí','dospělých')}`);pp('dite',()=>`${S.dite} ${plural(S.dite,'dítě','děti','dětí')}`);pp('zak',()=>`${S.zak} ${plural(S.zak,'žák','žáci','žáků')}`);OS_VLASTNI.forEach(p=>{if(S[p.k])a.push(`${S[p.k]}× ${KL.male(KL.t(p.n))}`)});return a.join(', ')};
 const typeTxt=()=>SEL().map(t=>`${S.q[t.k]}× ${KL.male(KL.t(t.n))}${cis(t.k)}`).join(', ')||(denMod()?KL.t('bez noclehu'):'nevybráno');
 const dateTxt=()=>S.mod==='lod'?(S.d0?`${fD(S.d0)}${S.l.dni>1?' – '+fD(addD(S.d0,S.l.dni-1)):''} · ${KL.t('lodě')}${R.n?' · '+R.n+' '+plural(R.n,'noc','noci','nocí'):''}`:KL.t('vyberte den')):!S.from?'vyberte termín':denMod()?`${fD(S.from)} · ${KL.t('bez noclehu')}`:S.from&&S.to?`${fD(S.from)} – ${fD(S.to)} · ${R.n} ${plural(R.n,'noc','noci','nocí')}`:'vyberte odjezd';
 
@@ -473,7 +475,7 @@ function submit(){
  else if(window.KKR){let r;
    const mista=[].concat(...Object.keys(MISTA).map(k=>S.c[k].map(n=>k+'-'+n)),S.q.teepee?['teepee-1']:[]);
   const lo=lodeObj(),dp=doprObj(),od=iso(S.from),dk=denMod()&&lo?KKR.lodeDny(lo).pop():iso(S.to),pb=KKR.novaPlatba(Math.round(R.total),lo&&lo.den<od?lo.den:od);
-  const UG=S.mod==='lod'&&S.nc&&useky().length>1?useky():null,st0=pb?'pop':KKR.stavWeb(mista,{stan:S.q.stan||0,karavan:S.q.karavan||0}),zak={dalsi:{stan:S.q.stan||0,karavan:S.q.karavan||0},osoby:{dosp:S.dosp,dite:S.dite,zak:S.zak},jmeno:f.jmeno.value.trim(),telefon:f.telefon.value.trim(),email:f.email.value.trim(),zdroj:'web',jazyk:KL.jazyk};
+  const UG=S.mod==='lod'&&S.nc&&useky().length>1?useky():null,st0=pb?'pop':KKR.stavWeb(mista,{stan:S.q.stan||0,karavan:S.q.karavan||0}),zak={dalsi:{stan:S.q.stan||0,karavan:S.q.karavan||0},osoby:Object.assign({dosp:S.dosp,dite:S.dite,zak:S.zak},...OS_VLASTNI.filter(p=>S[p.k]).map(p=>({[p.k]:S[p.k]}))),jmeno:f.jmeno.value.trim(),telefon:f.telefon.value.trim(),email:f.email.value.trim(),zdroj:'web',jazyk:KL.jazyk};
     try{if(UG&&UG.some(u=>KKR.kolize(mista,iso(u[0]),iso(u[1])).length))throw new Error('obsazeno');/* noc před a po plavbě = dvě navazující rezervace; cena, záloha, lodě a doprava jsou u první */
    const u0=UG?UG[0]:null,txU=UG?KL.t('Nocleh rozdělený')+': '+UG.map(u=>fD(u[0])+' – '+fD(u[1])).join(' a '):'';
    r=KKR.pridej(Object.assign({stav:st0,od:u0?iso(u0[0]):od,do:u0?iso(u0[1]):dk,lode:lo,doprava:dp,platba:pb,mista,zprava:[f.zprava.value.trim(),txU].filter(Boolean).join('\n'),cena:Math.round(R.total)},zak));
