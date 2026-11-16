@@ -1075,3 +1075,23 @@ main:has(.rz-lay){max-width:1720px}
 .pk-c .pk-b{order:7;grid-column:2;width:auto;margin-top:8px;min-height:34px;padding:6px 14px;font-size:14px;border-radius:10px}
 .pk-z{order:8;justify-content:flex-end;margin-top:4px;font-size:12px}
 .pk-c.hot{opacity:.75}
+
+/* skládání slev v Ceníku */
+.slv{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:10px;background:#fff}
+.slv.off{opacity:.55;background:#faf8f3}
+.slv-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.slv-h .sw{margin:0}.slv-n{flex:1 1 220px;font-weight:700}
+.slv-v{display:inline-flex;align-items:center;gap:6px}.slv-v .num{width:84px}.slv-v select{width:auto}.slv-m{font-weight:800;font-size:18px;color:#b3261e}
+.slv-r{display:grid;grid-template-columns:110px 1fr;gap:10px;align-items:center;margin-top:10px}
+.slv-l{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
+.slv-p{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.slv-c{display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 10px;border-radius:10px;background:#eef4f0;border:1px solid #cfe0d5;font-size:14px;font-weight:600}
+.slv-c .num{width:64px;min-height:32px;padding:4px 8px}.slv-c button{border:0;background:none;font-size:18px;line-height:1;color:var(--mut);cursor:pointer;padding:0 4px}.slv-c button:hover{color:#b3261e}
+.slv-a{font-style:normal;font-size:12px;font-weight:800;color:var(--mut)}
+.slv-add{width:auto;min-height:36px;font-size:13.5px;border-style:dashed}
+.slv-s{width:auto}.slv-d{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}.slv-d .inp{width:auto;min-height:36px}
+.slv-k{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;margin-right:12px;cursor:pointer}
+.slv-sum{margin:12px 0 0;padding:8px 12px;border-radius:10px;background:#fdf6e7;font-size:13.5px;color:#5d4a1f}.slv-sum b{color:#b3261e}
+@media(max-width:700px){.slv-r{grid-template-columns:1fr;gap:4px}}
+.slv .inp.slv-add,.slv .inp.slv-s,.slv .slv-d .inp,.slv .slv-v select{width:auto;flex:0 0 auto;min-height:34px;padding-top:4px;padding-bottom:4px}
+.slv .slv-r{margin-top:8px}.slv .ck-ch{padding:4px 10px}
