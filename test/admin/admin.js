@@ -506,7 +506,7 @@ function rezervace(m,sekV){
   var D0=function(s){var p=s.split('-');return new Date(+p[0],p[1]-1,+p[2])},ISO=function(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)};
   var ADD=function(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x},KR=function(s){var d=D0(s);return d.getDate()+'. '+(d.getMonth()+1)+'.'};
   var DNY=['Ne','Po','Út','St','Čt','Pá','So'],MES=['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
-  var dnes=ISO(new Date()),zac=ADD(D0(dnes),-2),autoN=R.auto(dnes),tab=KK.LS.get('rez.tab.'+sek,ST[0]),denP=dnes,filtr='',sbal={},rozb={};
+  var dnes=ISO(new Date()),zac=ADD(D0(dnes),-2),autoN=R.auto(dnes),tab=KK.LS.get('rez.tab.'+sek,ST[0]),denP=dnes,okno=dnes,filtr='',sbal={},rozb={};
   if(ST.indexOf(tab)<0)tab=ST[0];
   var F0={stav:'',obd:'bud',typ:'',zdroj:'',raz:'akce',od:'',do:''},F=Object.assign({},F0),q='',lim=100,posl=[],VY={};
   /* skupiny v pořadí a směru, jaké si obsluha nastavila */
@@ -689,7 +689,8 @@ function rezervace(m,sekV){
   var nLod=function(k){var n=0;Object.keys(lodK(k)).forEach(function(x){n+=k[x]});return n};
   var IKO={lid:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.5a3.2 3.2 0 0 1 0 6.2M21 20c0-2.8-1.7-5.1-4-5.8"/>',lod:'<path d="M2 15c3.5 3.5 16.5 3.5 20 0M5 15l2.5-6h9L19 15M12 9V4"/>',auto:'<path d="M2 16V7h12v9M14 10h4l4 4v2h-8"/><circle cx="6.5" cy="17" r="2"/><circle cx="17.5" cy="17" r="2"/>',cil:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>'};
   function dopTab(akt){
-    var d0=D0(denP),X=denLode(akt,denP),dny=[],i;for(i=0;i<14;i++)dny.push(ISO(ADD(d0,i)));
+    /* pruh 14 dní stojí na místě (kliknutím se den jen označí), posouvá se šipkami; vybraný den mimo pruh ho posune */
+    var d0=D0(denP),X=denLode(akt,denP),dny=[],i;if(denP<okno)okno=denP;else if(denP>ISO(ADD(D0(okno),13)))okno=ISO(ADD(D0(denP),-13));for(i=0;i<14;i++)dny.push(ISO(ADD(D0(okno),i)));
     var ST=stopy(X),SV2=svozy(X),VZ2=vyzStopy(X),vo=0,os=0,au=0,nl=0,sl=0;VZ2.forEach(function(z){vo+=z.osob});ST.forEach(function(z){os+=z.osob;au+=z.aut;nl+=nLod(z.kusy)});SV2.forEach(function(z){sl+=nLod(z.kusy)});
     var h='<section class="card rv"><div class="row rv-h"><h2 style="margin:0">Doprava · '+(denP===dnes?'dnes':DNY[d0.getDay()]+' '+KR(denP))+'</h2><span class="sp"></span>'+denNav()+tiskBtn('Tisk dopravy')+'</div>'+
       '<div class="rd-dny">'+dny.map(function(d){var x=D0(d),Y=denLode(akt,d),n=stopy(Y).length+vyzStopy(Y).length,l=svozy(Y).length;return '<button type="button" data-den="'+d+'" aria-pressed="'+(d===denP)+'" class="'+(x.getDay()%6?'':'vik')+'"><small>'+DNY[x.getDay()]+' '+x.getDate()+'. '+(x.getMonth()+1)+'.</small><b>'+(n||'–')+'</b><i>'+(n?pl(n,'zastávka','zastávky','zastávek'):l?'jen svoz':'nic')+'</i></button>'}).join('')+'</div>'+
@@ -869,7 +870,7 @@ function rezervace(m,sekV){
     return h}
   /* ---- PŮJČOVNA 2: dostupnost na 14 dní a stav skladu ---- */
   function lodDost(akt){
-    var T=R.lodeTypy(),C=R.lodeCelkem(),dny=[],i,d0=D0(denP);for(i=0;i<14;i++)dny.push(ISO(ADD(d0,i)));
+    var T=R.lodeTypy(),C=R.lodeCelkem(),dny=[],i;if(denP<okno)okno=denP;else if(denP>ISO(ADD(D0(okno),13)))okno=ISO(ADD(D0(denP),-13));for(i=0;i<14;i++)dny.push(ISO(ADD(D0(okno),i)));
     var ri=function(k){return k in R.VYB},obs=dny.map(function(d){return R.lodeObs(d)}),RD=T.map(function(p){return [p.k,p.n,p.pozn||'']}).concat(Object.keys(R.VYB).map(function(k){return [k,R.VYB[k],'vybavení']}));
     var bun=function(k,j){var c=C[k]||0,v=c-(obs[j][k]||0),cl=v<0?'min':v===0?'nic':c&&v/c<=.2?'malo':'ok',nz=RD.filter(function(x){return x[0]===k})[0][1],t=nz+' '+KR(dny[j])+': volných '+v+' z '+c;
       return '<td class="rv-c '+cl+(dny[j]===denP?' ted':'')+'">'+(ri(k)?'<b title="'+esc(t)+'">'+v+'</b>':'<button type="button" class="rv-kdo" data-kdo="'+k+'|'+dny[j]+'" title="'+esc(t)+' – kdo je má půjčené" aria-label="'+esc(t)+'. Zobrazit, kdo je má půjčené.">'+v+'</button>')+'</td>'};
@@ -1329,7 +1330,7 @@ function rezervace(m,sekV){
       else if(s.g){sbal[s.g]=!sbal[s.g];kresli()}
       else if(s.nm)form(null,{mista:[s.nm],od:denP,do:ISO(ADD(D0(denP),1))});
       else if(s.den){denP=s.den;kresli()}
-      else if(s.dpos!=null){denP=+s.dpos?ISO(ADD(D0(denP),+s.dpos)):dnes;kresli()}
+      else if(s.dpos!=null){var o=+s.dpos;if(!o){denP=okno=dnes}else{denP=ISO(ADD(D0(denP),o));if(Math.abs(o)>=7)okno=ISO(ADD(D0(okno),o))}kresli()}
       else if(s.a==='nova')form(null);
       else if(s.a==='ubyt')ubytovat();
       else if(s.a==='tisk')tisk(s.co);
