@@ -256,6 +256,9 @@ window.KK_PREKLADY={
 },
 "dtexty": {
 "Zobrazit ceník 2026": "Show price list 2026",
+"Nocleh rozdělený": "Split stay",
+"Druhá část pobytu k rezervaci": "Second part of the stay for booking",
+"cena a záloha jsou v ní.": "price and deposit are in it.",
 "Klikněte na noci, které u nás chcete strávit.": "Click the nights you want to spend with us.",
 "Noc patří ke dni, kdy večer jdete spát.": "A night belongs to the day you go to bed.",
 "spíte u nás": "you stay with us",
@@ -1329,6 +1332,9 @@ window.KK_PREKLADY={
 },
 "dtexty": {
 "Zobrazit ceník 2026": "Preisliste 2026 anzeigen",
+"Nocleh rozdělený": "Geteilter Aufenthalt",
+"Druhá část pobytu k rezervaci": "Zweiter Teil des Aufenthalts zur Buchung",
+"cena a záloha jsou v ní.": "Preis und Anzahlung sind dort.",
 "Klikněte na noci, které u nás chcete strávit.": "Klicken Sie auf die Nächte, die Sie bei uns verbringen möchten.",
 "Noc patří ke dni, kdy večer jdete spát.": "Eine Nacht gehört zu dem Tag, an dem Sie schlafen gehen.",
 "spíte u nás": "Sie übernachten bei uns",
