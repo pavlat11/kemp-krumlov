@@ -854,11 +854,11 @@ function rezervace(m,sekV){
     else h+='<div class="rs-b lo nic"><span class="rs-n">'+SV(RSI.lo,15)+'Lodě</span><span class="rs-i">bez lodí</span></div>';
     h+=hU;
     return '<div class="rsp">'+h+'</div>'};
-  function tabulka(L,gf,nastr){
+  function tabulka(L,gf,nastr,bezRaz){
     if(!L.length)return '<div class="card rl-0"><b>Nic tu není.</b><span class="mut">Zkuste jiné období, zrušit filtry nebo hledat jinak.</span></div>';
     var hl=!gf,akc=!gf&&F.raz==='akce'&&F.obd!=='min';if(akc)gf=skupAkce;
     /* řazení přímo nad seznamem */
-    var RZ=[['akce','Co je na řadě'],['od','Podle příjezdu'],['nove','Nejnovější'],['jmeno','Podle jména']],razH=hl?'<div class="rr-raz" role="group" aria-label="Řadit"><span>Řadit</span>'+RZ.map(function(x){return '<button type="button" data-fr="'+x[0]+'" aria-pressed="'+(F.raz===x[0])+'">'+x[1]+'</button>'}).join('')+'</div>':'';
+    var RZ=[['akce','Co je na řadě'],['od','Podle příjezdu'],['nove','Nejnovější'],['jmeno','Podle jména']],razH=hl&&!bezRaz?'<div class="rr-raz" role="group" aria-label="Řadit"><span>Řadit</span>'+RZ.map(function(x){return '<button type="button" data-fr="'+x[0]+'" aria-pressed="'+(F.raz===x[0])+'">'+x[1]+'</button>'}).join('')+'</div>':'';
     var mes='',h='<section class="rr-l"><div class="rr-top"><label class="rr-va"><input type="checkbox" data-va aria-label="Vybrat vše zobrazené"> Vybrat vše</label>'+razH+'<span class="rr-nas">'+(nastr||'')+'</span></div>';
     var sk={};if(gf||F.raz==='od')L.forEach(function(r){var d=D0(r.od),k=gf?gf(r):MES[d.getMonth()]+' '+d.getFullYear();sk[k]=(sk[k]||0)+1});
     L.slice(0,lim).forEach(function(r){var d=D0(r.od),mm=MES[d.getMonth()]+' '+d.getFullYear(),o=r.osoby||{},os=(o.dosp||0)+(o.dite||0)+(o.zak||0),b=r.stav==='blk';
@@ -922,18 +922,27 @@ function rezervace(m,sekV){
     var SUB=[['chatka','Chatky'],['podsad','Podsadové stany'],['teepee','Teepee'],['vlastni','Vlastní stany a karavany']],jeSub=SUB.some(function(x){return x[0]===F.typ}),nF=(F.zdroj?1:0)+(F.od||F.do?1:0);
     var IKT={'':'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',ubyt:'<path d="M3 11 12 4l9 7M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',lode:'<path d="M3 17c2 0 2-1.5 4.5-1.5S9.5 17 12 17s2-1.5 4.5-1.5S19 17 21 17"/><path d="M5 13h14l-2-5H7z"/>',doprava:'<path d="M3 16V7a2 2 0 0 1 2-2h11l4 5v6"/><path d="M3 16h18"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/>'};
     /* jedna lišta: vlevo co zobrazit, vpravo období, stav a další filtry */
+    var TB=[['','Vše','vse'],['chatka','Chatky','ubyt'],['podsad','Podsadové stany','ubyt'],['teepee','Teepee','ubyt'],['vlastni','Vlastní stan / karavan','ubyt'],['lode','Lodě','lode'],['doprava','Doprava','doprava']];
+    var RZ=[['akce','Co je na řadě'],['od','Podle příjezdu'],['nove','Nejnovější'],['jmeno','Podle jména']];
+    var opt=function(O,v){return O.map(function(o){return '<option value="'+o[0]+'"'+(v===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')};
+    var ukol=UK.filter(function(u){return poc[u[0]]});
+    /* varianta B: záložky skupin + jedna tenká lišta nástrojů, úkoly jako pruh, pod tím seznam */
     return '<section class="rlb">'+
-      '<div class="rsk" role="group" aria-label="Skupiny rezervací">'+[['','Všechny rezervace',[['','Vše','']]],['Ubytování',null,[['chatka','Chatky','ubyt'],['podsad','Podsadové stany','ubyt'],['teepee','Teepee','ubyt'],['vlastni','Vlastní stan / karavan','ubyt']]],['Půjčovna',null,[['lode','Lodě','lode']]],['Doprava',null,[['doprava','Rozvoz na start','doprava']]]].map(function(g){return '<div class="rsk-g">'+(g[1]?'':'<small>'+g[0]+'</small>')+'<div>'+g[2].map(function(x){var n=TC[x[0]]||0,on=F.typ===x[0];return '<button type="button" class="rsk-b '+(x[2]||'vse')+(on?' on':'')+(n?'':' nic')+'" data-ft="'+x[0]+'" aria-pressed="'+on+'"><b>'+n+'</b><span>'+x[1]+'</span></button>'}).join('')+'</div></div>'}).join('')+'</div>'+
-      '<div class="rlb-f"><label class="rl-f"><span class="sr">Období</span><select class="inp'+(F.obd!=='bud'?' on':'')+'" data-f="obd" aria-label="Období">'+OB.map(function(o){return '<option value="'+o[0]+'"'+(F.obd===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label>'+
-        '<label class="rl-f"><span class="sr">Stav</span><select class="inp rl-ss'+(F.stav?' on':'')+'" data-f="stav" aria-label="Stav"><option value="">Všechny stavy ('+vse+')</option>'+SF.map(function(g){return '<optgroup label="'+g[0]+'">'+g[1].map(function(x){return '<option value="'+x[0]+'"'+(F.stav===x[0]?' selected':'')+(poc[x[0]]||F.stav===x[0]?'':' disabled')+'>'+x[1]+' ('+poc[x[0]]+')</option>'}).join('')+'</optgroup>'}).join('')+'</select></label>'+
-        '<button type="button" class="btn sm gh rlb-fb'+(vicF||nF?' on':'')+'" data-a="vicf" aria-expanded="'+!!(vicF||nF)+'">'+SV('<path d="M4 6h16M7 12h10M10 18h4"/>',16)+'Filtry'+(nF?' <b>'+nF+'</b>':'')+'</button>'+
-        (zmeneno?'<button type="button" class="btn sm gh rl-x" data-a="frst">Zrušit vše</button>':'')+'</div>'+
+      '<div class="rzt" role="tablist" aria-label="Skupiny rezervací">'+TB.map(function(x){var n=TC[x[0]]||0,on=F.typ===x[0]||!x[0]&&!F.typ;return '<button type="button" role="tab" class="'+x[2]+(n?'':' nic')+'" data-ft="'+x[0]+'" aria-selected="'+on+'">'+x[1]+'<small>'+n+'</small></button>'}).join('')+'</div>'+
+      '<div class="rlb-f">'+
+        '<select class="inp'+(F.obd!=='bud'?' on':'')+'" data-f="obd" aria-label="Období">'+opt(OB,F.obd)+'</select>'+
+        '<select class="inp rl-ss'+(F.stav?' on':'')+'" data-f="stav" aria-label="Stav"><option value="">Všechny stavy</option>'+SF.map(function(g){return '<optgroup label="'+g[0]+'">'+g[1].map(function(x){return '<option value="'+x[0]+'"'+(F.stav===x[0]?' selected':'')+(poc[x[0]]||F.stav===x[0]?'':' disabled')+'>'+x[1]+' ('+poc[x[0]]+')</option>'}).join('')+'</optgroup>'}).join('')+'</select>'+
+        '<label class="rlb-r"><span>Řadit</span><select class="inp" data-f="raz" aria-label="Řadit">'+opt(RZ,F.raz)+'</select></label>'+
+        '<button type="button" class="btn sm gh rlb-fb'+(vicF||nF?' on':'')+'" data-a="vicf" aria-expanded="'+!!(vicF||nF)+'">'+SV('<path d="M4 6h16M7 12h10M10 18h4"/>',16)+'Další filtry'+(nF?' <b>'+nF+'</b>':'')+'</button>'+
+        (zmeneno?'<button type="button" class="btn sm gh rl-x" data-a="frst">Zrušit vše</button>':'')+
+        '<span class="rlb-sp"></span>'+
+        (L.length?'<span class="rlb-ex"><button type="button" class="btn sm gh ic2" data-a="csv" title="Stáhnout do Excelu">'+SV('<path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/>',16)+'<span>Excel</span></button>'+tiskBtn('Tisk')+'</span>':'')+
+      '</div>'+
       (vicF||nF?'<div class="rlb-p">'+sel('zdroj','Zdroj',[['','Web i obsluha'],['web','Z webu'],['rucne','Zadala obsluha']])+
         '<label class="rl-f"><span>Pobyt od</span><input type="date" class="inp" data-f="od" value="'+F.od+'"></label><label class="rl-f"><span>do</span><input type="date" class="inp" data-f="do" value="'+F.do+'"></label></div>':'')+
       '</section>'+
-      '<div class="rtk" role="group" aria-label="Co je potřeba udělat"><small>Je potřeba:</small>'+UK.map(function(u){var n=poc[u[0]],on=F.stav===u[0];
-        return '<button type="button" class="rtk-t '+u[3]+(n?'':' nic')+(on?' on':'')+(u[4]?' hot':'')+'" data-fs="'+u[0]+'" aria-pressed="'+on+'" title="'+u[2]+'"><b>'+n+'</b><span>'+u[1]+'</span>'+(u[4]?'<em>'+u[2]+'</em>':'')+'</button>'}).join('')+'</div>'+
-      tabulka(L,null,(F.stav?'<button type="button" class="rl-akt" data-fs="" title="Zrušit filtr stavu">'+SFm[F.stav][1]+' <span aria-hidden="true">×</span><span class="sr">zrušit filtr</span></button>':'')+(L.length?'<button type="button" class="btn sm gh ic2" data-a="csv" title="Stáhnout do Excelu">'+SV('<path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/>',16)+'<span>Excel</span></button>'+tiskBtn('Tisk'):''));
+      (ukol.length?'<div class="rjp" role="group" aria-label="Co je potřeba udělat"><span class="rjp-l">Je potřeba</span>'+ukol.map(function(u){var on=F.stav===u[0];return '<button type="button" class="'+(on?'on':'')+'" data-fs="'+(on?'':u[0])+'" aria-pressed="'+on+'"><b>'+poc[u[0]]+'</b> '+u[1].toLowerCase()+(u[4]?' <em>('+u[2]+')</em>':'')+'</button>'}).join('')+'</div>':'')+
+      tabulka(L,null,F.stav?'<button type="button" class="rl-akt" data-fs="" title="Zrušit filtr stavu">'+SFm[F.stav][1]+' <span aria-hidden="true">×</span><span class="sr">zrušit filtr</span></button>':'',1);
   }
   /* ---- chytré hledání přes všechny rezervace: jméno, číslo, telefon, e-mail, místo, datum, stav, poznámka ---- */
   function hledej(A,dotaz){

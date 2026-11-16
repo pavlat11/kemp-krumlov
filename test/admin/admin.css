@@ -1228,3 +1228,31 @@ main:has(.rz-lay){max-width:1720px}
 .rtk-t.w b{color:#b8650e}.rtk-t.b b{color:#1f6d77}
 .rtk-t.nic{background:#f7f4ee;border-style:solid}.rtk-t.nic b{color:#a7aea9}
 @media(max-width:700px){.rsk-g:not(:first-child){padding-left:0;border-left:0}}
+
+/* v115: varianta B – záložky skupin, tenká lišta, pruh úkolů */
+.rlb{display:block;padding:0 16px;gap:0}
+.rlb .rsk,.rlb .rl-tyh{display:none}
+.rzt{display:flex;gap:22px;overflow-x:auto;border-bottom:1.5px solid var(--line);scrollbar-width:none}
+.rzt button{flex:none;display:inline-flex;align-items:baseline;gap:6px;padding:14px 2px 11px;margin-bottom:-1.5px;border:0;border-bottom:3px solid transparent;background:none;font:inherit;font-size:14.5px;font-weight:700;color:var(--mut);cursor:pointer}
+.rzt button small{font-size:12.5px;font-weight:800;color:#a7aea9}
+.rzt button:hover{color:var(--ink)}
+.rzt button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--deep)}
+.rzt .ubyt[aria-selected=true]{border-bottom-color:#2f7a4f}.rzt .lode[aria-selected=true]{border-bottom-color:#1f6d77}.rzt .doprava[aria-selected=true]{border-bottom-color:#c27317}
+.rzt button[aria-selected=true] small{color:var(--ink)}
+.rzt button.nic{opacity:.5}
+.rzt button:focus-visible{outline:3px solid var(--sun);outline-offset:-3px}
+.rlb .rlb-f{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 0;margin:0;border:0}
+.rlb .rlb-f select.inp{width:auto;min-height:36px;padding:6px 30px 6px 10px;font-size:14px}
+.rlb-r{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--mut)}
+.rlb-sp{flex:1}
+.rlb .rlb-p{padding:0 0 12px;border-top:1px dashed var(--line);padding-top:10px}
+.rjp{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;margin:10px 0 4px;padding:8px 12px;border-radius:12px;background:#fdf3e2;border:1px solid #f1d9ad;font-size:13.5px}
+.rjp-l{font-weight:800;color:#8a5a12;margin-right:4px}
+.rjp button{border:0;background:none;font:inherit;color:#6b4610;padding:3px 8px;border-radius:8px;cursor:pointer}
+.rjp button b{font-weight:800}.rjp button em{font-style:normal;color:#b42318;font-weight:700}
+.rjp button+button::before{content:"·";margin-right:10px;color:#c9a46a}
+.rjp button:hover{background:#f8e5c2}.rjp button.on{background:#8a5a12;color:#fff}.rjp button.on em{color:#fff}
+.rjp button:focus-visible{outline:3px solid var(--sun)}
+.rlb ~ .rtk{display:none}
+.rlb .rlb-f select.inp{max-width:200px}.rlb-ex{display:inline-flex;gap:6px;flex:none}
+@media(max-width:1500px){.rlb-ex .btn span,.rlb-ex .btn{gap:0}.rlb-ex .btn>span{display:none}.rlb .rlb-f select.inp{max-width:175px}}
