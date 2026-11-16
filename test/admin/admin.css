@@ -1394,3 +1394,25 @@ main:has(.rz-lay){max-width:1720px}
 .rdn-o>small{display:block;margin-top:4px;font-size:12.5px;color:var(--mut);text-align:center}
 .rdn-fo{padding:12px 0 8px;border-top:1px solid #f0ebdf}
 .rdx-b .rdn-o{margin:0 0 12px;padding:0 0 12px;border-bottom:1px solid #f0ebdf}
+/* seznam rezervací: rozložení řádku podle šířky seznamu (při otevřeném detailu je užší) – nic nepřetéká */
+.rr-l{container-type:inline-size;container-name:rrl}
+.rr-h>*{min-width:0}
+@container rrl (max-width:880px){
+  .rr-h{grid-template-columns:auto minmax(0,1fr) auto;gap:6px 14px}
+  .rr-d{grid-column:2}.rr-j{grid-column:2}.rr-c{grid-column:2/4}.rr-k{grid-column:3;grid-row:1/3}
+  .rzr .rsp{grid-template-columns:1fr}
+}
+@container rrl (max-width:560px){
+  .rr-k{grid-row:auto;grid-column:2/4;flex-direction:row;align-items:center;justify-content:space-between}
+}
+/* detail: poznámka hned pod telefonem */
+.rdn-f li.rdn-pz{background:#fff7e2;margin:2px -14px 0;padding:10px 14px;border-top:1px solid #f0dca6}
+.rdn-f li.rdn-pz .rdn-i{background:#fbe9bd;color:#8a5a12}
+.rdn-f li.rdn-pz p{margin:0;padding-top:3px;font-size:14px;color:var(--deep);white-space:pre-wrap;overflow-wrap:anywhere}
+.rdn-fc{overflow:hidden}
+.rdn-fo{border-top:1px solid #f0ebdf}
+/* Odhlásit hosta – výrazná vlastní barva */
+.rp-a[data-st="odj"],.rpan .rp-a[data-st="odj"]{background:#b4532a;border-color:#b4532a;color:#fff}
+.rp-a[data-st="odj"]:hover,.rpan .rp-a[data-st="odj"]:hover{background:#963f1b;border-color:#963f1b;color:#fff}
+.rs-a .btn[data-st="odj"],.pk-z .btn[data-st="odj"]{background:#b4532a;border-color:#b4532a;color:#fff}
+.rs-a .btn[data-st="odj"]:hover,.pk-z .btn[data-st="odj"]:hover{background:#963f1b;border-color:#963f1b;color:#fff}
