@@ -54,7 +54,7 @@ const UNIT0={stan:['Počet stanů','stan','stany','stanů'],karavan:['Počet kar
 const UNIT=Object.assign({},UNIT0);TYPES.forEach(t=>{if(!UNIT[t.k]){const n=KL.male(KL.t(t.n));UNIT[t.k]=['Počet',n,n,n]}});
 const EXTRAS=KC.kat('doplnky').filter(p=>p.rez!==0&&p.skryt!==1).map(p=>({k:p.k,n:p.n,pro:(p.pro||[]).filter(k=>TYPES.some(t=>t.k===k)),s:KC.t(p.k,'a')+(p.pozn?' / '+p.pozn.replace(/^za /,''):' / noc')}));
 EXTRAS.forEach(x=>{if(!ICO[x.k])ICO[x.k]='<path d="M12 5v14M5 12h14"/>'});
-const PEOPLE=[{k:'dosp',n:'Dospělí',s:'od 15 let',min:1},{k:'dite',n:'Děti',s:'do 15 let',min:0},{k:'zak',n:'Žáci a studenti',s:'zvýhodněně jen ve vlastním stanu',min:0}].filter(x=>x.k==='dosp'||!(KC.p(x.k)||{}).skryt);
+const PEOPLE=[{k:'dosp',n:'Dospělí',s:'od 15 let',min:0},{k:'dite',n:'Děti',s:'do 15 let',min:0},{k:'zak',n:'Žáci a studenti',s:'zvýhodněně jen ve vlastním stanu',min:0}].filter(x=>x.k==='dosp'||!(KC.p(x.k)||{}).skryt);
 /* přejmenované osoby v ceníku: název a popis z ceníku */
 const OS_VYCH={dosp:['os','Osoba'],dite:['dite','Dítě'],zak:['zak','Žák ve stanu']};PEOPLE.forEach(x=>{const v=OS_VYCH[x.k],p=v&&KC.p(v[0]);if(p&&p.n&&p.n!==v[1]){x.n=p.n;x.s=p.pozn||'';x.jm=1}});
 /* vlastní typy osob z ceníku (např. senior, ZTP) */
@@ -339,7 +339,7 @@ function dolu(el){setTimeout(()=>{if(!el||el.hidden||!el.offsetParent)return;con
 function warn(msg){const w=$('rzWarn');w.textContent=msg;w.hidden=!msg;clearTimeout(warnT);if(msg){warnT=setTimeout(()=>{w.hidden=true},8000)}}
 {const bar=root.querySelector('.rz-bar'),w=$('rzWarn');if(bar&&w)bar.before(w)}
 const extrasTxt=()=>EXTRAS.filter(x=>S[x.k]).map(x=>`${S[x.k]>1?S[x.k]+'× ':''}${KL.male(KL.t(x.n))}`).join(', ');
-const peopleTxt=()=>{const J=k=>PEOPLE.find(x=>x.k===k&&x.jm),a=[];const pp=(k,f)=>{if(!S[k]&&k!=='dosp')return;const j=J(k);a.push(j?`${S[k]}× ${KL.male(KL.t(j.n))}`:f())};pp('dosp',()=>`${S.dosp} ${plural(S.dosp,'dospělý','dospělí','dospělých')}`);pp('dite',()=>`${S.dite} ${plural(S.dite,'dítě','děti','dětí')}`);pp('zak',()=>`${S.zak} ${plural(S.zak,'žák','žáci','žáků')}`);OS_VLASTNI.forEach(p=>{if(S[p.k])a.push(`${S[p.k]}× ${KL.male(KL.t(p.n))}`)});return a.join(', ')};
+const peopleTxt=()=>{const J=k=>PEOPLE.find(x=>x.k===k&&x.jm),a=[];const pp=(k,f)=>{if(!S[k])return;const j=J(k);a.push(j?`${S[k]}× ${KL.male(KL.t(j.n))}`:f())};pp('dosp',()=>`${S.dosp} ${plural(S.dosp,'dospělý','dospělí','dospělých')}`);pp('dite',()=>`${S.dite} ${plural(S.dite,'dítě','děti','dětí')}`);pp('zak',()=>`${S.zak} ${plural(S.zak,'žák','žáci','žáků')}`);OS_VLASTNI.forEach(p=>{if(S[p.k])a.push(`${S[p.k]}× ${KL.male(KL.t(p.n))}`)});return a.join(', ')||'–'};
 const typeTxt=()=>SEL().map(t=>`${S.q[t.k]}× ${KL.male(KL.t(t.n))}${cis(t.k)}`).join(', ')||(denMod()?KL.t('bez noclehu'):'nevybráno');
 const dateTxt=()=>S.mod==='lod'?(S.d0?`${fD(S.d0)}${S.l.dni>1?' – '+fD(addD(S.d0,S.l.dni-1)):''} · ${KL.t('lodě')}${R.n?' · '+R.n+' '+plural(R.n,'noc','noci','nocí'):''}`:KL.t('vyberte den')):!S.from?'vyberte termín':denMod()?`${fD(S.from)} · ${KL.t('bez noclehu')}`:S.from&&S.to?`${fD(S.from)} – ${fD(S.to)} · ${R.n} ${plural(R.n,'noc','noci','nocí')}`:'vyberte odjezd';
 
@@ -427,6 +427,7 @@ function navState(){const q=seq();if(!q.includes(cur))cur=q[q.length-1];const i=
  $('rzNext').innerHTML=last?(innerWidth>900?KL.t(maZal()?'Odeslat rezervaci':'Odeslat poptávku')+' →':KL.t('Odeslat')+' →'):(innerWidth>900?KL.t('Pokračovat:')+' '+KL.t(S.mod==='lod'&&HDLx[nx]||LBL[nx]||'')+' →':KL.t('Další')+' →');$('rzNext').removeAttribute('aria-label')}
 function nudge(){const c=$('rzCal');c.classList.remove('nudge');void c.offsetWidth;c.classList.add('nudge')}
 function stepOk(k){
+ if((k==='kdo'||k==='uby'&&S.mod==='uby'||k==='lode'&&S.mod==='lod')&&persons()<1){warn(KL.t('Zadejte prosím aspoň jednu osobu.'));return false}
  if(k==='volba')return !!S.mod;
  if(k==='termin'){if(S.mod==='lod'){if(!S.d0){warn(KL.t('Vyberte v kalendáři den vyplutí.'));nudge();return false}if(S.lp){warn(KL.t('Vyberte v kalendáři den vrácení. Na jeden den klikněte na stejný den znovu.'));nudge();return false}return true}
   if(!S.to||denMod()){warn(S.from&&!denMod()?'Vyberte v kalendáři den odjezdu.':'Vyberte v kalendáři den příjezdu a odjezdu.');nudge();return false}return true}

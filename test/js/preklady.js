@@ -256,6 +256,7 @@ window.KK_PREKLADY={
 },
 "dtexty": {
 "Zobrazit ceník 2026": "Show price list 2026",
+"Zadejte prosím aspoň jednu osobu.": "Please enter at least one person.",
 "Nocleh rozdělený": "Split stay",
 "Druhá část pobytu k rezervaci": "Second part of the stay for booking",
 "cena a záloha jsou v ní.": "price and deposit are in it.",
@@ -1332,6 +1333,7 @@ window.KK_PREKLADY={
 },
 "dtexty": {
 "Zobrazit ceník 2026": "Preisliste 2026 anzeigen",
+"Zadejte prosím aspoň jednu osobu.": "Bitte geben Sie mindestens eine Person an.",
 "Nocleh rozdělený": "Geteilter Aufenthalt",
 "Druhá část pobytu k rezervaci": "Zweiter Teil des Aufenthalts zur Buchung",
 "cena a záloha jsou v ní.": "Preis und Anzahlung sind dort.",
