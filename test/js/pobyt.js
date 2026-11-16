@@ -334,7 +334,7 @@ const tw={};function tween(el,to){const o=tw[el.id]||(tw[el.id]={v:0,a:0});cance
 let R,warnT;
 /* po volbě sjet plynule k dalším údajům, ať je host nemusí hledat */
 function dolu(el){setTimeout(()=>{if(!el||el.hidden||!el.offsetParent)return;const r=el.getBoundingClientRect(),top=scrollY+r.top-110;if(r.top<90||r.top>innerHeight*.55)scrollTo({top,behavior:'smooth'})},120)}
-function warn(msg){const w=$('rzWarn');w.textContent=msg;w.hidden=!msg;clearTimeout(warnT);if(msg){warnT=setTimeout(()=>{w.hidden=true},8000);const r=w.getBoundingClientRect();if(r.bottom>innerHeight||r.top<0)w.scrollIntoView({behavior:'smooth',block:'center'})}}
+function warn(msg){const w=$('rzWarn');w.textContent=msg;w.hidden=!msg;clearTimeout(warnT);if(msg){warnT=setTimeout(()=>{w.hidden=true},8000)}}
 {const bar=root.querySelector('.rz-bar'),w=$('rzWarn');if(bar&&w)bar.before(w)}
 const extrasTxt=()=>EXTRAS.filter(x=>S[x.k]).map(x=>`${S[x.k]>1?S[x.k]+'× ':''}${KL.male(KL.t(x.n))}`).join(', ');
 const peopleTxt=()=>{const a=[`${S.dosp} ${plural(S.dosp,'dospělý','dospělí','dospělých')}`];if(S.dite)a.push(`${S.dite} ${plural(S.dite,'dítě','děti','dětí')}`);if(S.zak)a.push(`${S.zak} ${plural(S.zak,'žák','žáci','žáků')}`);OS_VLASTNI.forEach(p=>{if(S[p.k])a.push(`${S[p.k]}× ${KL.male(KL.t(p.n))}`)});return a.join(', ')};
@@ -436,8 +436,9 @@ function stepOk(k){
  if(k==='lode'&&S.mod==='uby'&&dvJo()&&!stepOk('doprava'))return false;
  if(k==='doprava'&&S.l.dopr===null&&!(nLodi()&&S.l.odkud==='kemp')){warn(KL.t('Vyberte prosím, jestli chcete dopravu.'));return false}
  return true}
-function go(k,scroll=true){k=alias(k);let q=seq();if(!q.includes(k))return;let i=q.indexOf(cur),n=q.indexOf(k);
- if(n>i)for(let j=i;j<n;j++)if(!stepOk(q[j])){n=j;break}
+function go(k,scroll=true){k=alias(k);let q=seq();if(!q.includes(k))return;let i=q.indexOf(cur),n=q.indexOf(k),stop=false;
+ if(n>i)for(let j=i;j<n;j++)if(!stepOk(q[j])){n=j;stop=true;break}
+ if(stop&&n===i){navState();const w=$('rzWarn');if(w&&!w.hidden)setTimeout(()=>{const r=w.getBoundingClientRect();if(r.top<80||r.bottom>innerHeight-(innerWidth<=900?120:20))scrollTo({top:scrollY+r.top-innerHeight/2+r.height/2,behavior:'smooth'})},30);return}
  q=seq();cur=q[Math.max(0,Math.min(q.length-1,n))];navState();
  if(scroll){const top=root.querySelector('.rz-main').getBoundingClientRect().top;if(top<0||top>innerHeight*.5)root.querySelector('.rz-main').scrollIntoView({behavior:'smooth',block:'start'})}
  if(cur==='kontakt')setTimeout(()=>form.elements.jmeno.focus({preventScroll:true}),350)}

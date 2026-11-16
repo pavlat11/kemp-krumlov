@@ -3459,3 +3459,6 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-nc-d.v4 .rz-nc-i{margin:8px 0 0;text-align:center}.rz-nc-d.v4 .rz-nc-i[hidden]{display:none}
 @media(max-width:700px){.rz-nc-d.v4{padding:14px}.rz-ncc4{padding:10px;grid-template-columns:1fr}.rz-ncg4 button{height:40px}}
 .rz-ncg4 button.sp.lod{box-shadow:inset 0 -4px 0 #7fd0db}.rz-ncc4:has(.rz-ncm:only-child){grid-template-columns:minmax(0,420px);justify-content:center}
+/* hláška vždy na očích: drží se u spodního okraje obrazovky, dokud je formulář vidět */
+#rezervace .rz-main>.rz-warn{position:sticky;bottom:16px;z-index:6;box-shadow:0 14px 30px -12px rgba(162,59,30,.55);background:#fff1ec}
+@media(max-width:900px){#rezervace .rz-main>.rz-warn{bottom:96px}}
