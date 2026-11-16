@@ -276,7 +276,7 @@ var R=window.KKR={
  novaPlatba:function(cena,od,dnes){var z=R.zalohaCastka(cena);return z?{zaloha:z,splatnost:R.splatnost(od,dnes),stav:'ceka'}:null},
  PLATBA:{ceka:'Čeká na zálohu',zal:'Záloha zaplacena',vse:'Zaplaceno celé'},
  jenLode:function(r){return !!(r&&r.lode&&R.lodePocet(r.lode)&&!(r.mista||[]).length&&!(r.dalsi&&(+r.dalsi.stan||+r.dalsi.karavan)))},
- STAVY:{pop:'Poptávka',pot:'Rezervace',uby:'Ubytovaný',odj:'Odjel',zru:'Zrušená',blk:'Blokace'},
+ STAVY:{pop:'Čeká na zálohu',pot:'Rezervace',uby:'Ubytovaný',odj:'Odjel',zru:'Zrušená',blk:'Blokace'},
  nazev:function(m){var p=m.split('-');return p[0]==='chatka'?'Chatka '+p[1]:p[0]==='podsad'?'Podsadový stan '+p[1]:'Teepee'},
  /* režim pro každý typ zvlášť: 'poptavka' (potvrzuje obsluha) nebo 'ihned' */
  nast:function(){var n=cti(KN,{}),z=n.rezim,r={};['chatka','podsad','teepee','stan','karavan'].forEach(function(k){r[k]=(typeof z==='string'?z:(z||{})[k])==='ihned'?'ihned':'poptavka'});n.rezim=r;return n},

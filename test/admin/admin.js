@@ -169,7 +169,7 @@ function prehled(m){
         '<'+TG+' class="card pv-s pv-big"'+HR+dlz('dnes')+'><small>Obsazeno dnes</small><b>'+proc+' %</b><i class="pv-m"><i style="width:'+proc+'%"></i></i><span class="pv-t">'+tt+'</span></'+TG+'>'+
         '<'+TG+' class="card pv-s"'+HR+dlz('dnes')+'><small>Přijíždí dnes</small><b>'+pri+'</b><span>'+(pri?pl(pri,'rezervace čeká','rezervace čekají','rezervací čeká')+' na ubytování':'nikdo')+'</span></'+TG+'>'+
         '<'+TG+' class="card pv-s"'+HR+dlz('dnes')+'><small>Odjíždí dnes</small><b>'+odj+'</b><span>'+(odj?'k odhlášení':'nikdo')+'</span></'+TG+'>'+
-        '<'+TG+' class="card pv-s'+(pop?' pv-a':'')+'"'+HR+dlz('dnes')+'><small>Poptávky k potvrzení</small><b>'+pop+'</b><span>'+(pop?'čekají na vaši odpověď':'vše vyřízeno')+'</span></'+TG+'>'+
+        '<'+TG+' class="card pv-s'+(pop?' pv-a':'')+'"'+HR+dlz('dnes')+'><small>Čeká na zálohu / potvrzení</small><b>'+pop+'</b><span>'+(pop?'čekají na vaši odpověď':'vše vyřízeno')+'</span></'+TG+'>'+
         '<div class="card pv-s"><small>V kempu teď</small><b>'+tu+'</b><span>'+pl(tu,'ubytovaný host','ubytovaní hosté','ubytovaných hostů')+'</span></div></div>';
       var dny=[],i;for(i=0;i<14;i++){var d=new Date(nd.getFullYear(),nd.getMonth(),nd.getDate()+i,12);dny.push(d)}
       var graf='<div class="card pv-g"><div class="pv-gh"><h2>Obsazenost na 14 dní</h2>'+(REZ_ODKAZY?'<a href="#rezervace"'+dlz('kal')+'>Otevřít kalendář →</a>':'')+'</div><div class="pv-b">'+dny.map(function(d){var x=obs(ISO(d)),p=mista.length?Math.round(x/mista.length*100):0,we=d.getDay()%6===0;return '<div class="pv-c'+(we?' we':'')+(ISO(d)===dnes?' tod':'')+'" title="'+d.getDate()+'. '+(d.getMonth()+1)+'.: obsazeno '+x+' z '+mista.length+' míst"><span class="pv-p">'+p+'</span><i style="height:'+Math.max(2,p)+'%" class="'+(p>=90?'pl':p>=60?'st':'')+'"></i><small>'+DK[d.getDay()]+'<br>'+d.getDate()+'.</small></div>'}).join('')+'</div><p class="mut pv-lg">Procento obsazených chatek, podsadových stanů a teepee na noc.</p></div>';
@@ -476,7 +476,7 @@ function rezervace(m,sekV){
   var F0={stav:'',obd:'bud',typ:'',zdroj:'',raz:'akce',od:'',do:''},F=Object.assign({},F0),q='',lim=100,posl=[],VY={};
   /* skupiny v pořadí a směru, jaké si obsluha nastavila */
   var skupiny=function(){var n=R.nast(),po=n.poradi2||[];return R.SKUPINY.filter(function(g){return R.rezTyp(g.k)}).sort(function(a,b){var x=po.indexOf(a.id),y=po.indexOf(b.id);return (x<0?99:x)-(y<0?99:y)})};
-  var AKCE={pop:['pot','Potvrdit poptávku'],pot:['uby','Ubytovat hosta (check-in)'],uby:['odj','Odhlásit hosta (check-out)']};
+  var AKCE={pop:['pot','Potvrdit rezervaci'],pot:['uby','Ubytovat hosta (check-in)'],uby:['odj','Odhlásit hosta (check-out)']};
   var noci=function(r){return Math.round((D0(r.do)-D0(r.od))/864e5)};
   var termin=function(r){var n=noci(r);return KR(r.od)+' – '+KR(r.do)+' '+r.do.slice(0,4)+' ('+n+' '+pl(n,'noc','noci','nocí')+')'};
   var mistaTxt=function(r){var a=(r.mista||[]).map(R.nazev);if(r.dalsi){if(r.dalsi.stan)a.push(r.dalsi.stan+'× vlastní stan');if(r.dalsi.karavan)a.push(r.dalsi.karavan+'× karavan')}return a.join(', ')||'—'};
@@ -587,7 +587,7 @@ function rezervace(m,sekV){
       TN.map(function(t){return '<tr><th scope="row">'+t[1]+'<small>z '+CEL[t[0]]+'</small></th>'+DD.map(function(d){var c=d.vo[t[0]]||0;return '<td class="'+bar(c,CEL[t[0]])+(d.i===denP?' on':'')+(d.i===dnes?' dn':'')+'"><button type="button" data-den="'+d.i+'" tabindex="-1" aria-hidden="true">'+(c||'–')+'</button></td>'}).join('')+'</tr>'}).join('')+'</tbody></table>';
     return '<p class="rz-dat"><b>'+DL[d.getDay()]+' '+d.getDate()+'. '+MG[d.getMonth()]+'</b></p>'+
       '<section class="rn-w'+(zvV?' zv':'')+(jeD?' jd':'')+'"><div class="rn-hd"><h2>'+(jeD?'Kdo kde dnes je':'Kdo kde bude · '+DL[dp.getDay()].toLowerCase()+' '+dp.getDate()+'. '+MG[dp.getMonth()]+(dp.getFullYear()!==d.getFullYear()?' '+dp.getFullYear():''))+'</h2>'+
-        '<span class="rn-leg" aria-hidden="true"><i class="obs"></i>Ubytovaný<i class="ceka"></i>Rezervace<i class="popt"></i>Poptávka<i class="vol"></i>Volno<i class="blk"></i>Blokace</span></div>'+
+        '<span class="rn-leg" aria-hidden="true"><i class="obs"></i>Ubytovaný<i class="ceka"></i>Rezervace<i class="popt"></i>Čeká na zálohu<i class="vol"></i>Volno<i class="blk"></i>Blokace</span></div>'+
       '<div class="rn-nav"><button type="button" class="btn sm" data-dpos="-1" aria-label="Předchozí den">‹</button><label><span class="sr">Datum</span><input type="date" class="inp" id="rnd" value="'+denP+'"></label><button type="button" class="btn sm" data-dpos="1" aria-label="Další den">›</button>'+(jeD?'':'<button type="button" class="btn sm pri" data-dpos="0">Zpět na dnešek</button>')+'<button type="button" class="btn sm gh rn-zv" data-a="zv" aria-pressed="'+zvV+'">'+SV('<circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',16)+' Zvýraznit volná</button>'+'<button type="button" class="btn sm gh" data-a="tisk">'+SV('<path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/>',16)+' Tisk ubytování</button>'+
         '</div>'+
       '<p class="rn-dl">Volná místa v dalších dnech <span>· zelená = dost volna, oranžová = málo, červená = plno · kliknutím vyberete den</span></p><div class="rn-dny" role="group" aria-label="Vybrat den">'+pas+'</div>'+
@@ -764,7 +764,7 @@ function rezervace(m,sekV){
     d.showModal();prep();f.jmeno.focus()}
   /* ---- UBYTOVÁNÍ: příjezdy a odjezdy na den – stejné rozložení jako výdej a vracení lodí ---- */
   var ubKarta=function(r,typ){var o=r.osoby||{},os=KKC.osobPocet(o),n=noci(r),p=r.platba,
-      tg=typ==='pri'?(r.stav==='pop'?(p&&p.stav==='ceka'?'<span class="pk-t zle">čeká na zálohu</span>':'<span class="pk-t">poptávka</span>'):'<span class="pk-t">'+(n+' '+pl(n,'noc','noci','nocí'))+'</span>')
+      tg=typ==='pri'?(r.stav==='pop'?(p&&p.stav==='ceka'?'<span class="pk-t zle">čeká na zálohu</span>':'<span class="pk-t">čeká na zálohu</span>'):'<span class="pk-t">'+(n+' '+pl(n,'noc','noci','nocí'))+'</span>')
         :typ==='odj'||typ==='plan'?(r.do<dnes?'<span class="pk-t zle">měl odjet '+KR(r.do)+'</span>':'<span class="pk-t dnes">odjíždí '+(r.do===dnes?'dnes':KR(r.do))+'</span>')
         :'<span class="pk-t">odhlášen'+(r.hist&&r.hist.length?' '+cas(r.hist[r.hist.length-1].t).split(' ').pop():'')+'</span>',
       lo=LK(r)?'<span class="pk-lo">'+SV(IC.lode,13)+esc(LK(r))+'</span>':'',dp=r.doprava?'<span class="pk-lo dp">doprava '+esc(R.mistoN(r.doprava.misto))+(r.doprava.cas?' '+esc(r.doprava.cas):'')+'</span>':'';
@@ -1189,7 +1189,7 @@ function rezervace(m,sekV){
       if(!pop){pn.hidden=true;return}pn.hidden=false;var cn=+f.cena.value||0,zl=(r&&r.platba&&r.platba.zaloha)||R.zalohaCastka(cn),sp=(r&&r.platba&&r.platba.splatnost)||(f.od.value?R.splatnost(f.od.value,dnes):'');
       pn.className='rf-pn'+(f.platba.value==='ceka'&&!f.email.value.trim()?' zle':'');
       pn.innerHTML=f.platba.value==='ceka'?'<b>Hostovi přijde e-mail s výzvou k zaplacení zálohy'+(zl?' '+kc(zl):'')+(sp?' do '+KR(sp):'.')+'</b> Místa i lodě se mu do té doby drží. Až zaplatí, klikněte na „Záloha zaplacena“ a z poptávky se stane rezervace. Když nezaplatí včas, poptávka sama propadne.'+(f.email.value.trim()?'':' <b>Vyplňte e-mail hosta, jinak výzva nemá kam přijít.</b>')
-        :'Poptávka bez zálohy čeká na vaše potvrzení. Místa i lodě se hostovi zatím drží.'};
+        :'Bez zálohy čeká rezervace na vaše potvrzení. Místa i lodě se hostovi zatím drží.'};
     f.addEventListener('change',nota);f.addEventListener('input',function(e){if(e.target.name==='email'||e.target.name==='cena')nota()});setTimeout(nota,0);
     var spocti=function(){if(b||!window.KKC)return;var od=f.od.value,dk=f.do.value,nn=od&&dk&&od<dk?Math.round((D0(dk)-D0(od))/864e5):0,q={};
       Object.keys(vyb).forEach(function(k){var t=k.split('-')[0];q[t]=(q[t]||0)+1});q.stan=+d.stan||0;q.karavan=+d.karavan||0;KKC.osobyTypy().forEach(function(t){var el=f['os_'+t.rk];if(el)q[t.k]=+el.value||0});var ty=Object.keys(q).filter(function(k){return q[k]&&KKC.p(k)&&KKC.p(k).kat==='ubytovani'});if(KKC.osobaPlati&&!KKC.osobaPlati('dite',ty)){q.os+=q.dite;q.dite=0}if(KKC.osobaPlati&&!KKC.osobaPlati('os',ty))q.os=0;
