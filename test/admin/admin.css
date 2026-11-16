@@ -1058,3 +1058,20 @@ main:has(.rz-lay){max-width:1720px}
 .pk-m .pk-lo.dp{background:#fff4e2;color:#7a4a0c}
 .pk-col.vyd .btn.pk-b[data-qs]{background:var(--sun);border-color:var(--sun);color:var(--deep)}.pk-col.vyd .btn.pk-b[data-qs]:hover{filter:brightness(.96)}
 .pk-col.ven .btn.pk-b[data-qs]{background:#12414f;border-color:#12414f;color:#fff}.pk-col.ven .btn.pk-b[data-qs]:hover{background:#0d323d}
+
+/* kompaktní karty v Půjčovně a Ubytování: méně místa, tlačítko vedle telefonu */
+.pk-col{padding:12px}.pk-col header{padding:0 2px 8px}
+.pk-c{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:10px;padding:10px 12px;margin-top:8px;border-radius:12px}
+.pk-c>*{grid-column:1/-1;min-width:0}
+.pk-ch{order:1}.pk-ch .rl-j{font-size:15px}
+.pk-l{order:2;font-size:16px;margin-top:1px}
+.pk-v{order:3;font-size:12.5px;margin-top:1px}
+.pk-m{order:4;font-size:12.5px;margin-top:3px}
+.pk-m .pk-lo{padding:1px 7px;font-size:11.5px;margin:0 4px 0 0}
+.pk-w{order:5;margin:6px 0 0;padding:4px 8px;font-size:12px}
+.pk-f{order:6;grid-column:1;margin-top:8px;font-size:13px;justify-content:flex-start;flex-wrap:wrap;gap:4px 8px}
+.pk-f a{white-space:nowrap}
+.pk-pl{padding:2px 7px;font-size:12px;white-space:nowrap}
+.pk-c .pk-b{order:7;grid-column:2;width:auto;margin-top:8px;min-height:34px;padding:6px 14px;font-size:14px;border-radius:10px}
+.pk-z{order:8;justify-content:flex-end;margin-top:4px;font-size:12px}
+.pk-c.hot{opacity:.75}
