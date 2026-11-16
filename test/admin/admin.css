@@ -1269,3 +1269,13 @@ main:has(.rz-lay){max-width:1720px}
 .rzt-i.t-skup{background:#fbe6ee;color:#a3305c}.rzt button[aria-selected=true] .t-skup{background:#a3305c}.rzt button:has(.t-skup)[aria-selected=true]{border-bottom-color:#a3305c}
 .rzt button[title]{cursor:pointer}
 .rzt{gap:14px}.rzt button{gap:5px;font-size:14px}.rzt-i{width:26px;height:26px}.rzt button small{padding:0 6px;font-size:12px}
+
+/* v123: dosažený stav zeleně všude */
+.rdx-kr li.ho{background:#e3f1e8;color:#2f7a4f}
+.rdx-kr li.ho i{background:#2f7a4f;color:#fff}
+.rdx-kr li.ted{background:#2f7a4f;color:#fff}
+.rdx-kr li.ted i{background:#fff;color:#2f7a4f}
+.rdx-kr li.ceka{background:#fdf0dc;color:#8a5a12}
+.rdx-kr li.ceka i{background:#e0a21e;color:#fff}
+.rs-k.on{background:#2f7a4f;border-color:#2f7a4f;color:#fff}
+.rs-kr{min-width:0}.rs-k{max-width:100%;overflow:hidden;text-overflow:ellipsis}
