@@ -265,7 +265,7 @@ if(nocW){nocW.innerHTML=`<button type="button" class="rz-nb" data-nc="1" aria-pr
  const ncKlik=d=>{if(!nocOk(d))return;const k=iso(d);if(S.ns.has(k))S.ns.delete(k);else S.ns.add(k);ncSync();render()};
  nocW.ncSync=ncSync;
  nocW.addEventListener('click',e=>{const b=e.target.closest('[data-ncd]');if(!b||b.disabled)return;const v=b.dataset.ncd.split('-');ncKlik(D(+v[0],v[1]-1,+v[2]))});
- nocW.addEventListener('click',e=>{const b=e.target.closest('[data-nc]');if(!b)return;S.nc=!S.nc;if(S.nc&&!S.ns.size){const p=addD(S.d0,-1),l=addD(S.d0,S.l.dni-1);S.ns.add(iso(nocOk(p)?p:l));nocW.ncSync()}if(!S.nc){TYPES.forEach(t=>{S.q[t.k]=0;if(S.c[t.k])S.c[t.k]=[]});EXTRAS.forEach(x=>{S[x.k]=0})}render()});
+ nocW.addEventListener('click',e=>{const b=e.target.closest('[data-nc]');if(!b)return;S.nc=!S.nc;if(!S.nc){S.ns.clear();nocW.ncSync()}if(!S.nc){TYPES.forEach(t=>{S.q[t.k]=0;if(S.c[t.k])S.c[t.k]=[]});EXTRAS.forEach(x=>{S[x.k]=0})}render()});
 }
 const ncRange=(a,b)=>{for(let d=a;d<b;d=addD(d,1))if(!nocOk(d))return false;return true};
 const nocChyba=()=>{if(!S.nc||!S.pr||!S.ou)return '';for(let d=S.pr;d<S.ou;d=addD(d,1))if(!gap(d)&&!nocOk(d))return KL.t('V tomto termínu máme zavřeno nebo je to v minulosti. Vyberte prosím jiné noci.');return ''};
