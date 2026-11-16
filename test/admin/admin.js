@@ -768,7 +768,7 @@ function rezervace(m,sekV){
         :typ==='odj'||typ==='plan'?(r.do<dnes?'<span class="pk-t zle">měl odjet '+KR(r.do)+'</span>':'<span class="pk-t dnes">odjíždí '+(r.do===dnes?'dnes':KR(r.do))+'</span>')
         :'<span class="pk-t">odhlášen'+(r.hist&&r.hist.length?' '+cas(r.hist[r.hist.length-1].t).split(' ').pop():'')+'</span>',
       lo=LK(r)?'<span class="pk-lo">'+SV(IC.lode,13)+esc(LK(r))+'</span>':'',dp=r.doprava?'<span class="pk-lo dp">doprava '+esc(R.mistoN(r.doprava.misto))+(r.doprava.cas?' '+esc(r.doprava.cas):'')+'</span>':'';
-    var uz=typ==='pri'&&r.stav==='uby';if(uz)tg='<span class="pk-t ok">✓ ubytován</span>';
+    var uz=typ==='pri'&&(r.stav==='uby'||r.stav==='odj');if(uz)tg='<span class="pk-t ok">✓ ubytován</span>';
     var btn=uz?'<div class="pk-z"><button type="button" class="lnk" data-qs="'+r.id+'" data-st="pot">Zrušit ubytování</button></div>':typ==='pri'?'<button type="button" class="btn pri pk-b" data-qs="'+r.id+'" data-st="uby">Ubytovat</button>':typ==='odj'?'<button type="button" class="btn pri pk-b" data-qs="'+r.id+'" data-st="odj">Odhlásit</button>':'';
     return '<article class="pk-c'+(DRZ[r.id]?' zm'+(Date.now()-DRZ[r.id].t<1500?' zm-n':''):'')+(typ==='odj'&&r.do<dnes?' po':'')+(typ==='hot'?' hot':'')+'"><div class="pk-ch"><button type="button" class="rl-j" data-id="'+r.id+'">'+esc(r.jmeno)+'</button>'+tg+'</div>'+
       '<div class="pk-l">'+esc(kratM(r))+'</div><div class="pk-v">'+esc(KKC.osobyTxt(o))+' · '+KR(r.od)+' – '+KR(r.do)+'</div>'+
@@ -778,9 +778,9 @@ function rezervace(m,sekV){
       (typ==='hot'?'<div class="pk-z"><button type="button" class="lnk" data-qs="'+r.id+'" data-st="uby">Zrušit odhlášení</button></div>':typ==='odj'&&r.stav==='uby'&&r.od===dnes?'<div class="pk-z"><button type="button" class="lnk" data-qs="'+r.id+'" data-st="pot">Zrušit ubytování</button></div>':'')+'</article>'};
   function ubyTab(akt){
     var d0=D0(denP),jeDnes=denP===dnes,H=akt.filter(function(r){return r.stav!=='blk'&&maUby(r)}),jm=function(a,b){return a.jmeno.localeCompare(b.jmeno,'cs')};
-    var PR=H.filter(function(r){return ((r.stav==='pot'||r.stav==='pop')||DRZ[r.id]&&r.stav==='uby')&&r.od===denP}).sort(jm);
+    var hot=function(r){return r.stav==='uby'||r.stav==='odj'},PRh=H.filter(function(r){return r.od===denP&&jeDnes&&hot(r)}).sort(jm),PR=H.filter(function(r){return (r.stav==='pot'||r.stav==='pop')&&r.od===denP}).sort(jm);
     var OD=H.filter(function(r){return jeDnes?r.stav==='uby'&&r.do<=dnes:(r.stav==='uby'||r.stav==='pot'||r.stav==='pop')&&r.do===denP}).sort(function(a,b){return a.do.localeCompare(b.do)||jm(a,b)});
-    var HT=H.filter(function(r){return r.stav==='odj'&&r.do===denP}).sort(jm);
+    var HT=jeDnes?H.filter(function(r){return r.stav==='odj'&&r.do===denP}).sort(jm):[];
     var ZU=H.filter(function(r){return (jeDnes?r.stav==='uby':r.stav!=='odj')&&r.od<=denP&&r.do>denP});
     var po=jeDnes?OD.filter(function(r){return r.do<dnes}).length:0,osb=function(L){var n=0;L.forEach(function(r){var o=r.osoby||{};n+=KKC.osobPocet(o)});return n};
     var vse=[],obs={};skupiny().forEach(function(g){g.c.forEach(function(c){vse.push(g.k+'-'+c)})});
@@ -791,10 +791,10 @@ function rezervace(m,sekV){
       '<div class="pk-s ven"><b>'+OD.length+'</b><span>odjíždí</span><small>'+(po?po+' po termínu':'k odhlášení')+'</small></div>'+
       '<div class="pk-s zu"><b>'+ZU.length+'</b><span>zůstává</span><small>'+osb(ZU)+' '+pl(osb(ZU),'host','hosté','hostů')+'</small></div>'+
       '<div class="pk-s vra"><b>'+vol+'</b><span>volných míst</span><small>z '+vse.length+' · chatky, stany, teepee</small></div></div></section>';
-    var sl=function(cls,nad,pop,L,typ,nic){return '<section class="pk-col '+cls+'"><header><h3>'+nad+'<span>'+L.length+'</span></h3><p>'+pop+'</p></header>'+(L.length?L.map(function(r){return ubKarta(r,typ)}).join(''):'<p class="pk-0">'+nic+'</p>')+'</section>'};
-    h+='<div class="pk-g">'+sl('vyd','1 · Přijíždí','Hosté s rezervací, kteří ten den přijedou.',PR,'pri','Nikdo nepřijíždí.')+
-      sl('ven','2 · Odjíždí',jeDnes?'Ubytovaní hosté, kteří dnes odjíždějí.':'Hosté, kteří ten den odjedou.',OD,jeDnes?'odj':'plan','Nikdo neodjíždí.')+
-      sl('vra','3 · Odjeli','Hotovo, místo je volné pro další hosty.',HT,'hot','Zatím nikdo.')+'</div>';
+    /* hotoví (ubytovaní / odhlášení) zůstávají na konci sloupce zeleně, kvůli přehledu */
+    var sl=function(cls,nad,pop,L,typ,nic,Lh,typH,nh){return '<section class="pk-col '+cls+'"><header><h3>'+nad+'<span>'+L.length+'</span>'+(Lh&&Lh.length?'<em class="pk-hn">✓ '+Lh.length+' '+nh+'</em>':'')+'</h3><p>'+pop+'</p></header>'+(L.length?L.map(function(r){return ubKarta(r,typ)}).join(''):'<p class="pk-0">'+nic+'</p>')+(Lh&&Lh.length?'<div class="pk-hd"><span>Hotovo</span></div>'+Lh.map(function(r){return ubKarta(r,typH).replace('class="pk-c','class="pk-c pk-ok')}).join(''):'')+'</section>'};
+    h+='<div class="pk-g pk-g2">'+sl('vyd','1 · Přijíždí','Hosté s rezervací, kteří ten den přijedou.',PR,'pri',PRh.length?'Všichni jsou ubytovaní.':'Nikdo nepřijíždí.',PRh,'pri','ubytováno')+
+      sl('ven','2 · Odjíždí',jeDnes?'Ubytovaní hosté, kteří dnes odjíždějí.':'Hosté, kteří ten den odjedou.',OD,jeDnes?'odj':'plan',HT.length?'Všichni jsou odhlášení.':'Nikdo neodjíždí.',HT,'hot','odhlášeno')+'</div>';
     return h}
   function lodeTab(akt){
     var d0=D0(denP),jeDnes=denP===dnes,S=R.vse().filter(function(r){return r.stav!=='zru'&&sLod(r)});
