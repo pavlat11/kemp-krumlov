@@ -1249,3 +1249,20 @@ main:has(.rz-lay){max-width:1720px}
 @media(max-width:1500px){.rlb-ex .btn span,.rlb-ex .btn{gap:0}.rlb-ex .btn>span{display:none}.rlb .rlb-f select.inp{max-width:175px}}
 .rtk+.rlb{margin-top:12px}
 .rtk+.rr-l .rr-top,.rtk+section .rr-top{margin-top:10px}
+
+/* v120: ikony a barvy záložek, Vybrat vše v liště */
+.rzt button{align-items:center}
+.rzt-i{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;font-style:normal}
+.rzt-i.t-vse{background:#eef0ee;color:#3d4a43}
+.rzt-i.t-chatka{background:#e3f1e8;color:#2f7a4f}.rzt-i.t-podsad{background:#ecf2dc;color:#5b7a1f}
+.rzt-i.t-teepee{background:#f6ebdc;color:#9a5b1e}.rzt-i.t-vlastni{background:#ece7f6;color:#5b4a9a}
+.rzt-i.t-lode{background:#dff0f2;color:#1f6d77}.rzt-i.t-doprava{background:#fbecd8;color:#c27317}
+.rzt button small{padding:1px 7px;border-radius:999px;background:#f1efe9}
+.rzt button[aria-selected=true] .rzt-i{color:#fff}
+.rzt button[aria-selected=true] .t-vse{background:var(--deep)}.rzt button[aria-selected=true] .t-chatka{background:#2f7a4f}.rzt button[aria-selected=true] .t-podsad{background:#5b7a1f}
+.rzt button[aria-selected=true] .t-teepee{background:#9a5b1e}.rzt button[aria-selected=true] .t-vlastni{background:#5b4a9a}.rzt button[aria-selected=true] .t-lode{background:#1f6d77}.rzt button[aria-selected=true] .t-doprava{background:#c27317}
+.rzt .podsad[aria-selected=true],.rzt button:has(.t-podsad)[aria-selected=true]{border-bottom-color:#5b7a1f}
+.rzt button:has(.t-teepee)[aria-selected=true]{border-bottom-color:#9a5b1e}.rzt button:has(.t-vlastni)[aria-selected=true]{border-bottom-color:#5b4a9a}
+.rlb-va{display:inline-flex;align-items:center;gap:7px;padding:0 10px 0 4px;margin-right:2px;min-height:36px;border-right:1.5px solid var(--line);font-size:13.5px;font-weight:700;color:var(--ink);cursor:pointer}
+.rlb-va input{width:17px;height:17px}
+@media(max-width:1500px){.rlb-va span{display:none}}
