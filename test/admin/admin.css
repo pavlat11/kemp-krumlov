@@ -1325,3 +1325,4 @@ main:has(.rz-lay){max-width:1720px}
 .pk-c.pk-off.zm::after{filter:none}
 .pk-hd.off{color:#8a867c}.pk-hd.off::before,.pk-hd.off::after{background:#dad6cc}
 .pk-col.ven .pk-hn{background:#ebe9e3;color:#77736a}
+#tisk tr.tk-mp td{border-bottom:0}#tisk tr.tk-pz td{padding-top:0;padding-bottom:4pt;font-size:8.8pt;color:#222;white-space:normal}#tisk tr.tk-pz b{font-weight:700}#tisk tr.tk-mp,#tisk tr.tk-pz{break-inside:avoid}
