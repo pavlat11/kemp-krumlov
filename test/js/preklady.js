@@ -256,6 +256,11 @@ window.KK_PREKLADY={
 },
 "dtexty": {
 "Zobrazit ceník 2026": "Show price list 2026",
+"Oblíbené": "Popular",
+"Pohodlně": "Easy",
+"Bez starostí o auto": "No car worries",
+"odebrat": "remove",
+"Doplujete až ke svému stanu či chatce": "Paddle right back to your tent or cabin",
 "Klikněte na den vyplutí. Jedete na víc dní? Klikněte i na den návratu.": "Click your launch day. Going for several days? Click the return day too.",
 "Vyplutí": "Launch",
 "Návrat": "Return",
@@ -1299,6 +1304,11 @@ window.KK_PREKLADY={
 },
 "dtexty": {
 "Zobrazit ceník 2026": "Preisliste 2026 anzeigen",
+"Oblíbené": "Beliebt",
+"Pohodlně": "Bequem",
+"Bez starostí o auto": "Ohne Sorge ums Auto",
+"odebrat": "entfernen",
+"Doplujete až ke svému stanu či chatce": "Sie paddeln bis zu Ihrem Zelt oder Ihrer Hütte",
 "Klikněte na den vyplutí. Jedete na víc dní? Klikněte i na den návratu.": "Klicken Sie auf den Starttag. Mehrere Tage? Klicken Sie auch auf den Rückkehrtag.",
 "Vyplutí": "Start",
 "Návrat": "Rückkehr",

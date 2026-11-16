@@ -3339,3 +3339,31 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-rek-k{margin:0 0 12px;font-size:17px;font-weight:800;color:#0b2419}
 @media(max-width:900px){#rezervace .rz-main>.rz-warn{margin:0 18px 12px}.rz-rek{padding:14px}.rz-rek dl>div{grid-template-columns:1fr auto}.rz-rek dt{grid-column:1/-1;font-size:12.5px;margin-bottom:-6px}}
 #rezervace .rz-row .rt .pr strong{white-space:nowrap}.rz-rek-c small{white-space:nowrap}
+
+/* nabídka lodí a dopravy v2 – fotka, cena v bublině, výrazné tlačítko */
+.rz-nab .rz-nb.v2{border-radius:26px;box-shadow:0 0 0 1.5px #e6dfd0,0 22px 44px -28px #0b2419aa}
+.rz-nab .rz-nb.v2:hover{transform:translateY(-4px);box-shadow:0 0 0 1.5px #cdbf9f,0 30px 50px -26px #0b2419cc}
+.rz-nab .rz-nb.v2.on{box-shadow:0 0 0 3px #2f7d4c,0 26px 44px -26px #2f7d4caa}
+.rz-nb.v2 .rz-nb-t{position:relative;display:block;height:190px;padding:0;background:#12626f center/cover no-repeat;overflow:hidden}
+.rz-nb.v2.lod .rz-nb-t{background-image:linear-gradient(180deg,rgba(8,40,46,.05) 30%,rgba(8,40,46,.88)),url("../img/inl-02-1024.webp");background-position:center,18% center}
+.rz-nb.v2.dop .rz-nb-t{background-image:linear-gradient(180deg,rgba(74,38,4,.1) 30%,rgba(74,38,4,.9)),url("../img/inl-01.webp");background-position:center,70% 85%}
+.rz-nb.v2 .rz-nb-t{transition:background-size .5s}
+.rz-nb.v2 .tag{position:absolute;left:14px;top:14px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.94);color:#0b2419;font-size:12.5px;font-weight:800;letter-spacing:.01em}
+.rz-nb.v2 .cn{position:absolute;right:14px;top:14px;flex-direction:row;align-items:baseline;gap:5px;padding:7px 14px;border-radius:16px;background:#f4a64a;color:#0b2419;box-shadow:0 10px 22px -10px #000a}
+.rz-nab .rz-nb.v2 .cn small{color:#0b2419;opacity:.8;font-size:12.5px}
+.rz-nb.v2 .cn b{font-size:22px;color:#0b2419}
+.rz-nb.v2 .cn i{font-size:12px;font-weight:700;opacity:.8;color:#0b2419}
+.rz-nb.v2 .hd{position:absolute;left:18px;right:18px;bottom:16px;display:flex;align-items:center;gap:12px;text-align:left}
+.rz-nab .rz-nb.v2 .ic,.rz-nab .rz-nb.v2.on .ic{flex:none;width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.2);backdrop-filter:blur(6px);color:#fff}
+.rz-nab .rz-nb.v2 .ic svg{width:28px;height:28px}
+.rz-nb.v2 .nd{padding:0;color:#fff;font-size:23px;line-height:1.15;text-shadow:0 2px 12px #0008}
+.rz-nb.v2 .pr{padding:16px 22px 0;font-size:14.5px;color:#0b2419;font-weight:800}
+.rz-nb.v2 .pr:empty{display:none}
+.rz-nb.v2 ul{padding:12px 22px 0;gap:9px;font-size:15px}
+.rz-nb.v2 li svg{background:#dff1e5;color:#2f7d4c;width:20px;height:20px}
+.rz-nb.v2 .cta{margin:20px 18px 18px;padding:15px 18px;font-size:16.5px;box-shadow:0 12px 22px -12px #e08a1e}
+.rz-nb.v2 .cta i{font-style:normal;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#0b2419;color:#f4a64a;font-size:17px;line-height:1}
+.rz-nb.v2.on .cta{background:#e3f3e8;color:#1f6a3d;box-shadow:none}
+.rz-nb.v2.on .cta u{font-weight:600;color:#5f6b63}
+.rz-nb.v2.on .cta .a1 svg{color:#2f7d4c}
+@media(max-width:900px){.rz-nb.v2 .rz-nb-t{height:150px}.rz-nb.v2 .nd{font-size:20px}.rz-nb.v2 .tag{font-size:11.5px;padding:5px 10px}.rz-nb.v2 .cn b{font-size:19px}}
