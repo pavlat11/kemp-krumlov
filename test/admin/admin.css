@@ -1154,3 +1154,5 @@ main:has(.rz-lay){max-width:1720px}
 .rdx-b .rp-hi{margin:0}
 .rpan .rp-f{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px}.rpan .rp-f .btn{display:inline-flex;align-items:center;gap:6px}
 .rdx-sum{grid-template-columns:1.5fr 1fr 1fr}.rdx-sum b{white-space:normal;font-size:16px;line-height:1.2}
+.rdx-kr.hot li.ho:last-child{background:#2f7a4f;color:#fff}.rdx-kr.hot li.ho:last-child i{background:#fff;color:#2f7a4f}
+.rpl.vse{background:#e3f1e8;color:#2f7a4f}
