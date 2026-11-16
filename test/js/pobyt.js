@@ -297,9 +297,9 @@ function compute(){const nights=nightsList(),L=[],sk={},qk={};let sum=0;
  if(onlyStan())add(`${S.zak}× ${plural(S.zak,'žák','žáci','žáků')}`,'zak',S.zak);
  OS_VLASTNI.forEach(p=>add(`${S[p.k]||0}× ${KL.male(KL.t(p.n))}`,p.k,S[p.k]||0));
  EXTRAS.forEach(x=>add(`${S[x.k]}× ${KL.male(KL.t(x.n))}`,x.k,S[x.k]));
- const n=nights.length,lo=lodeObj(),SL=KC.slevaPobyt?KC.slevaPobyt({noci:n,q:qk,sumK:sk,od:n?iso(nights[0]):'',lodi:lo?Object.values(lo.kusy).reduce((a,b)=>a+(+b||0),0):0}):{kc:0,nazev:'',proc:0},dv=SL.kc,disc=sum?dv/sum:0,discN=SL.nazev,discP=SL.proc;
- /* lodě a doprava – sleva pobytu se na ně nevztahuje */
- const L2=[],cl=lo?KR.cenaLodi(lo):{navoz:0,celkem:0},dp=doprObj(),cd=dp?KR.cenaDopravy(dp):0;
+ const n=nights.length,lo=lodeObj(),L2=[],cl=lo?KR.cenaLodi(lo):{navoz:0,celkem:0},dp=doprObj(),cd=dp?KR.cenaDopravy(dp):0;
+ /* slevy podle ceníku – z ubytování, případně i z lodí a dopravy */
+ const SL=KC.slevaPobyt?KC.slevaPobyt({noci:n,q:qk,sumK:sk,od:n?iso(nights[0]):(lo?lo.den:''),lodi:lo?Object.values(lo.kusy).reduce((a,b)=>a+(+b||0),0):0,lode:cl.celkem,dop:cd}):{kc:0,nazev:'',proc:0},dv=SL.kc,disc=sum?dv/sum:0,discN=SL.nazev,discP=SL.proc;
  if(lo){LODE.forEach(p=>{const q=lo.kusy[p.k];if(q)L2.push([`${q}× ${KL.male(KL.t(p.n))}${lo.dni>1?' · '+lo.dni+' '+plural(lo.dni,'den','dny','dní'):''}`,q*KC.lod(p.k,lo.dni)*lo.dni])});if(cl.navoz)L2.push([KL.t('Návoz lodí'),cl.navoz])}
  if(cd)L2.push([`${KL.t('Doprava osob')} – ${KL.t(KR.mistoN(dp.misto))}`,cd]);
  const total=sum-dv+cl.celkem+cd;
@@ -340,7 +340,7 @@ function render(){Object.keys(MISTA).forEach(k=>{S.c[k]=S.c[k].filter(n=>freeU(k
  $('rzSumDate').textContent=dateTxt();$('rzSumPeople').textContent=peopleTxt();$('rzSumType').textContent=typeTxt();$('rzSumExtras').textContent=extrasTxt()||'žádné';
  $('rzSumLode').textContent=[lodeTxt(),doprTxt()?KL.t('doprava osob')+' – '+doprTxt():''].filter(Boolean).join(' + ')||KL.t('žádné');
  {const z=$('rzZal'),u=!!(S.to&&R.zal&&R.total);z.hidden=!u;z.textContent=u?(R.zal>=Math.round(R.total)?`${KL.t('Platí se předem převodem')}: ${fmt(R.zal)}`:`${KL.t('Záloha předem')} ${fmt(R.zal)} · ${KL.t('zbytek na místě')} ${fmt(R.total-R.zal)}`):''}
- $('rzLines').innerHTML=!S.to?'<li><span>Vyberte termín</span><em>–</em></li>':R.L.map(([l,v])=>`<li><span>${l}</span><em>${fmt(v)}</em></li>`).join('')+(R.dv?`<li class="minus"><span>${KL.t('Sleva')}${R.discP?' '+R.discP+' %':''}${R.discN?' · '+KL.t(R.discN):''}</span><em>−${fmt(R.dv)}</em></li>`:'')+R.L2.map(([l,v])=>`<li><span>${l}</span><em>${fmt(v)}</em></li>`).join('')||'<li><span>Vyberte termín</span><em>–</em></li>';
+ $('rzLines').innerHTML=!S.to?'<li><span>Vyberte termín</span><em>–</em></li>':R.L.map(([l,v])=>`<li><span>${l}</span><em>${fmt(v)}</em></li>`).join('')+R.L2.map(([l,v])=>`<li><span>${l}</span><em>${fmt(v)}</em></li>`).join('')+(R.dv?`<li class="minus"><span>${KL.t('Sleva')}${R.discP?' '+R.discP+' %':''}${R.discN?' · '+KL.t(R.discN):''}</span><em>−${fmt(R.dv)}</em></li>`:'')||'<li><span>Vyberte termín</span><em>–</em></li>';
  /* skrytá pole pro odeslání */
  const f=form.elements,set=(n,v)=>{f[n].value=v};
  set('prijezd',iso(S.from));set('odjezd',iso(S.to));set('noci',R.n);set('ubytovani',typeTxt());set('pocet_jednotek',SEL().reduce((a,t)=>a+S.q[t.k],0));
