@@ -272,7 +272,7 @@ function lodPriklad(){const os=Math.max(1,persons()),p=k=>LODE.find(x=>x.k===k);
  t=t||LODE[0];if(!t)return null;return {cena:n*KC.lod(t.k,1),txt:`${KL.t('Pro')} ${proOs(os)}: ${n>1?n+'× ':''}${KL.male(KL.t(t.n))}`}}
 function dopPriklad(){const m=REKA.filter(x=>x.k!=='kemp'&&x.cena).sort((a,b)=>a.cena-b.cena)[0];if(!m)return null;const a=KR.aut(persons());return {cena:m.cena*a,txt:`${KL.t(m.n)} · ${a} ${plural(a,'auto','auta','aut')} ${KL.t('pro')} ${proOs(Math.max(1,persons()))}`}}
 const setOpts=(el,h)=>{if(el.__h!==h){el.innerHTML=h;el.__h=h}};
-function lodRender(){if(!lodOk)return;const v=lodFree(),n=nLodi(),oi=rIdx(S.l.odkud),uby=S.mod==='uby',nab=$('rzNab');
+function lodRender(){if(!lodOk)return;if(S.l.pref&&S.l.den){const f=lodFree();if(!nLodi()&&(f[S.l.pref]||0)>0)S.l.kusy[S.l.pref]=1;S.l.pref=null}const v=lodFree(),n=nLodi(),oi=rIdx(S.l.odkud),uby=S.mod==='uby',nab=$('rzNab');
  nab.hidden=!uby;$('rzLodL').hidden=uby&&!S.l.chci;
  nab.querySelectorAll('[data-nb]').forEach(b=>{const on=b.dataset.nb==='lod'?S.l.chci:S.l.dopr===true;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
  {const L=lodPriklad(),D=dopPriklad();if(L){$('rzNbC-lod').textContent=fmt(L.cena);$('rzNbJ-lod').textContent=KL.t('za loď a den');$('rzNbP-lod').textContent=L.txt}if(D){$('rzNbC-dop').textContent=fmt(D.cena);$('rzNbJ-dop').textContent=KL.t('za jízdu');$('rzNbP-dop').textContent=D.txt}}
@@ -444,6 +444,9 @@ const NAMES={'Vlastní stan':'stan','Karavan':'karavan','Chatka':'chatka','Teepe
 document.querySelectorAll('[data-kc]').forEach(a=>a.addEventListener('click',e=>{const k=NAMES[a.dataset.kc];if(!k)return;e.preventDefault();
  setMod('uby');setType(k);cur=S.to&&!denMod()?'uby':'termin';navState();
  root.querySelector('.rz-main').scrollIntoView({behavior:"smooth",block:"start"})}));
+/* napojení ze sekce Půjčovna lodí: otevře rezervaci lodí, vybraná loď se předvyplní po zvolení dne */
+document.addEventListener('click',e=>{const a=e.target.closest('[data-rzlod]');if(!a)return;e.preventDefault();setMod('lod');S.l.pref=a.dataset.rzlod||null;cur='termin';navState();
+ root.querySelector('.rz-main').scrollIntoView({behavior:"smooth",block:"start"})});
 window.RZ={setType,go,setMod};
 const dlg=$('rzPrice'),openP=()=>{dlg.showModal?dlg.showModal():dlg.setAttribute('open','')};
 $('rzPriceBtn').addEventListener('click',openP);$('rzPriceBtn2').addEventListener('click',openP);

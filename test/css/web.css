@@ -3287,3 +3287,23 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-nb .cta .a1{display:none;align-items:center;gap:8px}.rz-nb .cta .a1 svg{width:20px;height:20px}
 .rz-nb.on .cta{background:#173b2a;color:#fff}.rz-nb.on .cta .a0{display:none}.rz-nb.on .cta .a1{display:inline-flex}
 @media(max-width:700px){.rz-nb .cn b{font-size:26px}.rz-nb .nd{font-size:20px}}
+
+/* PE-LA zjednodušeně: karty lodí podle ceníku + rezervace */
+#pela .pl-hero{margin-bottom:-40px}
+#pela .pq{position:relative;z-index:2;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:22px}
+#pela .pq-c{position:relative;display:flex;flex-direction:column;padding:22px 20px 20px;border-radius:22px;background:#134043;border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 40px -24px rgba(0,0,0,.7);transition:transform .25s,border-color .25s}
+#pela .pq-c:hover{transform:translateY(-3px);border-color:rgba(255,210,63,.55)}
+#pela .pq-c.top{border-color:#ffd23f}
+#pela .pq-tag{position:absolute;top:-11px;left:18px;padding:4px 10px;border-radius:999px;background:#ffd23f;color:#0e2e30;font-size:11.5px;font-weight:800;letter-spacing:.02em}
+#pela .pq-ic{color:#7fd0d4;height:48px;margin-bottom:10px}#pela .pq-ic svg{height:100%;width:auto;max-width:100%}
+#pela .pq-c h4{margin:0;font-size:20px;color:#fff;font-weight:800}
+#pela .pq-o{margin:2px 0 14px;color:rgba(255,255,255,.7);font-size:14.5px}
+#pela .pq-p{margin-top:auto;display:flex;flex-direction:column;gap:2px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
+#pela .pq-p span{color:rgba(255,255,255,.75);font-size:14px}#pela .pq-p b{color:#ffd23f;font-size:24px;font-weight:800}
+#pela .pq-p small{color:rgba(255,255,255,.65);font-size:13px}
+#pela .pq-b{margin-top:14px;display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border-radius:999px;background:#ffd23f;color:#0e2e30;font-weight:800;font-size:15px;text-decoration:none;transition:background .2s,transform .2s}
+#pela .pq-b:hover{background:#ffe06e;transform:translateY(-1px)}#pela .pq-b:focus-visible{outline:3px solid #fff;outline-offset:2px}
+#pela .pq-inc{list-style:none;display:flex;flex-wrap:wrap;gap:10px 26px;margin:22px 0 0;padding:16px 20px;border-radius:18px;background:rgba(255,255,255,.06);font-size:15px;color:rgba(255,255,255,.88)}
+#pela .pq-inc li{display:flex;align-items:center;gap:8px}#pela .pq-inc svg{color:#ffd23f;flex:none}
+#pela .pq-inc .pq-open{margin-left:auto}#pela .pq-inc .pq-open b{color:#fff}
+@media(max-width:700px){#pela .pq-inc .pq-open{margin-left:0}}
