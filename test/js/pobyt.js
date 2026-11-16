@@ -158,7 +158,7 @@ function stepper(get,set,min,max){const w=document.createElement('div');w.classN
  p.addEventListener('click',e=>{e.stopPropagation();set(Math.min(max,get()+1));render();pop(o)});
  w.upd=()=>{o.textContent=get();m.disabled=get()<=min();p.disabled=get()>=max};return w}
 PEOPLE.forEach(r=>{const c=document.createElement('div');c.className='rz-pc';
- const pro=((KC.p(r.k)||{}).pro||[]).filter(k=>TYPES.some(t=>t.k===k)),jen=pro.length&&r.k!=='zak'?`<em class="rz-xne">${KL.t('Jen k:')} ${pro.map(k=>KL.t((TYPES.find(t=>t.k===k)||{}).n||k)).join(', ')}</em>`:'';
+ const pro=((KC.p(r.k)||{}).pro||[]).filter(k=>TYPES.some(t=>t.k===k)),jen='';
  c.innerHTML=`<span class="ic">${SV(ICO[r.k])}</span><span class="tx"><b>${r.n}</b><small>${r.s}</small>${jen}</span>`;
  r.st=stepper(()=>S[r.k],v=>{S[r.k]=v;fitUnits()},()=>r.min,30);c.append(r.st);r.el=c;$('rzPeople').append(c)});
 
@@ -187,7 +187,7 @@ EXTRAS.forEach(x=>{const c=document.createElement('div');c.className='rz-x';c.ta
  c.innerHTML=`<span class="tg"></span><span class="ic">${SV(ICO[x.k])}</span><b>${x.n}</b><small>${x.s}</small>`;
  x.st=stepper(()=>S[x.k],v=>{S[x.k]=v},()=>1,9);c.append(x.st);
  const tog=()=>{if(c.classList.contains('ne'))return;S[x.k]=S[x.k]?0:1;render()};
- if(x.pro.length){const n=document.createElement('em');n.className='rz-xne';n.textContent=KL.t('Jen k:')+' '+x.pro.map(k=>KL.t((TYPES.find(t=>t.k===k)||{}).n||k)).join(', ');c.append(n)}
+ if(x.pro.length)c.title=KL.t('Jen k:')+' '+x.pro.map(k=>KL.t((TYPES.find(t=>t.k===k)||{}).n||k)).join(', ');
  c.addEventListener('click',e=>{if(e.target.closest('.rz-st'))return;tog()});
  c.addEventListener('keydown',e=>{if(e.target!==c)return;if(e.key==='Enter'||e.key===' '){e.preventDefault();tog()}});
  x.el=c;$('rzExtras').append(c)});
