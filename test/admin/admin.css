@@ -1019,3 +1019,19 @@ div.pv-s{cursor:default}
 .rl-akt span[aria-hidden]{font-size:16px;line-height:1;opacity:.8}
 @media(max-width:1000px){.ruk{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:480px){.ruk-t{padding:10px}.ruk-t b{font-size:24px;min-width:30px}}
+
+/* karta rezervace: pevné sloupce Platba | Ubytování | Lodě (+ doprava), tužka Upravit, plná šířka */
+main:has(.rz-lay){max-width:1720px}
+.rzr .rsp{grid-template-columns:repeat(3,minmax(0,1fr))}
+.rzr .rs-b{position:relative;padding:12px 18px 12px 20px;align-content:start}
+.rzr .rs-b::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+.rzr .rs-b.pl::before{background:#e0a21e}.rzr .rs-b.ub::before{background:#2f7a4f}.rzr .rs-b.lo::before{background:#2a7c86}
+.rzr .rs-n{display:flex;align-items:center;gap:6px;color:#3d4a42}.rzr .rs-n svg{flex:none}
+.rzr .rs-b.pl .rs-n svg{color:#b8650e}.rzr .rs-b.ub .rs-n svg{color:#2f7a4f}.rzr .rs-b.lo .rs-n svg{color:#1f6d77}
+.rzr .rs-b.nic{background:#faf8f3}.rzr .rs-b.nic::before{opacity:.25}.rzr .rs-b.nic .rs-n,.rzr .rs-b.nic .rs-i{color:#a29c8e}.rzr .rs-b.nic .rs-n svg{color:#b9b3a6}
+.rzr .rs-dp{grid-column:1/-1;display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:4px;padding:6px 10px;border-radius:10px;background:#fff4e2;border:1px solid #f1d6a8;color:#7a4a0c;font-size:12.5px;font-weight:600}
+.rzr .rs-dp svg{color:#c27317;flex:none}.rzr .rs-dp b{font-weight:800;color:#7a4a0c}
+.rzr .rr-k{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.rr-e{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--deep);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.rr-e:hover{border-color:var(--deep);background:#f7f4ee}.rr-e:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+@media(max-width:900px){.rzr .rsp{grid-template-columns:1fr}.rr-e span{display:none}}
