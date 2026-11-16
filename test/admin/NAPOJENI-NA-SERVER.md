@@ -182,3 +182,23 @@ rezervace.lode.vraceno = [ { kdy:čas, kdo:"Jméno", kusy:{kanoe:1, padla:2} }, 
 
 ### Doprava bez lodí
 `rezervace.doprava = { misto, osob, cas, den }` – `den` je den jízdy. Bez lodí si host vybere místo i den (z dní pobytu); s loděmi je místo = start plavby a den = den vyplutí.
+
+## Vyzvednutí v cíli (doprava zpět do kempu)
+
+Rezervace může mít kromě `doprava` (odvoz z kempu na start) i `vyzved` – vyzvednutí lidí v cíli plavby a odvoz zpět do kempu:
+
+```json
+"vyzved": { "misto": "dop9", "osob": 6, "cas": "16:30", "den": "2027-07-12" }
+```
+
+Cena je stejná jako doprava na totéž místo (`cena místa × počet aut`, auto = 8 osob) a je součástí `cena` rezervace.
+Na webu se nabízí, když host končí mimo kemp (s loděmi), nebo když bez lodí zvolí místo pod kempem (Zlatá Koruna, Boršov).
+
+## Uzavření sezóny
+
+- `POST /api/me/over {heslo}` – ověří heslo přihlášeného (204 = OK, 403 = špatně). Používá se před citlivými akcemi.
+- `POST /api/sezony/{rok}/uzavrit {heslo}` – jen Správce. Rezervace s příjezdem v daném roce přesune do archivní tabulky
+  (nebo jim nastaví `archiv = rok`), číslování nových rezervací začne od `R{rok+1}-0001`. Rezervace na další roky zůstanou.
+- `GET /api/sezony` – seznam archivovaných sezón se souhrnem (rezervací, nocí, hostů, lodí, tržby, zrušených).
+- `POST /api/sezony/{rok}/obnovit {heslo}` – vrátí sezónu z archivu mezi rezervace.
+- Před uzavřením si administrace sama stáhne zálohu (`KK.export()`); na serveru navíc doporučujeme zálohu databáze.

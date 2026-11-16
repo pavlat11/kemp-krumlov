@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ochrana osobních údajů · Kemp Krumlov</title>
+<meta name="description" content="Jak Kemp Krumlov zpracovává osobní údaje hostů – rezervace, ubytování, půjčovna lodí a doprava.">
+<meta name="theme-color" content="#0f2219">
+<meta name="robots" content="noindex, nofollow">
+<style>
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:200 800;font-display:swap;src:url(fonts/plus-jakarta-sans-latin-ext-wght-normal.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:200 800;font-display:swap;src:url(fonts/plus-jakarta-sans-latin-wght-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+:root{--deep:#0f2219;--forest:#173a29;--river:#2a7c86;--cream:#faf6ee;--sand:#f3ecdf;--sun:#f4a64a;--ink:#14201a;--muted:#5e6b63;--line:rgba(20,32,26,.1)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:var(--ink);background:var(--cream);line-height:1.65;font-size:17px;-webkit-font-smoothing:antialiased}
+a{color:var(--river);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:3px solid var(--sun);outline-offset:3px;border-radius:6px}
+.hd{background:var(--deep);color:#fff}
+.hd-in{max-width:880px;margin:0 auto;padding:18px 24px;display:flex;align-items:center;gap:16px}
+.logo{display:flex;align-items:center;color:#fff;text-decoration:none}.logo svg{height:40px;width:auto}
+.sp{flex:1}
+.lang{display:flex;gap:6px}
+.lang button{font:inherit;font-size:14px;font-weight:700;color:#cfe0d6;background:transparent;border:1.5px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 12px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:#fff;color:var(--deep);border-color:#fff}
+.zpet{display:inline-flex;align-items:center;gap:8px;color:#fff;font-weight:700;font-size:15px;text-decoration:none;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.1)}
+.zpet:hover{background:rgba(255,255,255,.18)}
+main{max-width:880px;margin:0 auto;padding:44px 24px 72px}
+.eyebrow{display:inline-block;font-size:12.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--river);margin-bottom:10px}
+h1{font-size:clamp(32px,5vw,46px);line-height:1.12;letter-spacing:-.02em;margin:0 0 14px;color:var(--deep)}
+.lead{font-size:18.5px;color:var(--muted);margin:0 0 30px}
+.upd{display:inline-block;font-size:14px;font-weight:700;color:var(--forest);background:var(--sand);border-radius:999px;padding:6px 14px;margin-bottom:34px}
+.toc{background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px 26px;margin-bottom:34px}
+.toc b{display:block;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.toc ol{margin:0;padding-left:20px;columns:2;column-gap:32px}.toc li{margin:3px 0;break-inside:avoid}
+@media(max-width:640px){.toc ol{columns:1}}
+section{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px 28px;margin-bottom:18px;scroll-margin-top:20px}
+section h2{font-size:22px;line-height:1.3;margin:0 0 12px;color:var(--deep);display:flex;gap:12px;align-items:baseline}
+section h2 span{flex:none;display:inline-grid;place-items:center;width:32px;height:32px;border-radius:10px;background:var(--sun);color:var(--deep);font-size:16px}
+section p{margin:0 0 12px}section p:last-child,section ul:last-child{margin-bottom:0}
+section ul{margin:0 0 12px;padding-left:22px}section li{margin:5px 0}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:6px 20px;margin:0}
+.kv dt{color:var(--muted);font-weight:600}.kv dd{margin:0;font-weight:700}
+@media(max-width:560px){.kv{grid-template-columns:1fr}.kv dd{margin-bottom:8px}}
+table{width:100%;border-collapse:collapse;font-size:15.5px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-top:1px solid var(--line)}
+th{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-top:0}
+@media(max-width:640px){table,thead,tbody,tr,th,td{display:block}thead{display:none}tr{border-top:1px solid var(--line);padding:8px 0}td{border:0;padding:3px 0}td:first-child{font-weight:800}}
+@media(max-width:560px){.hd-in{gap:10px;padding:14px 16px}.logo svg{height:30px}.zpet{padding:8px 11px}.zpet span[data-l]{display:none!important}.lang button{padding:5px 9px}main{padding:32px 16px 56px}section{padding:20px 18px}}
+.ft{max-width:880px;margin:0 auto;padding:0 24px 40px;color:var(--muted);font-size:14px}
+[data-l]{display:none}
+html[lang="cs"] [data-l="cs"],html[lang="en"] [data-l="en"],html[lang="de"] [data-l="de"]{display:block}
+</style>
+<script>
+/* jazyk: ?lang=en|de, jinak volba z webu (kkt.jazyk), jinak čeština */
+(function(){var J=['cs','en','de'],q=(location.search.match(/[?&]lang=([a-z]{2})/)||[])[1],s=null;try{s=JSON.parse(localStorage.getItem('kkt.jazyk')||'null')}catch(e){}
+var l=J.indexOf(q)>=0?q:J.indexOf(s)>=0?s:'cs';document.documentElement.lang=l})();
+</script>
+</head>
+<body>
+<header class="hd"><div class="hd-in">
+<a class="logo" href="./" title="Kemp Krumlov"><svg aria-label="Kemp Krumlov" role="img" viewBox="40 40 1480 450" xmlns="http://www.w3.org/2000/svg"><path d="M63 55H245L305 140L137 383H63Z" fill="#0b94d4"></path><path d="M265 55H358L312 125Z" fill="#0b94d4"></path><path d="M377 55H558V383H487L322 135Z" fill="#e5db35"></path><path d="M63 402H205L312 242L420 402H558V472H63Z" fill="#567d22"></path><text fill="currentColor" font-family="'Open Sans',Arial,sans-serif" font-size="292" font-weight="800" lengthAdjust="spacingAndGlyphs" textLength="895" x="606" y="300">KEMP</text><text fill="currentColor" font-family="'Open Sans',Arial,sans-serif" font-size="166" font-weight="400" lengthAdjust="spacingAndGlyphs" textLength="782" x="606" y="440">KRUMLOV</text></svg></a>
+<span class="sp"></span>
+<div class="lang" role="group" aria-label="Jazyk / Language / Sprache"><button type="button" data-j="cs">CZ</button><button type="button" data-j="en">EN</button><button type="button" data-j="de">DE</button></div>
+<a class="zpet" href="./" id="zpet"><span aria-hidden="true">←</span><span data-l="cs">Zpět na web</span><span data-l="en">Back to website</span><span data-l="de">Zurück zur Website</span></a>
+</div></header>
+
+<main id="obsah">
+
+<!-- ============================ ČEŠTINA ============================ -->
+<div data-l="cs">
+<span class="eyebrow">GDPR</span>
+<h1>Ochrana osobních údajů</h1>
+<p class="lead">Jak zacházíme s údaji, které nám svěříte při rezervaci ubytování, půjčení lodí nebo objednání dopravy. Sbíráme jen to, co k vyřízení pobytu opravdu potřebujeme.</p>
+<span class="upd">Platné od 16. 11. 2026</span>
+<nav class="toc" aria-label="Obsah"><b>Obsah</b><ol>
+<li><a href="#cs-1">Kdo vaše údaje zpracovává</a></li><li><a href="#cs-2">Jaké údaje zpracováváme</a></li><li><a href="#cs-3">Proč a na jakém základě</a></li><li><a href="#cs-4">Jak dlouho údaje uchováváme</a></li><li><a href="#cs-5">Komu údaje předáváme</a></li><li><a href="#cs-6">Cookies a údaje v prohlížeči</a></li><li><a href="#cs-7">Vaše práva</a></li><li><a href="#cs-8">Kontakt</a></li>
+</ol></nav>
+
+<section id="cs-1"><h2><span>1</span>Kdo vaše údaje zpracovává</h2>
+<p>Správcem osobních údajů je provozovatel kempu:</p>
+<dl class="kv"><dt>Provozovatel</dt><dd>Libor Pokorný</dd><dt>IČO</dt><dd>02080109</dd><dt>Adresa</dt><dd>Domoradice 107, 381 01 Český Krumlov</dd><dt>E-mail</dt><dd><a href="mailto:kempkrumlov2017@gmail.com">kempkrumlov2017@gmail.com</a></dd><dt>Telefon</dt><dd><a href="tel:+420720514943">+420 720 514 943</a></dd></dl>
+<p style="margin-top:12px">Půjčení lodí a dopravu osob zajišťuje přímo v kempu půjčovna lodí PE-LA (<a href="tel:+420725336601">+420 725 336 601</a>). Údaje potřebné k půjčení lodí a k dopravě jí předáváme jen v rozsahu, který k tomu potřebuje.</p>
+</section>
+
+<section id="cs-2"><h2><span>2</span>Jaké údaje zpracováváme</h2>
+<ul>
+<li><b>Rezervace z webu:</b> jméno a příjmení, telefon, e-mail, vaše zpráva, termín pobytu, počet a věkové skupiny osob (dospělí, děti, žáci), vybrané ubytování a doplňky, půjčené lodě, místo a čas dopravy.</li>
+<li><b>Platby:</b> výše zálohy a doplatku, datum platby a variabilní symbol. Číslo vašeho účtu vidíme jen ve výpisu z banky, když zálohu posíláte převodem.</li>
+<li><b>Při ubytování v kempu:</b> údaje, které nám ukládá zákon do evidence ubytovaných a kvůli místnímu poplatku – zejména jméno, datum narození, adresa trvalého bydliště, číslo dokladu totožnosti a doba pobytu. U cizinců navíc státní občanství a účel pobytu.</li>
+<li><b>Komunikace:</b> e-maily, zprávy a telefonáty, které si s námi vyměníte.</li>
+</ul>
+</section>
+
+<section id="cs-3"><h2><span>3</span>Proč a na jakém základě</h2>
+<table><thead><tr><th>Účel</th><th>Právní základ (GDPR)</th></tr></thead><tbody>
+<tr><td>Přijetí a vyřízení rezervace, ubytování, půjčení lodí a doprava, komunikace s vámi</td><td>Plnění smlouvy – čl. 6 odst. 1 písm. b)</td></tr>
+<tr><td>Evidence ubytovaných, místní poplatek, hlášení pobytu cizinců, účetnictví a daně</td><td>Plnění právní povinnosti – čl. 6 odst. 1 písm. c)</td></tr>
+<tr><td>Ochrana našich práv (například řešení reklamace nebo škody na lodi)</td><td>Oprávněný zájem – čl. 6 odst. 1 písm. f)</td></tr>
+</tbody></table>
+<p style="margin-top:12px">Marketingové e-maily bez vašeho souhlasu neposíláme a údaje neprodáváme.</p>
+</section>
+
+<section id="cs-4"><h2><span>4</span>Jak dlouho údaje uchováváme</h2>
+<ul>
+<li><b>Rezervace</b> po dobu vyřízení pobytu a poté nejvýše 3 roky (kvůli případným reklamacím). Zrušené a propadlé rezervace mažeme nejpozději do 1 roku.</li>
+<li><b>Evidence ubytovaných</b> 6 let od posledního zápisu, jak ukládá zákon.</li>
+<li><b>Účetní doklady</b> (faktury, platby) 10 let podle zákona o účetnictví a zákona o DPH.</li>
+</ul>
+<p>Po uplynutí této doby údaje smažeme nebo anonymizujeme.</p>
+</section>
+
+<section id="cs-5"><h2><span>5</span>Komu údaje předáváme</h2>
+<ul>
+<li>půjčovně lodí PE-LA – jen údaje potřebné k půjčení lodí a dopravě,</li>
+<li>poskytovatelům, kteří pro nás zajišťují web, rezervační systém a e-mail (e-mail provozujeme přes službu Google Gmail),</li>
+<li>bance při platbě zálohy převodem,</li>
+<li>účetní nebo daňovému poradci,</li>
+<li>úřadům, pokud to ukládá zákon (město Český Krumlov – místní poplatek, Policie ČR – hlášení pobytu cizinců).</li>
+</ul>
+</section>
+
+<section id="cs-6"><h2><span>6</span>Cookies a údaje v prohlížeči</h2>
+<p>Web nepoužívá reklamní ani analytické cookies. Ve vašem prohlížeči si ukládá jen zvolený jazyk, měnu (Kč / €) a nastavení animací, aby vám je příště nemusel nabízet znovu. Tyto údaje nikam neposílá a smažete je vymazáním dat webu v prohlížeči.</p>
+<p>V části Kontakt je vložená mapa ze služby Mapy.com (Seznam.cz, a.s.). Ta se načítá z jejích serverů a řídí se jejími <a href="https://o.seznam.cz/ochrana-udaju/" rel="noopener" target="_blank">zásadami ochrany údajů</a>.</p>
+</section>
+
+<section id="cs-7"><h2><span>7</span>Vaše práva</h2>
+<p>Máte právo:</p>
+<ul>
+<li>získat informaci, jaké údaje o vás zpracováváme, a jejich kopii,</li>
+<li>požádat o opravu nepřesných údajů,</li>
+<li>požádat o výmaz údajů, pokud už je nepotřebujeme a zákon nám neukládá je uchovávat,</li>
+<li>požádat o omezení zpracování a o přenesení údajů,</li>
+<li>vznést námitku proti zpracování na základě oprávněného zájmu.</li>
+</ul>
+<p>Stačí nám napsat nebo zavolat – odpovíme nejpozději do 1 měsíce. Pokud se domníváte, že s údaji nezacházíme správně, můžete podat stížnost u <a href="https://uoou.gov.cz" rel="noopener" target="_blank">Úřadu pro ochranu osobních údajů</a> (Pplk. Sochora 27, 170 00 Praha 7).</p>
+</section>
+
+<section id="cs-8"><h2><span>8</span>Kontakt</h2>
+<p>S dotazy k ochraně osobních údajů se obracejte na <a href="mailto:kempkrumlov2017@gmail.com">kempkrumlov2017@gmail.com</a> nebo na telefon <a href="tel:+420720514943">+420 720 514 943</a>.</p>
+</section>
+</div>
+
+<!-- ============================ ENGLISH ============================ -->
+<div data-l="en">
+<span class="eyebrow">GDPR</span>
+<h1>Privacy policy</h1>
+<p class="lead">How we handle the data you give us when you book accommodation, rent boats or order transport. We only collect what we really need for your stay.</p>
+<span class="upd">Effective from 16 November 2026</span>
+<nav class="toc" aria-label="Contents"><b>Contents</b><ol>
+<li><a href="#en-1">Who processes your data</a></li><li><a href="#en-2">What data we process</a></li><li><a href="#en-3">Why and on what legal basis</a></li><li><a href="#en-4">How long we keep data</a></li><li><a href="#en-5">Who we share data with</a></li><li><a href="#en-6">Cookies and browser storage</a></li><li><a href="#en-7">Your rights</a></li><li><a href="#en-8">Contact</a></li>
+</ol></nav>
+
+<section id="en-1"><h2><span>1</span>Who processes your data</h2>
+<p>The data controller is the operator of the camp:</p>
+<dl class="kv"><dt>Operator</dt><dd>Libor Pokorný</dd><dt>Company ID (IČO)</dt><dd>02080109</dd><dt>Address</dt><dd>Domoradice 107, 381 01 Český Krumlov, Czech Republic</dd><dt>E-mail</dt><dd><a href="mailto:kempkrumlov2017@gmail.com">kempkrumlov2017@gmail.com</a></dd><dt>Phone</dt><dd><a href="tel:+420720514943">+420 720 514 943</a></dd></dl>
+<p style="margin-top:12px">Boat rental and passenger transport are provided directly at the camp by the PE-LA boat rental (<a href="tel:+420725336601">+420 725 336 601</a>). We only share the data it needs for the boat rental and transport.</p>
+</section>
+
+<section id="en-2"><h2><span>2</span>What data we process</h2>
+<ul>
+<li><b>Online bookings:</b> name, phone, e-mail, your message, dates of stay, number and age groups of guests, chosen accommodation and extras, rented boats, place and time of transport.</li>
+<li><b>Payments:</b> amount of the deposit and balance, payment date and payment reference. We only see your account number on our bank statement when you pay by bank transfer.</li>
+<li><b>When you stay at the camp:</b> data required by law for the guest register and the local tourist fee – in particular name, date of birth, permanent address, ID document number and length of stay. For foreign guests also nationality and purpose of stay.</li>
+<li><b>Communication:</b> e-mails, messages and phone calls you exchange with us.</li>
+</ul>
+</section>
+
+<section id="en-3"><h2><span>3</span>Why and on what legal basis</h2>
+<table><thead><tr><th>Purpose</th><th>Legal basis (GDPR)</th></tr></thead><tbody>
+<tr><td>Accepting and handling your booking, accommodation, boat rental and transport, communication with you</td><td>Performance of a contract – Art. 6(1)(b)</td></tr>
+<tr><td>Guest register, local tourist fee, registration of foreign guests, accounting and taxes</td><td>Legal obligation – Art. 6(1)(c)</td></tr>
+<tr><td>Protecting our rights (e.g. handling a complaint or damage to a boat)</td><td>Legitimate interest – Art. 6(1)(f)</td></tr>
+</tbody></table>
+<p style="margin-top:12px">We do not send marketing e-mails without your consent and we never sell your data.</p>
+</section>
+
+<section id="en-4"><h2><span>4</span>How long we keep data</h2>
+<ul>
+<li><b>Bookings</b> for the duration of your stay and then for up to 3 years (in case of complaints). Cancelled and expired bookings are deleted within 1 year at the latest.</li>
+<li><b>Guest register</b> 6 years from the last entry, as required by law.</li>
+<li><b>Accounting records</b> (invoices, payments) 10 years under Czech accounting and VAT law.</li>
+</ul>
+<p>After that we delete or anonymise the data.</p>
+</section>
+
+<section id="en-5"><h2><span>5</span>Who we share data with</h2>
+<ul>
+<li>the PE-LA boat rental – only data needed for boat rental and transport,</li>
+<li>providers of our website, booking system and e-mail (our e-mail runs on Google Gmail),</li>
+<li>our bank when you pay the deposit by transfer,</li>
+<li>our accountant or tax advisor,</li>
+<li>authorities where required by law (Town of Český Krumlov – local tourist fee, Czech Police – registration of foreign guests).</li>
+</ul>
+</section>
+
+<section id="en-6"><h2><span>6</span>Cookies and browser storage</h2>
+<p>The website uses no advertising or analytics cookies. It only stores your chosen language, currency (CZK / €) and animation setting in your browser so it does not have to ask again. This data is not sent anywhere; you can remove it by clearing the site data in your browser.</p>
+<p>The Contact section contains an embedded map from Mapy.com (Seznam.cz, a.s.). It loads from their servers and is governed by their <a href="https://o.seznam.cz/ochrana-udaju/" rel="noopener" target="_blank">privacy policy</a>.</p>
+</section>
+
+<section id="en-7"><h2><span>7</span>Your rights</h2>
+<p>You have the right to:</p>
+<ul>
+<li>know what data we process about you and get a copy,</li>
+<li>ask us to correct inaccurate data,</li>
+<li>ask us to delete data we no longer need and are not required by law to keep,</li>
+<li>ask us to restrict processing and to transfer your data,</li>
+<li>object to processing based on legitimate interest.</li>
+</ul>
+<p>Just write to us or call – we will reply within one month. If you believe we do not handle your data properly, you can lodge a complaint with the Czech <a href="https://uoou.gov.cz" rel="noopener" target="_blank">Office for Personal Data Protection</a> (Pplk. Sochora 27, 170 00 Prague 7) or with the data protection authority in your country.</p>
+</section>
+
+<section id="en-8"><h2><span>8</span>Contact</h2>
+<p>For any questions about data protection, contact us at <a href="mailto:kempkrumlov2017@gmail.com">kempkrumlov2017@gmail.com</a> or call <a href="tel:+420720514943">+420 720 514 943</a>.</p>
+</section>
+</div>
+
+<!-- ============================ DEUTSCH ============================ -->
+<div data-l="de">
+<span class="eyebrow">DSGVO</span>
+<h1>Datenschutzerklärung</h1>
+<p class="lead">Wie wir mit den Daten umgehen, die Sie uns bei der Reservierung einer Unterkunft, beim Bootsverleih oder bei der Bestellung eines Transfers anvertrauen. Wir erheben nur, was wir für Ihren Aufenthalt wirklich brauchen.</p>
+<span class="upd">Gültig ab 16. 11. 2026</span>
+<nav class="toc" aria-label="Inhalt"><b>Inhalt</b><ol>
+<li><a href="#de-1">Wer Ihre Daten verarbeitet</a></li><li><a href="#de-2">Welche Daten wir verarbeiten</a></li><li><a href="#de-3">Zweck und Rechtsgrundlage</a></li><li><a href="#de-4">Speicherdauer</a></li><li><a href="#de-5">Empfänger der Daten</a></li><li><a href="#de-6">Cookies und Speicherung im Browser</a></li><li><a href="#de-7">Ihre Rechte</a></li><li><a href="#de-8">Kontakt</a></li>
+</ol></nav>
+
+<section id="de-1"><h2><span>1</span>Wer Ihre Daten verarbeitet</h2>
+<p>Verantwortlicher ist der Betreiber des Camps:</p>
+<dl class="kv"><dt>Betreiber</dt><dd>Libor Pokorný</dd><dt>ID-Nr. (IČO)</dt><dd>02080109</dd><dt>Adresse</dt><dd>Domoradice 107, 381 01 Český Krumlov, Tschechien</dd><dt>E-Mail</dt><dd><a href="mailto:kempkrumlov2017@gmail.com">kempkrumlov2017@gmail.com</a></dd><dt>Telefon</dt><dd><a href="tel:+420720514943">+420 720 514 943</a></dd></dl>
+<p style="margin-top:12px">Bootsverleih und Personentransfer stellt direkt im Camp der Bootsverleih PE-LA bereit (<a href="tel:+420725336601">+420 725 336 601</a>). Wir geben ihm nur die Daten weiter, die er dafür braucht.</p>
+</section>
+
+<section id="de-2"><h2><span>2</span>Welche Daten wir verarbeiten</h2>
+<ul>
+<li><b>Online-Reservierungen:</b> Name, Telefon, E-Mail, Ihre Nachricht, Aufenthaltszeitraum, Anzahl und Altersgruppen der Personen, gewählte Unterkunft und Extras, gemietete Boote, Ort und Zeit des Transfers.</li>
+<li><b>Zahlungen:</b> Höhe der Anzahlung und des Restbetrags, Zahlungsdatum und Verwendungszweck. Ihre Kontonummer sehen wir nur auf unserem Kontoauszug, wenn Sie per Überweisung zahlen.</li>
+<li><b>Bei Übernachtung im Camp:</b> gesetzlich vorgeschriebene Angaben für das Gästeverzeichnis und die Kurtaxe – insbesondere Name, Geburtsdatum, Wohnanschrift, Ausweisnummer und Aufenthaltsdauer. Bei ausländischen Gästen zusätzlich Staatsangehörigkeit und Zweck des Aufenthalts.</li>
+<li><b>Kommunikation:</b> E-Mails, Nachrichten und Telefonate mit uns.</li>
+</ul>
+</section>
+
+<section id="de-3"><h2><span>3</span>Zweck und Rechtsgrundlage</h2>
+<table><thead><tr><th>Zweck</th><th>Rechtsgrundlage (DSGVO)</th></tr></thead><tbody>
+<tr><td>Annahme und Abwicklung der Reservierung, Unterkunft, Bootsverleih und Transfer, Kommunikation mit Ihnen</td><td>Vertragserfüllung – Art. 6 Abs. 1 lit. b</td></tr>
+<tr><td>Gästeverzeichnis, Kurtaxe, Meldung ausländischer Gäste, Buchhaltung und Steuern</td><td>Rechtliche Verpflichtung – Art. 6 Abs. 1 lit. c</td></tr>
+<tr><td>Wahrung unserer Rechte (z. B. Reklamation oder Schaden an einem Boot)</td><td>Berechtigtes Interesse – Art. 6 Abs. 1 lit. f</td></tr>
+</tbody></table>
+<p style="margin-top:12px">Werbe-E-Mails senden wir nicht ohne Ihre Einwilligung, und Ihre Daten verkaufen wir nie.</p>
+</section>
+
+<section id="de-4"><h2><span>4</span>Speicherdauer</h2>
+<ul>
+<li><b>Reservierungen</b> für die Dauer Ihres Aufenthalts und danach höchstens 3 Jahre (wegen möglicher Reklamationen). Stornierte und verfallene Reservierungen löschen wir spätestens nach 1 Jahr.</li>
+<li><b>Gästeverzeichnis</b> 6 Jahre ab dem letzten Eintrag, wie gesetzlich vorgeschrieben.</li>
+<li><b>Buchhaltungsunterlagen</b> (Rechnungen, Zahlungen) 10 Jahre nach tschechischem Buchhaltungs- und Mehrwertsteuerrecht.</li>
+</ul>
+<p>Danach löschen oder anonymisieren wir die Daten.</p>
+</section>
+
+<section id="de-5"><h2><span>5</span>Empfänger der Daten</h2>
+<ul>
+<li>Bootsverleih PE-LA – nur die für Bootsverleih und Transfer nötigen Daten,</li>
+<li>Anbieter unserer Website, des Reservierungssystems und der E-Mail (unsere E-Mail läuft über Google Gmail),</li>
+<li>unsere Bank bei Zahlung der Anzahlung per Überweisung,</li>
+<li>unsere Buchhaltung bzw. Steuerberatung,</li>
+<li>Behörden, soweit gesetzlich vorgeschrieben (Stadt Český Krumlov – Kurtaxe, Polizei der Tschechischen Republik – Meldung ausländischer Gäste).</li>
+</ul>
+</section>
+
+<section id="de-6"><h2><span>6</span>Cookies und Speicherung im Browser</h2>
+<p>Die Website verwendet keine Werbe- oder Analyse-Cookies. Sie speichert in Ihrem Browser nur die gewählte Sprache, die Währung (CZK / €) und die Animationseinstellung, damit sie nicht erneut fragen muss. Diese Daten werden nirgendwohin gesendet; Sie löschen sie, indem Sie die Website-Daten im Browser entfernen.</p>
+<p>Im Bereich Kontakt ist eine Karte von Mapy.com (Seznam.cz, a.s.) eingebunden. Sie wird von deren Servern geladen; es gilt deren <a href="https://o.seznam.cz/ochrana-udaju/" rel="noopener" target="_blank">Datenschutzerklärung</a>.</p>
+</section>
+
+<section id="de-7"><h2><span>7</span>Ihre Rechte</h2>
+<p>Sie haben das Recht:</p>
+<ul>
+<li>Auskunft über Ihre gespeicherten Daten und eine Kopie zu erhalten,</li>
+<li>die Berichtigung unrichtiger Daten zu verlangen,</li>
+<li>die Löschung von Daten zu verlangen, die wir nicht mehr brauchen und nicht aufbewahren müssen,</li>
+<li>die Einschränkung der Verarbeitung und die Übertragung Ihrer Daten zu verlangen,</li>
+<li>der Verarbeitung aufgrund berechtigten Interesses zu widersprechen.</li>
+</ul>
+<p>Schreiben Sie uns oder rufen Sie an – wir antworten spätestens innerhalb eines Monats. Wenn Sie meinen, dass wir mit Ihren Daten nicht richtig umgehen, können Sie sich beim tschechischen <a href="https://uoou.gov.cz" rel="noopener" target="_blank">Amt für den Schutz personenbezogener Daten</a> (Pplk. Sochora 27, 170 00 Prag 7) oder bei der Datenschutzbehörde in Ihrem Land beschweren.</p>
+</section>
+
+<section id="de-8"><h2><span>8</span>Kontakt</h2>
+<p>Bei Fragen zum Datenschutz erreichen Sie uns unter <a href="mailto:kempkrumlov2017@gmail.com">kempkrumlov2017@gmail.com</a> oder telefonisch unter <a href="tel:+420720514943">+420 720 514 943</a>.</p>
+</section>
+</div>
+</main>
+<p class="ft">© 2026 Kemp Krumlov · Libor Pokorný, IČO 02080109</p>
+<script>
+(function(){var h=document.documentElement,B=[].slice.call(document.querySelectorAll('.lang button')),T={cs:'Ochrana osobních údajů · Kemp Krumlov',en:'Privacy policy · Kemp Krumlov',de:'Datenschutzerklärung · Kemp Krumlov'};
+function nastav(l){h.lang=l;document.title=T[l];B.forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.j===l))});
+  var z=document.getElementById('zpet');z.href=l==='cs'?'./':'./?lang='+l;z.setAttribute('aria-label',{cs:'Zpět na web',en:'Back to website',de:'Zurück zur Website'}[l]);
+  var u=new URL(location.href);if(l==='cs')u.searchParams.delete('lang');else u.searchParams.set('lang',l);history.replaceState(null,'',u)}
+B.forEach(function(b){b.addEventListener('click',function(){var l=b.dataset.j;try{localStorage.setItem('kkt.jazyk',JSON.stringify(l))}catch(e){}nastav(l)})});
+nastav(h.lang)})();
+</script>
+</body>
+</html>
