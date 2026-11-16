@@ -1193,3 +1193,15 @@ main:has(.rz-lay){max-width:1720px}
 .rr-raz button{padding:7px 13px;border:0;border-radius:9px;background:transparent;font:inherit;font-size:13.5px;font-weight:700;color:#5d6a62;cursor:pointer}
 .rr-raz button:hover{color:var(--deep)}.rr-raz button[aria-pressed=true]{background:#fff;color:var(--deep);box-shadow:0 1px 3px rgba(11,36,25,.15)}
 .rr-raz button:focus-visible{outline:3px solid var(--sun);outline-offset:1px}
+/* jedna přehledná lišta filtrů rezervací */
+.rlb{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:10px;margin:4px 0 14px;background:#fff;border:1px solid var(--line);border-radius:16px}
+.rlb .rl-tyh button{padding:8px 14px;font-size:14px;border-radius:10px}
+.rlb-f{display:flex;align-items:center;gap:8px;margin-left:auto;flex-wrap:wrap}
+.rlb-f .rl-f{margin:0}.rlb-f select.inp{width:auto;min-height:40px;font-weight:700}.rlb-f select.on{border-color:var(--deep);box-shadow:inset 0 0 0 1px var(--deep)}
+.rlb-fb{display:inline-flex;align-items:center;gap:6px;min-height:40px}.rlb-fb b{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:99px;background:var(--deep);color:#fff;font-size:11.5px}
+.rlb-fb.on{border-color:var(--deep);background:#f4f1ea}
+.rlb-p{flex-basis:100%;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:end;padding:12px 4px 4px;border-top:1px solid var(--line)}
+.rlb-p .rl-f select,.rlb-p .rl-f input{width:auto}
+.rr-nas{display:inline-flex;align-items:center;gap:6px}.rr-nas .btn{display:inline-flex;align-items:center;gap:6px}
+@media(max-width:900px){.rlb-f{margin-left:0}}
+.rlb-p .rl-f{flex-direction:row;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:13px;font-weight:700}.rlb-p .rl-f>span{display:inline!important;position:static!important;width:auto!important;height:auto!important;clip:auto!important}
