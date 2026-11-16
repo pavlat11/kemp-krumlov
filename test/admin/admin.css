@@ -1317,3 +1317,11 @@ main:has(.rz-lay){max-width:1720px}
 .pk-c.pk-ok .pk-l,.pk-c.pk-ok .rl-j{color:#2f5e43}
 .pk-c.pk-ok .pk-f,.pk-c.pk-ok .pk-m,.pk-c.pk-ok .pk-v{opacity:.75}
 .pk-c.pk-ok .rl-j,.pk-c.pk-ok .pk-l{color:#1f4d33}.pk-c.pk-ok .pk-v{opacity:1;color:#4c6b58}
+
+/* odhlášení = vyřešeno, šedě */
+.pk-c.pk-off{background:#f1f0ec;border-color:#e0ddd5;box-shadow:none;filter:grayscale(1)}
+.pk-c.pk-off .rl-j,.pk-c.pk-off .pk-l{color:#77736a}
+.pk-c.pk-off .pk-v,.pk-c.pk-off .pk-f,.pk-c.pk-off .pk-m,.pk-c.pk-off .pk-t{color:#9a968c;opacity:1}
+.pk-c.pk-off.zm::after{filter:none}
+.pk-hd.off{color:#8a867c}.pk-hd.off::before,.pk-hd.off::after{background:#dad6cc}
+.pk-col.ven .pk-hn{background:#ebe9e3;color:#77736a}
