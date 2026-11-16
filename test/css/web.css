@@ -3229,7 +3229,7 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-vc em{margin-top:8px;font-style:normal;font-weight:800;font-size:15px;color:#fff;background:#f4a64a;border-radius:999px;padding:10px 18px}
 .rz-vc:focus-visible,.rz-dv-c:focus-visible,.rz-nc:focus-visible{outline:3px solid #f4a64a;outline-offset:3px}
 #rezervace.na-volbe .rz-bar{display:none}
-#rezervace.mod-lod .rz-calinfo,#rezervace.mod-lod .rz-hint{display:none}
+#rezervace.mod-lod .rz-hint{display:none}
 .rz-noci{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:16px}
 .rz-nc{display:flex;flex-direction:column;gap:3px;text-align:left;padding:16px 18px 16px 52px;border:2px solid #ece5d7;border-radius:18px;background:#fff;font:inherit;color:#0b2419;cursor:pointer;position:relative;transition:.2s}
 .rz-nc::before{content:"";position:absolute;left:18px;top:50%;width:22px;height:22px;margin-top:-11px;border-radius:7px;border:2px solid #b9b1a0;background:#fff}
