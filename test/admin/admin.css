@@ -1164,3 +1164,10 @@ main:has(.rz-lay){max-width:1720px}
 .rzr:has(.sel),.rzr.sel{border:2px solid var(--sun);box-shadow:0 0 0 4px rgba(244,166,74,.22),0 10px 24px -14px rgba(11,36,25,.45)}
 .rzr:has(.sel) .rr-h,.rzr.sel .rr-h{background:#fff8ec}
 .rzr:has(.sel) .rr-z,.rzr.sel .rr-z{background:var(--sun);border-color:var(--sun);color:var(--deep)}
+
+/* řazení „co je na řadě“: skupiny Po termínu / Dnes / Zítra / Tento týden … */
+.rr-m.po{color:#b3261e}.rr-m.po span{background:#fbe3e0;color:#b3261e}
+.rr-m.dn{color:#b8650e}.rr-m.dn span{background:#fdf0de;color:#b8650e}
+.rr-m.ho{color:var(--mut)}
+.rl-z.po{background:#fbe3e0;color:#b3261e}
+.rr-d .rl-z{white-space:normal;line-height:1.25;display:inline-block;max-width:100%}
