@@ -1120,6 +1120,12 @@ function rezervace(m,sekV){
     h+='<ul class="rdn-f">'+(JL(r)&&r.lode?fakt('ka','Termín',KR(r.lode.den)+' '+r.lode.den.slice(0,4),dniL(r)+' '+pl(dniL(r),'den','dny','dní')+' · jen lodě'):fakt('ka','Termín',KR(r.od)+' – '+KR(r.do)+' '+r.do.slice(0,4),n+' '+pl(n,'noc','noci','nocí')))+
       (b||maUby(r)?fakt('ub','Místo',esc(mistaTxt(r))):'')+(b?'':fakt('os','Osoby',esc(KKC.osobyTxt(o))))+(kon.length?fakt('tel','Kontakt',kon[0],kon[1]||''):'')+'</ul>';
     if(r.zprava)h+='<div class="rdn-n"><small>'+SV(IK.po,14)+'Poznámka</small><p>'+esc(r.zprava)+'</p></div>';
+    /* osa průběhu – co už je hotové (zeleně) a co teprve přijde; řádek pro pobyt, lodě a platbu */
+    if(!b&&r.stav!=='zru'){var osa=function(nad,K,hot,pozn){return '<div class="rdn-o"><span>'+nad+'</span><ol aria-label="'+nad+': hotovo '+hot+' z '+K.length+'">'+K.map(function(t,i){return '<li class="'+(i<hot?'ok':i===hot?'dal':'')+'">'+(i<hot?'<i>'+FJ+'</i>':'<i></i>')+'<em>'+t+(i<hot?'<span class="sr"> – hotovo</span>':'')+'</em></li>'}).join('')+'</ol>'+(pozn?'<small>'+pozn+'</small>':'')+'</div>'},OS='',ls0=LS(r),pp=r.platba;
+      if(maUby(r))OS+=osa('Pobyt',['Přijato','Potvrzeno','Ubytován','Odjel'],({pop:1,pot:2,uby:3,odj:4})[r.stav]||1);
+      if(LK(r))OS+=osa('Lodě',['Rezervováno','Vydáno','Vráceno'],ls0==='vra'?3:ls0==='vyd'||ls0==='cast'?2:1,ls0==='cast'?'část lodí je už vrácená':'');
+      OS+=pp?osa('Platba',['Záloha','Doplaceno'],pp.stav==='vse'?2:pp.stav==='zal'?1:0):osa('Platba',['Zaplaceno na místě'],0);
+      h+='<section class="rdn-os" aria-label="Průběh rezervace">'+OS+'</section>'}
     /* hlavní akce – co je teď na řadě */
     h+=(JL(r)&&lodBtn(r)&&!(r.stav==='pop'&&r.platba&&r.platba.stav==='ceka')?lodBtn(r).replace('btn sm pri','btn pri rp-a'):r.stav==='pop'&&r.platba&&r.platba.stav==='ceka'?'<button type="button" class="btn pri rp-a" data-zp="zal">Záloha zaplacena – potvrdit</button><button type="button" class="btn sm gh rp-a2" data-st="pot">Potvrdit bez zálohy</button>':ak?'<button type="button" class="btn pri rp-a" data-st="'+ak[0]+'">'+ak[1]+'</button>':'');
     /* PLATBA – jako účtenka: položky, celkem, zaplaceno, zbývá */
