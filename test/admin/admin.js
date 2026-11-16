@@ -1554,8 +1554,8 @@ function kalkulace(m){var R=window.KKR;if(!R||!window.KKC){m.innerHTML='<div cla
      (!s.po.length&&!s.dluh.length&&!s.ceka.length?'<p class="szn-ok">✓ Nikdo s platbou nemešká.</p>':'')+'</div></div>'+
    graf(s).replace('<div class="card">','<div class="card" style="margin-top:16px">')+
    '<div class="grid g2" style="margin-top:16px">'+
-    '<div class="card"><h2>Obsazenost</h2><p class="mut" style="margin-top:-4px">Obsazené noci z nocí, kdy je kemp otevřený nebo v něm někdo byl ('+s.nociOtev+' '+pl(s.nociOtev,'noc','noci','nocí')+' v období).</p>'+
-     Object.keys(s.obs).map(function(t){var o=s.obs[t],kap=o.n*s.nociOtev,p=pc(o.obs,kap);return '<div class="kl-o"><span>'+(TYP[t]||t)+'<small>'+o.n+' '+pl(o.n,'místo','místa','míst')+' · '+o.obs+' z '+kap+' nocí</small></span><div class="kl-bar"><i class="c-u" style="width:'+Math.min(100,p)+'%"></i></div><b>'+p+' %</b></div>'}).join('')+
+    '<div class="card"><h2>Obsazenost</h2><p class="mut" style="margin-top:-4px">Kolik procent nocí byla místa obsazená. Období má '+s.nociOtev+' '+pl(s.nociOtev,'noc','noci','nocí')+' provozu (dny, kdy je kemp zavřený, se nepočítají).</p>'+
+     Object.keys(s.obs).map(function(t){var o=s.obs[t],kap=o.n*s.nociOtev,p=pc(o.obs,kap);return '<div class="kl-o"><span>'+(TYP[t]||t)+'<small>obsazeno '+o.obs+' z '+kap+' možných nocí ('+o.n+' '+pl(o.n,'místo','místa','míst')+' × '+s.nociOtev+')</small></span><div class="kl-bar"><i class="c-u" style="width:'+Math.min(100,p)+'%"></i></div><b>'+p+' %</b></div>'}).join('')+
      '<p class="mut" style="margin:10px 0 0;font-size:14px">Vlastní stany: <b>'+s.ext.stan+'</b> '+pl(s.ext.stan,'noc','noci','nocí')+' · Karavany: <b>'+s.ext.karavan+'</b> '+pl(s.ext.karavan,'noc','noci','nocí')+' (nemají pevnou kapacitu)</p></div>'+
     '<div class="card"><h2>Průměry</h2><dl class="kl-rz">'+
      '<div><dt>Průměrná rezervace</dt><dd>'+kc(n?s.trz/n:0)+'</dd></div>'+
