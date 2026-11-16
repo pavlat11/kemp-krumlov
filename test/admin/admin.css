@@ -1266,3 +1266,6 @@ main:has(.rz-lay){max-width:1720px}
 .rlb-va{display:inline-flex;align-items:center;gap:7px;padding:0 10px 0 4px;margin-right:2px;min-height:36px;border-right:1.5px solid var(--line);font-size:13.5px;font-weight:700;color:var(--ink);cursor:pointer}
 .rlb-va input{width:17px;height:17px}
 @media(max-width:1500px){.rlb-va span{display:none}}
+.rzt-i.t-skup{background:#fbe6ee;color:#a3305c}.rzt button[aria-selected=true] .t-skup{background:#a3305c}.rzt button:has(.t-skup)[aria-selected=true]{border-bottom-color:#a3305c}
+.rzt button[title]{cursor:pointer}
+.rzt{gap:14px}.rzt button{gap:5px;font-size:14px}.rzt-i{width:26px;height:26px}.rzt button small{padding:0 6px;font-size:12px}
