@@ -1171,3 +1171,25 @@ main:has(.rz-lay){max-width:1720px}
 .rr-m.ho{color:var(--mut)}
 .rl-z.po{background:#fbe3e0;color:#b3261e}
 .rr-d .rl-z{white-space:normal;line-height:1.25;display:inline-block;max-width:100%}
+
+/* přepínač „Zobrazit“: Vše | Ubytování | Lodě | Doprava + jemnější výběr ubytování */
+.rl-ty{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:12px 0 4px}
+.rl-tyl{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+.rl-tyh{display:inline-flex;gap:6px;flex-wrap:wrap}
+.rl-tyh button{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:inherit;font-size:14.5px;font-weight:800;color:var(--deep);cursor:pointer;transition:background .15s,border-color .15s}
+.rl-tyh button:hover{border-color:var(--deep2)}
+.rl-tyh button[aria-pressed=true]{color:#fff;border-color:transparent}
+.rl-tyh .vse[aria-pressed=true]{background:var(--deep)}.rl-tyh .ubyt[aria-pressed=true]{background:#2f7a4f}.rl-tyh .lode[aria-pressed=true]{background:#1f6d77}.rl-tyh .doprava[aria-pressed=true]{background:#c27317}
+.rl-tyh .ubyt svg{color:#2f7a4f}.rl-tyh .lode svg{color:#1f6d77}.rl-tyh .doprava svg{color:#c27317}.rl-tyh button[aria-pressed=true] svg{color:#fff}
+.rl-tyd{display:inline-flex;gap:4px;flex-wrap:wrap;padding-left:12px;border-left:1px solid var(--line)}
+.rl-tyd button{padding:6px 11px;border-radius:99px;border:1px solid var(--line);background:transparent;font:inherit;font-size:13px;font-weight:700;color:var(--mut);cursor:pointer}
+.rl-tyd button:hover{border-color:#2f7a4f;color:#2f7a4f}.rl-tyd button[aria-pressed=true]{background:#e3f1e8;border-color:#6fbf8a;color:#17603a}
+.rl-ty button:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+/* řazení nad seznamem rezervací */
+.rr-top{flex-wrap:wrap;gap:10px 16px}
+.rr-raz{display:inline-flex;align-items:center;gap:4px;padding:4px;border-radius:12px;background:#ece6d9;margin-right:auto}
+.rr-raz span{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);padding:0 8px 0 6px}
+.rr-raz button{padding:7px 13px;border:0;border-radius:9px;background:transparent;font:inherit;font-size:13.5px;font-weight:700;color:#5d6a62;cursor:pointer}
+.rr-raz button:hover{color:var(--deep)}.rr-raz button[aria-pressed=true]{background:#fff;color:var(--deep);box-shadow:0 1px 3px rgba(11,36,25,.15)}
+.rr-raz button:focus-visible{outline:3px solid var(--sun);outline-offset:1px}
