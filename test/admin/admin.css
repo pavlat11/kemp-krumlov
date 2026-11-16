@@ -1105,3 +1105,17 @@ main:has(.rz-lay){max-width:1720px}
 .ck-vaz .ck-pl{font-weight:600;color:#3d4a42;margin-right:4px;font-size:13px}.ck-vaz .ck-pl b{color:var(--deep);font-weight:800}
 .ck-vaz small{flex-basis:100%;color:var(--mut);margin:2px 0 0;font-size:12px}
 .ct tr.ck-mam td{padding-bottom:0}
+
+/* rozvoz na start: tabulka lidí u každé zastávky */
+.dp-zh{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px}.dp-zh h3{margin:0 8px 0 0}
+.dp-ch{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:13px;font-weight:600}
+.dp-ch b{font-weight:800;font-size:14px}.dp-ch.lid{background:#fdf0de;color:#7a4708}.dp-ch.aut{background:#f1eee6;color:#3d4a42}.dp-ch.lod{background:#dceef0;color:#12414f}
+.dp-t{width:100%;border-collapse:collapse;font-size:14px}
+.dp-t th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:800;padding:6px 10px;border-bottom:1.5px solid var(--line)}
+.dp-t td{padding:9px 10px;border-bottom:1px solid #efe9dc;vertical-align:middle}.dp-t tr:last-child td{border-bottom:0}
+.dp-t tbody tr:nth-child(even) td{background:#fcfaf5}
+.dp-t .n{text-align:center;width:80px}.dp-t td small{display:block;font-size:12px;color:var(--mut)}
+.dp-jm{font-weight:800;font-size:15px}.dp-os{display:inline-grid;place-items:center;min-width:34px;height:30px;padding:0 6px;border-radius:9px;background:#fdf0de;color:#7a4708;font-size:16px;font-weight:800}
+.dp-nal{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;border-radius:10px;background:#eaf4f5;color:#12414f;font-size:13.5px}.dp-nal svg{flex:none}
+@media(max-width:700px){.dp-t th:nth-child(3),.dp-t td:nth-child(3){display:none}}
+.dp-t{table-layout:fixed}.dp-t th:nth-child(1){width:34%}.dp-t th:nth-child(2){width:80px}.dp-t th:nth-child(3){width:24%}

@@ -647,11 +647,18 @@ function rezervace(m,sekV){
       '<div class="dp-k lod">'+SV(IKO.lod,22)+'<span>Návoz lodí</span><b>'+nl+'</b><small>'+(nl?pl(nl,'loď','lodě','lodí')+' na start':'nic')+'</small></div>'+
       '<div class="dp-k svz">'+SV(IKO.cil,22)+'<span>Svoz lodí z cíle</span><b>'+sl+'</b><small>'+(SV2.length?SV2.length+' '+pl(SV2.length,'místo','místa','míst'):'nic')+'</small></div></div></section>';
     /* rozvoz na start */
-    h+='<section class="card rv" style="margin-top:16px"><div class="dp-h"><span class="dp-hi lid">'+SV(IKO.auto,20)+'</span><div><h2>Rozvoz na start</h2><p class="mut">Zastávky podle času. U každé je, koho vezete a jaké lodě s vybavením naložit.</p></div></div>'+
-      (ST.length?'<ol class="dp-tl">'+ST.map(function(z){var lk=lodK(z.kusy),vk=vybK(z.kusy);
-        return '<li class="dp-st"><div class="dp-cas">'+(z.cas?'<b>'+esc(z.cas)+'</b><small>odjezd</small>':'<b>–</b><small>jen lodě</small>')+'</div><div class="dp-b"><h3>'+esc(R.mistoN(z.misto))+'</h3>'+
-          (z.lidi.length?'<div class="dp-r lid"><span class="dp-ri">'+SV(IKO.lid,18)+'</span><div><b>'+z.osob+' '+pl(z.osob,'osoba','osoby','osob')+' · '+z.aut+' '+pl(z.aut,'auto','auta','aut')+'</b><span class="dp-hs">'+z.lidi.map(function(r){return '<button type="button" class="lnk" data-id="'+r.id+'">'+esc(r.jmeno)+'</button> <small>'+(r.doprava.osob||0)+' os.'+(r.telefon?' · '+esc(r.telefon):'')+'</small>'}).join('')+'</span></div></div>':'')+
-          (z.lodi.length?'<div class="dp-r lod"><span class="dp-ri">'+SV(IKO.lod,18)+'</span><div><b>'+esc(kusyTxt(lk))+'</b><span class="dp-vy">'+esc(R.lodeKusyTxt(vk))+'</span>'+(z.lidi.length===z.lodi.length&&z.lidi.every(function(r){return z.lodi.indexOf(r)>=0})?'':'<span class="dp-hs">'+z.lodi.map(function(r){return '<button type="button" class="lnk" data-id="'+r.id+'">'+esc(r.jmeno)+'</button> <small>'+esc(LK(r))+'</small>'}).join('')+'</span>')+'</div></div>':'')+
+    h+='<section class="card rv" style="margin-top:16px"><div class="dp-h"><span class="dp-hi lid">'+SV(IKO.auto,20)+'</span><div><h2>Rozvoz na start</h2><p class="mut">Zastávky podle času odjezdu. U každé je seznam lidí, které vezete, a co naložit.</p></div></div>'+
+      (ST.length?'<ol class="dp-tl">'+ST.map(function(z){var lk=lodK(z.kusy),vk=vybK(z.kusy),H=z.lidi.slice();z.lodi.forEach(function(r){if(H.indexOf(r)<0)H.push(r)});
+        var nlz=nLod(z.kusy);
+        /* tabulka: kdo jede – každý host na vlastním řádku */
+        return '<li class="dp-st"><div class="dp-cas">'+(z.cas?'<b>'+esc(z.cas)+'</b><small>odjezd</small>':'<b>–</b><small>jen lodě</small>')+'</div><div class="dp-b">'+
+          '<div class="dp-zh"><h3>'+esc(R.mistoN(z.misto))+'</h3><span class="dp-ch lid">'+SV(IKO.lid,15)+'<b>'+z.osob+'</b> '+pl(z.osob,'osoba','osoby','osob')+'</span>'+(z.aut?'<span class="dp-ch aut">'+SV(IKO.auto,15)+'<b>'+z.aut+'</b> '+pl(z.aut,'auto','auta','aut')+'</span>':'')+(nlz?'<span class="dp-ch lod">'+SV(IKO.lod,15)+'<b>'+nlz+'</b> '+pl(nlz,'loď','lodě','lodí')+'</span>':'')+'</div>'+
+          '<table class="dp-t"><thead><tr><th>Host</th><th class="n">Osob</th><th>Telefon</th><th>Lodě</th></tr></thead><tbody>'+H.map(function(r){var jede=z.lidi.indexOf(r)>=0,ml=z.lodi.indexOf(r)>=0;
+            return '<tr><td><button type="button" class="lnk dp-jm" data-id="'+r.id+'">'+esc(r.jmeno)+'</button><small>'+(maUby(r)?esc(kratM(r)):'nebydlí v kempu')+'</small></td>'+
+              '<td class="n">'+(jede?'<b class="dp-os">'+(r.doprava.osob||0)+'</b>':'<span class="mut">jen lodě</span>')+'</td>'+
+              '<td>'+(r.telefon?'<a href="tel:'+esc(r.telefon.replace(/\s/g,''))+'">'+esc(r.telefon)+'</a>':'<span class="mut">–</span>')+'</td>'+
+              '<td>'+(ml?esc(LK(r)):'<span class="mut">vlastní lodě</span>')+'</td></tr>'}).join('')+'</tbody></table>'+
+          (nlz?'<div class="dp-nal">'+SV(IKO.lod,16)+'<span><b>Naložit:</b> '+esc(kusyTxt(lk))+' · '+esc(R.lodeKusyTxt(vk))+'</span></div>':'')+
           '</div></li>'}).join('')+'</ol>':'<p class="mut" style="margin:0">Na tento den nikoho ani nic na start nevezete.</p>')+'</section>';
     /* svoz */
     h+='<section class="card rv" style="margin-top:16px"><div class="dp-h"><span class="dp-hi svz">'+SV(IKO.cil,20)+'</span><div><h2>Svoz lodí z cíle</h2><p class="mut">Kde hosté končí a odkud je potřeba lodě a vybavení odvézt zpět do kempu.</p></div></div>'+
