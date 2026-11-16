@@ -27,6 +27,7 @@ var IC={
  okoX:'<path d="M17.9 17.9A10 10 0 0 1 12 19c-6.5 0-10-7-10-7a18 18 0 0 1 5.1-5.9M9.9 5.2A9 9 0 0 1 12 5c6.5 0 10 7 10 7a18 18 0 0 1-2.2 3.2M1 1l22 22"/>',
  kos:'<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>',
  upl:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>',
+ kalkulace:'<path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6" rx="1"/><rect x="12" y="8" width="3" height="10" rx="1"/><rect x="17" y="5" width="3" height="13" rx="1"/>',
  zaznam:'<path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/>',
  menu:'<path d="M4 7h16M4 12h16M4 17h16"/>'
 };
@@ -65,8 +66,8 @@ function jazykVolba(){var j=jazykAdm();return '<div class="row jz" role="group" 
 function jazykKlik(m){$$('[data-jz]',m).forEach(function(b){b.addEventListener('click',function(){if(b.dataset.jz===jazykAdm())return;var jd=function(){KK.LS.set('admin-jazyk',b.dataset.jz);neulozeno=null;route()};if(neulozeno&&neulozeno())ptej('Máte neuložené změny\n\nKdyž přepnete jazyk, změny se neuloží.',{ok:'Přepnout bez uložení',ne:'Zůstat'}).then(function(a){if(a)jd()});else jd()})})}
 
 /* ---------- kostra ---------- */
-var VIEWS={upravit:upravit,prehled:prehled,galerie:galerie,seo:seo,cenik:cenik,rezervace:rezervace,ubytovani:rezervace,pujcovna:rezervace,doprava:rezervace,nastaveni:nastaveni,zaznam:zaznam,uzivatele:uzivatele,ucet:ucet};
-var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['galerie','Galerie'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace'],['ubytovani','Ubytování'],['pujcovna','Půjčovna lodí'],['doprava','Doprava'],['cenik','Ceník a kapacity']]],['Systém',[['zaznam','Záznam akcí'],['nastaveni','Nastavení a záloha'],['uzivatele','Uživatelé']]]];
+var VIEWS={upravit:upravit,prehled:prehled,galerie:galerie,seo:seo,cenik:cenik,rezervace:rezervace,ubytovani:rezervace,pujcovna:rezervace,doprava:rezervace,nastaveni:nastaveni,zaznam:zaznam,kalkulace:kalkulace,uzivatele:uzivatele,ucet:ucet};
+var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['galerie','Galerie'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace'],['ubytovani','Ubytování'],['pujcovna','Půjčovna lodí'],['doprava','Doprava'],['cenik','Ceník a kapacity'],['kalkulace','Kalkulace']]],['Systém',[['zaznam','Záznam akcí'],['nastaveni','Nastavení a záloha'],['uzivatele','Uživatelé']]]];
 function shell(s){
   app.innerHTML='<div class="top"><div class="logo"><i>'+SV(IC.lode,20)+'</i>Administrace</div><button type="button" id="mb" aria-label="Otevřít menu" aria-expanded="false" aria-controls="side">'+SV(IC.menu,22)+'</button></div>'+
   '<div class="app"><nav class="side" id="side" aria-label="Administrace"><div class="logo"><i>'+SV(IC.lode,22)+'</i><span>Kemp Krumlov<small>Administrace</small></span></div>'+
@@ -1479,6 +1480,99 @@ function ucet(m){
     KK.auth.zmenHeslo(hf.stare.value,hf.nove.value).then(function(){toast('Heslo změněno.');shell(KK.auth.meSync())}).catch(function(x){er.textContent=x.message;er.hidden=false})});
 }
 
+/* ---------- KALKULACE: tržby, rozpad podle druhu, platby, obsazenost a průměry ----------
+   Rezervace se do období počítají podle dne příjezdu (u samotných lodí podle dne půjčení).
+   Obsazenost se počítá po nocích v období. Zahrnuje i uzavřené sezóny z archivu. */
+function kalkulace(m){var R=window.KKR;if(!R||!window.KKC){m.innerHTML='<div class="card">Rezervace nejsou k dispozici.</div>';return}
+ var kc=function(n){return Math.round(n||0).toLocaleString('cs-CZ').replace(/\s/g,' ')+' Kč'},
+  pc=function(a,b){return b?Math.round(a/b*100):0},
+  I=function(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)},
+  D=function(s){var p=s.split('-');return new Date(+p[0],p[1]-1,+p[2])},
+  KR=function(s){var d=D(s);return d.getDate()+'. '+(d.getMonth()+1)+'. '+d.getFullYear()},
+  dnes=new Date(),DN=I(dnes),
+  MES=['led','úno','bře','dub','kvě','čvn','čvc','srp','zář','říj','lis','pro'],
+  ar=R.archiv(),
+  roky=(function(){var o={};R.sezonaRoky().forEach(function(y){o[y]=1});Object.keys(ar).forEach(function(y){o[+y]=1});o[dnes.getFullYear()]=1;return Object.keys(o).map(Number).sort(function(a,b){return b-a})})(),
+  st=KK.LS.get('kalk',{})||{},
+  obd=st.obd||'rok',rok=roky.indexOf(st.rok)>=0?st.rok:dnes.getFullYear(),vOd=st.od||'',vDo=st.do||'';
+ var dk=function(r){return r.od||(r.lode&&r.lode.den)||''};
+ function rozsah(){
+  if(obd==='mes')return [I(new Date(dnes.getFullYear(),dnes.getMonth(),1)),I(new Date(dnes.getFullYear(),dnes.getMonth()+1,1))];
+  if(obd==='tyd'){var a=new Date(dnes.getFullYear(),dnes.getMonth(),dnes.getDate()-(dnes.getDay()+6)%7),b=new Date(a);b.setDate(b.getDate()+7);return [I(a),I(b)]}
+  if(obd==='vl'&&vOd&&vDo&&vDo>=vOd){var e=D(vDo);e.setDate(e.getDate()+1);return [vOd,I(e)]}
+  return [rok+'-01-01',(rok+1)+'-01-01']}
+ function vse(){var a=R.vse().slice();Object.keys(ar).forEach(function(y){(ar[y].rezervace||[]).forEach(function(r){a.push(Object.assign({_arch:1},r))})});return a}
+ /* celková cena = ubytování (vč. doplňků a slev) + lodě (půjčovné a návoz) + doprava (na start a vyzvednutí v cíli) */
+ function rozpad(r){var c=+r.cena||0,l=r.lode?R.cenaLodi(r.lode).celkem:0,d=R.cenaDopravy(r.doprava)+R.cenaDopravy(r.vyzved);
+  if(l+d>c){var k=c/((l+d)||1);l=Math.round(l*k);d=c-l;return {uby:0,lode:l,dop:d}}return {uby:c-l-d,lode:l,dop:d}}
+ function zaplaceno(r){var p=r.platba,c=+r.cena||0;if(p&&p.stav==='vse')return c;if(p&&p.stav==='zal')return Math.min(c,+p.zaloha||0);return 0}
+ function otevreno(iso){var S=KKC.data.sezona||{};if(S.celorocne)return true;var md=iso.slice(5);return md>=(S.otevrenoOd||'01-01')&&md<(S.otevrenoDo||'12-32')}
+ function spocti(){var rz=rozsah(),A=rz[0],B=rz[1],
+   V=vse().filter(function(r){var d=dk(r);return r.stav!=='blk'&&d>=A&&d<B}),
+   L=V.filter(function(r){return r.stav!=='zru'}),Z=V.length-L.length,
+   s={A:A,B:B,L:L,zru:Z,vse:V.length,trz:0,uby:0,lode:0,dop:0,zap:0,zal:0,dopl:0,noci:0,osob:0,rezU:0,rezL:0,lodi:0,arch:V.some(function(r){return r._arch}),mes:{},po:[],dluh:[],ceka:[]};
+  L.forEach(function(r){var c=+r.cena||0,x=rozpad(r),z=zaplaceno(r),p=r.platba,mk=dk(r).slice(0,7);
+   s.trz+=c;s.uby+=x.uby;s.lode+=x.lode;s.dop+=x.dop;s.zap+=z;if(p&&p.stav==='zal')s.zal+=z;s.dopl+=c-z;
+   if(r.od&&r.do&&((r.mista||[]).length||(r.dalsi&&(+r.dalsi.stan||+r.dalsi.karavan)))){s.rezU++;s.noci+=R.noci(r.od,r.do).length}
+   if(r.lode&&R.lodePocet(r.lode)){s.rezL++;s.lodi+=R.lodePocet(r.lode)}
+   s.osob+=KKC.osobPocet(r.osoby||{});
+   var o=s.mes[mk]=s.mes[mk]||{uby:0,lode:0,dop:0};o.uby+=x.uby;o.lode+=x.lode;o.dop+=x.dop;
+   if(c-z>0&&!r._arch){if(p&&p.stav==='ceka'&&p.splatnost&&p.splatnost<DN)s.po.push(r);else if(r.stav==='odj')s.dluh.push(r);else if(r.stav==='uby')s.ceka.push(r)}});
+  /* obsazenost po nocích v období (jen dny, kdy je kemp otevřený) */
+  var J={},noc=[],d=D(A),e=D(B),BK={};vse().forEach(function(r){if(r.stav!=='zru'&&r.stav!=='blk'&&r.od&&r.do&&(r.mista||[]).length)R.noci(r.od,r.do).forEach(function(x){BK[x]=1})});while(d<e&&noc.length<800){var iso=I(d);if(otevreno(iso)||BK[iso])noc.push(iso);d.setDate(d.getDate()+1)}
+  R.SKUPINY.forEach(function(g){J[g.k]=J[g.k]||{n:0,obs:0};J[g.k].n+=g.c.length});
+  var NS={},ext={stan:0,karavan:0};noc.forEach(function(x){NS[x]=1});
+  vse().forEach(function(r){if(r.stav==='zru'||r.stav==='blk'||!r.od||!r.do)return;R.noci(r.od,r.do).forEach(function(x){if(!NS[x])return;(r.mista||[]).forEach(function(mm){var t=mm.split('-')[0];if(J[t])J[t].obs++});if(r.dalsi){ext.stan+=+r.dalsi.stan||0;ext.karavan+=+r.dalsi.karavan||0}})});
+  s.obs=J;s.ext=ext;s.nociOtev=noc.length;return s}
+ var TYP={chatka:'Chatky',podsad:'Podsadové stany',teepee:'Teepee'};
+ function graf(s){var a=D(s.A),b=D(s.B),M=[];a=new Date(a.getFullYear(),a.getMonth(),1);while(a<b&&M.length<36){M.push(I(a).slice(0,7));a.setMonth(a.getMonth()+1)}
+  if(M.length<2)return '';var tot=function(k){var o=s.mes[k]||{};return (o.uby||0)+(o.lode||0)+(o.dop||0)},mx=Math.max.apply(null,M.map(tot))||1;
+  return '<div class="card"><h2>Tržby po měsících</h2><div class="kl-g" role="img" aria-label="Graf tržeb po měsících">'+M.map(function(k){var o=s.mes[k]||{uby:0,lode:0,dop:0},t=tot(k),h=function(v){return Math.round(v/mx*150)};
+   return '<div class="m" title="'+MES[+k.slice(5)-1]+' '+k.slice(0,4)+': '+kc(t)+'"><em>'+(t?Math.round(t/1000)+' tis.':'')+'</em><div class="s"><i class="c-u" style="height:'+h(o.uby)+'px"></i><i class="c-l" style="height:'+h(o.lode)+'px"></i><i class="c-d" style="height:'+h(o.dop)+'px"></i></div><small>'+MES[+k.slice(5)-1]+(M.length>12?' '+k.slice(2,4):'')+'</small></div>'}).join('')+'</div>'+leg()+'</div>'}
+ function leg(){return '<ul class="kl-l"><li><i class="kl-dot c-u"></i>Ubytování</li><li><i class="kl-dot c-l"></i>Lodě</li><li><i class="kl-dot c-d"></i>Doprava</li></ul>'}
+ function seznam(nad,L,pozn){if(!L.length)return '';L=L.slice().sort(function(a,b){return dk(a)<dk(b)?-1:1});
+  return '<h3 class="kl-h">'+nad+' <span class="mut">('+L.length+')</span></h3>'+(pozn?'<p class="mut" style="margin:0 0 6px;font-size:13px">'+pozn+'</p>':'')+'<ul class="kl-s">'+L.slice(0,8).map(function(r){var d=(+r.cena||0)-zaplaceno(r);
+   return '<li><span><b>'+esc(r.cislo||'')+'</b> '+esc(r.jmeno||'')+'<small>'+KR(dk(r))+(r.platba&&r.platba.splatnost&&r.platba.stav==='ceka'?' · splatnost '+KR(r.platba.splatnost):'')+'</small></span><b>'+kc(d)+'</b></li>'}).join('')+'</ul>'+(L.length>8?'<p class="mut" style="margin:6px 0 0;font-size:13px">… a dalších '+(L.length-8)+' – najdete je v Rezervacích</p>':'')}
+ function kresli(){var s=spocti(),n=s.L.length,KD=function(t,v,p){return '<div><dt>'+t+'</dt><dd>'+v+'</dd>'+(p?'<small>'+p+'</small>':'')+'</div>'},
+   konec=D(s.B);konec.setDate(konec.getDate()-1);
+  m.innerHTML='<div class="ph"><div><h1>Kalkulace</h1><p>Tržby, platby a obsazenost za vybrané období. Rezervace se počítají podle dne příjezdu, zrušené a blokace se do tržeb nepočítají.</p></div><button type="button" class="btn gh" id="klcsv">Stáhnout CSV</button></div>'+
+   '<div class="kl-top"><div class="rz-seg" role="group" aria-label="Období">'+[['tyd','Tento týden'],['mes','Tento měsíc'],['rok','Rok'],['vl','Vlastní']].map(function(x){return '<button type="button" data-ob="'+x[0]+'" aria-pressed="'+(obd===x[0])+'">'+x[1]+'</button>'}).join('')+'</div>'+
+   (obd==='rok'?'<select class="inp" id="klrok" aria-label="Rok">'+roky.map(function(y){return '<option'+(y===rok?' selected':'')+'>'+y+'</option>'}).join('')+'</select>':'')+
+   (obd==='vl'?'<label class="kl-d">od <input class="inp" type="date" id="klod" value="'+esc(vOd)+'"></label><label class="kl-d">do <input class="inp" type="date" id="kldo" value="'+esc(vDo)+'"></label>':'')+
+   '<span class="mut">'+KR(s.A)+' – '+KR(I(konec))+(s.arch?' · včetně archivu':'')+'</span></div>'+
+   '<div class="card"><h2>Tržby za období</h2><dl class="kl-k">'+KD('Tržby celkem',kc(s.trz),n+' '+pl(n,'rezervace','rezervace','rezervací'))+KD('Zaplaceno',kc(s.zap),pc(s.zap,s.trz)+' % z tržeb')+KD('Zbývá doplatit',kc(s.dopl),s.po.length?s.po.length+' po splatnosti zálohy':'')+KD('Zrušeno',String(s.zru),s.vse?pc(s.zru,s.vse)+' % rezervací':'')+'</dl></div>'+
+   '<div class="grid g2" style="margin-top:16px">'+
+    '<div class="card"><h2>Rozpad podle druhu</h2><div class="kl-bar">'+(s.trz?'<i class="c-u" style="width:'+(s.uby/s.trz*100)+'%"></i><i class="c-l" style="width:'+(s.lode/s.trz*100)+'%"></i><i class="c-d" style="width:'+(s.dop/s.trz*100)+'%"></i>':'')+'</div>'+
+     '<dl class="kl-rz">'+[['c-u','Ubytování',s.uby,s.rezU+' '+pl(s.rezU,'pobyt','pobyty','pobytů')+' · '+s.noci+' '+pl(s.noci,'noc','noci','nocí')+' · vč. doplňků a slev'],['c-l','Lodě',s.lode,s.lodi+' '+pl(s.lodi,'loď','lodě','lodí')+' v '+s.rezL+' '+pl(s.rezL,'rezervaci','rezervacích','rezervacích')+' · půjčovné a návoz'],['c-d','Doprava',s.dop,'odvoz na start a vyzvednutí v cíli']].map(function(x){return '<div><dt><i class="kl-dot '+x[0]+'"></i>'+x[1]+'<small>'+x[3]+'</small></dt><dd>'+kc(x[2])+'<small>'+pc(x[2],s.trz)+' %</small></dd></div>'}).join('')+'</dl></div>'+
+    '<div class="card"><h2>Platby</h2><dl class="kl-rz">'+
+     '<div><dt>Zaplaceno celé<small>rezervace označené jako zaplacené</small></dt><dd>'+kc(s.zap-s.zal)+'</dd></div>'+
+     '<div><dt>Přijaté zálohy<small>zbytek se doplácí na místě</small></dt><dd>'+kc(s.zal)+'</dd></div>'+
+     '<div><dt>Zbývá doplatit<small>u všech rezervací v období</small></dt><dd>'+kc(s.dopl)+'</dd></div></dl>'+
+     seznam('Záloha po splatnosti',s.po,'Rezervace, u kterých záloha nedorazila včas.')+
+     seznam('Odjeli a nemají označeno zaplaceno',s.dluh,'Buď dluží, nebo platili na místě a platba není v administraci zapsaná.')+
+     seznam('Ubytovaní, kteří ještě doplácejí',s.ceka)+
+     (!s.po.length&&!s.dluh.length&&!s.ceka.length?'<p class="szn-ok">✓ Nikdo s platbou nemešká.</p>':'')+'</div></div>'+
+   graf(s).replace('<div class="card">','<div class="card" style="margin-top:16px">')+
+   '<div class="grid g2" style="margin-top:16px">'+
+    '<div class="card"><h2>Obsazenost</h2><p class="mut" style="margin-top:-4px">Obsazené noci z nocí, kdy je kemp otevřený nebo v něm někdo byl ('+s.nociOtev+' '+pl(s.nociOtev,'noc','noci','nocí')+' v období).</p>'+
+     Object.keys(s.obs).map(function(t){var o=s.obs[t],kap=o.n*s.nociOtev,p=pc(o.obs,kap);return '<div class="kl-o"><span>'+(TYP[t]||t)+'<small>'+o.n+' '+pl(o.n,'místo','místa','míst')+' · '+o.obs+' z '+kap+' nocí</small></span><div class="kl-bar"><i class="c-u" style="width:'+Math.min(100,p)+'%"></i></div><b>'+p+' %</b></div>'}).join('')+
+     '<p class="mut" style="margin:10px 0 0;font-size:14px">Vlastní stany: <b>'+s.ext.stan+'</b> '+pl(s.ext.stan,'noc','noci','nocí')+' · Karavany: <b>'+s.ext.karavan+'</b> '+pl(s.ext.karavan,'noc','noci','nocí')+' (nemají pevnou kapacitu)</p></div>'+
+    '<div class="card"><h2>Průměry</h2><dl class="kl-rz">'+
+     '<div><dt>Průměrná rezervace</dt><dd>'+kc(n?s.trz/n:0)+'</dd></div>'+
+     '<div><dt>Ubytování za noc<small>průměr na jeden pobyt a noc</small></dt><dd>'+kc(s.noci?s.uby/s.noci:0)+'</dd></div>'+
+     '<div><dt>Délka pobytu</dt><dd>'+(s.rezU?(s.noci/s.rezU).toLocaleString('cs-CZ',{maximumFractionDigits:1}):'0')+' noci</dd></div>'+
+     '<div><dt>Hostů na rezervaci<small>celkem '+s.osob+' '+pl(s.osob,'host','hosté','hostů')+'</small></dt><dd>'+(n?(s.osob/n).toLocaleString('cs-CZ',{maximumFractionDigits:1}):'0')+'</dd></div>'+
+     '<div><dt>Lodě na rezervaci s loděmi</dt><dd>'+(s.rezL?(s.lodi/s.rezL).toLocaleString('cs-CZ',{maximumFractionDigits:1}):'0')+'</dd></div></dl></div></div>';
+  m.__s=s}
+ function uloz(){KK.LS.set('kalk',{obd:obd,rok:rok,od:vOd,do:vDo})}
+ m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ob){obd=b.dataset.ob;if(obd==='vl'&&!vOd){vOd=I(new Date(dnes.getFullYear(),dnes.getMonth(),1));vDo=DN}uloz();kresli()}
+  else if(b.id==='klcsv'){var s=m.__s,q=function(v){v=String(v==null?'':v);return /[;"\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v},
+   rows=[['Číslo','Jméno','Příjezd','Odjezd','Stav','Cena','Ubytování','Lodě','Doprava','Zaplaceno','Doplatit']].concat(s.L.map(function(r){var x=rozpad(r),z=zaplaceno(r);return [r.cislo,r.jmeno,r.od||dk(r),r.do||'',R.STAVY[r.stav]||r.stav,+r.cena||0,x.uby,x.lode,x.dop,z,(+r.cena||0)-z]}));
+   var a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+rows.map(function(r){return r.map(q).join(';')}).join('\r\n')],{type:'text/csv'}));a.download='kemp-krumlov-kalkulace-'+s.A+'.csv';a.click();toast('CSV staženo.')}});
+ m.addEventListener('change',function(e){var t=e.target;if(t.id==='klrok'){rok=+t.value;uloz();kresli()}else if(t.id==='klod'||t.id==='kldo'){vOd=$('#klod',m).value;vDo=$('#kldo',m).value;if(vOd&&vDo&&vDo<vOd){toast('Konec období musí být po začátku.',1);return}uloz();kresli()}});
+ kresli();
+}
 /* ---------- ZÁZNAM AKCÍ: kdo, kdy a co na webu změnil ---------- */
 function zaznam(m){
   m.innerHTML='<div class="ph"><div><h1>Záznam akcí</h1><p>Kdo, kdy a co na webu změnil. Ukládá se posledních 2000 záznamů v tomto prohlížeči.</p></div></div>'+

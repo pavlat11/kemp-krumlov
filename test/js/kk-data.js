@@ -33,7 +33,7 @@ function api(method,path,body){
    (Laravel: tabulka users s rolí, hesla bcrypt, přihlášení přes session, práva přes middleware/Policy).
    server: POST /login {login,heslo} · POST /logout · GET /me · GET/POST/PUT/DELETE /uzivatele · GET/PUT /prava · PUT /me/heslo */
 KK.ROLE={admin:'Správce',obsluha:'Obsluha'};
-KK.SEKCE={prehled:'Přehled',upravit:'Upravit web',galerie:'Galerie',seo:'SEO',rezervace:'Rezervace',cenik:'Ceník a kapacity',nastaveni:'Nastavení a záloha',zaznam:'Záznam akcí'};
+KK.SEKCE={prehled:'Přehled',upravit:'Upravit web',galerie:'Galerie',seo:'SEO',rezervace:'Rezervace',cenik:'Ceník a kapacity',nastaveni:'Nastavení a záloha',zaznam:'Záznam akcí',kalkulace:'Kalkulace'};
 var PRAVA0={obsluha:{prehled:1,upravit:1,galerie:1,rezervace:1,seo:0,cenik:0,nastaveni:0}};
 function hex(b){return [].map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2)}).join('')}
 function otisk(sul,heslo){var t=sul+'|'+heslo;
