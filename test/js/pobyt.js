@@ -156,7 +156,8 @@ function stepper(get,set,min,max){const w=document.createElement('div');w.classN
  p.addEventListener('click',e=>{e.stopPropagation();set(Math.min(max,get()+1));render();pop(o)});
  w.upd=()=>{o.textContent=get();m.disabled=get()<=min();p.disabled=get()>=max};return w}
 PEOPLE.forEach(r=>{const c=document.createElement('div');c.className='rz-pc';
- c.innerHTML=`<span class="ic">${SV(ICO[r.k])}</span><span class="tx"><b>${r.n}</b><small>${r.s}</small></span>`;
+ const pro=((KC.p(r.k)||{}).pro||[]).filter(k=>TYPES.some(t=>t.k===k)),jen=pro.length&&r.k!=='zak'?`<em class="rz-xne">${KL.t('Jen k:')} ${pro.map(k=>KL.t((TYPES.find(t=>t.k===k)||{}).n||k)).join(', ')}</em>`:'';
+ c.innerHTML=`<span class="ic">${SV(ICO[r.k])}</span><span class="tx"><b>${r.n}</b><small>${r.s}</small>${jen}</span>`;
  r.st=stepper(()=>S[r.k],v=>{S[r.k]=v;fitUnits()},()=>r.min,30);c.append(r.st);r.el=c;$('rzPeople').append(c)});
 
 /* ---------- ubytování ---------- */
@@ -291,11 +292,13 @@ const doprTxt=()=>{const d=doprObj();if(!d)return '';const a=KR.aut(d.osob);retu
 function compute(){const nights=nightsList(),L=[],sk={},qk={};let sum=0;
  const add=(label,key,qty)=>{if(!qty)return;let v=0;nights.forEach(d=>v+=P[key][isHi(d)?0:1]*qty);qk[key]=(qk[key]||0)+qty;if(v){L.push([label,v]);sum+=v;sk[key]=(sk[key]||0)+v}};
  SEL().forEach(x=>{const u=UNIT[x.k],q=S.q[x.k];add(`${q}× ${plural(q,u[1],u[2],u[3])}${cis(x.k)}`,x.k,q)});
- const ad=S.dosp+(!onlyStan()?S.zak:0);
+ /* skupiny osob mají svou cenu jen u ubytování, ke kterému patří (ceník → Osoby → Platí pro); jinak se počítají jako dospělý */
+ const typy=SEL().map(t=>t.k),ok=k=>KC.osobaPlati?KC.osobaPlati(k,typy):true;
+ const ad=S.dosp+(ok('dite')?0:S.dite)+(ok('zak')?0:S.zak)+OS_VLASTNI.reduce((a,p)=>a+(ok(p.k)?0:(S[p.k]||0)),0);
  add(`${ad}× ${plural(ad,'dospělý','dospělí','dospělých')}`,'os',ad);
- add(`${S.dite}× ${plural(S.dite,'dítě','děti','dětí')}`,'dite',S.dite);
- if(onlyStan())add(`${S.zak}× ${plural(S.zak,'žák','žáci','žáků')}`,'zak',S.zak);
- OS_VLASTNI.forEach(p=>add(`${S[p.k]||0}× ${KL.male(KL.t(p.n))}`,p.k,S[p.k]||0));
+ if(ok('dite'))add(`${S.dite}× ${plural(S.dite,'dítě','děti','dětí')}`,'dite',S.dite);
+ if(ok('zak'))add(`${S.zak}× ${plural(S.zak,'žák','žáci','žáků')}`,'zak',S.zak);
+ OS_VLASTNI.forEach(p=>{if(ok(p.k))add(`${S[p.k]||0}× ${KL.male(KL.t(p.n))}`,p.k,S[p.k]||0)});
  EXTRAS.forEach(x=>add(`${S[x.k]}× ${KL.male(KL.t(x.n))}`,x.k,S[x.k]));
  const n=nights.length,lo=lodeObj(),L2=[],cl=lo?KR.cenaLodi(lo):{navoz:0,celkem:0},dp=doprObj(),cd=dp?KR.cenaDopravy(dp):0;
  /* slevy podle ceníku – z ubytování, případně i z lodí a dopravy */

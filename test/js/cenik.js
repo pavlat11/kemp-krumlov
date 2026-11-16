@@ -26,7 +26,7 @@ var VYCHOZI={verze:1,
  polozky:[
   {k:'os',kat:'osoby',n:'Osoba',pozn:'od 15 let, včetně místního poplatku 50 Kč',a:200,b:190},
   {k:'dite',kat:'osoby',n:'Dítě',pozn:'do 15 let',a:120,b:100},
-  {k:'zak',kat:'osoby',n:'Žák ve stanu',pozn:'jen ve vlastním stanu',a:150,b:150},
+  {k:'zak',kat:'osoby',n:'Žák ve stanu',pozn:'jen ve vlastním stanu',a:150,b:150,pro:['stan']},
   {k:'stan',kat:'ubytovani',n:'Stan',pozn:'místo na louce u řeky',a:200,b:190,jed:'stan',rez:1},
   {k:'karavan',kat:'ubytovani',n:'Karavan',pozn:'místo s elektřinou',a:500,b:300,jed:'místo',rez:1},
   {k:'chatka',kat:'ubytovani',n:'Chatka',pozn:'+ každá osoba',a:990,b:890,jed:'chatka',luzka:7,rez:1},
@@ -54,7 +54,7 @@ var VYCHOZI={verze:1,
 /* starší uložený ceník doplní o nové vlastnosti z výchozího */
 /* starší formát slev {noci,proc} -> nový se skládanými podmínkami */
 function slevyNove(a){return (a||[]).map(function(x){return x&&x.pod?x:{n:'Od '+(x.noci||1)+' nocí',pod:{noci:+x.noci||1},typ:'proc',h:+x.proc||0,web:1}})}
-function doplň(u){u.slevy=slevyNove(u.slevy);
+function doplň(u){u.slevy=slevyNove(u.slevy);(u.polozky||[]).forEach(function(p){if(p.k==='zak'&&p.pro===undefined)p.pro=['stan']});
   if(!u.sluzby){var st=u.polozky.filter(function(p){return p.kat==='sluzby'});u.sluzby=st.length?st.filter(function(p){return p.k!=='poplatek'&&p.skryt!==1}).map(function(p){return{n:p.n,t:(p.a||0)+' Kč'+(p.jed?' / '+p.jed:'')+(p.pozn?' – '+p.pozn:'')}}):JSON.parse(JSON.stringify(VYCHOZI.sluzby));
     var pp=st.filter(function(p){return p.k==='poplatek'})[0],os=u.polozky.filter(function(p){return p.k==='os'})[0];if(os&&!os.pozn)os.pozn='včetně místního poplatku '+(pp?pp.a:50)+' Kč'}
   if(!u.mena)u.mena=JSON.parse(JSON.stringify(VYCHOZI.mena));
@@ -91,6 +91,8 @@ var KKC=window.KKC={
   minUbyt:function(){var v=KKC.kat('ubytovani').filter(function(p){return p.rez!==0}).map(function(p){return KKC.v(p.k,'min')});return v.length?Math.min.apply(null,v):0},
   /* jen procentní sleva podle nocí (starší volání) */
   sleva:function(n){var s=0;KKC.slevy().forEach(function(x){var p=x.pod||{},ok=x.typ==='proc'&&!(x.na&&x.na.length)&&Object.keys(p).every(function(k){return k==='noci'?n>=p.noci:!p[k]});if(ok&&+x.h>s)s=+x.h});return s/100},
+  /* skupina osob (dítě, žák, senior…) má vlastní cenu jen u ubytování, ke kterému je přiřazená (pole pro); jinak se počítá jako Osoba */
+  osobaPlati:function(k,typy){var p=mapa[k];if(!p||!p.pro||!p.pro.length||!typy||!typy.length)return true;return typy.every(function(t){return p.pro.indexOf(t)>=0})},
   slevy:function(){return (C.slevy||[]).filter(function(x){return x&&x.zap!==0})},
   POD:[['noci','nocí','noci'],['osob','osob','osoby'],['mist','míst celkem','místa celkem'],['chatka','chatek','chatky'],['podsad','podsadových stanů','podsadového stanu'],['teepee','teepee','teepee'],['stan','vlastních stanů','vlastního stanu'],['karavan','karavanů','karavanu'],['lodi','lodí','lodi']],
   /* popis podmínek a výše slevy česky (administrace, ceník na webu) */
