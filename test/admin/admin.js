@@ -941,7 +941,8 @@ function rezervace(m,sekV){
       (vicF||nF?'<div class="rlb-p">'+sel('zdroj','Zdroj',[['','Web i obsluha'],['web','Z webu'],['rucne','Zadala obsluha']])+
         '<label class="rl-f"><span>Pobyt od</span><input type="date" class="inp" data-f="od" value="'+F.od+'"></label><label class="rl-f"><span>do</span><input type="date" class="inp" data-f="do" value="'+F.do+'"></label></div>':'')+
       '</section>'+
-      (ukol.length?'<div class="rjp" role="group" aria-label="Co je potřeba udělat"><span class="rjp-l">Je potřeba</span>'+ukol.map(function(u){var on=F.stav===u[0];return '<button type="button" class="'+(on?'on':'')+'" data-fs="'+(on?'':u[0])+'" aria-pressed="'+on+'"><b>'+poc[u[0]]+'</b> '+u[1].toLowerCase()+(u[4]?' <em>('+u[2]+')</em>':'')+'</button>'}).join('')+'</div>':'')+
+      '<div class="rtk" role="group" aria-label="Co je potřeba udělat">'+UK.map(function(u){var n=poc[u[0]],on=F.stav===u[0];
+        return '<button type="button" class="rtk-t '+u[3]+(n?'':' nic')+(on?' on':'')+(u[4]?' hot':'')+'" data-fs="'+(on?'':u[0])+'" aria-pressed="'+on+'"><b>'+n+'</b><span>'+u[1]+'</span><small>'+(n?u[2]:'vše hotovo')+'</small></button>'}).join('')+'</div>'+
       tabulka(L,null,F.stav?'<button type="button" class="rl-akt" data-fs="" title="Zrušit filtr stavu">'+SFm[F.stav][1]+' <span aria-hidden="true">×</span><span class="sr">zrušit filtr</span></button>':'',1);
   }
   /* ---- chytré hledání přes všechny rezervace: jméno, číslo, telefon, e-mail, místo, datum, stav, poznámka ---- */

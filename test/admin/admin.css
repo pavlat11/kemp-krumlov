@@ -1219,14 +1219,6 @@ main:has(.rz-lay){max-width:1720px}
 .rsk-b.on{color:#fff;border-color:transparent;background:var(--deep)}.rsk-b.on b{color:#fff}
 .rsk-b.ubyt.on{background:#2f7a4f}.rsk-b.lode.on{background:#1f6d77}.rsk-b.doprava.on{background:#c27317}
 .rsk-b:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
-.rtk{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 6px}
-.rtk>small{font-size:12.5px;font-weight:800;color:var(--mut);margin-right:2px}
-.rtk-t{display:inline-flex;grid-template-columns:none;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font:inherit;cursor:pointer;text-align:left}
-.rtk-t::before{display:none}
-.rtk-t b{grid-row:auto;font-size:15px;min-width:0;line-height:1.2}.rtk-t span{font-size:13.5px;font-weight:700}
-.rtk-t em{font-style:normal;font-size:12.5px;font-weight:800;color:#b8650e}.rtk-t.b em{color:#1f6d77}
-.rtk-t.w b{color:#b8650e}.rtk-t.b b{color:#1f6d77}
-.rtk-t.nic{background:#f7f4ee;border-style:solid}.rtk-t.nic b{color:#a7aea9}
 @media(max-width:700px){.rsk-g:not(:first-child){padding-left:0;border-left:0}}
 
 /* v115: varianta B – záložky skupin, tenká lišta, pruh úkolů */
@@ -1253,6 +1245,7 @@ main:has(.rz-lay){max-width:1720px}
 .rjp button+button::before{content:"·";margin-right:10px;color:#c9a46a}
 .rjp button:hover{background:#f8e5c2}.rjp button.on{background:#8a5a12;color:#fff}.rjp button.on em{color:#fff}
 .rjp button:focus-visible{outline:3px solid var(--sun)}
-.rlb ~ .rtk{display:none}
 .rlb .rlb-f select.inp{max-width:200px}.rlb-ex{display:inline-flex;gap:6px;flex:none}
 @media(max-width:1500px){.rlb-ex .btn span,.rlb-ex .btn{gap:0}.rlb-ex .btn>span{display:none}.rlb .rlb-f select.inp{max-width:175px}}
+.rlb+.rtk{margin:12px 0 4px}
+.rtk+.rr-l .rr-top,.rtk+section .rr-top{margin-top:10px}
