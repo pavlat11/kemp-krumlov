@@ -1112,9 +1112,13 @@ function rezervace(m,sekV){
     /* PLATBA */
     if(!b){var p=r.platba,dop=p?Math.max(0,(+r.cena||0)-(p.stav==='zal'?+p.zaloha||0:p.stav==='vse'?+r.cena||0:0)):+r.cena||0,pi=!p?-1:p.stav==='ceka'?0:p.stav==='zal'?1:2;
       h+=blk('pl','pl','Platba',pbdg(r)||'<span class="rpl">na místě</span>',(p?krk(['Čeká','Záloha','Celé'],pi,1):'')+
-        kv([['Celkem','<b>'+kc(r.cena)+'</b>',(cL||cD)?'ubytování '+kc(cU)+(cL?' · lodě '+kc(cL):'')+(cD?' · doprava '+kc(cD):''):''],
-          p?['Záloha',kc(p.zaloha),p.stav==='ceka'?'splatnost '+KR(p.splatnost)+' '+p.splatnost.slice(0,4)+(p.splatnost<dnes?' – <b class="zle">po splatnosti</b>':''):p.kdy?'přijato '+cas(p.kdy):'']:null,
-          ['Zbývá zaplatit',dop?'<b>'+kc(dop)+'</b>':'<b class="ok">nic – zaplaceno</b>',dop?'na místě':''],
+        (function(){var ce=+r.cena||0,zp=!p?0:p.stav==='vse'?ce:p.stav==='zal'?Math.min(ce,+p.zaloha||0):0,pr=ce?Math.round(zp/ce*100):0;
+          return '<div class="rdx-pay"><div class="rdx-pay-t"><div><small>Celkem</small><b>'+kc(ce)+'</b></div><div class="zap"><small>Zaplaceno</small><b>'+kc(zp)+'</b></div><div class="'+(dop?'dop':'zap')+'"><small>Zbývá doplatit</small><b>'+(dop?kc(dop):'nic')+'</b></div></div>'+
+          '<div class="rdx-pay-b" role="img" aria-label="Zaplaceno '+pr+' %"><i style="width:'+pr+'%"></i></div>'+
+          (p&&p.stav==='ceka'&&+p.zaloha?'<p class="rdx-pay-z">Záloha <b>'+kc(p.zaloha)+'</b> se čeká do '+KR(p.splatnost)+' '+p.splatnost.slice(0,4)+(p.splatnost<dnes?' – <b class="zle">po splatnosti</b>':'')+'.</p>':'')+'</div>'})()+
+        kv([(cL||cD)?['Z toho',[cU?'ubytování '+kc(cU):'',cL?'lodě '+kc(cL):'',cD?'doprava '+kc(cD):''].filter(Boolean).join(' · ')]:null,
+          p&&p.stav!=='ceka'&&p.kdy?['Záloha',kc(p.zaloha),'přijato '+cas(p.kdy)]:null,
+          dop?['Doplatek','na místě']:null,
           p?['Var. symbol',esc(String(r.cislo||'').replace(/\D/g,''))]:null])+
         (r.stav==='zru'||!p?'':'<div class="rp-pl">'+(p.stav==='zal'?'<button type="button" class="btn sm" data-zp="vse">Doplaceno celé</button>':'')+(p.stav==='ceka'&&r.stav!=='pop'?'<button type="button" class="btn sm" data-zp="zal">Záloha zaplacena</button>':'')+(p.stav!=='ceka'?'<button type="button" class="btn sm gh" data-zp="ceka">Vrátit na nezaplaceno</button>':'')+'</div>'))}
     /* LODĚ */
