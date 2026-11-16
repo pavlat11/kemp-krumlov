@@ -3367,3 +3367,42 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-nb.v2.on .cta u{font-weight:600;color:#5f6b63}
 .rz-nb.v2.on .cta .a1 svg{color:#2f7d4c}
 @media(max-width:900px){.rz-nb.v2 .rz-nb-t{height:150px}.rz-nb.v2 .nd{font-size:20px}.rz-nb.v2 .tag{font-size:11.5px;padding:5px 10px}.rz-nb.v2 .cn b{font-size:19px}}
+
+/* stepper osob na střed */
+#rezervace .rz-pc .rz-st{justify-content:center;align-self:center;margin-left:auto;margin-right:auto}
+#rezervace .rz-pc .tx{align-items:center;text-align:center}
+#rezervace .rz-pc{justify-content:space-between}
+@media(max-width:900px){#rezervace .rz-pc .tx{align-items:flex-start;text-align:left}#rezervace .rz-pc .rz-st{margin-right:0}}
+/* nocleh k lodím – mini kalendář */
+.rz-nc-d.v2{display:block;padding:18px 20px}
+.rz-ncq{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.rz-ncq button{padding:9px 14px;border-radius:999px;border:1.5px solid #e2d9c7;background:#fff;font:inherit;font-size:14px;font-weight:700;color:#0b2419;cursor:pointer;transition:.2s}
+.rz-ncq button:hover:not(:disabled){border-color:#0b2419}
+.rz-ncq button.on{background:#f4a64a;border-color:#f4a64a}
+.rz-ncq button:disabled{opacity:.4;cursor:default}
+.rz-ncc{padding:12px;border-radius:16px;background:#fff;border:1.5px solid #ece5d7}
+.rz-ncw,.rz-ncg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.rz-ncw span{text-align:center;font-size:11.5px;font-weight:800;text-transform:uppercase;color:#8a948d;padding:2px 0 6px}
+.rz-ncg button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;height:46px;border:0;border-radius:12px;background:none;font:inherit;color:#0b2419;cursor:pointer;transition:background .15s}
+.rz-ncg button b{font-size:15px;font-weight:700;line-height:1}
+.rz-ncg button small{font-size:10px;font-weight:700;color:#8a948d;line-height:1.2}
+.rz-ncg button:hover:not(:disabled){background:#f4ede0}
+.rz-ncg button:disabled{color:#c6c9c4;cursor:default}
+.rz-ncg button.lod{background:#e2f1f3}
+.rz-ncg button.lod i{position:absolute;bottom:5px;width:14px;height:3px;border-radius:2px;background:#12626f}
+.rz-ncg button.in{background:#fde6c4}
+.rz-ncg button.from,.rz-ncg button.to{background:#0b2419;color:#fff}
+.rz-ncg button.from small,.rz-ncg button.to small{color:#f4c98d}
+.rz-ncg button.from i,.rz-ncg button.to i{background:#f4a64a}
+.rz-ncg button:focus-visible{outline:3px solid #f4a64a;outline-offset:1px}
+.rz-ncl{display:flex;align-items:center;gap:7px;margin:10px 2px 0;font-size:12.5px;color:#6b766f;font-weight:600}
+.rz-ncl i{width:16px;height:10px;border-radius:3px;background:#e2f1f3;box-shadow:inset 0 -3px 0 #12626f}
+.rz-nc-s{display:flex;align-items:center;justify-content:center;gap:18px;margin:14px 0 0}
+.rz-nc-s>div{display:flex;flex-direction:column;min-width:110px}
+.rz-nc-s>div:last-child{text-align:right}
+.rz-nc-s small{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#8a948d}
+.rz-nc-s b{font-size:16px;font-weight:800;color:#0b2419}.rz-nc-s b.wait{color:#e08a1e}
+.rz-nc-d.v2 .rz-nc-i{margin:10px 0 0;text-align:center;color:#b0661a}
+.rz-nc-d.v2 .rz-nc-i[hidden]{display:none}
+@media(max-width:900px){.rz-nc-d.v2{padding:14px}.rz-ncc{padding:8px}.rz-ncg button{height:42px}.rz-nc-s>div{min-width:0}}
+@media(max-width:900px){.rz-ncq{gap:6px}.rz-ncq button{padding:7px 11px;font-size:13px}}
