@@ -769,12 +769,13 @@ function rezervace(m,sekV){
       (p&&p.zaloha?krok('Záloha',ps==='zal'||ps==='vse',ps==='ceka'):'')+krok('Zaplaceno celé',ps==='vse',ps==='zal'||!p||!p.zaloha&&ps!=='vse'),
       ps==='ceka'?'záloha '+kc(p.zaloha)+' do '+KR(p.splatnost):ps==='zal'?'doplatit '+kc(dop):ps==='vse'?'':'platí se na místě · '+kc(r.cena),
       ps==='ceka'?B('data-zp="'+r.id+'" data-zc="zal"','Záloha zaplacena',1):ps!=='vse'?B('data-zp="'+r.id+'" data-zc="vse"','Zaplaceno celé',ps==='zal'&&r.stav==='uby'):'');
-    /* ubytování */
+    /* ubytování – v kartě až poslední sloupec */
+    var hU='';
     if(maUby(r)){var st=r.stav,ix={pop:0,pot:1,uby:2,odj:3}[st];
-      h+=blok('ub'+(st==='odj'?' ok':''),'Ubytování',krok('Potvrzeno',ix>=1,ix===0)+krok('Ubytován',ix>=2,ix===1)+krok('Odjel',ix>=3,ix===2),
+      hU+=blok('ub'+(st==='odj'?' ok':''),'Ubytování',krok('Potvrzeno',ix>=1,ix===0)+krok('Ubytován',ix>=2,ix===1)+krok('Odjel',ix>=3,ix===2),
         st==='pop'?'čeká na potvrzení':st==='pot'?(r.od===dnes?'přijíždí dnes':r.od<dnes?'měl přijet '+KR(r.od):'příjezd '+KR(r.od)):st==='uby'?(r.do===dnes?'odjíždí dnes':'do '+KR(r.do)):'',
         st==='pop'&&ps!=='ceka'?B('data-qs="'+r.id+'" data-st="pot"','Potvrdit',1):st==='pot'&&r.od<=dnes?B('data-qs="'+r.id+'" data-st="uby"','Ubytovat',1):st==='uby'?B('data-qs="'+r.id+'" data-st="odj"','Odhlásit',r.do<=dnes):'')}
-    else h+='<div class="rs-b ub nic"><span class="rs-n">'+SV(RSI.ub,15)+'Ubytování</span><span class="rs-i">bez ubytování</span></div>';
+    else hU+='<div class="rs-b ub nic"><span class="rs-n">'+SV(RSI.ub,15)+'Ubytování</span><span class="rs-i">bez ubytování</span></div>';
     var dpr=r.doprava?'<span class="rs-dp">'+SV(RSI.dp,15)+'<b>Doprava</b> '+esc(R.mistoN(r.doprava.misto))+(r.doprava.cas?' · '+esc(r.doprava.cas):'')+(r.doprava.osob?' · '+r.doprava.osob+' '+pl(r.doprava.osob,'osoba','osoby','osob'):'')+'</span>':'';
     /* lodě */
     if(sLod(r)){var x=LS(r),pd=posD(r),po=(x==='vyd'||x==='cast')&&pd<dnes;
@@ -783,6 +784,7 @@ function rezervace(m,sekV){
         x==='res'&&r.lode.den<=dnes?B('data-lv="'+r.id+'"','Vydat lodě',1):x==='vyd'||x==='cast'?B('data-lr="'+r.id+'"','Vrátit lodě',1):'').replace('</div>',dpr+'</div>')}
     else if(r.doprava)h+='<div class="rs-b lo jdp"><span class="rs-n">'+SV(RSI.lo,15)+'Lodě</span><span class="rs-i">bez lodí – vlastní</span>'+dpr+'</div>';
     else h+='<div class="rs-b lo nic"><span class="rs-n">'+SV(RSI.lo,15)+'Lodě</span><span class="rs-i">bez lodí</span></div>';
+    h+=hU;
     return '<div class="rsp">'+h+'</div>'};
   function tabulka(L,gf){
     if(!L.length)return '<div class="card rl-0"><b>Nic tu není.</b><span class="mut">Zkuste jiné období, zrušit filtry nebo hledat jinak.</span></div>';
