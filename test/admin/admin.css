@@ -1119,3 +1119,38 @@ main:has(.rz-lay){max-width:1720px}
 .dp-nal{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;border-radius:10px;background:#eaf4f5;color:#12414f;font-size:13.5px}.dp-nal svg{flex:none}
 @media(max-width:700px){.dp-t th:nth-child(3),.dp-t td:nth-child(3){display:none}}
 .dp-t{table-layout:fixed}.dp-t th:nth-child(1){width:34%}.dp-t th:nth-child(2){width:80px}.dp-t th:nth-child(3){width:24%}
+
+/* detail rezervace – přehledné bloky */
+.rpan{width:420px;padding:18px 18px 22px;background:#faf8f3}
+@media(max-width:1180px){.rpan{width:min(440px,100%)}}
+.rdx-h small{font-size:12.5px;color:var(--mut)}.rdx-h small b{color:var(--deep)}
+.rdx-h h2{margin:2px 0 6px;font-size:24px}
+.rdx-st{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.rdx-q{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.rdx-q .btn{display:inline-flex;align-items:center;gap:6px}
+.rdx-sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:4px 0 12px}
+.rdx-sum>div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;min-width:0}
+.rdx-sum small{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--mut)}
+.rdx-sum b{font-size:17px;font-weight:800;color:var(--deep);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rdx-sum span{font-size:12px;color:var(--mut)}
+.rpan .rp-a{margin:0 0 12px}
+.rdx-b{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px 12px 16px;margin-top:10px;overflow:hidden}
+.rdx-b::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#d9d3c5}
+.rdx-b.pl::before{background:#e0a21e}.rdx-b.lo::before{background:#2a7c86}.rdx-b.dp::before{background:#d9822b}.rdx-b.ub::before{background:#2f7a4f}
+.rdx-b header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.rdx-b header h3{margin:0;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#3d4a42;flex:1}
+.rdx-i{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;background:#f1eee6;color:#3d4a42}
+.rdx-b.pl .rdx-i{background:#fdf0de;color:#b8650e}.rdx-b.lo .rdx-i{background:#dceef0;color:#1f6d77}.rdx-b.dp .rdx-i{background:#fff0dc;color:#c27317}.rdx-b.ub .rdx-i{background:#e3f1e8;color:#2f7a4f}
+.rdx-kv{display:grid;grid-template-columns:110px 1fr;gap:7px 12px;margin:0;font-size:14px}
+.rdx-kv dt{color:var(--mut);font-size:13px;padding-top:1px}.rdx-kv dd{margin:0;color:var(--deep);min-width:0;overflow-wrap:anywhere}
+.rdx-kv dd small{display:block;font-size:12.5px;color:var(--mut)}.rdx-kv .zle{color:#b3261e}.rdx-kv .ok{color:#2f7a4f}
+.rdx-kr{display:flex;list-style:none;margin:0 0 10px;padding:0;gap:4px}
+.rdx-kr li{flex:1;display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:8px;background:#f4f1ea;font-size:12px;font-weight:700;color:#9a9484;min-width:0}
+.rdx-kr li span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rdx-kr i{font-style:normal;display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#fff;font-size:11px;flex:none}
+.rdx-kr li.ho{background:#e3f1e8;color:#2f7a4f}.rdx-kr li.ho i{background:#2f7a4f;color:#fff}
+.rdx-kr li.ted{background:var(--deep);color:#fff}.rdx-kr li.ted i{background:#fff;color:var(--deep)}
+.rdx-b .rp-pl{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rdx-b .rp-n{margin:0;font-size:14px;white-space:pre-wrap}
+.rdx-b .rp-hi{margin:0}
+.rpan .rp-f{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px}.rpan .rp-f .btn{display:inline-flex;align-items:center;gap:6px}
+.rdx-sum{grid-template-columns:1.5fr 1fr 1fr}.rdx-sum b{white-space:normal;font-size:16px;line-height:1.2}
