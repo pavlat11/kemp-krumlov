@@ -1247,5 +1247,5 @@ main:has(.rz-lay){max-width:1720px}
 .rjp button:focus-visible{outline:3px solid var(--sun)}
 .rlb .rlb-f select.inp{max-width:200px}.rlb-ex{display:inline-flex;gap:6px;flex:none}
 @media(max-width:1500px){.rlb-ex .btn span,.rlb-ex .btn{gap:0}.rlb-ex .btn>span{display:none}.rlb .rlb-f select.inp{max-width:175px}}
-.rlb+.rtk{margin:12px 0 4px}
+.rtk+.rlb{margin-top:12px}
 .rtk+.rr-l .rr-top,.rtk+section .rr-top{margin-top:10px}
