@@ -232,7 +232,7 @@ if(lodW&&LODE.length&&REKA.length>1){lodOk=true;const t=x=>KL.t(x);
  $('rzLkam').addEventListener('change',e=>{S.l.kam=e.target.value;render()});
  $('rzNab').addEventListener('click',e=>{const b=e.target.closest('[data-nb]');if(!b)return;
   if(b.dataset.nb==='lod'){S.l.chci=!S.l.chci;if(!S.l.chci)LODE.forEach(p=>S.l.kusy[p.k]=0)}else S.l.dopr=S.l.dopr===true?false:true;render();
-  if(b.dataset.nb==='lod'&&S.l.chci)setTimeout(()=>$('rzLodL').scrollIntoView({behavior:'smooth',block:'nearest'}),80)})
+  if(b.dataset.nb==='lod'&&S.l.chci)dolu($('rzLodL'));else if(b.dataset.nb==='dop'&&S.l.dopr===true)dolu(SK.doprava)})
 }
 else if(lodW){lodW.innerHTML='<p class="rz-norez">'+KL.t('Lodě si domluvte telefonicky.')+'</p>'}
 {const tx=(id,q)=>{const e=q?root.querySelector(q):$(id);if(e)e.textContent=KL.t(e.textContent.trim())};['rzLodH','rzLodS','rzSumLodT','rzVolH','rzVolS','rzDvH','rzDvS'].forEach(i=>tx(i));root.querySelectorAll('.rz-vc b,.rz-vc small,.rz-vc em').forEach(e=>{e.textContent=KL.t(e.textContent.trim())})}
@@ -241,7 +241,7 @@ if(dvW){const VAN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
  dvW.innerHTML=`<div class="rz-dv-tr" id="rzDvTr"></div><div class="rz-dv-o" role="radiogroup"><button type="button" class="rz-dv-c ano" role="radio" data-dv="1"><span class="ic">${VAN}</span><b>${KL.t('Ano, odvezte nás')}</b><small id="rzDvP"></small><em id="rzDvK"></em></button><button type="button" class="rz-dv-c ne" role="radio" data-dv="0"><span class="ic">${CAR}</span><b>${KL.t('Ne, dopravíme se sami')}</b><small>${KL.t('Na start přijedeme vlastním autem.')}</small><em>0 Kč</em></button></div>
  <div class="rz-dv-cas" id="rzDvC"><div class="rz-dv-kam" id="rzDvKam"><label class="rz-lf"><span>${KL.t('Kam vás odvezeme')}</span><select id="rzDvM"></select></label><label class="rz-lf"><span>${KL.t('Který den')}</span><select id="rzDvD"></select></label></div><b>${KL.t('V kolik chcete vyrazit z kempu?')}</b><div>${[8,9,10,11,12,13,14].map(h=>[h+':00',h+':30']).flat().map(c=>`<button type="button" data-cas="${c}">${c}</button>`).join('')}</div></div><p class="rz-dv-n" id="rzDvN"></p>`;
  dvW.addEventListener('change',e=>{if(e.target.id==='rzDvM')S.dvM=e.target.value;if(e.target.id==='rzDvD')S.dvD=e.target.value;render()});
- dvW.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;if(b.dataset.dv){S.l.dopr=b.dataset.dv==='1';render()}else if(b.dataset.cas){S.l.cas=b.dataset.cas;render()}})}
+ dvW.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;if(b.dataset.dv){S.l.dopr=b.dataset.dv==='1';render();if(S.l.dopr)dolu($('rzDvC'))}else if(b.dataset.cas){S.l.cas=b.dataset.cas;render()}})}
 function dopRender(){if(!dvW||!lodOk)return;const sL=nLodi()>0,RK=REKA.filter(x=>x.k!=='kemp');
  if(!sL){if(!RK.some(x=>x.k===S.dvM))S.dvM=(RK[0]||{}).k||'';const sd=stayDays();if(!sd.some(d=>iso(d)===S.dvD))S.dvD=sd.length?iso(sd[Math.min(1,sd.length-1)]):'';
   setOpts($('rzDvM'),RK.map(x=>`<option value="${x.k}">${KL.t(x.n)} · ${fmt(x.cena*KR.aut(persons()))}</option>`).join(''));$('rzDvM').value=S.dvM;
@@ -327,6 +327,8 @@ const tw={};function tween(el,to){const o=tw[el.id]||(tw[el.id]={v:0,a:0});cance
  const f=t=>{const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);o.v=from+(to-from)*e;el.textContent=fmt(o.v);if(p<1)o.a=requestAnimationFrame(f)};o.a=requestAnimationFrame(f)}
 
 let R,warnT;
+/* po volbě sjet plynule k dalším údajům, ať je host nemusí hledat */
+function dolu(el){setTimeout(()=>{if(!el||el.hidden||!el.offsetParent)return;const r=el.getBoundingClientRect(),top=scrollY+r.top-110;if(r.top<90||r.top>innerHeight*.55)scrollTo({top,behavior:'smooth'})},120)}
 function warn(msg){const w=$('rzWarn');w.textContent=msg;w.hidden=!msg;clearTimeout(warnT);if(msg){warnT=setTimeout(()=>{w.hidden=true},8000);const r=w.getBoundingClientRect();if(r.bottom>innerHeight||r.top<0)w.scrollIntoView({behavior:'smooth',block:'center'})}}
 {const bar=root.querySelector('.rz-bar'),w=$('rzWarn');if(bar&&w)bar.before(w)}
 const extrasTxt=()=>EXTRAS.filter(x=>S[x.k]).map(x=>`${S[x.k]>1?S[x.k]+'× ':''}${KL.male(KL.t(x.n))}`).join(', ');

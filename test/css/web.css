@@ -3406,3 +3406,7 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-nc-d.v2 .rz-nc-i[hidden]{display:none}
 @media(max-width:900px){.rz-nc-d.v2{padding:14px}.rz-ncc{padding:8px}.rz-ncg button{height:42px}.rz-nc-s>div{min-width:0}}
 @media(max-width:900px){.rz-ncq{gap:6px}.rz-ncq button{padding:7px 11px;font-size:13px}}
+
+.rz-dlg-x,.gl-x,.gl-p,.gl-n{display:grid!important;place-items:center;padding:0!important;line-height:0!important}
+.rz-dlg-x svg,.gl-x svg,.gl-p svg,.gl-n svg{display:block}
+.am-x{display:grid!important;place-items:center;padding:0!important;line-height:0!important}
