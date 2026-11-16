@@ -33,7 +33,7 @@ function api(method,path,body){
    (Laravel: tabulka users s rolí, hesla bcrypt, přihlášení přes session, práva přes middleware/Policy).
    server: POST /login {login,heslo} · POST /logout · GET /me · GET/POST/PUT/DELETE /uzivatele · GET/PUT /prava · PUT /me/heslo */
 KK.ROLE={admin:'Správce',obsluha:'Obsluha'};
-KK.SEKCE={prehled:'Přehled',upravit:'Upravit web',galerie:'Galerie',seo:'SEO',rezervace:'Rezervace',cenik:'Ceník a kapacity',nastaveni:'Nastavení a záloha'};
+KK.SEKCE={prehled:'Přehled',upravit:'Upravit web',galerie:'Galerie',seo:'SEO',rezervace:'Rezervace',cenik:'Ceník a kapacity',nastaveni:'Nastavení a záloha',zaznam:'Záznam akcí'};
 var PRAVA0={obsluha:{prehled:1,upravit:1,galerie:1,rezervace:1,seo:0,cenik:0,nastaveni:0}};
 function hex(b){return [].map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2)}).join('')}
 function otisk(sul,heslo){var t=sul+'|'+heslo;
@@ -63,9 +63,9 @@ KK.auth={
       if(!ok)return chyba();
       if(x.aktivni===false)return Promise.reject(new Error('Účet je vypnutý. Obraťte se na správce.'));
       x.posledni=Date.now();ulozU(u);
-      var s={id:x.id,jmeno:x.jmeno,role:x.role,od:Date.now(),do:Date.now()+12*3600e3};LS.set('session',s);return s});
+      var s={id:x.id,jmeno:x.jmeno,role:x.role,od:Date.now(),do:Date.now()+12*3600e3};LS.set('session',s);historie('Přihlášení','přihlášen');return s});
   },
-  logout:function(){if(KK.MODE==='server')return api('POST','/logout');LS.del('session');return Promise.resolve()},
+  logout:function(){if(KK.MODE==='server')return api('POST','/logout');if(KK.auth.meSync())historie('Odhlášení','odhlášen');LS.del('session');return Promise.resolve()},
   me:function(){if(KK.MODE==='server')return api('GET','/me').catch(function(){return null});return Promise.resolve(KK.auth.meSync())},
   /* aktuální přihlášený – vždy s čerstvou rolí; vypnutý nebo smazaný účet se odhlásí */
   meSync:function(){var s=LS.get('session',null);if(!s||s.do<=Date.now()){if(s)LS.del('session');return null}
@@ -276,7 +276,7 @@ function naData(b){return new Promise(function(ok){var r=new FileReader();r.onlo
 function zDat(u){var p=u.split(','),b=atob(p[1]),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new Blob([a],{type:(p[0].match(/:(.*?);/)||[])[1]||'image/webp'})}
 
 /* ---------------- HISTORIE ZMĚN, EXPORT, RESET ---------------- */
-function historie(co,popis){var h=LS.get('historie',[]);h.unshift({kdy:Date.now(),co:co,popis:popis,kdo:(KK.auth.meSync()||{}).jmeno||''});LS.set('historie',h.slice(0,50))}
+function historie(co,popis){var h=LS.get('historie',[]);h.unshift({kdy:Date.now(),co:co,popis:popis,kdo:(KK.auth.meSync()||{}).jmeno||''});LS.set('historie',h.slice(0,2000))}
 KK.historie=function(){return LS.get('historie',[])};KK.zaznam=historie;
 KK.export=function(){return KK.galerie.seznam().then(function(f){
   return Promise.all(f.map(function(x){if(!x.blob)return x;return new Promise(function(ok){var r=new FileReader();r.onload=function(){var y=Object.assign({},x);y.blob=r.result;delete y.nahled;ok(y)};r.readAsDataURL(x.blob)})}))
@@ -293,7 +293,7 @@ KK.import=function(d){
 };
 /* Části, které lze vrátit do původní podoby nezávisle (klíče v localStorage). */
 KK.RESET_SKUPINY={
-  texty:['texty','dtexty','texty.en','texty.de','dtexty.en','dtexty.de','historie','jazyk'],
+  texty:['texty','dtexty','texty.en','texty.de','dtexty.en','dtexty.de','jazyk'],
   seo:['seo'],
   cenik:['cenik','mena'],
   galerie:['galerie','ikony'],
@@ -306,6 +306,7 @@ KK.reset=function(vyber){
   var skup=vyber||Object.keys(KK.RESET_SKUPINY),klice=[];
   skup.forEach(function(s){klice=klice.concat(KK.RESET_SKUPINY[s]||[])});
   klice.forEach(LS.del);
+  historie('Začít znovu',skup.join(', '));
   var p=Promise.resolve();
   if(skup.indexOf('fotky')>=0)p=tx('readwrite',function(s){s.clear()}).then(function(){return KK.obrazky.soubor.vymaz().catch(function(){})});
   return p.then(function(){});

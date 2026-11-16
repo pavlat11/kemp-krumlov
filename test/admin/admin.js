@@ -64,8 +64,8 @@ function jazykVolba(){var j=jazykAdm();return '<div class="row jz" role="group" 
 function jazykKlik(m){$$('[data-jz]',m).forEach(function(b){b.addEventListener('click',function(){if(b.dataset.jz===jazykAdm())return;var jd=function(){KK.LS.set('admin-jazyk',b.dataset.jz);neulozeno=null;route()};if(neulozeno&&neulozeno())ptej('Máte neuložené změny\n\nKdyž přepnete jazyk, změny se neuloží.',{ok:'Přepnout bez uložení',ne:'Zůstat'}).then(function(a){if(a)jd()});else jd()})})}
 
 /* ---------- kostra ---------- */
-var VIEWS={upravit:upravit,prehled:prehled,galerie:galerie,seo:seo,cenik:cenik,rezervace:rezervace,ubytovani:rezervace,pujcovna:rezervace,doprava:rezervace,nastaveni:nastaveni,uzivatele:uzivatele,ucet:ucet};
-var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['galerie','Galerie'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace'],['ubytovani','Ubytování'],['pujcovna','Půjčovna lodí'],['doprava','Doprava'],['cenik','Ceník a kapacity']]],['Systém',[['nastaveni','Nastavení a záloha'],['uzivatele','Uživatelé']]]];
+var VIEWS={upravit:upravit,prehled:prehled,galerie:galerie,seo:seo,cenik:cenik,rezervace:rezervace,ubytovani:rezervace,pujcovna:rezervace,doprava:rezervace,nastaveni:nastaveni,zaznam:zaznam,uzivatele:uzivatele,ucet:ucet};
+var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['galerie','Galerie'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace'],['ubytovani','Ubytování'],['pujcovna','Půjčovna lodí'],['doprava','Doprava'],['cenik','Ceník a kapacity']]],['Systém',[['zaznam','Záznam akcí'],['nastaveni','Nastavení a záloha'],['uzivatele','Uživatelé']]]];
 function shell(s){
   app.innerHTML='<div class="top"><div class="logo"><i>'+SV(IC.lode,20)+'</i>Administrace</div><button type="button" id="mb" aria-label="Otevřít menu" aria-expanded="false" aria-controls="side">'+SV(IC.menu,22)+'</button></div>'+
   '<div class="app"><nav class="side" id="side" aria-label="Administrace"><div class="logo"><i>'+SV(IC.lode,22)+'</i><span>Kemp Krumlov<small>Administrace</small></span></div>'+
@@ -1478,6 +1478,16 @@ function ucet(m){
     KK.auth.zmenHeslo(hf.stare.value,hf.nove.value).then(function(){toast('Heslo změněno.');shell(KK.auth.meSync())}).catch(function(x){er.textContent=x.message;er.hidden=false})});
 }
 
+/* ---------- ZÁZNAM AKCÍ: kdo, kdy a co na webu změnil ---------- */
+function zaznam(m){
+  m.innerHTML='<div class="ph"><div><h1>Záznam akcí</h1><p>Kdo, kdy a co na webu změnil. Ukládá se posledních 2000 záznamů v tomto prohlížeči.</p></div></div>'+
+  '<div class="card"><label class="f">Hledat<input class="inp" type="search" id="zq" placeholder="jméno, akce, popis…" autocomplete="off"></label><ul class="szn-a" id="zl" style="margin-top:12px"></ul></div>';
+  var Z=KK.historie();
+  function kresli(){var q=($('#zq',m).value||'').trim().toLowerCase();
+    var sez=Z.filter(function(z){return !q||(z.co+' '+z.popis+' '+z.kdo).toLowerCase().indexOf(q)>=0});
+    $('#zl',m).innerHTML=sez.length?sez.map(function(z){return '<li><div><b>'+esc(z.co)+'</b> '+esc(z.popis)+'<small>'+F(z.kdy)+(z.kdo?' · '+esc(z.kdo):'')+'</small></div></li>'}).join(''):'<li class="mut">Žádné záznamy.</li>'}
+  $('#zq',m).addEventListener('input',kresli);kresli();
+}
 /* Části, které lze v „Začít znovu“ vrátit do původní podoby: [klíč, název, popis, výchozí zaškrtnutí] */
 var RS_SKUPINY=[
   ['texty','Texty a překlady','Texty webu, překlady a historie úprav',true],
@@ -1493,7 +1503,7 @@ function nastaveni(m){
   '<div class="card"><h2>Záloha</h2><p class="mut">Stáhne soubor .json se všemi úpravami.</p><div class="row"><button class="btn pri" id="ex">Stáhnout zálohu</button><label class="btn gh" for="im">Nahrát zálohu</label><input type="file" id="im" accept=".json,application/json" hidden></div></div>'+
   '<div class="card"><h2>Začít znovu</h2><p class="mut">Vyberte, co se má vrátit do původní podoby. Co nezaškrtnete, zůstane beze změny.</p><form id="rsf">'+RS_SKUPINY.map(function(s){return '<label class="szn-c"><input type="checkbox" class="cb" name="rs" value="'+s[0]+'"'+(s[3]?' checked':'')+'> <span><b>'+s[1]+'</b><small class="mut" style="display:block">'+s[2]+'</small></span></label>'}).join('')+'</form><div class="row" style="margin-top:12px"><button class="btn dan" id="rs" type="button">Smazat vybrané</button></div></div></div>'+
   (window.KKR&&KK.auth.muze('uzivatele')?'<div id="szn"></div>':'');
-  $('#ex').addEventListener('click',function(){KK.export().then(function(d){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:'application/json'}));a.download='kemp-krumlov-zaloha-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Záloha stažena.')})});
+  $('#ex').addEventListener('click',function(){KK.export().then(function(d){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:'application/json'}));a.download='kemp-krumlov-zaloha-'+new Date().toISOString().slice(0,10)+'.json';a.click();KK.zaznam('Záloha','stažena');toast('Záloha stažena.')})});
   $('#im').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var inpZ=e.target;ptej('Nahrát zálohu?\n\nSoučasné úpravy webu, ceník i rezervace se přepíšou obsahem souboru.',{ok:'Nahrát zálohu',nebezp:1}).then(function(ok){if(!ok){inpZ.value='';return}
     f.text().then(function(t){return KK.import(JSON.parse(t))}).then(function(){ZDROJ=null;toast('Záloha obnovena.')}).catch(function(x){toast(x.message||'Soubor nejde načíst.',1)});inpZ.value=''})});
   if($('#szn'))sezona($('#szn'));
