@@ -683,6 +683,9 @@ function rezervace(m,sekV){
     d.addEventListener('click',function(e){if(e.target===d||e.target.closest('[data-x]')){zavri();return}var b=e.target.closest('[data-id]');if(b){zavri();detail(b.dataset.id)}});
     d.addEventListener('cancel',function(e){e.preventDefault();zavri()});d.showModal();$('[data-x]',d).focus()};
   /* ---- PŮJČOVNA 1: výdej a vracení – tři sloupce podle toho, co se s loděmi právě děje ---- */
+  /* karta rezervace: zaplaceno / doplatit + malý ukazatel */
+  var plKarta=function(r){if(r.stav==='zru'||!(+r.cena))return '';var ce=+r.cena,p=r.platba,zp=!p?0:p.stav==='vse'?ce:p.stav==='zal'?Math.min(ce,+p.zaloha||0):0,d=ce-zp,pr=Math.round(zp/ce*100);
+    return '<span class="rr-pl'+(d?'':' ok')+'"><span class="rr-pl-t"><span class="z"><small>Zaplaceno</small><b>'+kc(zp)+'</b></span><span class="'+(d?'d':'z')+'"><small>Doplatit</small><b>'+(d?kc(d):'nic')+'</b></span></span><i><s style="width:'+pr+'%"></s></i></span>'};
   var kUhrade=function(r){var p=r.platba;if(p&&p.stav==='vse')return '<span class="pk-pl ok">zaplaceno</span>';var d=p&&p.stav==='zal'?Math.max(0,(+r.cena||0)-(+p.zaloha||0)):+r.cena||0;return d?'<span class="pk-pl">doplatit <b>'+kc(d)+'</b></span>':''};
   var pkKarta=function(r,typ){var l=r.lode,ven=typ==='ven',k=ven?R.lodeVen(r):R.lodePotreba(l),lk=lodK(k),vk=vybK(k),pd=posD(r),po=ven&&pd<dnes;
     var kdy=typ==='vyd'?(r.doprava&&r.doprava.cas?'<span class="pk-t">'+SV(IKO.auto,14)+'odjezd '+esc(r.doprava.cas)+'</span>':'<span class="pk-t">'+(l.odkud==='kemp'?'vyplouvá z kempu':'vlastní doprava')+'</span>')
@@ -841,7 +844,7 @@ function rezervace(m,sekV){
     /* platba */
     h+=blok('pl'+(ps==='vse'?' ok':ps==='ceka'&&p.splatnost<dnes?' zle':''),'Platba',
       (p&&p.zaloha?krok('Záloha',ps==='zal'||ps==='vse',ps==='ceka'):'')+krok('Zaplaceno celé',ps==='vse',ps==='zal'||!p||!p.zaloha&&ps!=='vse'),
-      ps==='ceka'?'záloha '+kc(p.zaloha)+' do '+KR(p.splatnost):ps==='zal'?'doplatit '+kc(dop):ps==='vse'?'':'platí se na místě · '+kc(r.cena),
+      plKarta(r)+(ps==='ceka'?'<span class="rr-pz">záloha '+kc(p.zaloha)+' do '+KR(p.splatnost)+'</span>':!p?'<span class="rr-pz">platí se na místě</span>':''),
       ps==='ceka'?B('data-zp="'+r.id+'" data-zc="zal"','Záloha zaplacena',1):ps!=='vse'?B('data-zp="'+r.id+'" data-zc="vse"','Zaplaceno celé',ps==='zal'&&r.stav==='uby'):'');
     /* ubytování – v kartě až poslední sloupec */
     var hU='';
