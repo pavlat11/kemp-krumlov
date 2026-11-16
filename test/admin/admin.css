@@ -1280,3 +1280,16 @@ main:has(.rz-lay){max-width:1720px}
 .rs-k.on{background:#2f7a4f;border-color:#2f7a4f;color:#fff}
 .rs-kr{min-width:0}.rs-k{max-width:100%;overflow:hidden;text-overflow:ellipsis}
 .pct-q .btn.on{background:#2f7a4f;border-color:#2f7a4f;color:#fff}
+
+/* v126: výrazné Zobrazit, malé Upravit (jen ikona) */
+.rr-bb{display:inline-flex;align-items:center;gap:6px}
+.rr-bb .rr-e.rr-z{display:inline-flex;align-items:center;gap:8px;padding:10px 16px 10px 14px;border-radius:12px;border:0;background:#f4a64a;color:#0b2419;font:inherit;font-size:14.5px;font-weight:800;cursor:pointer;box-shadow:0 8px 18px -10px #e08a1e;transition:background .15s,transform .15s}
+.rr-bb .rr-e.rr-z:hover{background:#ffb866;transform:translateY(-1px)}
+.rr-bb .rr-e.rr-z i{font-style:normal;font-weight:800;transition:transform .15s}
+.rr-bb .rr-e.rr-z:hover i{transform:translateX(3px)}
+.rzr.akt .rr-bb .rr-e.rr-z,.rzr.on .rr-bb .rr-e.rr-z{background:#0b2419;color:#fff;box-shadow:none}
+.rr-bb .rr-e.rr-u{display:inline-grid;place-items:center;width:38px;height:38px;padding:0;border-radius:11px;border:1.5px solid var(--line);background:#fff;color:#5d584c;cursor:pointer}
+.rr-bb .rr-e.rr-u:hover{border-color:var(--deep2);color:var(--deep)}
+.rr-bb .rr-e:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.rr-bb .rr-e.rr-z.sel{background:#0b2419;color:#fff;box-shadow:none}@media(max-width:900px){.rr-bb .rr-e.rr-z span{display:inline}}
+.rr-c{min-width:0}.rr-c .rl-c{max-width:100%;overflow:hidden;text-overflow:ellipsis}
