@@ -928,7 +928,7 @@ function rezervace(m,sekV){
     var poSpl=L.filter(function(r){return SFm.zc[3](r)&&r.platba.splatnost&&r.platba.splatnost<dnes}).length,
       lrD=L.filter(function(r){return SFm.lr[3](r)&&r.lode.den<=dnes}).length,
       lvD=L.filter(function(r){return SFm.lv[3](r)&&lkon(r)<=dnes}).length;
-    var UK=[['zc','Čeká na zálohu',poSpl?poSpl+' po splatnosti':'zkontrolujte platby','w',poSpl],['pop','Čeká na potvrzení','potvrďte nebo zrušte','w'],
+    var UK=[['zc','Čeká na zálohu',poSpl?poSpl+' po splatnosti':'zkontrolujte platby','w',poSpl],['zz','Záloha zaplacena','zbývá doplatit na místě','g',0,'zatím žádná'],
       ['lr','Lodě k výdeji',lrD?lrD+' vydat dnes':'nic dnes','b',lrD],['lv','Lodě na vodě',lvD?lvD+' vrátit dnes':'žádné vrácení dnes','b',lvD]];
     if(F.stav&&!SFm[F.stav])F.stav='';
     if(F.stav)L=L.filter(function(r){return DRZ[r.id]||SFm[F.stav][3](r)});radit(L);
@@ -951,7 +951,7 @@ function rezervace(m,sekV){
     /* varianta B: záložky skupin + jedna tenká lišta nástrojů, úkoly jako pruh, pod tím seznam */
     return ''+
       '<div class="rtk" role="group" aria-label="Co je potřeba udělat">'+UK.map(function(u){var n=poc[u[0]],on=F.stav===u[0];
-        return '<button type="button" class="rtk-t '+u[3]+(n?'':' nic')+(on?' on':'')+(u[4]?' hot':'')+'" data-fs="'+(on?'':u[0])+'" aria-pressed="'+on+'"><b>'+n+'</b><span>'+u[1]+'</span><small>'+(n?u[2]:'vše hotovo')+'</small></button>'}).join('')+'</div>'+
+        return '<button type="button" class="rtk-t '+u[3]+(n?'':' nic')+(on?' on':'')+(u[4]?' hot':'')+'" data-fs="'+(on?'':u[0])+'" aria-pressed="'+on+'"><b>'+n+'</b><span>'+u[1]+'</span><small>'+(n?u[2]:u[5]||'vše hotovo')+'</small></button>'}).join('')+'</div>'+
       '<section class="rlb">'+
       '<div class="rzt" role="tablist" aria-label="Skupiny rezervací">'+TB.map(function(x){var n=TC[x[0]]||0,on=F.typ===x[0]||!x[0]&&!F.typ;return '<button type="button" role="tab" class="'+x[2]+(n?'':' nic')+'" data-ft="'+x[0]+'" aria-selected="'+on+'"'+(x[0]==='skup'?' title="Rezervace od '+SKUP_OS+' osob nebo na 3 a více míst"':'')+'><i class="rzt-i t-'+(x[0]||'vse')+'">'+SV(TI[x[0]],16)+'</i>'+x[1]+'<small>'+n+'</small></button>'}).join('')+'</div>'+
       '<div class="rlb-f">'+(L.length?'<label class="rlb-va" title="Vybrat všechny zobrazené rezervace"><input type="checkbox" data-va aria-label="Vybrat vše zobrazené"><span>Vybrat vše</span></label>':'')+
