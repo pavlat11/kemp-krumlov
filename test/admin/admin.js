@@ -943,7 +943,7 @@ function rezervace(m,sekV){
       '<div class="vb-j"><div class="vb-r1"><button type="button" class="rl-j" data-id="'+r.id+'">'+esc(r.jmeno)+'</button><small>'+esc(r.cislo||'')+(r.zdroj==='web'?' · web':'')+(os?' · '+os+' '+pl(os,'osoba','osoby','osob'):'')+(r.telefon?' · <a class="rr-t" href="tel:'+esc(r.telefon.replace(/\s/g,''))+'">'+esc(r.telefon)+'</a>':'')+(r.zprava?' · <span title="'+esc(r.zprava)+'">✎ poznámka</span>':'')+'</small></div>'+
       '<div class="vb-r2">'+KR(r.od)+(r.od===r.do?'':' – '+KR(r.do))+rok+' · '+delka(r)+(co.filter(Boolean).length?' · '+esc(co.filter(Boolean).join(', ')):'')+(b?' · <b>blokace</b>':'')+(!al.length&&zn?' '+zn:'')+'</div></div>'+
       '<div class="vb-cena">'+(b?'':'<b>'+kc(ce)+'</b>'+stavCeny)+'</div>'+
-      '<span class="rr-bb"><button type="button" class="rr-e rr-z vb-det" data-id="'+r.id+'" title="Otevřít detail rezervace">Detail <i aria-hidden="true">→</i></button><button type="button" class="rr-e rr-u" data-ue="'+r.id+'" title="Upravit rezervaci" aria-label="Upravit rezervaci – '+esc(r.jmeno)+'">'+SV(IC.obsah,16)+'</button></span></div>';
+      '<span class="rr-bb"><button type="button" class="rr-e rr-z vb-det" data-id="'+r.id+'" title="Otevřít detail rezervace">Detail <i aria-hidden="true">→</i></button></span></div>';
     if(b)return bar+h;
     if(zru)return bar+h+'<div class="vb-g"><div class="vb-k"><span class="vb-p">Zrušená rezervace</span></div></div>';
     var g=[];
