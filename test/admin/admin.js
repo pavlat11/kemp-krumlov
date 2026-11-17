@@ -925,7 +925,7 @@ function rezervace(m,sekV){
     var p=r.platba,ps=p?p.stav:'',ce=+r.cena||0,zp=!p?0:ps==='vse'?ce:ps==='zal'?Math.min(ce,+p.zaloha||0):0,d=ce-zp,zru=r.stav==='zru',
       Bt=function(a,t,pri){return '<button type="button" class="btn sm'+(pri?' pri':'')+'" '+a+'>'+t+'</button>'},
       K=function(t,on,zle){return '<span class="vb-s'+(on?' on':zle?' zle':'')+'">'+(on?'✓':'○')+' '+t+'</span>'},
-      sl=function(nad,hl,stavy,pod,btn,zle){return '<div class="vb-k'+(zle?' zle':'')+'"><span class="vb-n">'+nad+'</span><span class="vb-h">'+hl+'</span>'+(stavy?'<span class="vb-ss">'+stavy+'</span>':'')+(pod?'<span class="vb-p">'+pod+'</span>':'')+(btn&&btn!==alB?'<span class="vb-a">'+btn+'</span>':'')+'</div>'};
+      sl=function(nad,hl,stavy,pod,btn,zle){var ik={'Platba':'pl','Ubytování':'ub','Lodě':'lo','Doprava':'dp'}[nad];return '<div class="vb-k '+(ik||'')+(zle?' zle':'')+'"><span class="vb-n">'+(ik?SV(RSI[ik],15):'')+nad+'</span><span class="vb-h">'+hl+'</span>'+(stavy?'<span class="vb-ss">'+stavy+'</span>':'')+(pod?'<span class="vb-p">'+pod+'</span>':'')+(btn&&btn!==alB?'<span class="vb-a">'+btn+'</span>':'')+'</div>'};
     /* co je po termínu → červená lišta s jedním tlačítkem */
     var al=[],alB='',x=sLod(r)?LS(r):'',pd=x?posD(r):'';
     if(!zru&&!b){
@@ -943,7 +943,7 @@ function rezervace(m,sekV){
       '<div class="vb-j"><div class="vb-r1"><button type="button" class="rl-j" data-id="'+r.id+'">'+esc(r.jmeno)+'</button><small>'+esc(r.cislo||'')+(r.zdroj==='web'?' · web':'')+(os?' · '+os+' '+pl(os,'osoba','osoby','osob'):'')+(r.telefon?' · <a class="rr-t" href="tel:'+esc(r.telefon.replace(/\s/g,''))+'">'+esc(r.telefon)+'</a>':'')+(r.zprava?' · <span title="'+esc(r.zprava)+'">✎ poznámka</span>':'')+'</small></div>'+
       '<div class="vb-r2">'+KR(r.od)+(r.od===r.do?'':' – '+KR(r.do))+rok+' · '+delka(r)+(co.filter(Boolean).length?' · '+esc(co.filter(Boolean).join(', ')):'')+(b?' · <b>blokace</b>':'')+(!al.length&&zn?' '+zn:'')+'</div></div>'+
       '<div class="vb-cena">'+(b?'':'<b>'+kc(ce)+'</b>'+stavCeny)+'</div>'+
-      '<span class="rr-bb"><button type="button" class="rr-e rr-z vb-det" data-id="'+r.id+'" title="Otevřít detail rezervace">Detail</button><button type="button" class="rr-e rr-u" data-ue="'+r.id+'" title="Upravit rezervaci" aria-label="Upravit rezervaci – '+esc(r.jmeno)+'">'+SV(IC.obsah,16)+'</button></span></div>';
+      '<span class="rr-bb"><button type="button" class="rr-e rr-z vb-det" data-id="'+r.id+'" title="Otevřít detail rezervace">Detail <i aria-hidden="true">→</i></button><button type="button" class="rr-e rr-u" data-ue="'+r.id+'" title="Upravit rezervaci" aria-label="Upravit rezervaci – '+esc(r.jmeno)+'">'+SV(IC.obsah,16)+'</button></span></div>';
     if(b)return bar+h;
     if(zru)return bar+h+'<div class="vb-g"><div class="vb-k"><span class="vb-p">Zrušená rezervace</span></div></div>';
     var g=[];

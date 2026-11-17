@@ -1502,3 +1502,16 @@ main:has(.rz-lay){max-width:1720px}
 @media(max-width:900px){.rzr.vb .rr-h.vb-hl{grid-template-columns:auto minmax(0,1fr) auto}.rzr.vb .rr-bb{grid-column:2/-1;justify-self:start}.rzr.vb .vb-k{border-left:0;border-top:1px solid #efe9dc}.rzr.vb .vb-k:first-child{border-top:0}}
 .rzr.vb .vb-ss .vb-bar{flex:1 1 100%}
 .rzr.vb .vb-hl .rr-bb{align-self:center;align-items:stretch}.rzr.vb .vb-hl .rr-bb .rr-e{min-height:40px}
+/* Vzhled B2 – střed mezi původním a B: jemné barevné označení druhů, kroky jako štítky, oranžový Detail */
+.rzr.vb .vb-k{position:relative;padding-left:22px}
+.rzr.vb .vb-k::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:0 3px 3px 0;opacity:.55}
+.rzr.vb .vb-k.pl::before{background:#e0a21e}.rzr.vb .vb-k.ub::before{background:#2f7a4f}.rzr.vb .vb-k.lo::before{background:#2a7c86}.rzr.vb .vb-k.dp::before{background:#c27317}
+.rzr.vb .vb-n{display:flex;align-items:center;gap:6px}
+.rzr.vb .vb-k.pl .vb-n svg{color:#b8650e}.rzr.vb .vb-k.ub .vb-n svg{color:#2f7a4f}.rzr.vb .vb-k.lo .vb-n svg{color:#1f6d77}.rzr.vb .vb-k.dp .vb-n svg{color:#c27317}
+.rzr.vb .vb-ss{gap:6px}
+.rzr.vb .vb-s{display:inline-flex;align-items:center;padding:2px 10px;border-radius:999px;border:1px solid #e6dfd0;background:#faf8f3;color:#8a948d;font-size:12.5px}
+.rzr.vb .vb-s.on{background:#e3f3e8;border-color:#c9e6d2;color:var(--ok)}
+.rzr.vb .vb-s.zle{background:#fdecea;border-color:#f3c9c4;color:#b3261e}
+.rzr.vb .rr-bb .rr-e.rr-z.vb-det{background:var(--sun);border-color:var(--sun);color:var(--deep);display:inline-flex;align-items:center;gap:6px}
+.rzr.vb .rr-bb .rr-e.rr-z.vb-det i{font-style:normal;font-weight:800}
+.rzr.vb .rr-bb .rr-e.rr-z.vb-det:hover{background:#ffb866;border-color:#ffb866}
