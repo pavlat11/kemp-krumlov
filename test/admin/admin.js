@@ -69,7 +69,10 @@ function login(){
 
 /* ---------- jazyk úprav (čeština = originál, ostatní = překlad) ---------- */
 function jazykAdm(){var j=KK.LS.get('admin-jazyk','cs');return KK.JAZYKY[j]?j:'cs'}
-function jazykVolba(){var j=jazykAdm();return '<div class="row jz" role="group" aria-label="Jazyk úprav">'+Object.keys(KK.JAZYKY).map(function(k){return '<button type="button" class="btn sm gh" data-jz="'+k+'" aria-pressed="'+(k===j)+'">'+KK.JAZYKY[k]+'</button>'}).join('')+'</div>'}
+/* přepínač ve tvaru segmentu (jedna skupina = jeden rámeček, vybraná volba je bílá) */
+function seg(nadpis,attr,pol,akt,ikony){return '<div class="segw"><span class="seg-l" aria-hidden="true">'+nadpis+'</span><div class="seg" role="group" aria-label="'+nadpis+'">'+pol.map(function(x){return '<button type="button" '+attr+'="'+x[0]+'" aria-pressed="'+(x[0]===akt)+'"'+(x[2]?' title="'+x[2]+'"':'')+'>'+(ikony&&ikony[x[0]]?SV(ikony[x[0]],16):'')+'<span>'+x[1]+'</span></button>'}).join('')+'</div></div>'}
+var JZK={cs:'CZ',en:'EN',de:'DE'};
+function jazykVolba(){var j=jazykAdm();return seg('Jazyk','data-jz',Object.keys(KK.JAZYKY).map(function(k){return [k,'<b>'+JZK[k]+'</b> '+KK.JAZYKY[k],KK.JAZYKY[k]]}),j)}
 function jazykKlik(m){$$('[data-jz]',m).forEach(function(b){b.addEventListener('click',function(){if(b.dataset.jz===jazykAdm())return;var jd=function(){KK.LS.set('admin-jazyk',b.dataset.jz);neulozeno=null;route()};if(neulozeno&&neulozeno())ptej('Máte neuložené změny\n\nKdyž přepnete jazyk, změny se neuloží.',{ok:'Přepnout bez uložení',ne:'Zůstat'}).then(function(a){if(a)jd()});else jd()})})}
 
 /* ---------- kostra ---------- */
@@ -146,10 +149,13 @@ function upravit(m){
   /* PE-LA: každý jazyk má vlastní stránky (en/, de/), vybírá se i stránka webu */
   var PS=PELA?KK.LS.get('admin-pela-str','index'):'';if(PELA&&!PSTR.some(function(x){return x[0]===PS}))PS='index';
   var ADR=PELA?WEB+(J!=='cs'?J+'/':'')+PS+'.html?edit=1':WEB+'index.html?edit=1'+LQ;
-  m.innerHTML='<div class="ph" style="margin-bottom:12px"><div><h1>Upravit web'+(PELA?' PE-LA':'')+'</h1><p>Klikněte na text, fotku nebo ikonu a upravte je. Tlačítkem Procházet vypnete úpravy a můžete na webu normálně klikat '+(PELA?'(menu, odkazy, galerie). Ceny se mění v Ceníku – je společný s kempem.':'(kroky rezervace, místa na mapě).')+'</p></div>'+
-  '<div class="row" role="group" aria-label="Velikost náhledu"><button type="button" class="btn sm gh" data-w="pc" aria-pressed="true">Počítač</button><button type="button" class="btn sm gh" data-w="tab" aria-pressed="false">Tablet</button><button type="button" class="btn sm gh" data-w="mob" aria-pressed="false">Mobil</button>'+
-  '<a class="btn sm gh" href="'+ADR+'" target="_blank" rel="noopener">Nová záložka '+SV(IC.ven,14)+'</a></div></div>'+
-  '<div class="row" style="margin:-4px 0 12px;gap:12px;flex-wrap:wrap">'+(PELA?'<div class="row jz" role="group" aria-label="Stránka webu PE-LA">'+PSTR.map(function(x){return '<button type="button" class="btn sm gh" data-ps="'+x[0]+'" aria-pressed="'+(x[0]===PS)+'">'+x[1]+'</button>'}).join('')+'</div>':'')+jazykVolba()+(J!=='cs'?'<span class="mut">Upravujete překlad – klikněte na český text a napište '+(J==='en'?'anglický':'německý')+'. Co nepřeložíte, zůstane česky.</span>':'')+'</div>'+
+  var ZAR={pc:'<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',tab:'<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M11 18h2"/>',mob:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>'};
+  m.innerHTML='<div class="ph" style="margin-bottom:14px"><div><h1>Upravit web'+(PELA?' PE-LA':'')+'</h1><p>Klikněte na text, fotku nebo ikonu a upravte je. Tlačítkem Procházet vypnete úpravy a můžete na webu normálně klikat '+(PELA?'(menu, odkazy, galerie). Ceny se mění v Ceníku – je společný s kempem.':'(kroky rezervace, místa na mapě).')+'</p></div><a class="btn sm gh" href="'+ADR+'" target="_blank" rel="noopener">'+SV(IC.ven,15)+' Otevřít v nové záložce</a></div>'+
+  '<div class="card ed-bar">'+
+   (PELA?seg('Stránka','data-ps',PSTR,PS):'')+jazykVolba()+
+   '<span class="sp"></span>'+seg('Náhled','data-w',[['pc','<span class="sr">Počítač</span>','Počítač'],['tab','<span class="sr">Tablet</span>','Tablet'],['mob','<span class="sr">Mobil</span>','Mobil']],'pc',ZAR)+
+  '</div>'+
+  (J!=='cs'?'<p class="ed-pr">'+SV('<circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/>',16)+(PELA?'Upravujete '+(J==='en'?'anglickou':'německou')+' verzi webu PE-LA – texty pište '+(J==='en'?'anglicky':'německy')+'.':'Upravujete překlad – klikněte na český text a napište '+(J==='en'?'anglický':'německý')+'. Co nepřeložíte, zůstane česky.')+'</p>':'')+
   '<div class="frame"><iframe id="wf" title="Web '+NAZEV+' v editačním režimu" src="'+ADR+'"></iframe></div>';jazykKlik(m);
   $$('[data-ps]',m).forEach(function(b){b.addEventListener('click',function(){if(b.dataset.ps===PS)return;var jd=function(){KK.LS.set('admin-pela-str',b.dataset.ps);neulozeno=null;route()};if(neulozeno&&neulozeno())ptej('Máte neuložené změny\n\nKdyž přepnete stránku, změny se neuloží.',{ok:'Přepnout bez uložení',ne:'Zůstat'}).then(function(a){if(a)jd()});else jd()})});
   /* jazyk přepnutý přímo v náhledu → srovnat tlačítka */
