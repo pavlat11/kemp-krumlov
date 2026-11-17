@@ -949,7 +949,7 @@ function rezervace(m,sekV){
     var g=[];
     /* platba */
     g.push(sl('Platba',ce?plKarta(r):'bez ceny','',
-      ps==='vse'?'zaplaceno celé':ps==='zal'?'záloha '+kc(zp)+' přijata':ps==='ceka'?'záloha '+kc(p.zaloha)+' do '+KR(p.splatnost):'platí se na místě',
+      ps==='vse'?'':ps==='zal'?'záloha '+kc(zp)+' přijata':ps==='ceka'?'záloha '+kc(p.zaloha)+' do '+KR(p.splatnost):'platí se na místě',
       ps==='ceka'?Bt('data-zp="'+r.id+'" data-zc="zal"','Záloha zaplacena'):ps!=='vse'&&ce?Bt('data-zp="'+r.id+'" data-zc="vse"','Zaplaceno celé'):'',ps==='ceka'&&p.splatnost<dnes,ps==='vse'));
     /* ubytování */
     if(maUby(r)){var st=r.stav,ix={pop:0,pot:1,uby:2,odj:3}[st];

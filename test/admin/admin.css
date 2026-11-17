@@ -1528,3 +1528,20 @@ main:has(.rz-lay){max-width:1720px}
 .rzr.vb .rr-pl-t>span.d b{color:var(--warn)}
 .rzr.vb .rr-pl i{display:block;height:4px;border-radius:2px;background:#efe9dc;margin-top:8px}.rzr.vb .rr-pl i s{display:block;height:4px;border-radius:2px;background:var(--ok)}
 .rzr.vb .vb-k.ok .rr-pl-t>span{background:#dcefe2}
+/* Kompaktní karta */
+.rzr.vb .vb-al{padding:5px 8px 5px 16px;font-size:13px}.rzr.vb .vb-al .btn{min-height:30px;padding:3px 12px;font-size:13px}
+.rzr.vb .rr-h.vb-hl{padding:10px 16px;gap:2px 16px}
+.rzr.vb .vb-r1 .rl-j{font-size:16px}.rzr.vb .vb-r1 small{font-size:12.5px}.rzr.vb .vb-r2{margin-top:1px;font-size:13px}
+.rzr.vb .vb-cena b{font-size:16px}.rzr.vb .vb-c{font-size:12px;line-height:1.3}
+.rzr.vb .rr-bb .rr-e.rr-z.vb-det{padding:6px 12px;min-height:34px;font-size:13.5px}
+.rzr.vb .vb-g{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.rzr.vb .vb-k{padding:8px 14px 9px 18px;gap:3px}.rzr.vb .vb-k::before{top:9px;bottom:9px}
+.rzr.vb .vb-n{font-size:10.5px}.rzr.vb .vb-n svg{width:13px;height:13px}
+.rzr.vb .vb-h{font-size:14px;line-height:1.35}
+.rzr.vb .vb-s{padding:1px 8px;font-size:12px}.rzr.vb .vb-p{font-size:12px}
+.rzr.vb .vb-a{margin-top:3px}.rzr.vb .vb-a .btn{min-height:30px;padding:3px 12px;font-size:13px}
+.rzr.vb .rr-pl{margin:2px 0 0}.rzr.vb .rr-pl-t{gap:6px}
+.rzr.vb .rr-pl-t>span{padding:4px 9px;border-radius:8px}
+.rzr.vb .rr-pl small{font-size:11px}.rzr.vb .rr-pl b{font-size:15px;line-height:1.2}
+.rzr.vb .rr-pl i{margin-top:5px}
+.rr-m{margin-top:10px}
