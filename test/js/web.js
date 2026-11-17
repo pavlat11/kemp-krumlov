@@ -42,7 +42,7 @@ if(s){
 }
 
 function nactiSkript(src){return new Promise(function(ok,no){var e=document.createElement('script');e.src=BASE+src;e.onload=ok;e.onerror=no;document.body.appendChild(e)})}
-function nactiData(){return window.KK&&KK.galerie?Promise.resolve():nactiSkript('js/kk-data.js?v=14')}
+function nactiData(){return window.KK&&KK.galerie?Promise.resolve():nactiSkript('js/kk-data.js?v=15')}
 
 /* 3) galerie z administrace */
 if(get('galerie'))document.addEventListener('DOMContentLoaded',function(){
@@ -58,7 +58,7 @@ var ses=get('session');
 /* jen přihlášený se zapnutým účtem a právem „Upravit web“ (správce vždy) */
 var smiUpravit=function(){if(!ses||ses.do<=Date.now())return false;var u=(get('uzivatele')||[]).filter(function(x){return x.id===ses.id})[0];
   if(get('uzivatele')&&(!u||u.aktivni===false))return false;var role=u?u.role:ses.role;if(role==='admin')return true;
-  var p=(get('prava')||{})[role]||{};return p.upravit!==0};
+  var p=Object.assign({},(get('prava')||{})[role]||{},u&&u.prava||{});return p.upravit!==0};
 if(/[?&]edit(=1)?(&|$)/.test(location.search)&&smiUpravit()){
   var l=document.createElement('link');l.rel='stylesheet';l.href=BASE+'css/editace.css?v=9';document.head.appendChild(l);
   document.addEventListener('DOMContentLoaded',function(){nactiData().then(function(){return nactiSkript('js/editace.js?v=10')})});
