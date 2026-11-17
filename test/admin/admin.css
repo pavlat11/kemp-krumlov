@@ -1515,3 +1515,8 @@ main:has(.rz-lay){max-width:1720px}
 .rzr.vb .rr-bb .rr-e.rr-z.vb-det{background:var(--sun);border-color:var(--sun);color:var(--deep);display:inline-flex;align-items:center;gap:6px}
 .rzr.vb .rr-bb .rr-e.rr-z.vb-det i{font-style:normal;font-weight:800}
 .rzr.vb .rr-bb .rr-e.rr-z.vb-det:hover{background:#ffb866;border-color:#ffb866}
+/* splněná část = jemně zelené podbarvení */
+.rzr.vb .vb-k.ok{background:#eef7f0}
+.rzr.vb .vb-k.ok::before{background:var(--ok);opacity:.8}
+.rzr.vb .vb-k.ok .vb-s.on{background:#fff;border-color:#c9e6d2}
+.rzr.vb .vb-k.ok .vb-bar{background:#d5e9db}

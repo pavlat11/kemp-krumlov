@@ -925,7 +925,7 @@ function rezervace(m,sekV){
     var p=r.platba,ps=p?p.stav:'',ce=+r.cena||0,zp=!p?0:ps==='vse'?ce:ps==='zal'?Math.min(ce,+p.zaloha||0):0,d=ce-zp,zru=r.stav==='zru',
       Bt=function(a,t,pri){return '<button type="button" class="btn sm'+(pri?' pri':'')+'" '+a+'>'+t+'</button>'},
       K=function(t,on,zle){return '<span class="vb-s'+(on?' on':zle?' zle':'')+'">'+(on?'✓':'○')+' '+t+'</span>'},
-      sl=function(nad,hl,stavy,pod,btn,zle){var ik={'Platba':'pl','Ubytování':'ub','Lodě':'lo','Doprava':'dp'}[nad];return '<div class="vb-k '+(ik||'')+(zle?' zle':'')+'"><span class="vb-n">'+(ik?SV(RSI[ik],15):'')+nad+'</span><span class="vb-h">'+hl+'</span>'+(stavy?'<span class="vb-ss">'+stavy+'</span>':'')+(pod?'<span class="vb-p">'+pod+'</span>':'')+(btn&&btn!==alB?'<span class="vb-a">'+btn+'</span>':'')+'</div>'};
+      sl=function(nad,hl,stavy,pod,btn,zle,ok){var ik={'Platba':'pl','Ubytování':'ub','Lodě':'lo','Doprava':'dp'}[nad];return '<div class="vb-k '+(ik||'')+(zle?' zle':'')+(ok?' ok':'')+'"><span class="vb-n">'+(ik?SV(RSI[ik],15):'')+nad+'</span><span class="vb-h">'+hl+'</span>'+(stavy?'<span class="vb-ss">'+stavy+'</span>':'')+(pod?'<span class="vb-p">'+pod+'</span>':'')+(btn&&btn!==alB?'<span class="vb-a">'+btn+'</span>':'')+'</div>'};
     /* co je po termínu → červená lišta s jedním tlačítkem */
     var al=[],alB='',x=sLod(r)?LS(r):'',pd=x?posD(r):'';
     if(!zru&&!b){
@@ -950,17 +950,17 @@ function rezervace(m,sekV){
     /* platba */
     g.push(sl('Platba',ce?'<b>'+kc(zp)+'</b> z '+kc(ce):'bez ceny',ce?'<i class="vb-bar"><i style="width:'+Math.round(zp/ce*100)+'%"></i></i>':'',
       ps==='vse'?'zaplaceno celé':ps==='zal'?'záloha '+kc(zp)+' přijata':ps==='ceka'?'záloha '+kc(p.zaloha)+' do '+KR(p.splatnost):'platí se na místě',
-      ps==='ceka'?Bt('data-zp="'+r.id+'" data-zc="zal"','Záloha zaplacena'):ps!=='vse'&&ce?Bt('data-zp="'+r.id+'" data-zc="vse"','Zaplaceno celé'):'',ps==='ceka'&&p.splatnost<dnes));
+      ps==='ceka'?Bt('data-zp="'+r.id+'" data-zc="zal"','Záloha zaplacena'):ps!=='vse'&&ce?Bt('data-zp="'+r.id+'" data-zc="vse"','Zaplaceno celé'):'',ps==='ceka'&&p.splatnost<dnes,ps==='vse'));
     /* ubytování */
     if(maUby(r)){var st=r.stav,ix={pop:0,pot:1,uby:2,odj:3}[st];
       g.push(sl('Ubytování',esc(co.join(', ')),K('Potvrzeno',ix>=1)+K('Ubytován',ix>=2,st==='pot'&&r.od<dnes)+K('Odjel',ix>=3,st==='uby'&&r.do<dnes),
         st==='pop'?'čeká na potvrzení':st==='pot'?(r.od===dnes?'přijíždí dnes':r.od<dnes?'měl přijet '+KR(r.od):'příjezd '+KR(r.od)):st==='uby'?(r.do===dnes?'odjíždí dnes':r.do<dnes?'měl odjet '+KR(r.do):'do '+KR(r.do)):'odjel '+KR(r.do),
-        st==='pop'&&ps!=='ceka'?Bt('data-qs="'+r.id+'" data-st="pot"','Potvrdit'):st==='pot'&&r.od<=dnes?Bt('data-qs="'+r.id+'" data-st="uby"','Ubytovat'):st==='uby'?Bt('data-qs="'+r.id+'" data-st="odj"','Odhlásit'):'',(st==='pot'&&r.od<dnes)||(st==='uby'&&r.do<dnes)))}
+        st==='pop'&&ps!=='ceka'?Bt('data-qs="'+r.id+'" data-st="pot"','Potvrdit'):st==='pot'&&r.od<=dnes?Bt('data-qs="'+r.id+'" data-st="uby"','Ubytovat'):st==='uby'?Bt('data-qs="'+r.id+'" data-st="odj"','Odhlásit'):'',(st==='pot'&&r.od<dnes)||(st==='uby'&&r.do<dnes),st==='odj'))}
     /* lodě */
     if(sLod(r)){var po=(x==='vyd'||x==='cast')&&pd<dnes;
       g.push(sl('Lodě',esc(LK(r)),K('Vydané',x!=='res',x==='res'&&r.lode.den<dnes)+K(x==='cast'?'Vrácená část':'Vrácené',x==='vra',po),
         x==='res'?(r.lode.den===dnes?'výdej dnes':'výdej '+KR(r.lode.den)):x==='vra'?'vše vráceno':(po?'měl vrátit '+KR(pd):pd===dnes?'vrací dnes':'vrátí '+KR(pd)),
-        x==='res'&&r.lode.den<=dnes?Bt('data-lv="'+r.id+'"','Vydat lodě'):x==='vyd'||x==='cast'?Bt('data-lr="'+r.id+'"','Vrátit lodě'):'',po))}
+        x==='res'&&r.lode.den<=dnes?Bt('data-lv="'+r.id+'"','Vydat lodě'):x==='vyd'||x==='cast'?Bt('data-lr="'+r.id+'"','Vrátit lodě'):'',po,x==='vra'))}
     /* doprava */
     if(r.doprava||r.vyzved){var os2=(r.doprava&&r.doprava.osob)||(r.vyzved&&r.vyzved.osob)||0;
       g.push(sl('Doprava',(r.doprava?'<span class="vb-d"><b>'+esc(r.doprava.cas||'–')+'</b> odvoz '+esc(R.mistoN(r.doprava.misto))+'</span>':'')+(r.vyzved?'<span class="vb-d"><b>'+esc(r.vyzved.cas||'–')+'</b> vyzvednutí '+esc(R.mistoN(r.vyzved.misto))+'</span>':''),'',
