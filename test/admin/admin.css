@@ -1593,3 +1593,4 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .up-c.pe{background:#dff0ef;color:#0c3640}
 .up-gs:not(.ke):not(.pe){grid-column:1/-1}
 .up-gs:not(.ke):not(.pe) .sw-l{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.rz-jennas .rq,.rz-jennas .rz-ak{display:none!important}

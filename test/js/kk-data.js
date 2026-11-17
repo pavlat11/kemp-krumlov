@@ -42,10 +42,10 @@ function api(method,path,body){
    server: POST /login {login,heslo} · POST /logout · GET /me · GET/POST/PUT/DELETE /uzivatele · GET/PUT /prava · PUT /me/heslo */
 KK.ROLE={admin:'Správce',obsluha:'Obsluha'};
 /* web kempu a web PE-LA mají práva zvlášť (upravit/galerie/seo = kemp, pela_… = PE-LA); Provoz a Systém jsou společné */
-KK.SEKCE={prehled:'Přehled',upravit:'Upravit web',galerie:'Galerie',seo:'SEO',pela_upravit:'Upravit web',pela_galerie:'Galerie',pela_seo:'SEO',rezervace:'Rezervace',cenik:'Ceník a kapacity',nastaveni:'Nastavení a záloha',zaznam:'Záznam akcí',kalkulace:'Kalkulace'};
-var PRAVA0={obsluha:{prehled:1,upravit:1,galerie:1,rezervace:1,seo:0,pela_upravit:1,pela_galerie:1,pela_seo:0,cenik:0,nastaveni:0}};
+KK.SEKCE={prehled:'Přehled',upravit:'Upravit web',galerie:'Galerie',seo:'SEO',pela_upravit:'Upravit web',pela_galerie:'Galerie',pela_seo:'SEO',ubytovani:'Ubytování',pujcovna:'Půjčovna lodí',doprava:'Doprava',rez_nastaveni:'Nastavení rezervací',rezervace:'Rezervace',cenik:'Ceník a kapacity',nastaveni:'Nastavení a záloha',zaznam:'Záznam akcí',kalkulace:'Kalkulace'};
+var PRAVA0={obsluha:{prehled:1,upravit:1,galerie:1,rezervace:1,seo:0,pela_upravit:1,pela_galerie:1,pela_seo:0,ubytovani:1,pujcovna:1,doprava:1,rez_nastaveni:0,cenik:0,nastaveni:0}};
 /* skupiny práv v Uživatelích: [nadpis, klíče, krátký štítek] */
-KK.SEKCE_SKUPINY=[['Web Kemp Krumlov',['upravit','galerie','seo'],'Kemp'],['Web PE-LA',['pela_upravit','pela_galerie','pela_seo'],'PE-LA'],['Provoz a systém',['rezervace','cenik','kalkulace','zaznam','nastaveni'],'']];
+KK.SEKCE_SKUPINY=[['Web Kemp Krumlov',['upravit','galerie','seo'],'Kemp'],['Web PE-LA',['pela_upravit','pela_galerie','pela_seo'],'PE-LA'],['Provoz',['rezervace','ubytovani','pujcovna','doprava','rez_nastaveni','cenik','kalkulace'],''],['Systém',['zaznam','nastaveni'],'']];
 var WEB_SEKCE={upravit:1,galerie:1,seo:1};
 function hex(b){return [].map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2)}).join('')}
 function otisk(sul,heslo){var t=sul+'|'+heslo;
@@ -62,7 +62,9 @@ function aktivniSpravci(u){return u.filter(function(x){return x.role==='admin'&&
 KK.prava={
   vse:function(){var p=LS.get('prava',null)||{};var o={};Object.keys(PRAVA0).forEach(function(r){o[r]=Object.assign({},PRAVA0[r],p[r]||{});o[r].prehled=1});return o},
   /* práva jednoho účtu: vlastní nastavení u uživatele (x.prava), jinak výchozí podle role */
-  uzivatel:function(x){var o=Object.assign({},(KK.prava.vse()[x.role]||{}),x.prava||{});o.prehled=1;return o},
+  uzivatel:function(x){var o=Object.assign({},(KK.prava.vse()[x.role]||{}),x.prava||{});o.prehled=1;
+    /* starší účty měly jedno právo Rezervace pro Ubytování, Půjčovnu i Dopravu – převezme se */
+    if(x.prava&&x.prava.rezervace!=null)['ubytovani','pujcovna','doprava'].forEach(function(k){if(x.prava[k]==null)o[k]=x.prava.rezervace});return o},
   uloz:function(p){LS.set('prava',p);historie('Práva','upravena práva obsluhy');return Promise.resolve(KK.prava.vse())}
 };
 KK.auth={
@@ -86,7 +88,7 @@ KK.auth={
     s.jmeno=x.jmeno;s.role=x.role;s.vychozi=!!x.vychozi;s.login=x.login;s.email=x.email||'';return s},
   /* smí uživatel spravovat daný web (aspoň jednu sekci Upravit web / Galerie / SEO)? */
   muzeWeb:function(w){var s=KK.auth.meSync();if(!s)return false;if(s.role==='admin')return true;var x=seznamU().filter(function(y){return y.id===s.id})[0];var p=x?KK.prava.uzivatel(x):(KK.prava.vse()[s.role]||{});var pre=w==='pela'?'pela_':'';return ['upravit','galerie','seo'].some(function(k){return !!p[pre+k]})},
-  muze:function(sekce){if(sekce==='ubytovani'||sekce==='pujcovna'||sekce==='doprava')sekce='rezervace';if(KK.WEB==='pela'&&WEB_SEKCE[sekce])sekce='pela_'+sekce;var s=KK.auth.meSync();if(!s)return false;if(s.role==='admin')return true;if(sekce==='uzivatele')return false;if(sekce==='ucet')return true;var x=seznamU().filter(function(y){return y.id===s.id})[0];var p=x?KK.prava.uzivatel(x):(KK.prava.vse()[s.role]||{});return !!p[sekce]},
+  muze:function(sekce){if(KK.WEB==='pela'&&WEB_SEKCE[sekce])sekce='pela_'+sekce;var s=KK.auth.meSync();if(!s)return false;if(s.role==='admin')return true;if(sekce==='uzivatele')return false;if(sekce==='ucet')return true;var x=seznamU().filter(function(y){return y.id===s.id})[0];var p=x?KK.prava.uzivatel(x):(KK.prava.vse()[s.role]||{});return !!p[sekce]},
   zmenHeslo:function(stare,nove){var s=KK.auth.meSync();if(!s)return Promise.reject(new Error('Nejste přihlášen.'));
     var e=kontrolaHesla(nove);if(e)return Promise.reject(new Error(e));
     var u=seznamU(),x=u.filter(function(y){return y.id===s.id})[0];
