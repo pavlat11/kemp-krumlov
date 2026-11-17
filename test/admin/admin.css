@@ -1520,3 +1520,11 @@ main:has(.rz-lay){max-width:1720px}
 .rzr.vb .vb-k.ok::before{background:var(--ok);opacity:.8}
 .rzr.vb .vb-k.ok .vb-s.on{background:#fff;border-color:#c9e6d2}
 .rzr.vb .vb-k.ok .vb-bar{background:#d5e9db}
+/* Zaplaceno / Doplatit v kartě – větší políčka */
+.rzr.vb .rr-pl{margin:4px 0 2px}.rzr.vb .rr-pl-t{gap:8px}
+.rzr.vb .rr-pl-t>span{padding:8px 12px;border-radius:10px}
+.rzr.vb .rr-pl small{font-size:12.5px}
+.rzr.vb .rr-pl b{font-size:18px;font-weight:800;line-height:1.25;color:var(--ok)}
+.rzr.vb .rr-pl-t>span.d b{color:var(--warn)}
+.rzr.vb .rr-pl i{display:block;height:4px;border-radius:2px;background:#efe9dc;margin-top:8px}.rzr.vb .rr-pl i s{display:block;height:4px;border-radius:2px;background:var(--ok)}
+.rzr.vb .vb-k.ok .rr-pl-t>span{background:#dcefe2}
