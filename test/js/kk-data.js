@@ -13,10 +13,18 @@ var KK=window.KK=window.KK||{};
 KK.MODE='local';          // 'local' | 'server'
 KK.API_URL='/api';        // adresa API na serveru
 
+/* WEB: kemp | pela – texty, fotky, galerie, ikony a SEO má každý web vlastní, ceník, rezervace a účty jsou společné.
+   Web PE-LA nastavuje window.KK_WEB='pela' sám, administrace podle přepínače nahoře (admin/index.html).
+   server: každý požadavek na texty, fotky, galerii a SEO dostane ?web=kemp|pela */
+KK.WEB=window.KK_WEB==='pela'?'pela':'kemp';
+KK.WEBY={kemp:'Kemp Krumlov',pela:'PE-LA'};
+var WEBOVE=/^(texty|dtexty|ikony|obrazky|seo|galerie)(\.|$)/;
+var WK=function(k){return KK.WEB==='pela'&&WEBOVE.test(k)?'pela.'+k:k};
+KK.WK=WK;
 var LS={
-  get:function(k,d){try{var v=localStorage.getItem('kkt.'+k);return v?JSON.parse(v):d}catch(e){return d}},
-  set:function(k,v){try{localStorage.setItem('kkt.'+k,JSON.stringify(v));return true}catch(e){return false}},
-  del:function(k){try{localStorage.removeItem('kkt.'+k)}catch(e){}}
+  get:function(k,d){try{var v=localStorage.getItem('kkt.'+WK(k));return v?JSON.parse(v):d}catch(e){return d}},
+  set:function(k,v){try{localStorage.setItem('kkt.'+WK(k),JSON.stringify(v));return true}catch(e){return false}},
+  del:function(k){try{localStorage.removeItem('kkt.'+WK(k))}catch(e){}}
 };
 KK.LS=LS;
 
@@ -158,6 +166,15 @@ KK.SEO_VYCHOZI={
   googleVerify:'',
   firma:{nazev:'Kemp Krumlov',ulice:'Domoradice 107',mesto:'Český Krumlov',psc:'381 01',telefon:'+420 720 514 943',email:'kempkrumlov2017@gmail.com',lat:'48.8190',lng:'14.3276',sezonaOd:'05-01',sezonaDo:'10-01',cenovaHladina:'190–990 Kč'}
 };
+if(KK.WEB==='pela')KK.SEO_VYCHOZI={
+  title:'PE-LA – půjčovna lodí a raftů na Vltavě | Český Krumlov',
+  description:'Půjčovna kánoí a raftů PE-LA v Českém Krumlově. Pádla, vesty a barely v ceně, doprava na místo vyplutí po celé Vltavě. Na vodě od roku 1993.',
+  canonical:'https://www.pe-la.cz/',
+  index:true,
+  ogTitle:'',ogDescription:'',ogImage:'assets/img/og.jpg',
+  googleVerify:'',
+  firma:{nazev:'PE-LA půjčovna lodí',ulice:'Domoradice 107',mesto:'Český Krumlov',psc:'381 01',telefon:'+420 725 336 601',email:'pelalode@seznam.cz',lat:'48.8190',lng:'14.3276',sezonaOd:'05-01',sezonaDo:'10-01',cenovaHladina:''}
+};
 KK.seo={
   nacti:function(){return KK.MODE==='server'?api('GET','/seo'):Promise.resolve(KK.seo.nactiSync())},
   nactiSync:function(){var u=LS.get('seo',null)||{};var v=JSON.parse(JSON.stringify(KK.SEO_VYCHOZI));Object.keys(u).forEach(function(k){if(k==='firma')Object.assign(v.firma,u.firma||{});else v[k]=u[k]});return v},
@@ -178,12 +195,12 @@ KK.cenik={
 /* ---------------- GALERIE ----------------
    Fotka: {id, popis, kat:'ubyt'|'reka'|'vecer'|'', poradi, viditelna, w, h, src (cesta) | blob, nahled(blob), velikost, pridano}
    server: GET /api/fotky · POST /api/fotky (multipart, více souborů) · PATCH /api/fotky/{id} · DELETE /api/fotky/{id} · PUT /api/fotky/poradi [id,…] */
-var DBN='kkt-admin',DBV=1,_db=null;
+var DBN=KK.WEB==='pela'?'kkt-pela-admin':'kkt-admin',DBV=1,_db=null;
 function db(){if(_db)return _db;_db=new Promise(function(ok,no){var r=indexedDB.open(DBN,DBV);r.onupgradeneeded=function(){var d=r.result;if(!d.objectStoreNames.contains('fotky'))d.createObjectStore('fotky',{keyPath:'id'})};r.onsuccess=function(){ok(r.result)};r.onerror=function(){no(r.error)}});return _db}
 function tx(mode,fn){return db().then(function(d){return new Promise(function(ok,no){var t=d.transaction('fotky',mode),s=t.objectStore('fotky'),res=fn(s);t.oncomplete=function(){ok(res&&res.result!==undefined?res.result:res)};t.onerror=function(){no(t.error)}})})}
 /* kategorie galerie – výchozí tři, další si obsluha přidá v Galerii; n = česky, en/de = překlad (prázdné → česky) */
 KK.galKat={
-  VYCHOZI:[{k:'ubyt',n:'Ubytování',t:'galerie.5'},{k:'reka',n:'U řeky',t:'galerie.6'},{k:'vecer',n:'Večery',t:'galerie.7'}],
+  VYCHOZI:KK.WEB==='pela'?[]:[{k:'ubyt',n:'Ubytování',t:'galerie.5'},{k:'reka',n:'U řeky',t:'galerie.6'},{k:'vecer',n:'Večery',t:'galerie.7'}],
   vse:function(){var a=LS.get('galerie.kat',null);return (a&&a.length?a:KK.galKat.VYCHOZI).map(function(x){return Object.assign({},x)})},
   uloz:function(a){a=(a||[]).filter(function(x){return x&&x.k&&String(x.n||'').trim()});LS.set('galerie.kat',a);KK.KATEGORIE=KK.galKat.mapa();historie('Galerie','kategorie upraveny');return a},
   mapa:function(){var m={};KK.galKat.vse().forEach(function(x){m[x.k]=x.n});return m},
@@ -198,7 +215,7 @@ KK.galerie={
   },
   /* první spuštění: převezme fotky, které jsou teď na webu */
   zalozZWebu:function(polozky){
-    return tx('readwrite',function(s){polozky.forEach(function(p,i){s.put({id:'web-'+i,popis:p.popis,kat:p.kat,poradi:i,viditelna:true,src:p.src,w:p.w||1536,h:p.h||1024,velikost:0,pridano:Date.now(),zdroj:'web'})})})
+    return tx('readwrite',function(s){polozky.forEach(function(p,i){s.put({id:'web-'+i,popis:p.popis,kat:p.kat,poradi:i,viditelna:true,src:p.src,full:p.full||'',w:p.w||1536,h:p.h||1024,velikost:0,pridano:Date.now(),zdroj:'web'})})})
       .then(function(){LS.set('galerie',{v:1});return KK.galerie.seznam()});
   },
   pridej:function(soubory,vychoziKat,prubeh){
@@ -247,7 +264,7 @@ function zmensi(file,max,q){
    ikony   {"klíč":{n:"tent",s:"<path…>"}}    server: GET/PUT /api/prepisy/ikony
    obrazky {"img/x.webp":{id,v}} + soubory     server: GET /api/prepisy/fotky · POST (multipart: cesta, soubor) · DELETE ?cesta=… */
 var _odb=null;
-function odb(){if(_odb)return _odb;_odb=new Promise(function(ok,no){var r=indexedDB.open('kkt-obrazky',1);r.onupgradeneeded=function(){r.result.createObjectStore('o',{keyPath:'id'})};r.onsuccess=function(){ok(r.result)};r.onerror=function(){no(r.error)}});return _odb}
+function odb(){if(_odb)return _odb;_odb=new Promise(function(ok,no){var r=indexedDB.open(KK.WEB==='pela'?'kkt-pela-obrazky':'kkt-obrazky',1);r.onupgradeneeded=function(){r.result.createObjectStore('o',{keyPath:'id'})};r.onsuccess=function(){ok(r.result)};r.onerror=function(){no(r.error)}});return _odb}
 function otx(mode,fn){return odb().then(function(d){return new Promise(function(ok,no){var t=d.transaction('o',mode),s=t.objectStore('o'),r=fn(s);t.oncomplete=function(){ok(r&&r.result!==undefined?r.result:r)};t.onerror=function(){no(t.error)}})})}
 function mapa(zaklad,nazev,jaz){var K=function(){return jaz?kJ(zaklad):zaklad};return{
   vse:function(){return LS.get(K(),{})},
@@ -276,14 +293,15 @@ function naData(b){return new Promise(function(ok){var r=new FileReader();r.onlo
 function zDat(u){var p=u.split(','),b=atob(p[1]),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new Blob([a],{type:(p[0].match(/:(.*?);/)||[])[1]||'image/webp'})}
 
 /* ---------------- HISTORIE ZMĚN, EXPORT, RESET ---------------- */
-function historie(co,popis){var h=LS.get('historie',[]);h.unshift({kdy:Date.now(),co:co,popis:popis,kdo:(KK.auth.meSync()||{}).jmeno||''});LS.set('historie',h.slice(0,2000))}
+function historie(co,popis){var h=LS.get('historie',[]);h.unshift({kdy:Date.now(),co:(KK.WEB==='pela'&&/^(Texty|Překlad|Texty v mapách|Ikony|Fotky na webu|SEO|Galerie)/.test(co)?'PE-LA · ':'')+co,popis:popis,kdo:(KK.auth.meSync()||{}).jmeno||''});LS.set('historie',h.slice(0,2000))}
 KK.historie=function(){return LS.get('historie',[])};KK.zaznam=historie;
 KK.export=function(){return KK.galerie.seznam().then(function(f){
   return Promise.all(f.map(function(x){if(!x.blob)return x;return new Promise(function(ok){var r=new FileReader();r.onload=function(){var y=Object.assign({},x);y.blob=r.result;delete y.nahled;ok(y)};r.readAsDataURL(x.blob)})}))
   .then(function(fotky){return KK.obrazky.soubor.vse().catch(function(){return[]}).then(function(ob){return Promise.all(ob.map(function(o){return naData(o.blob).then(function(d){return{id:o.id,data:d}})}))}).then(function(ob){
-    return{verze:1,datum:new Date().toISOString(),texty:LS.get('texty',{}),seo:LS.get('seo',null),cenik:LS.get('cenik',null),fotky:fotky,rezervace:LS.get('rezervace',[]),rezNast:LS.get('rez.nast',null),rezCislo:LS.get('rez.cislo',0),rezArchiv:LS.get('rez.archiv',null),dtexty:LS.get('dtexty',{}),preklady:preklady(),ikony:LS.get('ikony',{}),obrazky:LS.get('obrazky',{}),obrazkySoubory:ob}})})})};
+    return{verze:1,web:KK.WEB,datum:new Date().toISOString(),texty:LS.get('texty',{}),seo:LS.get('seo',null),cenik:LS.get('cenik',null),fotky:fotky,rezervace:LS.get('rezervace',[]),rezNast:LS.get('rez.nast',null),rezCislo:LS.get('rez.cislo',0),rezArchiv:LS.get('rez.archiv',null),dtexty:LS.get('dtexty',{}),preklady:preklady(),ikony:LS.get('ikony',{}),obrazky:LS.get('obrazky',{}),obrazkySoubory:ob}})})})};
 KK.import=function(d){
   if(!d||d.verze!==1)return Promise.reject(new Error('Soubor není záloha administrace Kemp Krumlov.'));
+  if((d.web||'kemp')!==KK.WEB)return Promise.reject(new Error('Záloha je z webu '+KK.WEBY[d.web||'kemp']+'. Přepněte nahoře na '+KK.WEBY[d.web||'kemp']+' a obnovte ji tam.'));
   LS.set('texty',d.texty||{});['dtexty','ikony','obrazky'].forEach(function(k){if(d[k]&&Object.keys(d[k]).length)LS.set(k,d[k]);else LS.del(k)});
   ['en','de'].forEach(function(j){var z=(d.preklady||{})[j]||{};['texty','dtexty'].forEach(function(b){if(z[b]&&Object.keys(z[b]).length)LS.set(b+'.'+j,z[b]);else LS.del(b+'.'+j)})});if(d.seo)LS.set('seo',d.seo);else LS.del('seo');if(d.cenik)LS.set('cenik',d.cenik);else LS.del('cenik');if(d.rezArchiv)LS.set('rez.archiv',d.rezArchiv);if(d.rezervace){LS.set('rezervace',d.rezervace);LS.set('rez.cislo',d.rezCislo||d.rezervace.length);if(d.rezNast)LS.set('rez.nast',d.rezNast)}
   var fotky=(d.fotky||[]).map(function(f){if(typeof f.blob==='string'){var p=f.blob.split(','),b=atob(p[1]),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);f.blob=new Blob([a],{type:(p[0].match(/:(.*?);/)||[])[1]||'image/webp'});f.nahled=f.blob}return f});

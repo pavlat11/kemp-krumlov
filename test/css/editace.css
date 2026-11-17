@@ -76,3 +76,19 @@ dialog.kke-ptj h2{margin:0 0 8px;font-size:19px;color:#0b2419}dialog.kke-ptj p{m
 dialog.kke-ptj div{display:flex;gap:10px;margin-top:20px}
 dialog.kke-ptj button{flex:1;min-height:44px;border-radius:12px;border:1.5px solid #d9d3c6;background:#fff;color:#0b2419;font:inherit;font-weight:700;cursor:pointer}
 dialog.kke-ptj button[data-y]{background:#b3261e;border-color:#b3261e;color:#fff}
+
+/* --- web PE-LA: lišta a zvýraznění v barvách PE-LA --- */
+.kke-pela .kke-bar{background:#0a2229}
+.kke-pela .kke-tit{color:#ffb81c}
+.kke-pela .kke-b.kke-save{background:#ffb81c;border-color:#ffb81c;color:#0a2229}
+.kke-pela .kke-b.kke-save:hover:not(:disabled){background:#ffcf5c}
+.kke-pela .kke-b:focus-visible{outline-color:#ffb81c}
+.kke-pela.kk-edit [data-t]:hover,.kke-pela.kk-edit [data-t]:focus-visible{outline-color:#1b8a8c!important;background-color:rgba(27,138,140,.12)}
+.kke-pela.kk-edit [data-t].kke-act{outline-color:#1b8a8c!important;caret-color:#1b8a8c}
+.kke-pela.kk-edit [data-t].kke-ceka{box-shadow:inset 0 -2px 0 #ffb81c;background-color:rgba(255,184,28,.14)}
+.kke-pela.kk-edit [data-pc]{cursor:not-allowed;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(27,138,140,.35)}
+.kke-pela.kk-edit #fotogalerie .gitem{cursor:not-allowed}
+.kke-pela.kk-edit [data-reveal],.kke-pela.kk-edit .fade-up,.kke-pela.kk-edit .split .w>span{opacity:1!important;transform:none!important}
+.kke-pela.kk-edit .clip-reveal{clip-path:none!important}
+.kke-pela.kk-edit .loader{display:none!important}
+.kke-pela.kk-edit .kke-toast a{color:#0f5a62}

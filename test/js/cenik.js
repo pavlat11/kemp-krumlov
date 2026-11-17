@@ -20,7 +20,7 @@ var VYCHOZI={verze:1,
   ubytovani:{n:'Ubytování',sloupce:['Sezóna','Mimo sezónu']},
   doplnky:{n:'Doplňky',sloupce:['Sezóna','Mimo sezónu']},
   lode:{n:'Půjčovna lodí (cena za loď a den)',sloupce:['1–2 dny','3 a více dní']},
-  navoz:{n:'Návoz lodí (jednorázový poplatek)',sloupce:['Cena'],pevne:true},
+  navoz:{n:'Návoz lodí (jednorázový poplatek)',sloupce:['Bližší místa','Vzdálenější místa'],pevne:true},
   doprava:{n:'Doprava osob (cena za auto pro 8 osob)',sloupce:['Cena']}
  },
  polozky:[
@@ -41,7 +41,7 @@ var VYCHOZI={verze:1,
   {k:'raft6',kat:'lode',n:'Raft pro 6',pozn:'5–6 osob',a:1600,b:1400,osob:6},
   {k:'raft8',kat:'lode',n:'Raft pro 8',pozn:'7–8 osob',a:1800,b:1600,osob:8},
   {k:'baraka',kat:'lode',n:'Baraka',pozn:'2 osoby',a:750,b:550,osob:2},
-  {k:'nav1',kat:'navoz',n:'Jeden den, do 10 lodí',a:200},{k:'nav2',kat:'navoz',n:'Jeden den, 10 a více lodí',a:500},
+  {k:'nav1',kat:'navoz',n:'Jeden den, do 10 lodí',a:200,b:600},{k:'nav2',kat:'navoz',n:'Jeden den, 10 a více lodí',a:500,b:1000},
   {k:'nav3',kat:'navoz',n:'Více dní, do 10 lodí',a:400},{k:'nav4',kat:'navoz',n:'Více dní, 10 a více lodí',a:800},
   {k:'dop1',kat:'doprava',n:'Vyšší Brod',a:1150},{k:'dop2',kat:'doprava',n:'Rožmberk nad Vltavou',a:850},{k:'dop3',kat:'doprava',n:'Nahořany',a:650},
   {k:'dop4',kat:'doprava',n:'Kemp Vltava',a:550},{k:'dop5',kat:'doprava',n:'Viking / Pískárna',a:500},{k:'dop6',kat:'doprava',n:'Vltavan / Spolí',a:350},
@@ -61,6 +61,8 @@ function doplň(u){u.slevy=slevyNove(u.slevy);(u.polozky||[]).forEach(function(p
   u.kategorie=JSON.parse(JSON.stringify(VYCHOZI.kategorie));u.polozky=u.polozky.filter(function(p){return u.kategorie[p.kat]});
   /* půjčovna: starší ceník ještě lodě a návoz nemá – doplní se výchozí (před dopravu) */
   ['navoz','lode'].forEach(function(kat){if(u.polozky.some(function(p){return p.kat===kat}))return;var nove=JSON.parse(JSON.stringify(VYCHOZI.polozky.filter(function(p){return p.kat===kat}))),i=u.polozky.findIndex(function(p){return p.kat==='doprava'});u.polozky.splice.apply(u.polozky,[i<0?u.polozky.length:i,0].concat(nove))});
+  /* návoz: druhý sloupec (vzdálenější místa, web PE-LA) ve starším ceníku chybí */
+  u.polozky.forEach(function(p){if(p.kat==='navoz'&&p.b==null){var v=VYCHOZI.polozky.filter(function(x){return x.k===p.k})[0];if(v&&v.b!=null)p.b=v.b}});
   return u}
 function nacti(){
   if(window.KK_CENIK_DATA)return doplň(window.KK_CENIK_DATA);
@@ -168,7 +170,7 @@ if(tb){
   var lo=KKC.kat('lode').filter(function(p){return p.skryt!==1});
   if(lo.length){h+='<tr class="ck-kat"><th colspan="3" scope="colgroup">'+esc(L('Půjčovna lodí'))+' <small>'+esc(L('za loď a den: 1–2 dny / 3 a více dní'))+'</small></th></tr>';
    lo.forEach(function(p){h+='<tr><td>'+esc(p.n)+(p.pozn?' <small>'+esc(p.pozn)+'</small>':'')+'</td><td>'+fmt(+p.a||0)+' Kč</td><td>'+fmt(p.b==null?+p.a||0:+p.b)+' Kč</td></tr>'});
-   KKC.kat('navoz').forEach(function(p){h+='<tr><td>'+esc(L('Návoz lodí'))+' <small>'+esc(p.n)+'</small></td><td colspan="2">'+fmt(+p.a||0)+' Kč</td></tr>'})}
+   KKC.kat('navoz').forEach(function(p){h+='<tr><td>'+esc(L('Návoz lodí'))+' <small>'+esc(p.n)+'</small></td><td colspan="2">'+fmt(+p.a||0)+(p.b!=null&&+p.b!==+p.a?' / '+fmt(+p.b):'')+' Kč</td></tr>'})}
   var sl=C.sluzby||[];
   if(sl.length){h+='<tr class="ck-kat"><th colspan="3" scope="colgroup">Služby v kempu</th></tr>';sl.forEach(function(p){if(p.n)h+='<tr><td>'+esc(p.n)+'</td><td colspan="2">'+esc(p.t)+'</td></tr>'})}
   tb.innerHTML=h;

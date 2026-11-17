@@ -2,7 +2,14 @@
 (function(){
 'use strict';
 var $=function(s,r){return(r||document).querySelector(s)},$$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
-var app=$('#app'),WEB='../';
+var app=$('#app');
+/* spravovaný web (přepínač nahoře v menu): Kemp Krumlov | PE-LA. Texty, fotky, galerie a SEO má každý web svoje,
+   ceník, rezervace, půjčovna, doprava a účty jsou společné. */
+var PELA=KK.WEB==='pela',WEB=PELA?'../pela/':'../',NAZEV=KK.WEBY[KK.WEB];
+var GALSEL=PELA?'#fotogalerie .gitem':'#galerie .gl-i';
+/* stránky webu PE-LA (náhled v test/pela, jazyky ve složkách en/ a de/) */
+var PSTR=[['index','Úvod'],['kanoe','Kanoe'],['rafty','Rafty'],['vybaveni','Vybavení']];
+var LOGO_PELA='<svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true"><path d="M41 8 27 33" stroke="currentColor" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M9 32h46c-2 8-10 13-23 13S11 40 9 32z" fill="currentColor"/><path d="M8 54c4-4 8-4 12 0s8 4 12 0 8-4 12 0 8 4 12 0" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg>';
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
 var txt=function(h){var d=document.createElement('div');d.innerHTML=h;return d.textContent.replace(/\s+/g,' ').trim()};
 var pl=function(n,a,b,c){return n===1?a:n>=2&&n<=4?b:c};
@@ -42,7 +49,7 @@ function zdroj(){
   return fetch(WEB+'index.html',{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){
     var d=new DOMParser().parseFromString(h,'text/html'),texty=[],cen=0;
     $$('[data-t]',d).forEach(function(e){if(e.hasAttribute('data-cena')){cen++;return}var k=e.dataset.t;if(texty.some(function(x){return x.k===k}))return;texty.push({k:k,sek:k.split('.')[0],html:KK.cisti(e.innerHTML),tag:e.tagName.toLowerCase()})});
-    var fotky=$$('#galerie .gl-i',d).map(function(f){var i=$('img',f);return{src:i.getAttribute('src'),popis:i.getAttribute('alt')||'',kat:f.dataset.c||'',w:+i.getAttribute('width')||1536,h:+i.getAttribute('height')||1024}});
+    var fotky=$$(GALSEL,d).map(function(f){var i=$('img',f);return{src:i.getAttribute('src'),full:PELA?f.getAttribute('data-full')||'':'',popis:i.getAttribute('alt')||'',kat:PELA?'':f.dataset.c||'',w:+i.getAttribute('width')||1536,h:+i.getAttribute('height')||1024}});
     var img=$$('img',d),bezAlt=img.filter(function(i){return !i.hasAttribute('alt')}).length,h1=$$('h1',d).length;
     ZDROJ={texty:texty,ceny:cen,fotky:fotky,bezAlt:bezAlt,h1:h1,obrazky:img.length};return ZDROJ;
   });
@@ -50,7 +57,7 @@ function zdroj(){
 
 /* ---------- přihlášení ---------- */
 function login(){
-  app.innerHTML='<div class="login"><form novalidate aria-labelledby="lt"><div class="logo"><i>'+SV(IC.lode,22)+'</i>Kemp Krumlov</div><h1 id="lt">Administrace</h1><p>Přihlaste se pro správu webu.</p>'+
+  app.innerHTML='<div class="login"><form novalidate aria-labelledby="lt"><div class="logo"><i>'+(PELA?LOGO_PELA:SV(IC.lode,22))+'</i>'+NAZEV+'</div><h1 id="lt">Administrace</h1><p>Přihlaste se pro správu webu.</p>'+
    '<label class="f">Přihlašovací jméno nebo e-mail<input class="inp" name="u" autocomplete="username" required></label><br>'+
    '<label class="f">Heslo<input class="inp" name="p" type="password" autocomplete="current-password" required aria-describedby="lh"><small id="lh">První přihlášení v náhledu: <b>admin</b> / <b>kemp</b> – heslo si pak změňte.</small></label>'+
    '<p class="err-msg" role="alert" hidden></p><br><button class="btn pri" style="width:100%">Přihlásit se</button></form></div>';
@@ -69,10 +76,10 @@ function jazykKlik(m){$$('[data-jz]',m).forEach(function(b){b.addEventListener('
 var VIEWS={upravit:upravit,prehled:prehled,galerie:galerie,seo:seo,cenik:cenik,rezervace:rezervace,ubytovani:rezervace,pujcovna:rezervace,doprava:rezervace,nastaveni:nastaveni,zaznam:zaznam,kalkulace:kalkulace,uzivatele:uzivatele,ucet:ucet};
 var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['galerie','Galerie'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace'],['ubytovani','Ubytování'],['pujcovna','Půjčovna lodí'],['doprava','Doprava'],['cenik','Ceník a kapacity'],['kalkulace','Kalkulace']]],['Systém',[['zaznam','Záznam akcí'],['nastaveni','Nastavení a záloha'],['uzivatele','Uživatelé']]]];
 function shell(s){
-  app.innerHTML='<div class="top"><div class="logo"><i>'+SV(IC.lode,20)+'</i>Administrace</div><button type="button" id="mb" aria-label="Otevřít menu" aria-expanded="false" aria-controls="side">'+SV(IC.menu,22)+'</button></div>'+
-  '<div class="app"><nav class="side" id="side" aria-label="Administrace"><div class="logo"><i>'+SV(IC.lode,22)+'</i><span>Kemp Krumlov<small>Administrace</small></span></div>'+
+  app.innerHTML='<div class="top"><div class="logo"><i>'+(PELA?LOGO_PELA:SV(IC.lode,20))+'</i>'+NAZEV+'</div>'+prepinac('wsw-top')+'<button type="button" id="mb" aria-label="Otevřít menu" aria-expanded="false" aria-controls="side">'+SV(IC.menu,22)+'</button></div>'+
+  '<div class="app"><nav class="side" id="side" aria-label="Administrace"><div class="logo"><i>'+(PELA?LOGO_PELA:SV(IC.lode,22))+'</i><span>'+NAZEV+'<small>Administrace</small></span></div>'+prepinac('')+
   NAV.map(function(g){var pol=g[1].filter(function(n){return KK.auth.muze(n[0])});if(!pol.length)return '';return '<div class="nav-t">'+g[0]+'</div>'+pol.map(function(n){return '<a class="nv" href="#'+n[0]+'">'+SV(IC[n[0]],19)+n[1]+(n[2]?'<span class="soon">brzy</span>':'')+'</a>'}).join('')}).join('')+
-  '<a class="nv" href="'+WEB+'" target="_blank" rel="noopener">'+SV(IC.ven,19)+'Zobrazit web</a>'+
+  '<a class="nv" href="'+WEB+'index.html" target="_blank" rel="noopener">'+SV(IC.ven,19)+(PELA?'Zobrazit web PE-LA':'Zobrazit web')+'</a>'+
   '<div class="who"><a href="#'+(KK.auth.muze('uzivatele')?'uzivatele':'ucet')+'" class="who-n" title="Můj účet a heslo"><b>'+esc(s.jmeno)+'</b><small>'+esc(KK.ROLE[s.role]||s.role)+'</small></a><button type="button" id="lo">Odhlásit</button></div></nav>'+
   '<main id="main" tabindex="-1"></main></div>';
   var side=$('#side'),mb=$('#mb'),scrim=null;
@@ -80,8 +87,12 @@ function shell(s){
   mb.addEventListener('click',function(){side.classList.add('open');mb.setAttribute('aria-expanded','true');scrim=document.body.appendChild(Object.assign(document.createElement('div'),{className:'scrim'}));scrim.onclick=zavri;$('a',side).focus()});
   side.addEventListener('click',function(e){if(e.target.closest('a.nv'))zavri()});
   $('#lo').addEventListener('click',function(){odejit().then(function(a){if(a)KK.auth.logout().then(login)})});
+  $$('[data-web]').forEach(function(b){b.addEventListener('click',function(){var w=b.dataset.web;if(w===KK.WEB)return;
+    odejit().then(function(a){if(!a)return;neulozeno=null;KK.LS.set('admin-web',w);location.reload()})})});
   onhashchange=route;route();
 }
+/* přepínač spravovaného webu – nahoře v menu (na mobilu v horní liště); po přepnutí se administrace načte znovu v barvách webu */
+function prepinac(tr){return '<div class="wsw'+(tr?' '+tr:'')+'" role="group" aria-label="Spravovaný web">'+['kemp','pela'].map(function(w){return '<button type="button" data-web="'+w+'" aria-pressed="'+(w===KK.WEB)+'"'+(tr?' aria-label="'+KK.WEBY[w]+'"':'')+'>'+(tr&&w==='kemp'?'Kemp':KK.WEBY[w])+'</button>'}).join('')+'</div>'}
 var neulozeno=null;function odejit(){return !neulozeno||!neulozeno()?Promise.resolve(true):ptej('Máte neuložené změny\n\nKdyž odejdete, změny se neuloží.',{ok:'Odejít bez uložení',ne:'Zůstat'})}
 /* hezké potvrzovací okno místo confirm(); vrací Promise<true|false>, s o.pole Promise<text|null> */
 function ptej(txt,o){o=o||{};return new Promise(function(res){
@@ -124,7 +135,7 @@ function route(){
   predHash=location.hash||'#prehled';neulozeno=null;
   $$('.side a.nv').forEach(function(a){if(a.getAttribute('href')==='#'+v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   var st=$('#main'),m=st.cloneNode(false);st.replaceWith(m);m.innerHTML='<p class="mut">Načítám…</p>';KK.JAZYK='cs';
-  Promise.resolve(VIEWS[v](m,v)).then(function(){var h=$('h1',m);if(h){h.tabIndex=-1;h.focus({preventScroll:true})}document.title=(h?h.textContent+' · ':'')+'Administrace · Kemp Krumlov';scrollTo(0,0)});
+  Promise.resolve(VIEWS[v](m,v)).then(function(){var h=$('h1',m);if(h){h.tabIndex=-1;h.focus({preventScroll:true})}document.title=(h?h.textContent+' · ':'')+'Administrace · '+NAZEV;scrollTo(0,0)});
 }
 addEventListener('beforeunload',function(e){if(neulozeno&&neulozeno()){e.preventDefault();e.returnValue=''}});
 
@@ -132,11 +143,15 @@ addEventListener('beforeunload',function(e){if(neulozeno&&neulozeno()){e.prevent
 /* ---------- UPRAVIT WEB (stránka přímo v administraci) ---------- */
 function upravit(m){
   var sir={pc:'100%',tab:'820px',mob:'390px'},J=jazykAdm(),LQ='&lang='+J;
-  m.innerHTML='<div class="ph" style="margin-bottom:12px"><div><h1>Upravit web</h1><p>Klikněte na text, fotku nebo ikonu a upravte je. Tlačítkem Procházet vypnete úpravy a můžete na webu normálně klikat (kroky rezervace, místa na mapě).</p></div>'+
+  /* PE-LA: každý jazyk má vlastní stránky (en/, de/), vybírá se i stránka webu */
+  var PS=PELA?KK.LS.get('admin-pela-str','index'):'';if(PELA&&!PSTR.some(function(x){return x[0]===PS}))PS='index';
+  var ADR=PELA?WEB+(J!=='cs'?J+'/':'')+PS+'.html?edit=1':WEB+'index.html?edit=1'+LQ;
+  m.innerHTML='<div class="ph" style="margin-bottom:12px"><div><h1>Upravit web'+(PELA?' PE-LA':'')+'</h1><p>Klikněte na text, fotku nebo ikonu a upravte je. Tlačítkem Procházet vypnete úpravy a můžete na webu normálně klikat '+(PELA?'(menu, odkazy, galerie). Ceny se mění v Ceníku – je společný s kempem.':'(kroky rezervace, místa na mapě).')+'</p></div>'+
   '<div class="row" role="group" aria-label="Velikost náhledu"><button type="button" class="btn sm gh" data-w="pc" aria-pressed="true">Počítač</button><button type="button" class="btn sm gh" data-w="tab" aria-pressed="false">Tablet</button><button type="button" class="btn sm gh" data-w="mob" aria-pressed="false">Mobil</button>'+
-  '<a class="btn sm gh" href="'+WEB+'?edit=1'+LQ+'" target="_blank" rel="noopener">Nová záložka '+SV(IC.ven,14)+'</a></div></div>'+
-  '<div class="row" style="margin:-4px 0 12px;gap:12px;flex-wrap:wrap">'+jazykVolba()+(J!=='cs'?'<span class="mut">Upravujete překlad – klikněte na český text a napište '+(J==='en'?'anglický':'německý')+'. Co nepřeložíte, zůstane česky.</span>':'')+'</div>'+
-  '<div class="frame"><iframe id="wf" title="Web Kemp Krumlov v editačním režimu" src="'+WEB+'index.html?edit=1'+LQ+'"></iframe></div>';jazykKlik(m);
+  '<a class="btn sm gh" href="'+ADR+'" target="_blank" rel="noopener">Nová záložka '+SV(IC.ven,14)+'</a></div></div>'+
+  '<div class="row" style="margin:-4px 0 12px;gap:12px;flex-wrap:wrap">'+(PELA?'<div class="row jz" role="group" aria-label="Stránka webu PE-LA">'+PSTR.map(function(x){return '<button type="button" class="btn sm gh" data-ps="'+x[0]+'" aria-pressed="'+(x[0]===PS)+'">'+x[1]+'</button>'}).join('')+'</div>':'')+jazykVolba()+(J!=='cs'?'<span class="mut">Upravujete překlad – klikněte na český text a napište '+(J==='en'?'anglický':'německý')+'. Co nepřeložíte, zůstane česky.</span>':'')+'</div>'+
+  '<div class="frame"><iframe id="wf" title="Web '+NAZEV+' v editačním režimu" src="'+ADR+'"></iframe></div>';jazykKlik(m);
+  $$('[data-ps]',m).forEach(function(b){b.addEventListener('click',function(){if(b.dataset.ps===PS)return;var jd=function(){KK.LS.set('admin-pela-str',b.dataset.ps);neulozeno=null;route()};if(neulozeno&&neulozeno())ptej('Máte neuložené změny\n\nKdyž přepnete stránku, změny se neuloží.',{ok:'Přepnout bez uložení',ne:'Zůstat'}).then(function(a){if(a)jd()});else jd()})});
   /* jazyk přepnutý přímo v náhledu → srovnat tlačítka */
   $('#wf').addEventListener('load',function(){try{var jw=this.contentWindow.KK_LANG;if(jw&&jw!==jazykAdm()){KK.LS.set('admin-jazyk',jw);$$('[data-jz]',m).forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.jz===jw))})}}catch(e){}});
   var f=$('#wf');
@@ -199,7 +214,7 @@ function galerie(m){
   var urls=[];function u(f,n){if(f.src)return WEB+f.src;var x=KK.galerie.url(f,n);urls.push(x);return x}
   return zdroj().then(function(z){return KK.galerie.aktivni()?KK.galerie.seznam():KK.galerie.zalozZWebu(z.fotky)}).then(function(fotky){
     var vyber={};
-    m.innerHTML='<div class="ph"><div><h1>Galerie</h1><p>Nahrajte více fotek najednou, upravte popisky a kategorie a přetažením změňte pořadí. Prvních 9 fotek vidí návštěvník hned, ostatní po kliknutí na „Zobrazit další fotky“.</p></div><a class="btn gh" href="'+WEB+'#galerie" target="_blank" rel="noopener">Zobrazit na webu '+SV(IC.ven,16)+'</a></div>'+
+    m.innerHTML='<div class="ph"><div><h1>Galerie'+(PELA?' PE-LA':'')+'</h1><p>Nahrajte více fotek najednou, upravte popisky a kategorie a přetažením změňte pořadí. Prvních '+(PELA?12:9)+' fotek vidí návštěvník hned, ostatní po kliknutí na „Zobrazit další fotky“.</p></div><a class="btn gh" href="'+WEB+(PELA?'index.html#fotogalerie':'#galerie')+'" target="_blank" rel="noopener">Zobrazit na webu '+SV(IC.ven,16)+'</a></div>'+
     '<div class="drop" id="dz" tabindex="0" role="button" aria-describedby="dzh">'+SV(IC.upl,34)+'<b>Přetáhněte sem fotky</b><span class="mut" id="dzh">nebo je vyberte z počítače či telefonu · JPG, PNG, WebP · fotky se automaticky zmenší a převedou do WebP</span>'+
     '<div class="row"><label class="row" style="font-weight:600" for="dk">Kategorie nových fotek</label><select id="dk" class="inp" style="width:auto;min-height:40px">'+katOpts('')+'</select><button type="button" class="btn sm gh" id="gkat">'+SV('<path d="M12 5v14M5 12h14"/>',16)+'Kategorie</button><button type="button" class="btn pri sm" id="dv">Vybrat fotky</button></div>'+
     '<input type="file" id="df" accept="image/*" multiple hidden></div><ul class="up-list" id="ul" aria-live="polite"></ul>'+
@@ -311,7 +326,7 @@ function seoKontrola(s,z){
   r.push([s.ogImage?'ok':'warn','Obrázek pro sdílení '+(s.ogImage?'je vybraný.':'chybí.')]);
   r.push([s.index!==false?'ok':'err',s.index!==false?'Web je povolený k indexování.':'Web je skrytý před vyhledávači!']);
   if(z){r.push([z.h1===1?'ok':'warn','Stránka má '+z.h1+' hlavní nadpis (H1).']);r.push([z.bezAlt?'warn':'ok',z.bezAlt?z.bezAlt+' obrázků nemá popisek (alt).':'Všechny obrázky mají popisek (alt).'])}
-  r.push([s.firma.telefon&&s.firma.ulice?'ok':'warn','Údaje o kempu pro Google (adresa, telefon) '+(s.firma.telefon&&s.firma.ulice?'jsou vyplněné.':'chybí.')]);
+  r.push([s.firma.telefon&&s.firma.ulice?'ok':'warn','Údaje o '+(PELA?'půjčovně':'kempu')+' pro Google (adresa, telefon) '+(s.firma.telefon&&s.firma.ulice?'jsou vyplněné.':'chybí.')]);
   return r;
 }
 function seo(m){
@@ -319,16 +334,16 @@ function seo(m){
     var z=r[0],s=KK.seo.nactiSync(),zm=false;neulozeno=function(){return zm};
     var obr=(r[1].length?r[1].filter(function(f){return f.src}):z.fotky).map(function(f){return f.src});
     var F=function(n,lab,pom,typ,max){return '<label class="f">'+lab+(pom?'<small>'+pom+'</small>':'')+(typ==='ta'?'<textarea class="inp" name="'+n+'" rows="3"></textarea>':'<input class="inp" name="'+n+'"'+(typ?' type="'+typ+'"':'')+'>')+(max?'<span class="cnt" data-c="'+n+'" data-max="'+max+'"></span>':'')+'</label>'};
-    m.innerHTML='<div class="ph"><div><h1>SEO</h1><p>Jak se web zobrazí ve vyhledávání Googlu a při sdílení na Facebooku či WhatsAppu. Na serveru se tyto údaje zapíšou přímo do stránky.</p></div></div>'+
+    m.innerHTML='<div class="ph"><div><h1>SEO</h1><p>Jak se '+(PELA?'web PE-LA (úvodní stránka)':'web')+' zobrazí ve vyhledávání Googlu a při sdílení na Facebooku či WhatsAppu. Na serveru se tyto údaje zapíšou přímo do stránky.</p></div></div>'+
     '<form id="sf" class="grid g2" novalidate><div class="grid" style="align-content:start">'+
     '<div class="card"><h2>Vyhledávání</h2><p class="mut">Titulek a popis, které uvidí lidé v Googlu.</p><div class="grid">'+F('title','Titulek stránky','Co nejvýstižněji, důležitá slova na začátek.','',60)+F('description','Popis stránky','Krátké shrnutí, které láká ke kliknutí.','ta',160)+F('keywords','Klíčová slova','Oddělte čárkou. Slova a fráze, podle kterých vás mají lidé najít.','ta')+'<div class="row" style="gap:8px;flex-wrap:wrap;margin-top:-4px"><button type="button" class="btn sm gh" id="kwn">Doplnit návrh</button><span class="mut" id="kwc" style="font-size:12.5px"></span></div>'+F('canonical','Hlavní adresa webu','Adresa, pod kterou má Google web vést.','url')+
     '<label class="row" style="font-weight:700"><input type="checkbox" name="index" style="width:20px;height:20px;accent-color:#f4a64a"> Povolit zobrazení ve vyhledávačích</label></div></div>'+
     '<div class="card"><h2>Sdílení na sociálních sítích</h2><p class="mut">Když nevyplníte, použije se titulek a popis z vyhledávání.</p><div class="grid">'+F('ogTitle','Titulek při sdílení','','',70)+F('ogDescription','Popis při sdílení','','ta',200)+
     '<div><b style="font-size:14px">Obrázek při sdílení</b><div class="ogpick" role="group" aria-label="Obrázek při sdílení">'+obr.map(function(o){return '<button type="button" data-og="'+esc(o)+'" style="background-image:url(\''+esc(WEB+o)+'\')" aria-label="'+esc(o)+'"></button>'}).join('')+'</div></div></div></div>'+
-    '<div class="card"><h2>Údaje o kempu pro Google</h2><p class="mut">Google z nich ukazuje adresu, telefon a polohu na mapě (strukturovaná data).</p><div class="grid g2" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">'+
+    '<div class="card"><h2>Údaje o '+(PELA?'půjčovně':'kempu')+' pro Google</h2><p class="mut">Google z nich ukazuje adresu, telefon a polohu na mapě (strukturovaná data).</p><div class="grid g2" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">'+
     F('f.nazev','Název')+F('f.telefon','Telefon','','tel')+F('f.email','E-mail','','email')+F('f.ulice','Ulice a číslo')+F('f.mesto','Město')+F('f.psc','PSČ')+F('f.lat','Zeměpisná šířka')+F('f.lng','Zeměpisná délka')+'<div class="f"><b style="font-size:14px">Cenové rozpětí</b><small>Počítá se samo z Ceníku – od nejlevnějšího po nejdražší ubytování.</small><output class="inp" style="display:block;background:#f5f3ec">'+esc(KKC.rozpeti())+'</output></div>'+'</div></div>'+
     '<div class="card"><h2>Google Search Console</h2>'+F('googleVerify','Ověřovací kód','Z Google Search Console → Ověření vlastnictví → značka HTML (jen hodnota content).')+'</div>'+
-    '</div><div class="grid" style="align-content:start;position:sticky;top:20px"><div class="card seo-pre"><h2>Náhled v Googlu</h2><div class="serp" aria-hidden="true"><div class="u"><i>K</i><span><b style="font-weight:400">Kemp Krumlov</b><br><span id="pu"></span></span></div><div class="t" id="pt"></div><div class="d" id="pd"></div></div>'+
+    '</div><div class="grid" style="align-content:start;position:sticky;top:20px"><div class="card seo-pre"><h2>Náhled v Googlu</h2><div class="serp" aria-hidden="true"><div class="u"><i>'+(PELA?'P':'K')+'</i><span><b style="font-weight:400">'+NAZEV+'</b><br><span id="pu"></span></span></div><div class="t" id="pt"></div><div class="d" id="pd"></div></div>'+
     '<h2 style="margin-top:6px">Náhled při sdílení</h2><div class="og" aria-hidden="true"><div class="im" id="oi"></div><div class="bx"><small id="ou2"></small><b id="ot"></b><span id="od"></span></div></div></div>'+
     '<div class="card"><h2>Kontrola</h2><ul class="chk" id="ck"></ul></div>'+
     '<div class="row"><button class="btn pri" type="submit">Uložit SEO</button><button class="btn gh" type="button" id="sr">Obnovit výchozí</button></div></div></form>';
@@ -408,7 +423,7 @@ function cenik(m){
         '<p class="mut" style="margin:0 0 12px">Slevu si složíte z podmínek – počet nocí, osob, chatek, stanů, lodí… Všechny podmínky jsou nepovinné a musí platit zároveň. Když má host nárok na víc slev, platí ta nejvýhodnější (a k ní ty, které se smí sčítat). U každé slevy vyberete, z čeho se počítá – z ubytování, z půjčených lodí, z dopravy, nebo z více částí najednou.</p>'+
         (C.slevy.length?C.slevy.map(slvKarta).join(''):'<p class="mut">Žádné slevy.</p>')+'</section>';
       var h='<div class="row" style="margin-bottom:14px;gap:12px;flex-wrap:wrap">'+jazykVolba()+(PR?'<span class="mut">Překlad názvů a poznámek do jazyka '+KK.JAZYKY[J]+'. Prázdné pole = použije se šedý návrh (výchozí překlad), případně čeština. Ceny jsou pro všechny jazyky stejné.</span>':'')+'</div>'+
-      '<div class="ph"><div><h1>Ceník a kapacity'+(PR?' – '+KK.JAZYKY[J]:'')+'</h1><p>Jediné místo, kde se mění ceny. Projeví se všude na webu – v úvodu, u ubytování, v ceníku, na mapě kempu a u dopravy – a také ve výpočtu rezervace.</p></div>'+
+      '<div class="ph"><div><h1>Ceník a kapacity'+(PR?' – '+KK.JAZYKY[J]:'')+'</h1><p><span class="badge ok">Společný pro Kemp Krumlov i PE-LA</span> Jediné místo, kde se mění ceny. Projeví se všude na webu kempu – v úvodu, u ubytování, v ceníku, na mapě kempu a u dopravy –, na webu PE-LA (lodě, návoz, doprava, ubytování od) a také ve výpočtu rezervace.</p></div>'+
       '<div class="row"><a class="btn gh" href="'+WEB+'#ubytovani" target="_blank" rel="noopener">Zobrazit web '+SV(IC.ven,16)+'</a><button type="button" class="btn dan" id="cr">Obnovit výchozí ceník</button></div></div>'+
       ckn()+ckg('obecne')+'<div class="grid g2" style="margin-bottom:16px"><div class="card"><h2>Sezóna</h2><p class="mut">Kdy je kemp otevřený a jestli platí vyšší ceny v hlavní sezóně.</p>'+
       '<div class="sw-l"><label class="sw"><input type="checkbox" data-sz="celorocne"'+(CR?' checked':'')+'><span aria-hidden="true"></span>Otevřeno celý rok</label>'+
@@ -424,10 +439,10 @@ function cenik(m){
         (C.sluzby.length?'<div class="tw-wrap"><table class="ct"><thead><tr><th>Služba</th><th>Cena a podmínky (text)</th><th><span class="sr">Akce</span></th></tr></thead><tbody>'+C.sluzby.map(function(x,i){return '<tr><td><input class="inp" data-sv="'+i+'" data-f="'+pole('n')+'" value="'+esc(hod(x,'n'))+'"'+ph(x,'n')+' aria-label="Název služby'+(PR?' – '+KK.JAZYKY[J]:'')+'"></td><td><input class="inp" data-sv="'+i+'" data-f="'+pole('t')+'" value="'+esc(hod(x,'t'))+'"'+(PR?ph(x,'t'):' placeholder="např. 20 Kč / 4 min"')+' aria-label="Cena a podmínky – '+esc(x.n)+'"></td><td class="c"><button type="button" class="btn ic dan" data-svd="'+i+'" aria-label="Smazat službu – '+esc(x.n)+'">'+SV(IC.kos,18)+'</button></td></tr>'}).join('')+'</tbody></table></div>':'<p class="mut">Žádné služby – v ceníku na webu se sekce nezobrazí.</p>')+'</section>';
       var kempI=-1;
       Object.keys(C.kategorie).forEach(function(kat){
-        var K=C.kategorie[kat],pol=C.polozky.filter(function(p){return p.kat===kat}),dva=K.sloupce.length>1&&(HZ||kat==='lode'),SL=dva||K.sloupce.length<2?K.sloupce:['Cena'],ub=kat==='ubytovani',dop=kat==='doplnky',slu=kat==='sluzby',rez=ub||dop,lod=kat==='lode',dpr=kat==='doprava',oso=kat==='osoby';
+        var K=C.kategorie[kat],pol=C.polozky.filter(function(p){return p.kat===kat}),dva=K.sloupce.length>1&&(HZ||kat==='lode'||kat==='navoz'),SL=dva||K.sloupce.length<2?K.sloupce:['Cena'],ub=kat==='ubytovani',dop=kat==='doplnky',slu=kat==='sluzby',rez=ub||dop,lod=kat==='lode',dpr=kat==='doprava',oso=kat==='osoby';
         if(kat==='lode')h+=ckg('pujc');if(kat==='doprava')h+=ckg('dop');
         h+='<section class="card ck ck-'+(lod||kat==='navoz'?'pujc':dpr?'dop':'kemp')+'" style="margin-bottom:16px"><div class="row" style="margin-bottom:10px"><h2 style="margin:0">'+esc(K.n)+'</h2>'+(oso||ub||dop?'<span class="badge ck-web" title="Zobrazuje se v ceníku na webu">Ceník</span>':'')+'<span class="sp"></span>'+(K.pevne?'<span class="badge">pevné položky</span>':'<button type="button" class="btn sm pri" data-add="'+kat+'">+ Přidat položku</button>')+'</div>'+
-        (dop?'<p class="mut" style="margin:-4px 0 12px">Doplňky se zaškrtnutím „V rezervaci“ si host může přidat v kroku Doplňky.</p>':'')+(oso?'<p class="mut" style="margin:-4px 0 12px">Nová skupina (např. senior, ZTP) se objeví v rezervaci v kroku Kdo jede a v ceníku.</p>':'')+(lod?'<p class="mut" style="margin:-4px 0 12px">Cena za jednu loď a den včetně pádel, vest a barelů. Počty kusů na skladě nastavíte v Rezervace → Nastavení → Půjčovna a zálohy.</p>':'')+(kat==='navoz'?'<p class="mut" style="margin:-4px 0 12px">Připočítá se jednou ke každé rezervaci s loděmi.</p>':'')+(dpr?'<p class="mut" style="margin:-4px 0 12px">Pořadí = pořadí míst na řece po proudu (shora dolů). Kemp leží mezi Centrem a Zlatou Korunou. Nové místo se na mapě dopravy objeví mezi sousedy v seznamu.</p>':'')+(ub?'<p class="mut" style="margin:-4px 0 12px">Lůžka = kolik osob se vejde do jedné jednotky (prázdné = vlastní spaní, např. stan nebo karavan). Od osob = nepovinné, ubytování půjde na webu rezervovat jen pro skupiny od tolika osob.</p>':'')+
+        (dop?'<p class="mut" style="margin:-4px 0 12px">Doplňky se zaškrtnutím „V rezervaci“ si host může přidat v kroku Doplňky.</p>':'')+(oso?'<p class="mut" style="margin:-4px 0 12px">Nová skupina (např. senior, ZTP) se objeví v rezervaci v kroku Kdo jede a v ceníku.</p>':'')+(lod?'<p class="mut" style="margin:-4px 0 12px">Cena za jednu loď a den včetně pádel, vest a barelů. Počty kusů na skladě nastavíte v Rezervace → Nastavení → Půjčovna a zálohy.</p>':'')+(kat==='navoz'?'<p class="mut" style="margin:-4px 0 12px">Připočítá se jednou ke každé rezervaci s loděmi (v rezervaci se počítá cena pro bližší místa). Vzdálenější místa ukazuje web PE-LA jako „podle místa návozu“.</p>':'')+(dpr?'<p class="mut" style="margin:-4px 0 12px">Pořadí = pořadí míst na řece po proudu (shora dolů). Kemp leží mezi Centrem a Zlatou Korunou. Nové místo se na mapě dopravy objeví mezi sousedy v seznamu.</p>':'')+(ub?'<p class="mut" style="margin:-4px 0 12px">Lůžka = kolik osob se vejde do jedné jednotky (prázdné = vlastní spaní, např. stan nebo karavan). Od osob = nepovinné, ubytování půjde na webu rezervovat jen pro skupiny od tolika osob.</p>':'')+
         (function(){kempI=-1;if(dpr)pol.some(function(p,x){if(p.k==='dop8'||p.k==='dop9'){kempI=x;return true}});return ''})()+
         '<div class="tw-wrap"><table class="ct"><thead><tr><th>Název</th><th>Poznámka</th>'+SL.slice(0,dva?2:1).map(function(c){return '<th class="n">'+esc(c)+'</th>'}).join('')+(ub?'<th class="n">Lůžek</th><th class="n" title="Nepovinné: rezervace na webu jen pro skupiny od tolika osob">Od osob</th>':'')+(lod?'<th class="n">Osob</th>':'')+(slu?'<th>Za</th>':'')+(rez?'<th>V rezervaci</th>':'')+'<th><span class="sr">Akce</span></th></tr></thead><tbody>'+
         pol.map(function(p,pi){var i=C.polozky.indexOf(p),fix=K.pevne||POUZITO[p.k]||/^dop\d|^(kanoe|raft)/.test(p.k);

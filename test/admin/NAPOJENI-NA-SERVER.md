@@ -202,3 +202,33 @@ Na webu se nabízí, když host končí mimo kemp (s loděmi), nebo když bez lo
 - `GET /api/sezony` – seznam archivovaných sezón se souhrnem (rezervací, nocí, hostů, lodí, tržby, zrušených).
 - `POST /api/sezony/{rok}/obnovit {heslo}` – vrátí sezónu z archivu mezi rezervace.
 - Před uzavřením si administrace sama stáhne zálohu (`KK.export()`); na serveru navíc doporučujeme zálohu databáze.
+
+## Dva weby: Kemp Krumlov a PE-LA (jedna administrace)
+
+Administrace má nahoře v menu přepínač **Kemp Krumlov | PE-LA**. Po přepnutí se změní barvy,
+logo a sekce **Upravit web, Galerie a SEO** pracují s webem PE-LA. Ostatní je společné.
+
+| Data | Kemp | PE-LA | Poznámka |
+|------|------|-------|----------|
+| texty, překlady, přepisy textů, ikony, fotky na webu | `texty`, `dtexty`, … | `pela.texty`, `pela.dtexty`, … | každý web vlastní |
+| galerie, SEO | `galerie`, `seo` (IndexedDB `kkt-admin`) | `pela.galerie`, `pela.seo` (IndexedDB `kkt-pela-admin`) | každý web vlastní |
+| ceník, rezervace, sklad lodí, doprava, uživatelé, práva, historie | společné | společné | jedna databáze |
+
+V náhledu to řeší `KK.WEB` v `js/kk-data.js` (klíče s předponou `pela.`). Na serveru (Laravel):
+
+- tabulky `texty`, `fotky`, `seo`, `prepisy` dostanou sloupec `web` (`kemp` | `pela`),
+  API přijímá `?web=kemp|pela` (administrace ho pošle podle přepínače, web PE-LA vždy `pela`);
+- obě domény (kemp-krumlov.cz, pe-la.cz) běží z jedné Laravel aplikace na stejném hostingu,
+  doménu pozná podle `Host` a vybere šablony a `web`;
+- **ceník je jeden** – web PE-LA bere ceny lodí, návozu, dopravy a „ubytování od“ ze stejné tabulky.
+  Mapa klíčů PE-LA → položky ceníku je v repozitáři PE-LA v `inc/cenik-sdileny.php`
+  (stejná je v `js/pela-web.js`).
+
+Náhled webu PE-LA je v `test/pela/` – vygenerovaný z repozitáře `pavlat11/pela`:
+
+```
+cd pela && php nastroje/nahled.php ../kemp-krumlov/test/pela
+```
+
+Každý text PE-LA má `data-t="klic"` (stejný klíč jako v `lang/cs.php`), každá cena `data-pc="klic"`.
+Upravený text s cenou se ukládá se značkou `{price:klic}`, takže se cena dál bere z ceníku.
