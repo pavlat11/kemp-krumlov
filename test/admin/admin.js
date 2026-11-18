@@ -1743,5 +1743,11 @@ function sezona(box){var R=window.KKR,kc=function(n){return Math.round(n||0).toL
    .then(function(ok){if(!ok)return;try{R.obnovSezonu(y2);KK.zaznam('Sezóna',y2+' vrácena z archivu');roky=R.sezonaRoky();vyb=box.__rok=y2;kresli();toast('Sezóna '+y2+' je zpátky v rezervacích.')}catch(x){toast(x.message,1)}})}});
  kresli()}
 
+/* kříž v tabulce dostupnosti (lodě, vybavení): zvýrazní řádek i sloupec buňky pod myší / s fokusem */
+(function(){var posl=null;function vycisti(){$$('.rv-t .kx,.rv-t .kr,.rv-t .kc').forEach(function(x){x.classList.remove('kx','kr','kc')})}
+  function kriz(e){var c=e.target.closest&&e.target.closest('.rv-t td.rv-c');if(c===posl)return;posl=c;vycisti();if(!c)return;var tr=c.parentNode,t=c.closest('.rv-t'),ci=[].indexOf.call(tr.children,c);
+    tr.classList.add('kr');c.classList.add('kc');$$('tr',t).forEach(function(r){var x=r.children[ci];if(x)x.classList.add('kx')})}
+  document.addEventListener('mouseover',kriz);document.addEventListener('focusin',kriz);
+  document.addEventListener('mouseout',function(e){if(posl&&!(e.relatedTarget&&e.relatedTarget.closest&&e.relatedTarget.closest('.rv-t td.rv-c'))){posl=null;vycisti()}})})();
 KK.auth.me().then(function(s){s?shell(s):login()});
 })();
