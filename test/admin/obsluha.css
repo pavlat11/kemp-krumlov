@@ -453,3 +453,6 @@ select[data-u=role]{min-width:132px}
 .ob-sp span{display:flex;flex-direction:column;min-width:0}.ob-sp small{font-size:12px;color:var(--mut)}.ob-sp b{font-size:15px;font-weight:800}
 .ob-sp+.ob-who{margin-top:0}
 @media print{.ob-sp{display:none}}
+
+.ob-den{margin-left:auto;margin-right:auto}
+.ob-den+.ob-sum{text-align:center}
