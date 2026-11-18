@@ -230,3 +230,23 @@ html.ob-on,html.ob-on body{background:#F2F4F1}
 .up-v.up-app{background:#2F6B4F;color:#fff}
 .up-c.up-np{background:#FBEADF;color:#8A4214}
 [data-vz],[data-apsek]{min-width:0}
+
+/* skupiny Odjíždí / Přijíždí / Vydat / Vrátit a schované hotové */
+.ob-sk{margin:0 0 20px}
+.ob-sk-h{display:flex;align-items:center;gap:8px;margin:0 2px 10px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#3C4740}
+.ob-sk-h span{min-width:24px;padding:2px 8px;border-radius:999px;background:var(--c);color:#fff;font-size:12px;letter-spacing:0;text-align:center}
+.ob-hotd{margin-top:4px}
+.ob-hotd summary{display:flex;align-items:center;gap:8px;min-height:52px;padding:0 16px;border-radius:16px;background:#fff;color:#3C4740;font-weight:700;font-size:15px;cursor:pointer;list-style:none;box-shadow:0 1px 2px rgba(20,32,26,.06)}
+.ob-hotd summary::-webkit-details-marker{display:none}
+.ob-hotd summary svg{color:#2F6B4F}
+.ob-hotd summary span{padding:1px 8px;border-radius:999px;background:#E3EFE7;color:#23573F;font-size:12px}
+.ob-hotd summary::after{content:'';margin-left:auto;width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);transition:transform .15s}
+.ob-hotd[open] summary::after{transform:rotate(-135deg)}
+.ob-hotd[open] .ob-list{margin-top:12px}
+.ob-nx-c svg{color:var(--c)}
+
+/* plánek a kalendář z plné administrace uvnitř aplikace */
+.ob-c.siroky{max-width:none}
+.ob-rz{--bg:#f6f3ec;--line:#e6dfd0;--mut:#5d6a62;--ok:#2f7d4c;--ink:initial;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+.ob-rz .rz-top h1,.ob-rz .rz-seg{display:none}
+.ob-rz .rz-top{margin-bottom:14px}

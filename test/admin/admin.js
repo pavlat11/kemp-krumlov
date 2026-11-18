@@ -85,7 +85,7 @@ function shell(s){
   /* smí jen web PE-LA → rovnou PE-LA */
   if(!PELA&&!KK.auth.muzeWeb('kemp')&&KK.auth.muzeWeb('pela')){KK.LS.set('admin-web','pela');location.reload();return}
   /* obsluha se vzhledem „Aplikace pro obsluhu“ (nebo správce v náhledu) dostane jednoduchou aplikaci – admin/obsluha.js */
-  if(window.KKO&&KKO.ma(s)){KKO.start(s,{app:app,ptej:ptej,pocty:pocty,toast:toast,login:login,shell:shell});return}
+  if(window.KKO&&KKO.ma(s)){KKO.start(s,{app:app,ptej:ptej,pocty:pocty,toast:toast,login:login,shell:shell,rezervace:rezervace});return}
   document.documentElement.classList.remove('ob-on');
   app.innerHTML='<div class="top"><div class="logo"><i>'+(PELA?LOGO_PELA:SV(IC.lode,20))+'</i>'+NAZEV+'</div>'+prepinac('wsw-top')+'<button type="button" id="mb" aria-label="Otevřít menu" aria-expanded="false" aria-controls="side">'+SV(IC.menu,22)+'</button></div>'+
   '<div class="app"><nav class="side" id="side" aria-label="Administrace"><div class="logo"><i>'+(PELA?LOGO_PELA:SV(IC.lode,22))+'</i><span>'+NAZEV+'<small>Administrace</small></span></div>'+prepinac('')+
