@@ -551,6 +551,7 @@ function rezervace(m,sekV){
   var najdi=function(id){return R.vse().filter(function(x){return x.id===id})[0]};
   m.innerHTML='<div class="rz-lay"><div id="rzv"></div><aside id="rd" class="rpan" aria-labelledby="rdt" hidden></aside></div><dialog id="rf" class="dlg rdl" aria-labelledby="rft"></dialog>';
   var box=$('#rzv',m),dd=$('#rd',m),df=$('#rf',m),vicF=false;
+  m.otevri=function(id){detail(id)}; /* aplikace obsluhy otevírá detail rezervace z hledání */
   dd.close=function(){if(dd.hidden)return;dd.hidden=true;kresli()};
   var oznac=function(){$$('.sel',box).forEach(function(x){x.classList.remove('sel')});if(!dd.hidden)$$('[data-id="'+dd.dataset.id+'"]',box).forEach(function(x){x.classList.add('sel')})};
   /* změna rezervace se zápisem do její historie */
