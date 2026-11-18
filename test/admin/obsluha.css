@@ -373,3 +373,13 @@ html.ob-on,html.ob-on body{background:#F2F4F1}
 .ob-r-n .ob-jm b{font-size:16px;font-weight:800}
 .ob-k-n .ob-jm b{font-size:17px;font-weight:800}
 .ob-lid .ob-jm{font-weight:600}
+
+/* filtr v sekci + Hledat v menu */
+.ob [hidden]{display:none!important}
+.ob-fq0{margin:0 0 14px;padding:14px 16px;border-radius:14px;background:#fff;color:var(--mut);font-size:14.5px}
+.ob-fq0 a{color:#1D5A85;font-weight:700}
+@media (max-width:959px){.ob.jedna .ob-c{padding-bottom:120px}}
+.ob-nv.ob-nvh{margin-top:10px;border-top:1px solid var(--line);border-radius:0 0 14px 14px;padding-top:4px}
+.ob-nv.ob-nvh[aria-current]{border-radius:14px}
+.ob-tb{min-width:0}
+.ob-tb span{white-space:nowrap}
