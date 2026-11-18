@@ -250,3 +250,48 @@ html.ob-on,html.ob-on body{background:#F2F4F1}
 .ob-rz{--bg:#f6f3ec;--line:#e6dfd0;--mut:#5d6a62;--ok:#2f7d4c;--ink:initial;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
 .ob-rz .rz-top h1,.ob-rz .rz-seg{display:none}
 .ob-rz .rz-top{margin-bottom:14px}
+
+/* Ubytování – Příjezdy a odjezdy: přehledné řádky v panelu */
+.ob-pan{margin:0 0 16px;border-radius:20px;background:#fff;overflow:hidden;box-shadow:0 1px 2px rgba(20,32,26,.06)}
+.ob-pan-h{display:flex;align-items:center;gap:8px;margin:0;padding:14px 16px 10px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#3C4740}
+.ob-pan-h span{min-width:24px;padding:2px 8px;border-radius:999px;background:var(--c);color:#fff;font-size:12px;letter-spacing:0;text-align:center}
+.ob-r{display:flex;align-items:center;gap:12px;padding:12px 14px 12px 16px;border-top:1px solid #EDF0ED}
+.ob-pan-h+.ob-r{border-top:0}
+.ob-r .ob-mi{min-width:52px;height:52px;border-radius:14px}
+.ob-r .ob-mi b{font-size:19px}
+.ob-r .ob-mi small{font-size:10.5px}
+.ob-r-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.ob-r-n{display:flex;align-items:center;gap:6px;min-width:0}
+.ob-r-n b{font-size:16px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ob-tl2{width:28px;height:28px;flex:none;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;color:var(--cd);background:var(--cs)}
+.ob-r-t>small{font-size:13px;color:var(--mut)}
+.ob-r-ch{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:3px}
+.ob-r-ch .ob-ch{padding:3px 8px;font-size:12px}
+.ob-mini{min-height:28px;padding:0 10px;border:1.5px solid var(--c);border-radius:999px;background:#fff;color:var(--cd);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.ob-mini:hover{background:var(--cs)}
+.ob-r-pz{display:flex;gap:6px;align-items:flex-start;margin-top:3px;font-size:12.5px;color:#5A4A14}
+.ob-r-pz svg{flex:none;margin-top:2px}
+.ob-go{flex:none;min-width:104px;min-height:48px;padding:0 16px;border:0;border-radius:14px;background:var(--c);color:#fff;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer}
+.ob-go:hover{background:var(--cd)}
+.ob-st{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 12px;border:0;border-radius:12px;background:transparent;color:#2F6B4F;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.ob-st:hover{background:#F2F4F1}
+.ob-r.hot .ob-mi,.ob-r.hot .ob-r-n b{opacity:.55}
+.ob-hotd .ob-pan{margin-top:12px}
+@media (min-width:960px){.ob-pan{max-width:900px}.ob-hotd{max-width:900px}.ob-r{padding:14px 18px}}
+/* řádek: na mobilu tlačítko pod textem přes celou šířku, od 640 px vpravo */
+.ob-r{display:grid;grid-template-columns:52px minmax(0,1fr);grid-template-areas:"mi t" "mi a";align-items:start;column-gap:12px;row-gap:10px}
+.ob-r .ob-mi{grid-area:mi}
+.ob-r-t{grid-area:t}
+.ob-r .ob-go,.ob-r .ob-st{grid-area:a;justify-self:stretch}
+.ob-r .ob-st{justify-self:start;min-height:36px;padding:0 8px;margin-left:-8px}
+.ob-r .ob-go{min-height:46px}
+.ob-r-n b{white-space:normal}
+@media (min-width:640px){
+  .ob-r{grid-template-columns:52px minmax(0,1fr) auto;grid-template-areas:"mi t a";align-items:center}
+  .ob-r .ob-go,.ob-r .ob-st{justify-self:end;margin-left:0}
+  .ob-r .ob-go{min-width:130px}
+}
+.ob-akce{display:flex;justify-content:flex-end;margin:0 0 14px}
+.ob-akce .ob-go{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px}
+@media (max-width:639px){.ob-akce .ob-go{flex:1}}
+.ob-skr{height:0;overflow:hidden}
