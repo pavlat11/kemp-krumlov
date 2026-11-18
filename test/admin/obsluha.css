@@ -422,12 +422,6 @@ select[data-u=role]{min-width:132px}
   .ob-qw:not(.ma):not(:focus-within) .ob-kbd{display:inline-block}
   .ob-qw{max-width:none}
 }
-@media (min-width:1180px){
-  .ob-bar{flex-direction:row;align-items:center;gap:14px}
-  .ob-bar .ob-seg{flex:1 1 440px;min-width:380px}
-  .ob-bar .ob-qw{order:-1;flex:1 1 380px;min-width:280px;max-width:520px}
-  .ob-bar .ob-qw:only-child{flex:1 1 100%;max-width:none}
-}
 /* zvýraznění shod v plánku a kalendáři */
 .ob-rz .ob-dim{opacity:.22;filter:grayscale(.7);transition:opacity .15s}
 .ob-rz .ob-hit{outline:3px solid #E0A100;outline-offset:1px;box-shadow:0 0 0 7px rgba(224,161,0,.22);z-index:4}
