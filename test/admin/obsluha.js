@@ -242,6 +242,10 @@ function kresli(){if(!box||!document.body.contains(box))return;var s=sekce(),sc=
   document.title=(MOD[s]?MOD[s].n:s==='hledat'?'Hledat':'Přehled')+' · Obsluha · Kemp Krumlov';
   if(stejne)scrollTo(0,sc);else{scrollTo(0,0);var h1=$('h1',box),qi=$('#obq',box);if(qi)qi.focus();else if(h1){h1.tabIndex=-1;h1.focus({preventScroll:true})}}}
 /* nová rezervace / půjčení lodě: stejné okno jako v plné administraci (její obrazovka se připraví skrytě) */
+/* tiskové sestavy (stejné jako v plné administraci): Ubytování = příjezdy/odjezdy/úklid, Lodě = výdej a vrácení, Doprava = jízdy a svoz; vždy pro zobrazený den */
+function tiskni(){var sk=sekce(),sek=sk==='pujcovna'||sk==='doprava'?sk:'ubytovani',co=sk==='pujcovna'?'lod':sk==='doprava'?'dop':'uby',hid=$('#obskr');if(!hid){hid=document.createElement('div');hid.id='obskr';hid.className='ob-skr';hid.setAttribute('aria-hidden','true');box.appendChild(hid)}
+  KK.LS.set('rez.tab.'+sek,sk==='pujcovna'?'lod':'uby');hid.innerHTML='';try{A.rezervace(hid,sek)}catch(x){return A.toast('Tisk se nepodařilo připravit.',1)}
+  if(hid.tisk)hid.tisk(co,den)}
 function nova(sek,btn){var hid=$('#obskr');if(!hid){hid=document.createElement('div');hid.id='obskr';hid.className='ob-skr';hid.setAttribute('aria-hidden','true');box.appendChild(hid)}
   KK.LS.set('rez.tab.'+sek,sek==='pujcovna'?'lod':'uby');hid.innerHTML='';try{A.rezervace(hid,sek)}catch(x){return A.toast('Nepodařilo se otevřít.',1)}
   var b=$(sek==='pujcovna'?'[data-pujcit]':'[data-a='+(btn==='ubyt'?'ubyt':'nova')+']',hid);if(b)b.click()}
@@ -288,7 +292,7 @@ function klik(e){var t=e.target.closest('button,a,input,label,summary,details');
   if(t.dataset.nova)return nova(t.dataset.nova,t.dataset.btn);
   if(t.dataset.det)return detail(t.dataset.det); /* plánek a kalendář si klikání obsluhují samy */
   if(t.hasAttribute('data-ucet'))return ucetMenu();
-  if(t.hasAttribute('data-tisk'))return print();
+  if(t.hasAttribute('data-tisk'))return tiskni();
   if(t.dataset.den!=null){var n=+t.dataset.den;den=n?ADD(den,n):DNES();return kresli()}
   if(t.hasAttribute('data-qx')){var qi=$('.ob-qi',box);if(qi){qi.value='';filtruj();qi.focus()}return}
   if(t.dataset.seg){KK.LS.set('o.tab.'+t.dataset.seg,t.dataset.v);return kresli()}
