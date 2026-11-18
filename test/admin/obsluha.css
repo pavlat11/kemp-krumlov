@@ -349,3 +349,6 @@ html.ob-on,html.ob-on body{background:#F2F4F1}
 .ob-seg button[aria-selected=true] svg{color:var(--c);opacity:1}
 .ob-seg button span{margin-left:1px}
 @media (max-width:420px){.ob-seg button{flex-direction:column;gap:2px;min-height:58px;font-size:13.5px}.ob-seg button b{display:flex;align-items:center;gap:5px}.ob-seg button{position:relative}.ob-seg button span{position:absolute;top:5px;right:8px;font-size:11px;min-width:20px;padding:0 6px}}
+.ob-akce{gap:8px;flex-wrap:wrap}
+.ob-go.ob-go2{background:#fff;color:var(--cd);box-shadow:inset 0 0 0 2px var(--c)}
+.ob-go.ob-go2:hover{background:var(--cs)}
