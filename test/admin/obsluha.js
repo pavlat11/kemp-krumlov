@@ -220,7 +220,7 @@ function pujcovna(){var t=KK.LS.get('o.tab.l','vyd');if(['vyd','vra','dost'].ind
   var L=X[t].slice().sort(function(a,b){return (HOT[t](a)?1:0)-(HOT[t](b)?1:0)});
   return h+(L.length?'<div class="ob-list">'+L.map(function(r){return kartaL(r,t)}).join('')+'</div>':prazdne(t==='vyd'?'Žádné lodě k vydání.':'Žádné lodě k vrácení.'))}
 var GJ=[];
-function doprava(){var X=data(den),G=X.jiz.concat(X.vyz).sort(function(a,b){return cas(a.cas,b.cas)||(a.kl==='doprava'?0:1)-(b.kl==='doprava'?0:1)||poradiM(a.misto)-poradiM(b.misto)});GJ=G;
+function doprava(){var X=data(den),G=X.jiz.concat(X.vyz).sort(function(a,b){return (a.hot?1:0)-(b.hot?1:0)||cas(a.cas,b.cas)||(a.kl==='doprava'?0:1)-(b.kl==='doprava'?0:1)||poradiM(a.misto)-poradiM(b.misto)});GJ=G;
   var h=hl('Doprava',1,1)+bar('','Hledat hosta, místo, čas…')+denNav()+'<p class="ob-sum">'+X.jiz.length+' '+pl(X.jiz.length,'odvoz','odvozy','odvozů')+' na start · '+X.vyz.length+' '+pl(X.vyz.length,'vyzvednutí','vyzvednutí','vyzvednutí')+' v cíli</p><hr class="ob-sep">';
   if(!G.length)return h+prazdne('Na tento den žádné jízdy.');
   var li=function(g,i){var vy=g.kl==='vyzved',nl=lodiN(g.kusy);
