@@ -446,3 +446,10 @@ select[data-u=role]{min-width:132px}
 .ob-pan .ob-r{background:#fff;border:0;border-radius:16px;margin-top:8px;box-shadow:0 1px 3px rgba(20,32,26,.10),0 0 0 1px rgba(20,32,26,.04)}
 .ob-pan .ob-r.hot{background:#F7F9F7;box-shadow:0 0 0 1px rgba(20,32,26,.05)}
 .ob-pan .ob-r[data-det]:hover{background:#FAFBFA;box-shadow:0 2px 6px rgba(20,32,26,.14),0 0 0 1px rgba(20,32,26,.06)}
+
+/* kontakt na správce v menu */
+.ob-sp{display:flex;align-items:center;gap:10px;margin:auto 0 10px;padding:10px 12px;border-radius:14px;background:#fff;color:var(--ink);text-decoration:none;box-shadow:0 1px 2px rgba(20,32,26,.08)}
+.ob-sp svg{flex:none;color:var(--ok)}
+.ob-sp span{display:flex;flex-direction:column;min-width:0}.ob-sp small{font-size:12px;color:var(--mut)}.ob-sp b{font-size:15px;font-weight:800}
+.ob-sp+.ob-who{margin-top:0}
+@media print{.ob-sp{display:none}}

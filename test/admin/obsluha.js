@@ -116,11 +116,12 @@ function moduly(){return KK.APP_SEKCE.filter(function(k){return KK.auth.muze(k)}
 function sekce(){var h=location.hash.replace(/^#o\/?/,'').split('/')[0],M=moduly();if(h==='hledat')return 'hledat';if(M.length===1)return M[0];return M.indexOf(h)>=0?h:''}
 function navOdkazy(cls){var M=moduly(),s=sekce(),a=[];if(M.length>1)a.push(['','Přehled','prehled']);M.forEach(function(k){a.push([k,MOD[k].n,k])});a.push(['hledat','Hledat','hledat']);
   return a.map(function(x){return '<a class="'+cls+(MOD[x[0]]?' m-'+MOD[x[0]].c:'')+(x[0]==='hledat'?' ob-nvh':'')+'" href="#o'+(x[0]?'/'+x[0]:'')+'"'+(x[0]===s?' aria-current="page"':'')+'>'+sv(IK[x[2]],24)+'<span>'+x[1]+'</span></a>'}).join('')}
+function spravce(c){var n=(R.nast()||{}).spravce||{},t=(n.tel||'').trim();if(!t)return '';var h='tel:'+t.replace(/[^\d+]/g,'');return c==='d'?'<a class="btn" href="'+esc(h)+'">Zavolat správci'+(n.jmeno?' ('+esc(n.jmeno)+')':'')+' · '+esc(t)+'</a>':'<a class="ob-sp" href="'+esc(h)+'">'+sv(IK.tel||'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',18)+'<span><small>Správce'+(n.jmeno?' · '+esc(n.jmeno):'')+'</small><b>'+esc(t)+'</b></span></a>'}
 function kostra(){var nah=ja.role==='admin',M=moduly();
   document.documentElement.classList.add('ob-on');
   A.app.innerHTML=(nah?'<div class="ob-nah" role="status"><span><b>Náhled</b> – takhle vidí administraci obsluha s aplikací.</span><button type="button" id="obx">Zpět do administrace</button></div>':'')+
    '<div class="ob'+(M.length<2?' jedna':'')+'"><nav class="ob-side" aria-label="Aplikace obsluhy"><div class="ob-logo">'+sv(IK.pujcovna,22)+'<span>Kemp Krumlov<small>obsluha</small></span></div><div class="ob-sn" id="obsn"></div>'+
-   '<div class="ob-who"><span><b>'+esc(ja.jmeno)+'</b><small>'+(nah?'Správce · náhled':'Obsluha')+'</small></span><button type="button" class="ob-ic" data-ucet aria-label="Účet a odhlášení">'+sv(IK.ven,20)+'</button></div></nav>'+
+   spravce()+'<div class="ob-who"><span><b>'+esc(ja.jmeno)+'</b><small>'+(nah?'Správce · náhled':'Obsluha')+'</small></span><button type="button" class="ob-ic" data-ucet aria-label="Účet a odhlášení">'+sv(IK.ven,20)+'</button></div></nav>'+
    '<div class="ob-main"><main id="main" class="ob-c" tabindex="-1"></main></div>'+
    '<nav class="ob-tab" id="obtab" aria-label="Hlavní menu"></nav></div>';
   box=$('#main');
@@ -129,7 +130,7 @@ function kostra(){var nah=ja.role==='admin',M=moduly();
 }
 function ucetMenu(){var d=document.createElement('dialog');d.className='dlg ob-dlg';d.setAttribute('aria-labelledby','obuh');
   d.innerHTML='<form method="dialog" novalidate><h2 id="obuh">'+esc(ja.jmeno)+'</h2><p class="mut">Přihlášen jako '+esc(ja.login||'')+'</p>'+
-   '<details><summary>Změnit heslo</summary><div class="ob-hes"><label class="f">Současné heslo<input class="inp" type="password" name="s" autocomplete="current-password"></label><label class="f">Nové heslo<small>Aspoň 8 znaků</small><input class="inp" type="password" name="n" autocomplete="new-password"></label><p class="err-msg" role="alert" hidden></p><button type="button" class="btn pri" data-h>Uložit heslo</button></div></details>'+
+   (spravce('d')?'<p>'+spravce('d')+'</p>':'')+'<details><summary>Změnit heslo</summary><div class="ob-hes"><label class="f">Současné heslo<input class="inp" type="password" name="s" autocomplete="current-password"></label><label class="f">Nové heslo<small>Aspoň 8 znaků</small><input class="inp" type="password" name="n" autocomplete="new-password"></label><p class="err-msg" role="alert" hidden></p><button type="button" class="btn pri" data-h>Uložit heslo</button></div></details>'+
    '<div class="ob-dlg-b"><button type="button" class="btn gh" data-z>Zavřít</button><button type="button" class="btn dan2" data-o>Odhlásit se</button></div></form>';
   document.body.appendChild(d);var zav=function(){try{d.close()}catch(e){}d.remove()};
   d.addEventListener('cancel',function(e){e.preventDefault();zav()});d.addEventListener('click',function(e){if(e.target===d)zav()});
