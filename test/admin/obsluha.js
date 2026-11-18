@@ -245,6 +245,10 @@ function nova(sek,btn){var hid=$('#obskr');if(!hid){hid=document.createElement('
 function filtruj(){var i=$('.ob-qi',box);if(!i)return;fq[sekce()]=i.value;var q=bezD(i.value).trim(),sl=q?q.split(/\s+/):[],vse=$$('[data-q]',box),n=0;
   vse.forEach(function(el){var ok=sl.every(function(w){return el.dataset.q.indexOf(w)>=0});el.hidden=!ok;if(ok)n++});
   $$('.ob-pan,.ob-hotd,.ob-tl-2>section,.ob-list,.ob-tl',box).forEach(function(g){var d=$$('[data-q]',g);if(!d.length)return;var vid=d.some(function(x){return !x.hidden});g.hidden=!vid;if(g.tagName==='DETAILS'&&q&&vid)g.open=true});
+  /* počty v nadpisech podle toho, co je vidět */
+  $$('.ob-pan-h>span,.ob-sk-h>span,.ob-hotd>summary>span',box).forEach(function(b){var g=b.closest('details,section,.ob-pan');if(!g)return;var d=$$('[data-q]',g);if(d.length)b.textContent=d.filter(function(x){return !x.hidden}).length});
+  /* dva sloupce: prázdný sloupec schovat, zbylý roztáhnout přes celou šířku */
+  $$('.ob-2s',box).forEach(function(w){var k=[].slice.call(w.children);k.forEach(function(c){var d=$$('[data-q]',c);c.hidden=!d.length||!d.some(function(x){return !x.hidden})});w.classList.toggle('jeden',k.filter(function(c){return !c.hidden}).length<2)});
   var z=$('.ob-fq0',box);if(z)z.hidden=!(q&&vse.length&&!n)||false;if(z&&q&&!vse.length)z.hidden=false}
 /* ---------- hledání ve všech rezervacích (menu Hledat) ---------- */
 var hq='';
