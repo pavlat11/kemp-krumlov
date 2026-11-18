@@ -580,3 +580,12 @@ select[data-u=role]{min-width:132px}
 .ob-jz-sh.vy span{background:#A3501A}
 .ob-tl li.hot .ob-jz-h h3{color:var(--mut)}
 @media print{.ob-jz-p{display:none}}
+
+/* platba u lodí */
+.ob-pz{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:12px;background:#FDE7E4;border:2px solid #E8A39B;color:#8E1C15}
+.ob-pz>span{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ob-pz b{font-size:17px;font-weight:800}.ob-pz small{font-size:13px;color:#9B3A33}
+.ob-pz .ob-pl-b{margin:0}
+.ob-pz.ok{justify-content:flex-start;gap:6px;padding:6px 10px;border:0;background:#E3EFE7;color:#2F7A4F;font-weight:800;font-size:14px;align-self:flex-start}
+.ob-dluh{padding:3px 9px;border-radius:999px;background:#FDE7E4;color:#B3261E;font-size:12.5px;font-weight:800;white-space:nowrap}
+.ob-hl li{grid-template-columns:auto 52px auto auto minmax(0,1fr) auto auto}
