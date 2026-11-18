@@ -384,3 +384,4 @@ html.ob-on,html.ob-on body{background:#F2F4F1}
 .ob-tb{min-width:0}
 .ob-tb span{white-space:nowrap}
 @media (min-width:1200px){.ob-2s.jeden{grid-template-columns:minmax(0,1fr)}}
+.ob-rz .rz-ak{display:none}
