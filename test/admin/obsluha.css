@@ -590,3 +590,4 @@ select[data-u=role]{min-width:132px}
 .ob-dluh{padding:3px 9px;border-radius:999px;background:#FDE7E4;color:#B3261E;font-size:12.5px;font-weight:800;white-space:nowrap}
 .ob-hl li{grid-template-columns:auto 52px auto auto minmax(0,1fr) auto auto}
 .ob-pz{flex-wrap:nowrap}.ob-pz>span{flex-wrap:nowrap;white-space:nowrap}.ob-pz b{font-size:16px}
+.ob-ch-ok{display:inline-flex;align-items:center;gap:3px;background:#E3EFE7!important;color:#2F7A4F!important;font-weight:800}
