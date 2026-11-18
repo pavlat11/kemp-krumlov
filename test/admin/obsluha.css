@@ -542,3 +542,7 @@ select[data-u=role]{min-width:132px}
 .ob-hu-j{flex:1;color:var(--mut)}
 @media print{.ob-tlb,.ob-u-a,.ob-hu{display:none!important}}
 @media (max-width:640px){.ob-tiles>div{flex-wrap:wrap;gap:2px 6px}.ob-tiles .t-kc b{white-space:nowrap}.ob-pan .ob-r.ob-u2{column-gap:10px}.ob-mk{height:56px}.ob-pan .ob-r.ob-u2{grid-template-columns:56px minmax(0,1fr) auto}}
+.ob-pl-b{margin-top:6px;display:inline-flex;align-items:center;gap:5px;min-height:34px;padding:0 12px;border:0;border-radius:10px;background:#B3261E;color:#fff;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
+.ob-pl-b:hover{background:#951E18}
+@media print{.ob-pl-b{display:none!important}}
+.ob-pl-b.zal{margin-top:0;background:#A3501A}.ob-pl-b.zal:hover{background:#86400F}
