@@ -1,0 +1,232 @@
+/* =====================================================================
+   Kemp Krumlov – APLIKACE PRO OBSLUHU (admin/obsluha.js)
+   Mobil: horní lišta + spodní menu. PC (od 960 px): menu vlevo, dlaždice a karty vedle sebe.
+   ===================================================================== */
+html.ob-on,html.ob-on body{background:#F2F4F1}
+.ob{--ink:#14201A;--mut:#56625A;--line:#DCE2DC;--bg:#F2F4F1;--card:#fff;--ok:#23573F;--oks:#E3EFE7;--zl:#8A4214;--zls:#FBEADF;--c:#14201A;--cs:#E8ECE8;--cd:#0E1913;
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);min-height:100vh;min-height:100dvh;background:var(--bg);-webkit-tap-highlight-color:transparent}
+.ob *{box-sizing:border-box}
+.m-u{--c:#2F6B4F;--cs:#E3EFE7;--cd:#234F3B}
+.m-l{--c:#1D5A85;--cs:#E0ECF5;--cd:#164766}
+.m-d{--c:#A3501A;--cs:#FBEADF;--cd:#7E3E14}
+.ob-ic{width:48px;height:48px;flex:none;border:0;border-radius:999px;background:#fff;color:var(--ink);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;box-shadow:0 1px 2px rgba(20,32,26,.08)}
+.ob-ic:hover{background:#E8ECE8}
+.ob :focus-visible{outline:3px solid #1D5A85;outline-offset:2px}
+.ob h1:focus,.ob h1:focus-visible{outline:none}
+
+/* náhled pro správce */
+.ob-nah{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center;padding:10px 16px;background:#14201A;color:#fff;font:500 14px 'Plus Jakarta Sans',sans-serif}
+.ob-nah button{min-height:40px;padding:0 16px;border:0;border-radius:999px;background:#fff;color:#14201A;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer}
+
+/* rozvržení */
+.ob-side{display:none}
+.ob-main{min-width:0}
+.ob-c{max-width:1240px;margin:0 auto;padding:16px 16px 120px}
+.ob.jedna .ob-c{padding-bottom:40px}
+.ob-tab{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;justify-content:space-around;padding:6px 6px calc(8px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line)}
+.ob-tb{flex:1;max-width:120px;min-height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border-radius:14px;color:var(--mut);text-decoration:none;font-size:12px;font-weight:600}
+.ob-tb[aria-current]{color:var(--c);font-weight:800}
+.ob-tb[aria-current] svg{stroke-width:2.4}
+
+/* hlavička a den */
+.ob-top{display:flex;align-items:center;gap:12px;padding:8px 0 10px}
+.ob-tt{flex:1;min-width:0;display:flex;flex-direction:column}
+.ob-kick{font-size:13px;font-weight:600;color:var(--mut)}
+.ob-top h1{margin:0;font-size:28px;line-height:1.15;font-weight:800;letter-spacing:-.02em}
+.ob-av{background:var(--ink);color:#fff;font-weight:800;font-size:15px}
+.ob-av:hover{background:#2A3A31}
+.ob-den{display:flex;align-items:center;gap:8px;margin:0 0 14px}
+.ob-den .ob-ic{width:44px;height:44px}
+.ob-den-t{flex:1;min-height:48px;display:flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;background:#fff;color:var(--ink);font:inherit;cursor:pointer;box-shadow:0 1px 2px rgba(20,32,26,.08)}
+.ob-den-t b{font-size:16px;font-weight:800}
+.ob-den-t span{font-size:14px;color:var(--mut)}
+.ob-den-t:not(.dnes){background:#FFF6EE;box-shadow:inset 0 0 0 2px #E7B892}
+.ob-dnes{min-height:44px;padding:0 14px;border:0;border-radius:999px;background:var(--ink);color:#fff;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer}
+
+/* přehled: tři velké dlaždice */
+.ob-tiles{display:grid;gap:12px}
+.ob-tile{position:relative;display:flex;align-items:center;gap:16px;min-height:120px;padding:18px 18px 18px 20px;border-radius:24px;background:var(--c);color:#fff;text-decoration:none;box-shadow:0 2px 6px rgba(20,32,26,.10);transition:transform .12s,box-shadow .12s}
+.ob-tile:hover{box-shadow:0 8px 22px rgba(20,32,26,.18);transform:translateY(-1px)}
+.ob-tile:active{transform:scale(.985)}
+.ob-tile-i{width:64px;height:64px;flex:none;border-radius:20px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center}
+.ob-tile-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.ob-tile-t b{font-size:25px;font-weight:800;letter-spacing:-.01em}
+.ob-tile-t span{font-size:15px;color:rgba(255,255,255,.88)}
+.ob-tile-n{min-width:44px;height:44px;padding:0 12px;border-radius:999px;background:#fff;color:var(--cd);font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.ob-tile-n.nic{background:rgba(255,255,255,.2);color:#fff}
+.ob-tiles.n1 .ob-tile{min-height:180px}
+.ob-tiles.n2 .ob-tile{min-height:150px}
+
+.ob-next{margin-top:22px}
+.ob-next h2,.ob-map h2{margin:0 0 10px;font-size:16px;font-weight:800;color:var(--ink)}
+.ob-next h2 span{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;background:var(--ink);color:#fff;font-size:12px;vertical-align:2px}
+.ob-nl{display:grid;gap:8px}
+.ob-nx{display:flex;align-items:center;gap:12px;min-height:62px;padding:10px 14px 10px 0;border-radius:16px;background:#fff;color:var(--ink);text-decoration:none;overflow:hidden;box-shadow:0 1px 2px rgba(20,32,26,.06)}
+.ob-nx:hover{background:#FAFBFA}
+.ob-nx::before{content:'';align-self:stretch;width:6px;background:var(--c);flex:none}
+.ob-nx-c{width:52px;flex:none;font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;text-align:center}
+.ob-nx-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ob-nx-t b{font-size:15px;font-weight:700}
+.ob-nx-t small{font-size:13px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ob-nx svg{color:var(--mut);flex:none}
+.ob-0{display:flex;align-items:center;gap:12px;margin:0;padding:22px 18px;border-radius:18px;background:#fff;color:var(--mut);font-size:15px;font-weight:600}
+.ob-0 svg{color:#2F6B4F;flex:none}
+
+/* přepínač Příjezdy / Odjezdy … */
+.ob-seg{display:flex;gap:4px;padding:4px;margin:0 0 14px;border-radius:16px;background:#E1E6E0}
+.ob-seg button{flex:1;min-height:46px;border:0;border-radius:12px;background:transparent;color:var(--mut);font-weight:700;font-size:15px;font-family:inherit;cursor:pointer}
+.ob-seg button span{display:inline-block;min-width:24px;padding:1px 7px;border-radius:999px;background:rgba(20,32,26,.08);font-size:13px}
+.ob-seg button[aria-selected=true]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(20,32,26,.14)}
+.ob-seg button[aria-selected=true] span{background:var(--c);color:#fff}
+
+/* karty */
+.ob-list{display:grid;gap:12px}
+.ob-k{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:20px;background:#fff;box-shadow:0 1px 2px rgba(20,32,26,.06)}
+.ob-k.hot{background:#F8FAF8;box-shadow:inset 0 0 0 1px var(--line)}
+.ob-k.hot .ob-k-n b,.ob-k.hot .ob-mi{opacity:.6}
+.ob-k-h{display:flex;align-items:center;gap:12px}
+.ob-mi{position:relative;min-width:60px;height:60px;padding:0 8px;flex:none;border-radius:16px;background:var(--cs);color:var(--cd);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
+.ob-mi small{font-size:11px;font-weight:700}
+.ob-mi b{font-size:22px;font-weight:800}
+.ob-mi i{position:absolute;top:-6px;right:-6px;padding:1px 6px;border-radius:999px;background:var(--ink);color:#fff;font-style:normal;font-size:11px;font-weight:800}
+.ob-mi.cas b{font-size:18px;font-variant-numeric:tabular-nums}
+.ob-k-n{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ob-k-n b{font-size:17px;font-weight:800}
+.ob-k-n small{font-size:13.5px;color:var(--mut)}
+.ob-tel{width:44px;height:44px;flex:none;border-radius:999px;background:var(--cs);color:var(--cd);display:flex;align-items:center;justify-content:center}
+.ob-chs{display:flex;flex-wrap:wrap;gap:6px}
+.ob-ch{padding:5px 10px;border-radius:999px;background:#EEF1EE;color:#3C4740;font-size:12.5px;font-weight:700}
+.ob-ch.ok{background:var(--oks);color:var(--ok)}
+.ob-ch.zl{background:var(--zls);color:var(--zl)}
+.ob-ch.l{background:#E0ECF5;color:#164766}
+.ob-ch.d{background:#FBEADF;color:#7E3E14}
+.ob-pz{display:flex;gap:8px;align-items:flex-start;margin:0;padding:10px 12px;border-radius:12px;background:#FFF9E6;color:#4A3B10;font-size:14px}
+.ob-pz svg{flex:none;margin-top:2px}
+.ob-k-a{display:flex;gap:8px;flex-wrap:wrap}
+.ob-b{flex:1 1 150px;min-height:54px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 18px;border:0;border-radius:14px;background:var(--c);color:#fff;font-weight:800;font-size:16px;font-family:inherit;cursor:pointer}
+.ob-b:hover{background:var(--cd)}
+.ob-b.hot{background:#EEF1EE;color:#3C4740;box-shadow:inset 0 0 0 2px #CBD3CC}
+.ob-b.hot:hover{background:#E4E9E4}
+.ob-b:disabled{background:#E1E6E0;color:var(--mut);cursor:not-allowed;box-shadow:none}
+.ob-b2{flex:0 1 auto;min-height:54px;padding:0 16px;border:2px solid var(--c);border-radius:14px;background:#fff;color:var(--cd);font-weight:700;font-size:15px;font-family:inherit;cursor:pointer}
+.ob-b2:hover{background:var(--cs)}
+.ob-zal .ob-b2{min-height:44px;border-color:#A3501A;color:#7E3E14}
+.ob-kusy{margin:0;padding:12px;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px;border-radius:14px;background:#F4F7F9}
+.ob-kusy li{font-size:15px}
+.ob-kusy li b{color:var(--cd);font-weight:800}
+.ob-kusy li.lod{font-weight:700}
+.ob-zal{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--zls);color:var(--zl);font-size:14px;font-weight:700}
+.ob-zal span{flex:1}
+.ob-zal small{font-weight:600}
+
+/* kdo je kde */
+.ob-map{margin-top:22px;padding:16px;border-radius:20px;background:#fff}
+.ob-map-h{display:flex;align-items:baseline;justify-content:space-between}
+.ob-map-h span{font-size:13px;color:var(--mut)}
+.ob-mg{margin-top:10px}
+.ob-mg-n{display:block;margin-bottom:6px;font-size:12.5px;font-weight:700;color:var(--mut)}
+.ob-mc{display:grid;grid-template-columns:repeat(auto-fill,minmax(36px,1fr));gap:5px}
+.ob-cel{height:38px;border:0;border-radius:9px;font-weight:800;font-size:13px;font-family:inherit;cursor:pointer}
+.ob-cel.vol{background:#EEF1EE;color:var(--mut)}
+.ob-cel.obs{background:#9CC3AE;color:#0E2A1C}
+.ob-cel.uby{background:#2F6B4F;color:#fff}
+.ob-cel.pri{background:#fff;color:#7E3E14;box-shadow:inset 0 0 0 2.5px #A3501A}
+.ob-leg{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px;font-size:12.5px;color:#3C4740}
+.ob-leg span{display:flex;align-items:center;gap:6px}
+.ob-leg i{width:14px;height:14px;border-radius:4px}
+.ob-leg i.vol{background:#EEF1EE}.ob-leg i.obs{background:#9CC3AE}.ob-leg i.uby{background:#2F6B4F}.ob-leg i.pri{background:#fff;box-shadow:inset 0 0 0 2px #A3501A}
+
+/* doprava – časová osa */
+.ob-sum{margin:-4px 0 12px;font-size:14px;color:var(--mut)}
+.ob-tl{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.ob-tl>li{display:flex;gap:12px;align-items:flex-start}
+.ob-tl-c{width:56px;flex:none;padding-top:16px;font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;text-align:right}
+.ob-tl .ob-k{flex:1;min-width:0;border-left:6px solid #1D5A85}
+.ob-tl li.vy .ob-k{border-left-color:#A3501A}
+.ob-tl li.od .ob-b{background:#1D5A85}.ob-tl li.od .ob-b:hover{background:#164766}
+.ob-tl li.vy .ob-b{background:#A3501A}.ob-tl li.vy .ob-b:hover{background:#7E3E14}
+.ob-tl li.hot .ob-b{background:#EEF1EE;color:#3C4740}
+.ob-tl li.hot .ob-k{opacity:.75}
+.ob-tag{align-self:flex-start;padding:5px 10px;border-radius:999px;background:#E0ECF5;color:#164766;font-size:12.5px;font-weight:800}
+.ob-tl li.vy .ob-tag{background:#FBEADF;color:#7E3E14}
+.ob-tl h3{margin:0;font-size:19px;font-weight:800}
+.ob-dp{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14.5px;color:#3C4740}
+.ob-dp span{display:flex;align-items:center;gap:6px}
+.ob-dp b{color:var(--ink);font-size:16px}
+.ob-lid{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.ob-lid li{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;padding:0 0 0 12px;border-radius:12px;background:#F4F6F4;font-size:15px;font-weight:600}
+.ob-lid small{color:var(--mut);font-weight:500}
+.ob-lid .ob-tel{background:transparent}
+
+/* účet */
+.ob-dlg{max-width:420px}
+.ob-dlg h2{margin:0 0 4px}
+.ob-dlg details{margin:16px 0;border-top:1px solid #E1E6E0;padding-top:12px}
+.ob-dlg summary{cursor:pointer;font-weight:700;min-height:36px;display:flex;align-items:center}
+.ob-hes{display:grid;gap:12px;margin-top:10px}
+.ob-dlg-b{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.ob-none{max-width:480px;margin:15vh auto;padding:24px;text-align:center;font-family:'Plus Jakarta Sans',sans-serif}
+
+/* tablet */
+@media (min-width:640px){
+  .ob-c{padding:20px 24px 120px}
+  .ob-tiles.n3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ob-tiles.n2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ob-tiles.n2 .ob-tile,.ob-tiles.n3 .ob-tile{flex-direction:column;align-items:flex-start;min-height:200px;padding:22px}
+  .ob-tiles .ob-tile-n{position:absolute;top:18px;right:18px}
+  .ob-tiles.n2 .ob-tile-t,.ob-tiles.n3 .ob-tile-t{margin-top:auto}
+  .ob-list{grid-template-columns:repeat(auto-fill,minmax(340px,1fr));align-items:start}
+  .ob-nl{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+  .ob-tl{max-width:760px}
+}
+/* PC: menu vlevo místo spodní lišty */
+@media (min-width:960px){
+  .ob{display:grid;grid-template-columns:248px minmax(0,1fr)}
+  .ob.jedna{grid-template-columns:248px minmax(0,1fr)}
+  .ob-tab{display:none}
+  .ob-side{display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;padding:22px 14px;background:#fff;border-right:1px solid var(--line)}
+  .ob-nah~.ob .ob-side{top:60px;height:calc(100vh - 60px)}
+  .ob-logo{display:flex;align-items:center;gap:10px;padding:0 8px 18px;font-weight:800;font-size:16px}
+  .ob-logo svg{width:36px;height:36px;padding:7px;border-radius:12px;background:#14201A;color:#fff}
+  .ob-logo small{display:block;font-size:12px;font-weight:600;color:var(--mut)}
+  .ob-sn{display:flex;flex-direction:column;gap:6px}
+  .ob-nv{display:flex;align-items:center;gap:12px;min-height:52px;padding:0 14px;border-radius:14px;color:#3C4740;text-decoration:none;font-weight:700;font-size:15.5px}
+  .ob-nv:hover{background:#F2F4F1}
+  .ob-nv[aria-current]{background:var(--c);color:#fff}
+  .ob-nv:not(.m-u):not(.m-l):not(.m-d)[aria-current]{background:#14201A}
+  .ob-who{margin-top:auto;display:flex;align-items:center;gap:10px;padding:12px 8px 0;border-top:1px solid var(--line)}
+  .ob-who span{flex:1;min-width:0;display:flex;flex-direction:column}
+  .ob-who b{font-size:14px}.ob-who small{font-size:12px;color:var(--mut)}
+  .ob-who .ob-ic{background:#F2F4F1;box-shadow:none}
+  .ob-c,.ob.jedna .ob-c{padding:28px 36px 48px}
+  .ob-top .ob-av,.ob-zpet{display:none}
+  .ob-top h1{font-size:32px}
+  .ob-den{max-width:520px}
+  .ob-tiles.n3 .ob-tile,.ob-tiles.n2 .ob-tile{min-height:240px}
+  .ob-tile-t b{font-size:28px}
+}
+
+/* tisk */
+@media print{
+  html.ob-on,html.ob-on body{background:#fff}
+  .ob{display:block;background:#fff}
+  .ob-side,.ob-tab,.ob-nah,.ob-ic,.ob-k-a,.ob-dnes,.ob-den .ob-ic,.ob-seg button[aria-selected=false],.ob-tel,.toast{display:none!important}
+  .ob-c{padding:0;max-width:none}
+  .ob-den-t,.ob-seg,.ob-seg button{box-shadow:none!important;background:none!important;padding:0;min-height:0;justify-content:flex-start}
+  .ob-k,.ob-map{box-shadow:none;border:1px solid #bbb;break-inside:avoid}
+  .ob-list{grid-template-columns:1fr 1fr}
+  .ob-tl .ob-k{border-left-width:4px}
+}
+
+/* Uživatelé (plná administrace): volba vzhledu */
+.vz-g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:6px}
+.vz-o{display:flex;align-items:flex-start;gap:10px;padding:12px;border:2px solid #DCE2DC;border-radius:12px;cursor:pointer;background:#fff}
+.vz-o input{margin-top:3px;accent-color:#2F6B4F}
+.vz-o span{display:flex;flex-direction:column;gap:2px}
+.vz-o b{font-size:14.5px}
+.vz-o small{font-size:12.5px;opacity:.75}
+.vz-o:has(input:checked){border-color:#2F6B4F;background:#F1F7F3}
+@media (max-width:520px){.vz-g{grid-template-columns:1fr}}
+.up-v.up-app{background:#2F6B4F;color:#fff}
+.up-c.up-np{background:#FBEADF;color:#8A4214}
+[data-vz],[data-apsek]{min-width:0}

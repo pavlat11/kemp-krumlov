@@ -84,6 +84,9 @@ function shell(s){
   if(PELA&&!KK.auth.muzeWeb('pela')){KK.LS.set('admin-web','kemp');location.reload();return}
   /* smí jen web PE-LA → rovnou PE-LA */
   if(!PELA&&!KK.auth.muzeWeb('kemp')&&KK.auth.muzeWeb('pela')){KK.LS.set('admin-web','pela');location.reload();return}
+  /* obsluha se vzhledem „Aplikace pro obsluhu“ (nebo správce v náhledu) dostane jednoduchou aplikaci – admin/obsluha.js */
+  if(window.KKO&&KKO.ma(s)){KKO.start(s,{app:app,ptej:ptej,pocty:pocty,toast:toast,login:login,shell:shell});return}
+  document.documentElement.classList.remove('ob-on');
   app.innerHTML='<div class="top"><div class="logo"><i>'+(PELA?LOGO_PELA:SV(IC.lode,20))+'</i>'+NAZEV+'</div>'+prepinac('wsw-top')+'<button type="button" id="mb" aria-label="Otevřít menu" aria-expanded="false" aria-controls="side">'+SV(IC.menu,22)+'</button></div>'+
   '<div class="app"><nav class="side" id="side" aria-label="Administrace"><div class="logo"><i>'+(PELA?LOGO_PELA:SV(IC.lode,22))+'</i><span>'+NAZEV+'<small>Administrace</small></span></div>'+prepinac('')+
   NAV.map(function(g){var pol=g[1].filter(function(n){return KK.auth.muze(n[0])});if(!pol.length)return '';return '<div class="nav-t">'+g[0]+'</div>'+pol.map(function(n){return '<a class="nv" href="#'+n[0]+'">'+SV(IC[n[0]],19)+n[1]+(n[2]?'<span class="soon">brzy</span>':'')+'</a>'}).join('')}).join('')+
@@ -1497,14 +1500,16 @@ function datum(t){return t?new Date(t).toLocaleString('cs-CZ',{day:'numeric',mon
 function uzivatele(m){
   return KK.uzivatele.seznam().then(function(U){
     var ja=KK.auth.meSync(),P=KK.prava.vse(),RO=Object.keys(KK.ROLE),SK=Object.keys(KK.SEKCE).filter(function(k){return k!=='prehled'});
+    var APN={ubytovani:'Ubytování',pujcovna:'Lodě',doprava:'Doprava'};
     var SKG=KK.SEKCE_SKUPINY,SKL=function(k){var g=SKG.filter(function(x){return x[1].indexOf(k)>=0})[0];return (g&&g[2]?g[2]+' · ':'')+KK.SEKCE[k]};
-    var pravaTxt=function(u){if(u.role==='admin')return '<span class="up-v">smí vše</span>';var a=SK.filter(function(k){return u.prava[k]});return a.length?a.map(function(k){var pe=k.indexOf('pela_')===0;return '<span class="up-c'+(pe?' pe':'')+'">'+esc(SKL(k))+'</span>'}).join(''):'<span class="mut">jen Přehled</span>'};
+    var pravaTxt=function(u){if(u.role==='admin')return '<span class="up-v">smí vše</span>';
+      if(u.vzhled==='aplikace'){var ap=KK.APP_SEKCE.filter(function(k){return u.prava[k]});return '<span class="up-v up-app">Aplikace</span>'+(ap.length?ap.map(function(k){return '<span class="up-c">'+esc(APN[k])+'</span>'}).join(''):'<span class="mut">bez sekcí</span>')+(u.platby?'':'<span class="up-c up-np">bez plateb</span>')}var a=SK.filter(function(k){return u.prava[k]});return a.length?a.map(function(k){var pe=k.indexOf('pela_')===0;return '<span class="up-c'+(pe?' pe':'')+'">'+esc(SKL(k))+'</span>'}).join(''):'<span class="mut">jen Přehled</span>'};
     var radek=function(u){var jaJ=u.id===ja.id;return '<tr data-id="'+u.id+'"'+(u.aktivni?'':' class="skr"')+'><td><b>'+esc(u.jmeno)+'</b>'+(jaJ?' <span class="badge">vy</span>':'')+(u.vychozi?' <span class="badge warn">výchozí heslo</span>':'')+'<br><small class="mut">'+esc(u.login)+(u.email?' · '+esc(u.email):'')+'</small></td>'+
       '<td><select class="inp" data-u="role" aria-label="Role – '+esc(u.jmeno)+'"'+(jaJ?' disabled title="Svou roli změnit nemůžete"':'')+'>'+RO.map(function(r){return '<option value="'+r+'"'+(u.role===r?' selected':'')+'>'+KK.ROLE[r]+'</option>'}).join('')+'</select></td>'+
       '<td class="up-t">'+pravaTxt(u)+'</td><td class="c"><label class="sw" title="Zapnutý účet"><input type="checkbox" data-u="aktivni"'+(u.aktivni?' checked':'')+(jaJ?' disabled':'')+' aria-label="Účet zapnutý – '+esc(u.jmeno)+'"><span aria-hidden="true"></span></label></td>'+
       '<td><small class="mut">'+datum(u.posledni)+'</small></td>'+
       '<td class="c" style="white-space:nowrap"><button type="button" class="btn sm gh" data-a="upr">Upravit</button> <button type="button" class="btn sm gh'+(jaJ&&u.vychozi?' pri':'')+'" data-a="heslo">'+(jaJ?'Změnit heslo':'Nové heslo')+'</button>'+(jaJ?'':' <button type="button" class="btn ic dan" data-a="del" aria-label="Smazat uživatele '+esc(u.jmeno)+'">'+SV(IC.kos,18)+'</button>')+'</td></tr>'};
-    m.innerHTML='<div class="ph"><div><h1>Uživatelé</h1><p>Kdo smí do administrace a co tam smí dělat. <b>Správce</b> smí všechno včetně uživatelů, u <b>Obsluhy</b> nastavíte sekce každému zvlášť v Upravit.</p></div><button type="button" class="btn pri" id="un">+ Přidat uživatele</button></div>'+
+    m.innerHTML='<div class="ph"><div><h1>Uživatelé</h1><p>Kdo smí do administrace a co tam smí dělat. <b>Správce</b> smí všechno včetně uživatelů, u <b>Obsluhy</b> nastavíte sekce každému zvlášť v Upravit.</p></div><div class="row" style="gap:8px;flex-wrap:wrap"><button type="button" class="btn gh" id="unah" title="Podívejte se, jak vypadá aplikace pro obsluhu">'+SV(IC.lode,18)+' Náhled aplikace obsluhy</button><button type="button" class="btn pri" id="un">+ Přidat uživatele</button></div></div>'+
       (ja.vychozi?'<div class="card" style="border-left:4px solid var(--warn,#e0a100);border-radius:0 var(--r) var(--r) 0;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="flex:1"><b>Používáte výchozí heslo „kemp“.</b> Změňte si ho tlačítkem Změnit heslo u svého účtu.</span><button type="button" class="btn pri sm" id="umh">Změnit heslo</button></div>':'')+
       '<section class="card" style="margin-bottom:16px"><div class="tw-wrap"><table class="ct"><thead><tr><th>Uživatel</th><th>Role</th><th>Smí upravovat</th><th class="c">Zapnutý</th><th>Poslední přihlášení</th><th class="c"><span class="sr">Akce</span></th></tr></thead><tbody id="ul">'+U.map(radek).join('')+'</tbody></table></div></section>'+
       '<div class="card mut" style="font-size:13.5px">'+SV(IC.zamek,16)+' V náhledu jsou účty uložené jen v tomto prohlížeči a chrání jen před omylem. Skutečné zabezpečení (hesla na serveru, přihlášení, práva) bude po spuštění na serveru – účty se přenesou.</div>'+
@@ -1513,6 +1518,12 @@ function uzivatele(m){
       '<label class="f">Přihlašovací jméno<small>Bez mezer a diakritiky, např. jana.novakova</small><input class="inp" name="login" required autocomplete="off" autocapitalize="none" spellcheck="false"></label>'+
       '<label class="f">E-mail<small>Nepovinné – lze se jím i přihlásit</small><input class="inp" name="email" type="email" autocomplete="off"></label>'+
       '<label class="f">Role<select class="inp" name="role">'+RO.map(function(r){return '<option value="'+r+'"'+(r==='obsluha'?' selected':'')+'>'+KK.ROLE[r]+'</option>'}).join('')+'</select></label>'+
+      '<fieldset class="f up-f" data-vz><legend>Vzhled administrace<small>Aplikace = velké dlaždice a jen dnešní práce, na mobilu i na PC. Plná = celá administrace podle zaškrtnutých sekcí.</small></legend><div class="vz-g">'+
+        '<label class="vz-o"><input type="radio" name="vzhled" value="aplikace"><span><b>Aplikace pro obsluhu</b><small>Ubytování, Lodě, Doprava – jen to, co je potřeba udělat</small></span></label>'+
+        '<label class="vz-o"><input type="radio" name="vzhled" value="plna"><span><b>Plná administrace</b><small>Rezervace, ceník, web… podle sekcí</small></span></label></div></fieldset>'+
+      '<fieldset class="f up-f" data-apsek><legend>Co uvidí v aplikaci<small>Každá zapnutá sekce je jedna velká dlaždice. Když zapnete jen jednu, aplikace se rovnou otevře v ní.</small></legend><div class="sw-l">'+
+        KK.APP_SEKCE.map(function(k){return '<label class="sw"><input type="checkbox" name="ap_'+k+'"><span aria-hidden="true"></span>'+esc(APN[k])+'</label>'}).join('')+
+        '<label class="sw"><input type="checkbox" name="platby"><span aria-hidden="true"></span>Smí potvrzovat platby</label></div></fieldset>'+
       '<fieldset class="f up-f" data-prava><legend>Co smí upravovat<small>Přehled vidí každý. Správce smí vždy všechno.</small></legend><div class="up-g">'+SKG.map(function(g){var kl=g[1].filter(function(k){return SK.indexOf(k)>=0});return '<div class="up-gs'+(g[2]==='PE-LA'?' pe':g[2]?' ke':'')+'"><b>'+esc(g[0])+'</b><div class="sw-l">'+kl.map(function(k){return '<label class="sw"><input type="checkbox" name="pr_'+k+'"><span aria-hidden="true"></span>'+esc(KK.SEKCE[k])+'</label>'}).join('')+'</div></div>'}).join('')+'</div></fieldset>'+
       '<label class="f" data-heslo>Heslo<small>Aspoň 8 znaků. Předejte ho uživateli, heslo si pak může změnit kliknutím na své jméno vlevo dole.</small><span class="row" style="gap:8px"><input class="inp" name="heslo" type="text" autocomplete="new-password" spellcheck="false" style="flex:1"><button type="button" class="btn sm gh" id="ug">Vytvořit</button></span></label>'+
       '<p class="err-msg" role="alert" hidden></p></div><div class="row" style="justify-content:flex-end;gap:8px;margin-top:16px"><button type="button" class="btn gh" id="uz">Zrušit</button><button class="btn pri" id="uo" value="ok">Uložit</button></div></form></dialog>';
@@ -1520,18 +1531,25 @@ function uzivatele(m){
     function otevri(u){edit=u||null;er.hidden=true;f.reset();$('#udt').textContent=u?'Upravit uživatele':'Nový uživatel';
       f.jmeno.value=u?u.jmeno:'';f.login.value=u?u.login:'';f.login.disabled=!!u;f.email.value=u?u.email:'';f.role.value=u?u.role:'obsluha';f.role.disabled=!!(u&&u.id===ja.id);
       $('[data-heslo]',f).hidden=!!u;if(!u)f.heslo.value=KK.uzivatele.heslo();
-      var pv=u?u.prava:KK.prava.vse().obsluha;SK.forEach(function(k){f['pr_'+k].checked=!!pv[k]});prUkaz();
+      var pv=u?u.prava:KK.prava.vse().obsluha;SK.forEach(function(k){f['pr_'+k].checked=!!pv[k]});
+      KK.APP_SEKCE.forEach(function(k){f['ap_'+k].checked=!!pv[k]});f.platby.checked=u?u.platby!==false:true;vzNastav(u?(u.role==='admin'?'aplikace':u.vzhled):'aplikace');prUkaz();
       if(dlg.showModal)dlg.showModal();else dlg.setAttribute('open','');f.jmeno.focus()}
-    function prUkaz(){$('[data-prava]',f).hidden=f.role.value==='admin'}
+    function vzhled(){var x=$('[name=vzhled]:checked',f);return x?x.value:'plna'}
+    function vzNastav(v){$$('[name=vzhled]',f).forEach(function(x){x.checked=x.value===v})}
+    function prUkaz(){var ad=f.role.value==='admin',ap=!ad&&vzhled()==='aplikace';$('[data-vz]',f).hidden=ad;$('[data-apsek]',f).hidden=!ap;$('[data-prava]',f).hidden=ad||ap}
     f.role.addEventListener('change',prUkaz);
+    /* přepnutí vzhledu přenese zaškrtnuté sekce Ubytování / Lodě / Doprava */
+    $$('[name=vzhled]',f).forEach(function(x){x.addEventListener('change',function(){var ap=vzhled()==='aplikace';KK.APP_SEKCE.forEach(function(k){if(ap)f['ap_'+k].checked=f['pr_'+k].checked;else f['pr_'+k].checked=f['ap_'+k].checked});prUkaz()})});
+    $('#unah').addEventListener('click',function(){KK.LS.set('o.nahled',1);history.replaceState(null,'','#o');shell(KK.auth.meSync())});
     $('#un').addEventListener('click',function(){otevri(null)});
     var umh=$('#umh');if(umh)umh.addEventListener('click',function(){var b=$('#ul tr[data-id="'+ja.id+'"] [data-a=heslo]');if(b)b.click()});
     $('#uz').addEventListener('click',function(){dlg.close()});
     $('#ug').addEventListener('click',function(){f.heslo.value=KK.uzivatele.heslo();f.heslo.select()});
     f.addEventListener('submit',function(e){e.preventDefault();er.hidden=true;
       var z={jmeno:f.jmeno.value,login:f.login.value,email:f.email.value,role:f.role.value,heslo:f.heslo.value,prava:{}};SK.forEach(function(k){z.prava[k]=f['pr_'+k].checked?1:0});
+      z.vzhled=z.role==='admin'?'plna':vzhled();z.platby=f.platby.checked;if(z.vzhled==='aplikace')KK.APP_SEKCE.forEach(function(k){z.prava[k]=f['ap_'+k].checked?1:0});
       if(z.email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(z.email)){er.textContent='E-mail nevypadá správně.';er.hidden=false;f.email.focus();return}
-      var pr=edit?KK.uzivatele.uprav(edit.id,{jmeno:z.jmeno,email:z.email,role:edit.id===ja.id?undefined:z.role,prava:z.prava}):KK.uzivatele.pridej(z);
+      var pr=edit?KK.uzivatele.uprav(edit.id,{jmeno:z.jmeno,email:z.email,role:edit.id===ja.id?undefined:z.role,prava:z.prava,vzhled:z.vzhled,platby:z.platby}):KK.uzivatele.pridej(z);
       pr.then(function(u){dlg.close();toast(edit?'Uživatel upraven.':'Uživatel '+u.jmeno+' přidán. Heslo: '+z.heslo);if(edit&&edit.id===ja.id)shell(KK.auth.meSync());else route()}).catch(function(x){er.textContent=x.message;er.hidden=false})});
     var najdi=function(id){return U.filter(function(u){return u.id===id})[0]};
     $('#ul').addEventListener('change',function(e){var t=e.target,id=t.closest('tr').dataset.id,z={};z[t.dataset.u]=t.type==='checkbox'?t.checked:t.value;
