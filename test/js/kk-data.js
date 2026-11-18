@@ -58,7 +58,7 @@ function ulozU(u){LS.set('uzivatele',u)}
 KK.VZHLED={aplikace:'Aplikace pro obsluhu',plna:'Plná administrace'};
 KK.APP_SEKCE=['ubytovani','pujcovna','doprava'];
 function vzhledU(x){return x&&x.role!=='admin'&&x.vzhled==='aplikace'?'aplikace':'plna'}
-function verejny(x){return{id:x.id,jmeno:x.jmeno,login:x.login,email:x.email||'',role:x.role,prava:KK.prava.uzivatel(x),vzhled:vzhledU(x),platby:x.platby!==false,aktivni:x.aktivni!==false,vychozi:!!x.vychozi,posledni:x.posledni||null,vytvoren:x.vytvoren||null}}
+function verejny(x){return{id:x.id,jmeno:x.jmeno,login:x.login,email:x.email||'',role:x.role,prava:KK.prava.uzivatel(x),vzhled:vzhledU(x),platby:x.platby!==false,souhrny:x.souhrny!==false,aktivni:x.aktivni!==false,vychozi:!!x.vychozi,posledni:x.posledni||null,vytvoren:x.vytvoren||null}}
 function overHeslo(u,heslo){if(u.vychozi&&!u.hash)return Promise.resolve(heslo==='kemp');return otisk(u.sul,heslo).then(function(h){return h===u.hash})}
 function nastavHeslo(u,heslo){u.sul=novaSul();return otisk(u.sul,heslo).then(function(h){u.hash=h;delete u.vychozi;return u})}
 function kontrolaHesla(h){if(!h||h.length<8)return 'Heslo musí mít aspoň 8 znaků.';return ''}
@@ -89,7 +89,7 @@ KK.auth={
   meSync:function(){var s=LS.get('session',null);if(!s||s.do<=Date.now()){if(s)LS.del('session');return null}
     var x=seznamU().filter(function(y){return y.id===s.id})[0];
     if(!x||x.aktivni===false){LS.del('session');return null}
-    s.jmeno=x.jmeno;s.role=x.role;s.vychozi=!!x.vychozi;s.login=x.login;s.email=x.email||'';s.vzhled=vzhledU(x);s.platby=x.role==='admin'||x.platby!==false;return s},
+    s.jmeno=x.jmeno;s.role=x.role;s.vychozi=!!x.vychozi;s.login=x.login;s.email=x.email||'';s.vzhled=vzhledU(x);s.platby=x.role==='admin'||x.platby!==false;s.souhrny=x.role==='admin'||x.souhrny!==false;return s},
   /* přihlášený má jednoduchou aplikaci pro obsluhu (ne celou administraci) */
   aplikace:function(){var s=KK.auth.meSync();return !!s&&s.vzhled==='aplikace'},
   /* smí uživatel spravovat daný web (aspoň jednu sekci Upravit web / Galerie / SEO)? */
@@ -111,7 +111,7 @@ KK.uzivatele={
     if(!/^[a-z0-9._@-]{3,}$/i.test(login))return Promise.reject(new Error('Přihlašovací jméno: aspoň 3 znaky, bez mezer a diakritiky.'));
     if(u.some(function(y){return y.login.toLowerCase()===login.toLowerCase()}))return Promise.reject(new Error('Toto přihlašovací jméno už existuje.'));
     var e=kontrolaHesla(z.heslo);if(e)return Promise.reject(new Error(e));
-    var x={id:'u'+Date.now().toString(36),jmeno:z.jmeno.trim(),login:login,email:String(z.email||'').trim(),role:KK.ROLE[z.role]?z.role:'obsluha',vzhled:z.vzhled==='aplikace'?'aplikace':'plna',platby:z.platby!==false,aktivni:true,vytvoren:Date.now()};if(z.prava&&typeof z.prava==='object'){x.prava={};Object.keys(KK.SEKCE).forEach(function(k){if(k!=='prehled')x.prava[k]=z.prava[k]?1:0})}
+    var x={id:'u'+Date.now().toString(36),jmeno:z.jmeno.trim(),login:login,email:String(z.email||'').trim(),role:KK.ROLE[z.role]?z.role:'obsluha',vzhled:z.vzhled==='aplikace'?'aplikace':'plna',platby:z.platby!==false,souhrny:z.souhrny!==false,aktivni:true,vytvoren:Date.now()};if(z.prava&&typeof z.prava==='object'){x.prava={};Object.keys(KK.SEKCE).forEach(function(k){if(k!=='prehled')x.prava[k]=z.prava[k]?1:0})}
     return nastavHeslo(x,z.heslo).then(function(){u.push(x);ulozU(u);historie('Uživatelé','přidán '+x.jmeno+' ('+KK.ROLE[x.role]+')');return verejny(x)})},
   uprav:function(id,z,sebe){if(!sebe&&!KK.auth.muze('uzivatele'))return Promise.reject(new Error('Uživatele spravuje jen správce.'));
     var u=seznamU(),x=u.filter(function(y){return y.id===id})[0];if(!x)return Promise.reject(new Error('Uživatel neexistuje.'));
@@ -122,6 +122,7 @@ KK.uzivatele={
     if(!sebe&&z.aktivni!=null)x.aktivni=!!z.aktivni;
     if(!sebe&&z.vzhled!=null)x.vzhled=z.vzhled==='aplikace'?'aplikace':'plna';
     if(!sebe&&z.platby!=null)x.platby=!!z.platby;
+    if(!sebe&&z.souhrny!=null)x.souhrny=!!z.souhrny;
     if(!sebe&&z.prava&&typeof z.prava==='object'){x.prava={};Object.keys(KK.SEKCE).forEach(function(k){if(k!=='prehled')x.prava[k]=z.prava[k]?1:0})}
     if(!aktivniSpravci(u).length){var p=JSON.parse(pred);x.role=p.role;x.aktivni=p.aktivni;return Promise.reject(new Error('Musí zůstat aspoň jeden aktivní správce.'))}
     ulozU(u);if(!sebe)historie('Uživatelé','upraven '+x.jmeno);return Promise.resolve(verejny(x))},

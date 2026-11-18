@@ -234,7 +234,7 @@ Každý text PE-LA má `data-t="klic"` (stejný klíč jako v `lang/cs.php`), ka
 Upravený text s cenou se ukládá se značkou `{price:klic}`, takže se cena dál bere z ceníku.
 
 ## Aplikace pro obsluhu (admin/obsluha.js)
-- Uživatel má navíc `vzhled` (`'aplikace'` | `'plna'`) a `platby` (bool – smí potvrzovat zálohy a doplatky). Správce má vždy plnou administraci.
+- Uživatel má navíc `vzhled` (`'aplikace'` | `'plna'`) a `platby` (bool – smí potvrzovat zálohy a doplatky) a `souhrny` (bool – smí vidět finanční souhrny: Sezóna v číslech na Přehledu, Kalkulace, souhrny tržeb; správce vždy; výchozí true). Server musí `souhrny` hlídat i v API (nevracet tržby a kalkulace uživateli bez práva). Správce má vždy plnou administraci.
 - S `vzhled='aplikace'` smí účet jen sekce `ubytovani`, `pujcovna`, `doprava` (+ vlastní účet) – na serveru to musí hlídat i middleware/Policy, ne jen vzhled.
 - Akce z aplikace jsou stejné úpravy rezervace jako v plné administraci (stav `uby`/`odj`, `platba.stav`, `lode.vydano`/`lode.vraceno`) se zápisem do `hist`.
 - Nově: `doprava.hotovo` a `vyzved.hotovo` = `{kdy, kdo}` – obsluha označila odvoz na start / vyzvednutí v cíli jako hotové.
