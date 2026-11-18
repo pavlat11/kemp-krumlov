@@ -496,3 +496,49 @@ select[data-u=role]{min-width:132px}
 .ob-hl-z:hover{background:var(--cs)}
 @media (max-width:640px){.ob-hl-j{display:none}.ob-hl li{grid-template-columns:auto 44px minmax(0,1fr) auto;grid-template-areas:"o c n z" "o c t t"}.ob-hl-ok{grid-area:o}.ob-hl-c{grid-area:c}.ob-hl li .ob-jm{grid-area:n}.ob-hl li>.ob-ch{display:none}.ob-hl-t{grid-area:t;white-space:normal}.ob-hl-z{grid-area:z}}
 @media print{.ob-ikb,.ob-hl-z{display:none!important}}
+
+/* Ubytování – karty v novém stylu */
+.ob-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 18px}
+.ob-tiles>div{display:flex;align-items:baseline;gap:8px;padding:16px 18px;border-radius:16px;background:#fff;color:var(--mut);font-size:14px;box-shadow:0 1px 2px rgba(20,32,26,.06)}
+.ob-tiles b{font-size:26px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.ob-tiles .t-pri b{color:#2F6B4F}.ob-tiles .t-odj b{color:#A3501A}.ob-tiles .t-kc b{color:#B3261E;font-size:22px}
+@media (max-width:640px){.ob-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.ob-tiles>div{padding:12px 14px}.ob-tiles b{font-size:22px}.ob-tiles .t-kc b{font-size:18px}}
+.ob-pan{container-type:inline-size}
+.ob-pan .ob-r.ob-u2{display:grid;grid-template-columns:64px minmax(0,1fr) auto;grid-template-areas:"mk t kc" "a a a";align-items:start;column-gap:14px;row-gap:12px;padding:16px}
+.ob-mk{grid-area:mk;position:relative;height:64px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--cs);color:var(--cd);line-height:1.1}
+.k-odj .ob-mk{background:#FBE9DD;color:#7A3A10}.k-pri .ob-mk{background:#E3EFE7;color:#1F4D36}
+.ob-mk b{font-size:21px;font-weight:800}.ob-mk small{font-size:11px;color:var(--mut);text-align:center}
+.ob-mk i{position:absolute;top:-6px;right:-6px;padding:1px 6px;border-radius:999px;background:var(--ink);color:#fff;font-style:normal;font-size:11px;font-weight:800}
+.ob-u-t{grid-area:t;min-width:0;display:flex;flex-direction:column;gap:5px}
+.ob-u-t .ob-r-n{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ob-u-t .ob-r-n b{font-size:18px;font-weight:800;white-space:normal}
+.ob-u-t>small{font-size:14px;color:var(--mut)}
+.ob-cas{display:inline-flex;align-items:center;gap:4px;color:var(--ink);font-weight:800}
+.ob-cas svg{color:#B3261E}
+.ob-ch2{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:8px;background:#EEF1F4;color:#3C4740;font-size:13px}
+.ob-ch2 svg{color:#1D5A85}
+.ob-kc{grid-area:kc;display:flex;flex-direction:column;align-items:flex-end;text-align:right;white-space:nowrap}
+.ob-kc b{font-size:18px;font-weight:800;color:#B3261E}.ob-kc small{font-size:12px;font-weight:700;color:var(--mut)}
+.ob-kc.ok{flex-direction:row;align-items:center;gap:3px;color:#2F7A4F;font-weight:800;font-size:14px}
+.ob-u-a{grid-area:a;display:flex;gap:10px;padding-top:12px;border-top:1px solid #EDF0ED}
+.ob-u-a .ob-go{flex:1;min-height:50px}
+.ob-tlb{flex:none;width:50px;min-height:50px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;background:#F2F4F1;color:#C2185B}
+.ob-tlb:hover{background:#E9EDE9}
+@container (min-width:620px){
+  .ob-pan .ob-r.ob-u2{grid-template-columns:64px minmax(0,1fr) 210px;grid-template-areas:"mk t kc" "mk t a"}
+  .ob-u-a{padding-top:0;border-top:0;justify-content:flex-end}
+  .ob-u-a .ob-tlb{display:none}
+}
+.ob-pan-nic{margin:10px 10px 4px;color:var(--mut);font-size:14px}
+.ob-hu{margin-top:8px;border-radius:16px;background:#fff}
+.ob-hu summary{display:flex;align-items:center;gap:6px;padding:14px 16px;font-weight:800;color:#3C4740;cursor:pointer;list-style:none}
+.ob-hu summary::-webkit-details-marker{display:none}
+.ob-hu summary svg{color:#2F7A4F}
+.ob-hu summary::after{content:'▾';margin-left:auto;color:var(--mut);font-size:13px}
+.ob-hu:not([open]) summary::after{transform:rotate(-90deg)}
+.ob-hu ul{margin:0;padding:0 8px 6px;list-style:none}
+.ob-hu li{display:flex;align-items:center;gap:8px;padding:10px 8px;border-top:1px solid #EDF0ED;cursor:pointer}
+.ob-hu li .ob-hl-ok{width:auto;height:auto;background:none}
+.ob-hu-j{flex:1;color:var(--mut)}
+@media print{.ob-tlb,.ob-u-a,.ob-hu{display:none!important}}
+@media (max-width:640px){.ob-tiles>div{flex-wrap:wrap;gap:2px 6px}.ob-tiles .t-kc b{white-space:nowrap}.ob-pan .ob-r.ob-u2{column-gap:10px}.ob-mk{height:56px}.ob-pan .ob-r.ob-u2{grid-template-columns:56px minmax(0,1fr) auto}}
