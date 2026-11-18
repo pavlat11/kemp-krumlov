@@ -78,6 +78,8 @@ function jazykKlik(m){$$('[data-jz]',m).forEach(function(b){b.addEventListener('
 
 /* ---------- kostra ---------- */
 var VIEWS={rez_nastaveni:rezervace,upravit:upravit,prehled:prehled,galerie:galerie,seo:seo,cenik:cenik,rezervace:rezervace,ubytovani:rezervace,pujcovna:rezervace,doprava:rezervace,nastaveni:nastaveni,zaznam:zaznam,kalkulace:kalkulace,uzivatele:uzivatele,ucet:ucet};
+/* finanční souhrny a kalkulace jde vypnout (Nastavení a záloha, nebo přímo na Přehledu) – platí pro tento prohlížeč */
+var citSkryt=function(){return +KK.LS.get('cit.skryt',0)===1};
 var NAV=[['Web',[['prehled','Přehled'],['upravit','Upravit web'],['galerie','Galerie'],['seo','SEO']]],['Provoz',[['rezervace','Rezervace'],['ubytovani','Ubytování'],['pujcovna','Půjčovna lodí'],['doprava','Doprava'],['rez_nastaveni','Nastavení rezervací'],['cenik','Ceník a kapacity'],['kalkulace','Kalkulace']]],['Systém',[['zaznam','Záznam akcí'],['nastaveni','Nastavení a záloha'],['uzivatele','Uživatelé']]]];
 function shell(s){
   /* bez práv k webu PE-LA zpět na kemp (Provoz je společný) */
@@ -89,7 +91,7 @@ function shell(s){
   document.documentElement.classList.remove('ob-on');
   app.innerHTML='<div class="top"><div class="logo"><i>'+(PELA?LOGO_PELA:SV(IC.lode,20))+'</i>'+NAZEV+'</div>'+prepinac('wsw-top')+'<button type="button" id="mb" aria-label="Otevřít menu" aria-expanded="false" aria-controls="side">'+SV(IC.menu,22)+'</button></div>'+
   '<div class="app"><nav class="side" id="side" aria-label="Administrace"><div class="logo"><i>'+(PELA?LOGO_PELA:SV(IC.lode,22))+'</i><span>'+NAZEV+'<small>Administrace</small></span></div>'+prepinac('')+
-  NAV.map(function(g){var pol=g[1].filter(function(n){return KK.auth.muze(n[0])});if(!pol.length)return '';return '<div class="nav-t">'+g[0]+'</div>'+pol.map(function(n){return '<a class="nv" href="#'+n[0]+'">'+SV(IC[n[0]],19)+n[1]+(n[2]?'<span class="soon">brzy</span>':'')+'</a>'}).join('')}).join('')+
+  NAV.map(function(g){var pol=g[1].filter(function(n){return KK.auth.muze(n[0])&&!(n[0]==='kalkulace'&&citSkryt())});if(!pol.length)return '';return '<div class="nav-t">'+g[0]+'</div>'+pol.map(function(n){return '<a class="nv" href="#'+n[0]+'">'+SV(IC[n[0]],19)+n[1]+(n[2]?'<span class="soon">brzy</span>':'')+'</a>'}).join('')}).join('')+
   '<a class="nv" href="'+WEB+'index.html" target="_blank" rel="noopener">'+SV(IC.ven,19)+(PELA?'Zobrazit web PE-LA':'Zobrazit web')+'</a>'+
   '<div class="who"><a href="#'+(KK.auth.muze('uzivatele')?'uzivatele':'ucet')+'" class="who-n" title="Můj účet a heslo"><b>'+esc(s.jmeno)+'</b><small>'+esc(KK.ROLE[s.role]||s.role)+'</small></a><button type="button" id="lo">Odhlásit</button></div></nav>'+
   '<main id="main" tabindex="-1"></main></div>';
@@ -206,7 +208,7 @@ function prehled(m){
       var graf='<div class="card pv-g"><div class="pv-gh"><h2>Obsazenost na 14 dní</h2>'+(REZ_ODKAZY?'<a href="#rezervace"'+dlz('kal')+'>Otevřít kalendář →</a>':'')+'</div><div class="pv-b">'+dny.map(function(d){var x=obs(ISO(d)),p=mista.length?Math.round(x/mista.length*100):0,we=d.getDay()%6===0;return '<div class="pv-c'+(we?' we':'')+(ISO(d)===dnes?' tod':'')+'" title="'+d.getDate()+'. '+(d.getMonth()+1)+'.: obsazeno '+x+' z '+mista.length+' míst"><span class="pv-p">'+p+'</span><i style="height:'+Math.max(2,p)+'%" class="'+(p>=90?'pl':p>=60?'st':'')+'"></i><small>'+DK[d.getDay()]+'<br>'+d.getDate()+'.</small></div>'}).join('')+'</div><p class="mut pv-lg">Procento obsazených chatek, podsadových stanů a teepee na noc.</p></div>';
       var rok=nd.getFullYear(),sez=function(y){var L=H.filter(function(x){return x.od.slice(0,4)===String(y)}),n=0,c=0;L.forEach(function(x){n+=Math.round((D0(x.do)-D0(x.od))/864e5);c+=+x.cena||0});return [L.length,n,c]};
       var s1=sez(rok),s2=sez(rok+1),nov=H.filter(function(x){return x.zdroj==='web'&&x.vytvoreno&&Date.now()-x.vytvoreno<7*864e5}).length;
-      var sz='<div class="card pv-z"><h2>Sezóna v číslech</h2><table class="pv-zt"><thead><tr><th></th><th>'+rok+'</th><th>'+(rok+1)+'</th></tr></thead><tbody>'+
+      var sz=citSkryt()?'<div class="card pv-z pv-zs"><div class="pv-gh"><h2>Sezóna v číslech</h2><button type="button" class="btn sm gh" data-cit="0">'+SV('<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',16)+'Zobrazit</button></div><p class="mut" style="margin:8px 0 0">Souhrny tržeb a kalkulace jsou skryté.</p></div>':'<div class="card pv-z"><div class="pv-gh"><h2>Sezóna v číslech</h2><button type="button" class="btn sm gh" data-cit="1" title="Skrýt finanční souhrny a kalkulace">'+SV('<path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 4M6.1 6.1A17 17 0 0 0 2 12s4 7 10 7a9.7 9.7 0 0 0 4.1-.9"/>',16)+'Skrýt</button></div><table class="pv-zt"><thead><tr><th></th><th>'+rok+'</th><th>'+(rok+1)+'</th></tr></thead><tbody>'+
         '<tr><th>Rezervací</th><td>'+s1[0]+'</td><td>'+s2[0]+'</td></tr><tr><th>Nocí celkem</th><td>'+s1[1]+'</td><td>'+s2[1]+'</td></tr><tr><th>Za ubytování</th><td>'+kc(s1[2])+'</td><td>'+kc(s2[2])+'</td></tr></tbody></table>'+
         '<p class="mut pv-lg">Bez zrušených rezervací a blokací. Za posledních 7 dní přišlo z webu '+nov+' '+pl(nov,'nová rezervace','nové rezervace','nových rezervací')+'.</p></div>';
       prov+='<div class="grid pv-r">'+graf+sz+'</div>';
@@ -218,7 +220,7 @@ function prehled(m){
       '<li class="ok"><a href="'+WEB+'index.html" target="_blank" rel="noopener"><b>Web</b><span>Otevřít v novém okně ↗</span></a></li></ul></div>';
     var hi='<div class="card"><h2>Poslední změny</h2>'+(h.length?'<ul class="hist">'+h.slice(0,6).map(function(x){return '<li><time>'+cas(x.kdy)+'</time><span><b>'+esc(x.co)+'</b> – '+esc(x.popis)+'</span></li>'}).join('')+'</ul>':'<p class="mut">Zatím žádné změny.</p>')+'</div>';
     m.innerHTML=hes+h1+prov+hi;
-    m.addEventListener('click',function(e){var a=e.target.closest('[data-pv],[data-rn]');if(!a)return;if(a.dataset.pv){KK.LS.set('rez.tab.ubytovani',a.dataset.pv);if(a.tagName==='A'){e.preventDefault();location.hash='#ubytovani'}}if(a.hasAttribute('data-rn'))sessionStorage.setItem('kkt.rez.nova','1')});
+    m.addEventListener('click',function(e){var c=e.target.closest('[data-cit]');if(c){KK.LS.set('cit.skryt',+c.dataset.cit);shell(KK.auth.meSync());return}var a=e.target.closest('[data-pv],[data-rn]');if(!a)return;if(a.dataset.pv){KK.LS.set('rez.tab.ubytovani',a.dataset.pv);if(a.tagName==='A'){e.preventDefault();location.hash='#ubytovani'}}if(a.hasAttribute('data-rn'))sessionStorage.setItem('kkt.rez.nova','1')});
   });
 }
 
@@ -1585,6 +1587,7 @@ function ucet(m){
    Rezervace se do období počítají podle dne příjezdu (u samotných lodí podle dne půjčení).
    Obsazenost se počítá po nocích v období. Zahrnuje i uzavřené sezóny z archivu. */
 function kalkulace(m){var R=window.KKR;if(!R||!window.KKC){m.innerHTML='<div class="card">Rezervace nejsou k dispozici.</div>';return}
+ if(citSkryt()){m.innerHTML='<div class="ph"><div><h1>Kalkulace</h1></div></div><div class="card"><h2>Kalkulace jsou skryté</h2><p class="mut">Finanční souhrny a kalkulace jsou vypnuté. Zapnout je může správce v Nastavení a záloha.</p>'+(KK.auth.muze('uzivatele')?'<button type="button" class="btn pri" id="citz">Zobrazit kalkulace</button>':'')+'</div>';var z=$('#citz');if(z)z.addEventListener('click',function(){KK.LS.set('cit.skryt',0);shell(KK.auth.meSync())});return}
  var kc=function(n){return Math.round(n||0).toLocaleString('cs-CZ').replace(/\s/g,' ')+' Kč'},
   pc=function(a,b){return b?Math.round(a/b*100):0},
   I=function(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)},
@@ -1698,7 +1701,9 @@ function nastaveni(m){
   '<div class="grid g2"><div class="card"><h2>Kde jsou data</h2><p><span class="badge warn">Náhled</span> Vše je uložené jen v tomto prohlížeči. Jiný počítač ani návštěvníci webu změny neuvidí.</p><p class="mut">Po spuštění na serveru se data budou ukládat do databáze a uvidí je všichni. Zálohu odsud pak jde na server nahrát.</p></div>'+
   '<div class="card"><h2>Záloha</h2><p class="mut">Stáhne soubor .json se všemi úpravami.</p><div class="row"><button class="btn pri" id="ex">Stáhnout zálohu</button><label class="btn gh" for="im">Nahrát zálohu</label><input type="file" id="im" accept=".json,application/json" hidden></div></div>'+
   '<div class="card"><h2>Začít znovu</h2><p class="mut">Vyberte, co se má vrátit do původní podoby. Co nezaškrtnete, zůstane beze změny.</p><form id="rsf">'+RS_SKUPINY.map(function(s){return '<label class="szn-c"><input type="checkbox" class="cb" name="rs" value="'+s[0]+'"'+(s[3]?' checked':'')+'> <span><b>'+s[1]+'</b><small class="mut" style="display:block">'+s[2]+'</small></span></label>'}).join('')+'</form><div class="row" style="margin-top:12px"><button class="btn dan" id="rs" type="button">Smazat vybrané</button></div></div></div>'+
+  (KK.auth.muze('uzivatele')?'<div class="card" style="margin-top:18px"><h2>Finanční souhrny a kalkulace</h2><p class="mut">Sezóna v číslech na Přehledu, stránka Kalkulace a souhrny tržeb. Když je vypnete, nikdo je neuvidí, dokud je tady nezapnete. Platí jen v tomto prohlížeči.</p><label class="sw"><input type="checkbox" id="citsw"'+(citSkryt()?'':' checked')+'><span aria-hidden="true"></span>Zobrazovat finanční souhrny a kalkulace</label></div>':'')+
   (window.KKR&&KK.auth.muze('uzivatele')?'<div id="szn"></div>':'');
+  if($('#citsw'))$('#citsw').addEventListener('change',function(e){KK.LS.set('cit.skryt',e.target.checked?0:1);KK.zaznam('Nastavení','finanční souhrny: '+(e.target.checked?'zobrazeny':'skryty'));shell(KK.auth.meSync())});
   $('#ex').addEventListener('click',function(){KK.export().then(function(d){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:'application/json'}));a.download='kemp-krumlov-zaloha-'+new Date().toISOString().slice(0,10)+'.json';a.click();KK.zaznam('Záloha','stažena');toast('Záloha stažena.')})});
   $('#im').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;var inpZ=e.target;ptej('Nahrát zálohu?\n\nSoučasné úpravy webu, ceník i rezervace se přepíšou obsahem souboru.',{ok:'Nahrát zálohu',nebezp:1}).then(function(ok){if(!ok){inpZ.value='';return}
     f.text().then(function(t){return KK.import(JSON.parse(t))}).then(function(){ZDROJ=null;toast('Záloha obnovena.')}).catch(function(x){toast(x.message||'Soubor nejde načíst.',1)});inpZ.value=''})});
@@ -1730,7 +1735,7 @@ function sezona(box){var R=window.KKR,kc=function(n){return Math.round(n||0).toL
  function kresli(){var ar=R.archiv(),AR=Object.keys(ar).sort().reverse(),K=vyb?R.sezonaKontrola(vyb):null,pr=K?K.uby.length+K.lode.length+K.budouci.length:0;
   box.innerHTML='<div class="card szn" style="margin-top:18px"><div class="szn-h"><div><h2>Sezóna</h2><p class="mut">Po skončení sezóny ji uzavřete: rezervace se přesunou do archivu, přehledy a seznamy začnou nanovo a čísla rezervací poběží od R'+String((vyb||ted)+1).slice(2)+'-0001. Rezervace na další rok zůstanou.</p></div>'+
    (roky.length>1?'<label class="f szn-r">Sezóna<select class="inp" id="sznR">'+roky.map(function(y){return '<option'+(y===vyb?' selected':'')+'>'+y+'</option>'}).join('')+'</select></label>':'')+'</div>'+
-   (K?'<h3 class="szn-t">Sezóna '+vyb+'</h3>'+SZ(K.souhrn)+
+   (K?'<h3 class="szn-t">Sezóna '+vyb+'</h3>'+(citSkryt()?'<p class="mut">Souhrny tržeb jsou skryté.</p>':SZ(K.souhrn))+
     (pr?'<div class="szn-w"><b>Před uzavřením zkontrolujte:</b><ul>'+(K.uby.length?'<li><b>'+K.uby.length+'</b> '+pl(K.uby.length,'host je','hosté jsou','hostů je')+' pořád ubytovaných – odhlaste je.</li>':'')+(K.lode.length?'<li><b>'+K.lode.length+'</b> '+pl(K.lode.length,'rezervace má','rezervace mají','rezervací má')+' lodě ještě venku – vraťte je.</li>':'')+(K.budouci.length?'<li><b>'+K.budouci.length+'</b> '+pl(K.budouci.length,'rezervace ještě neproběhla','rezervace ještě neproběhly','rezervací ještě neproběhlo')+'.</li>':'')+'</ul></div>':'<p class="szn-ok">✓ Vše je vyřízené, sezónu můžete uzavřít.</p>')+
     (K.dalsi?'<p class="mut">'+K.dalsi+' '+pl(K.dalsi,'rezervace','rezervace','rezervací')+' na další rok zůstane v systému.</p>':'')+
     '<div class="row"><button type="button" class="btn dan" id="sznU">Uzavřít sezónu '+vyb+'…</button></div>':'<p class="mut">Zatím nejsou žádné rezervace.</p>')+
