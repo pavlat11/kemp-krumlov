@@ -193,7 +193,7 @@ html.ob-on,html.ob-on body{background:#F2F4F1}
   .ob-nv{display:flex;align-items:center;gap:12px;min-height:52px;padding:0 14px;border-radius:14px;color:#3C4740;text-decoration:none;font-weight:700;font-size:15.5px}
   .ob-nv:hover{background:#F2F4F1}
   .ob-nv[aria-current]{background:var(--c);color:#fff}
-  .ob-nv:not(.m-u):not(.m-l):not(.m-d)[aria-current]{background:#14201A}
+  .ob-nv:not(.m-u):not(.m-l):not(.m-d):not(.m-r)[aria-current]{background:#14201A}
   .ob-who{margin-top:auto;display:flex;align-items:center;gap:10px;padding:12px 8px 0;border-top:1px solid var(--line)}
   .ob-who span{flex:1;min-width:0;display:flex;flex-direction:column}
   .ob-who b{font-size:14px}.ob-who small{font-size:12px;color:var(--mut)}
@@ -327,7 +327,7 @@ html.ob-on,html.ob-on body{background:#F2F4F1}
 .ob-hr .ob-mi{--cs:#EEF1EE;--cd:#3C4740}
 .ob-hr .ob-st{color:#3C4740}
 .ob-cis{font-size:12px;color:var(--mut);font-weight:600}
-.ob-nv:not(.m-u):not(.m-l):not(.m-d)[aria-current]{background:#14201A;color:#fff}
+.ob-nv:not(.m-u):not(.m-l):not(.m-d):not(.m-r)[aria-current]{background:#14201A;color:#fff}
 /* detail rezervace z hledání – panel vždy přes obrazovku */
 .ob-skr .rpan{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);max-height:none;border-radius:0;z-index:70;box-shadow:-18px 0 40px -18px rgba(15,34,25,.45)}
 .ob-skr{--bg:#f6f3ec;--line:#e6dfd0;--mut:#5d6a62;--ok:#2f7d4c;--ink:initial}
@@ -384,3 +384,39 @@ html.ob-on,html.ob-on body{background:#F2F4F1}
 .ob-tb{min-width:0}
 .ob-tb span{white-space:nowrap}
 @media (min-width:1200px){.ob-2s.jeden{grid-template-columns:minmax(0,1fr)}}
+
+/* REZERVACE */
+.m-r{--c:#5E4A8C;--cs:#ECE7F5;--cd:#4A3A70}
+.ob .k-rez{--c:#5E4A8C;--cd:#4A3A70;--cs:#ECE7F5}
+.ob .k-cer{--c:#9E2B20;--cd:#7E1F17;--cs:#FBE3E0}
+.ob .k-sed{--c:#3C4740;--cd:#14201A;--cs:#EEF1EE}
+.ob-ch.r{background:#ECE7F5;color:#4A3A70}
+.ob-ch.cer{background:#FBE3E0;color:#9E2B20}
+.ob-r-a2{grid-area:a;display:flex;flex-wrap:wrap;gap:8px}
+.ob-r-a2 .ob-go{flex:1 1 auto;min-height:46px;text-decoration:none}
+.ob-pan.k-rez{border-top:5px solid var(--c)}
+.ob-akce-r{justify-content:space-between;align-items:center;flex-wrap:wrap}
+.ob-fty{display:flex;flex-wrap:wrap;gap:6px}
+.ob-fty button{min-height:40px;padding:0 14px;border:1.5px solid #CBD3CC;border-radius:999px;background:#fff;color:#3C4740;font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer}
+.ob-fty button[aria-pressed=true]{border-color:#14201A;background:#14201A;color:#fff}
+.ob-gr{display:grid;gap:0 20px}
+@media (min-width:1200px){.ob-gr{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}}
+@media (min-width:640px){.ob-r-a2{justify-self:end;flex-wrap:nowrap}.ob-r-a2 .ob-go{flex:0 0 auto}}
+@media (max-width:639px){.ob-akce-r .ob-go{flex:1 1 100%}}
+.ob-tab .ob-tb{font-size:11px}
+.ob-tab .ob-tb svg{width:22px;height:22px}
+.ob-r .ob-mi.ob-dt{height:auto;min-height:56px;padding:5px 4px;gap:0}
+.ob-r .ob-mi.ob-dt b{font-size:19px;line-height:1.05}
+.ob-r .ob-mi.ob-dt small{font-size:11px}
+.ob-cis{white-space:nowrap}
+@media (min-width:1200px){
+  .ob-2s .ob-r:has(.ob-r-a2),.ob-gr .ob-r:has(.ob-r-a2){grid-template-columns:52px minmax(0,1fr);grid-template-areas:"mi t" "mi a";align-items:start}
+  .ob-2s .ob-r-a2,.ob-gr .ob-r-a2{justify-self:start}
+}
+/* čtyři dlaždice (s Rezervacemi) */
+@media (min-width:640px){
+  .ob-tiles.n4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ob-tiles.n4 .ob-tile{flex-direction:column;align-items:flex-start;min-height:180px;padding:22px}
+  .ob-tiles.n4 .ob-tile-t{margin-top:auto}
+}
+@media (min-width:1200px){.ob-tiles.n4{grid-template-columns:repeat(4,minmax(0,1fr))}.ob-tiles.n4 .ob-tile{min-height:220px}}
