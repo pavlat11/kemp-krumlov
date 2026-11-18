@@ -498,11 +498,11 @@ select[data-u=role]{min-width:132px}
 @media print{.ob-ikb,.ob-hl-z{display:none!important}}
 
 /* Ubytování – karty v novém stylu */
-.ob-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 18px}
-.ob-tiles>div{display:flex;align-items:baseline;gap:8px;padding:16px 18px;border-radius:16px;background:#fff;color:var(--mut);font-size:14px;box-shadow:0 1px 2px rgba(20,32,26,.06)}
-.ob-tiles b{font-size:26px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
-.ob-tiles .t-pri b{color:#2F6B4F}.ob-tiles .t-odj b{color:#A3501A}.ob-tiles .t-kc b{color:#B3261E;font-size:22px}
-@media (max-width:640px){.ob-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.ob-tiles>div{padding:12px 14px}.ob-tiles b{font-size:22px}.ob-tiles .t-kc b{font-size:18px}}
+.ob-sumt{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 18px}
+.ob-sumt>div{display:flex;align-items:baseline;gap:8px;padding:16px 18px;border-radius:16px;background:#fff;color:var(--mut);font-size:14px;box-shadow:0 1px 2px rgba(20,32,26,.06)}
+.ob-sumt b{font-size:26px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.ob-sumt .t-pri b{color:#2F6B4F}.ob-sumt .t-odj b{color:#A3501A}.ob-sumt .t-kc b{color:#B3261E;font-size:22px}
+@media (max-width:640px){.ob-sumt{grid-template-columns:repeat(2,minmax(0,1fr))}.ob-sumt>div{padding:12px 14px}.ob-sumt b{font-size:22px}.ob-sumt .t-kc b{font-size:18px}}
 .ob-pan{container-type:inline-size}
 .ob-pan .ob-r.ob-u2{display:grid;grid-template-columns:64px minmax(0,1fr) auto;grid-template-areas:"mk t kc" "a a a";align-items:start;column-gap:14px;row-gap:12px;padding:16px}
 .ob-mk{grid-area:mk;position:relative;height:64px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--cs);color:var(--cd);line-height:1.1}
@@ -541,8 +541,42 @@ select[data-u=role]{min-width:132px}
 .ob-hu li .ob-hl-ok{width:auto;height:auto;background:none}
 .ob-hu-j{flex:1;color:var(--mut)}
 @media print{.ob-tlb,.ob-u-a,.ob-hu{display:none!important}}
-@media (max-width:640px){.ob-tiles>div{flex-wrap:wrap;gap:2px 6px}.ob-tiles .t-kc b{white-space:nowrap}.ob-pan .ob-r.ob-u2{column-gap:10px}.ob-mk{height:56px}.ob-pan .ob-r.ob-u2{grid-template-columns:56px minmax(0,1fr) auto}}
+@media (max-width:640px){.ob-sumt>div{flex-wrap:wrap;gap:2px 6px}.ob-sumt .t-kc b{white-space:nowrap}.ob-pan .ob-r.ob-u2{column-gap:10px}.ob-mk{height:56px}.ob-pan .ob-r.ob-u2{grid-template-columns:56px minmax(0,1fr) auto}}
 .ob-pl-b{margin-top:6px;display:inline-flex;align-items:center;gap:5px;min-height:34px;padding:0 12px;border:0;border-radius:10px;background:#B3261E;color:#fff;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
 .ob-pl-b:hover{background:#951E18}
 @media print{.ob-pl-b{display:none!important}}
 .ob-pl-b.zal{margin-top:0;background:#A3501A}.ob-pl-b.zal:hover{background:#86400F}
+
+/* Doprava – jízdy */
+.ob-sumt .t-od b{color:#1D5A85}.ob-sumt .t-vy b{color:#A3501A}
+.ob-jz{gap:12px}
+.ob-jz-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ob-jz-h h3{flex:1 1 auto;margin:0;font-size:20px;font-weight:700}
+.ob-jz-h h3 i{font-style:normal;color:var(--mut);font-weight:400}
+.ob-jz-p{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:999px;background:#EEF2F5;color:#3C4740;font-size:13px;font-weight:700}
+.ob-jz-p.zle{background:#FDE7E4;color:#B3261E}
+.ob-jz-s{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:#F2F4F1;color:#3C4740;font-size:13.5px;font-weight:700}
+.ob-jz-s svg{color:#6B4FA0}
+.ob-jz-lid{margin:0;padding:0;list-style:none;border-radius:14px;background:#F4F6F4;overflow:hidden}
+.ob-jz-lid li{display:flex;flex-direction:column;gap:4px;padding:12px 14px;cursor:pointer}
+.ob-jz-lid li+li{border-top:1px solid #E3E8E3}
+.ob-jz-lid li:hover{background:#EEF1EE}
+.ob-jz-n{display:flex;align-items:center;gap:8px}
+.ob-jz-n .ob-jm b{font-size:16.5px;font-weight:800}
+.ob-jz-o{margin-left:auto;color:var(--mut);font-size:14px;white-space:nowrap}
+.ob-jz-lid small{font-size:14px;color:var(--mut)}
+.ob-jz-lid small b{color:#1D5A85;font-weight:800}
+.ob-jz-l{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:14px;background:#E8F0F6}
+.ob-tl li.vy .ob-jz-l{background:#FBEFE6}
+.ob-jz-l>div{display:flex;flex-wrap:wrap;gap:6px}
+.ob-jz-lh{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#1D5A85}
+.ob-tl li.vy .ob-jz-lh{color:#A3501A}
+.ob-jz-l .ob-pl{background:#fff;font-size:16px;padding:6px 11px}
+.ob-jz-l .ob-pv{background:#fff;font-size:13.5px}
+.ob-jz-l.nic{flex-direction:row;align-items:center;gap:8px}.ob-jz-l.nic small{color:var(--mut);font-size:14px}
+.ob-jz-sh{display:flex;align-items:center;gap:8px;margin:0 2px 12px 70px;font-size:14px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.ob-jz-sh.od{color:#1D5A85}.ob-jz-sh.vy{color:#A3501A}
+.ob-jz-sh span{min-width:24px;padding:1px 8px;border-radius:999px;color:#fff;font-size:13px;letter-spacing:0;text-align:center;background:#1D5A85}
+.ob-jz-sh.vy span{background:#A3501A}
+.ob-tl li.hot .ob-jz-h h3{color:var(--mut)}
+@media print{.ob-jz-p{display:none}}
