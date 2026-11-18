@@ -114,7 +114,7 @@ var AKCE={
 /* ---------- kostra aplikace ---------- */
 function moduly(){return KK.APP_SEKCE.filter(function(k){return KK.auth.muze(k)})}
 function sekce(){var h=location.hash.replace(/^#o\/?/,'').split('/')[0],M=moduly();if(h==='hledat')return 'hledat';if(M.length===1)return M[0];return M.indexOf(h)>=0?h:''}
-function navOdkazy(cls){var M=moduly(),s=sekce(),a=[['hledat','Hledat','hledat']];if(M.length>1)a.push(['','Přehled','prehled']);M.forEach(function(k){a.push([k,MOD[k].n,k])});
+function navOdkazy(cls){var M=moduly(),s=sekce(),a=[];if(M.length>1)a.push(['','Přehled','prehled']);M.forEach(function(k){a.push([k,MOD[k].n,k])});a.push(['hledat','Hledat','hledat']);
   return a.map(function(x){return '<a class="'+cls+(MOD[x[0]]?' m-'+MOD[x[0]].c:'')+(x[0]==='hledat'?' ob-nvh':'')+'" href="#o'+(x[0]?'/'+x[0]:'')+'"'+(x[0]===s?' aria-current="page"':'')+'>'+sv(IK[x[2]],24)+'<span>'+x[1]+'</span></a>'}).join('')}
 function kostra(){var nah=ja.role==='admin',M=moduly();
   document.documentElement.classList.add('ob-on');
