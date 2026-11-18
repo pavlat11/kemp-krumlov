@@ -343,7 +343,7 @@ html.ob-on,html.ob-on body{background:#F2F4F1}
 .ob-pan.k-odj,.ob-pan.k-pri{border-top:5px solid var(--c)}
 .ob-pan-h svg{color:var(--c)}
 /* přepínač s ikonami */
-.ob-seg button{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:0 8px}
+.ob-seg button{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 16px;min-height:50px}
 .ob-seg button b{font-weight:inherit}
 .ob-seg button svg{flex:none;opacity:.75}
 .ob-seg button[aria-selected=true] svg{color:var(--c);opacity:1}
@@ -418,12 +418,15 @@ select[data-u=role]{min-width:132px}
 .ob-qw.ma .ob-qx{display:inline-flex}
 .ob-kbd{display:none;flex:none;min-width:24px;height:26px;padding:0 7px;border-radius:7px;background:#F2F4F1;box-shadow:inset 0 -2px 0 #DCE2DC;color:#56625A;font:700 13px/26px 'Plus Jakarta Sans',sans-serif;text-align:center}
 @media (min-width:960px){
-  .ob-bar{flex-direction:row;align-items:center;gap:14px}
-  .ob-bar .ob-seg{flex:0 0 auto}
-  .ob-bar .ob-qw{order:-1;flex:1 1 420px;min-width:300px;max-width:560px}
-  .ob-bar .ob-qw:only-child{flex:1 1 560px}
+  .ob-bar .ob-qw:only-child{max-width:none}
   .ob-qw:not(.ma):not(:focus-within) .ob-kbd{display:inline-block}
   .ob-qw{max-width:none}
+}
+@media (min-width:1180px){
+  .ob-bar{flex-direction:row;align-items:center;gap:14px}
+  .ob-bar .ob-seg{flex:1 1 440px;min-width:380px}
+  .ob-bar .ob-qw{order:-1;flex:1 1 380px;min-width:280px;max-width:520px}
+  .ob-bar .ob-qw:only-child{flex:1 1 100%;max-width:none}
 }
 /* zvýraznění shod v plánku a kalendáři */
 .ob-rz .ob-dim{opacity:.22;filter:grayscale(.7);transition:opacity .15s}

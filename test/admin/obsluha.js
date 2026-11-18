@@ -160,7 +160,7 @@ var hotove=function(n,html){return n?'<details class="ob-hotd"><summary>'+sv(IK.
 var prazdne=function(t){return '<p class="ob-0">'+sv(IK.ok,28)+'<span>'+t+'</span></p>'};
 var tlac=function(cls,attr,txt,hot){return '<button type="button" class="ob-b '+cls+(hot?' hot':'')+'" '+attr+'>'+(hot?sv(IK.ok,20):'')+txt+'</button>'};
 
-function prehled(){var X=data(den),M=moduly(),dz=den===DNES(),h=hl(dz?'Přehled':'Přehled dne',0);
+function prehled(){var X=data(den),M=moduly(),dz=den===DNES(),h=hl(dz?'Přehled':'Přehled dne',0)+'<div class="ob-bar">'+qBox('Hledat rezervaci – jméno, telefon, chatka…')+'</div>';
   var T={ubytovani:[zbyva(X.pri,'pri')+zbyva(X.odj,'odj'),X.pri.length+' '+pl(X.pri.length,'příjezd','příjezdy','příjezdů')+' · '+X.odj.length+' '+pl(X.odj.length,'odjezd','odjezdy','odjezdů')],
     pujcovna:[zbyva(X.vyd,'vyd')+zbyva(X.vra,'vra'),X.vyd.length+' '+pl(X.vyd.length,'výdej','výdeje','výdejů')+' · '+X.vra.length+' '+pl(X.vra.length,'vrácení','vrácení','vrácení')],
     doprava:[X.jiz.filter(function(g){return !g.hot}).length+X.vyz.filter(function(g){return !g.hot}).length,X.jiz.length+' '+pl(X.jiz.length,'odvoz','odvozy','odvozů')+' · '+X.vyz.length+' '+pl(X.vyz.length,'vyzvednutí','vyzvednutí','vyzvednutí')]};
@@ -252,7 +252,7 @@ function zvyrazni(q,skrol){var rz=$('#obrz',box);if(!rz)return -1;var sl=q?q.spl
   if(skrol&&prvni)prvni.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});return Object.keys(n).length}
 function qStav(i,q,n){var w=i.closest('.ob-qw');w.classList.toggle('ma',!!q);var c=$('.ob-qn',w);c.textContent=q?(n?n+' '+pl(n,'shoda','shody','shod'):'nic'):'';c.classList.toggle('nic',!!q&&!n)}
 var qPosl='';
-function filtruj(){var i=$('.ob-qi',box);if(!i)return;fq[sekce()]=i.value;
+function filtruj(){var i=$('.ob-qi',box);if(!i)return;if(!sekce()){if(i.value.trim()){hq=i.value;location.hash='#o/hledat'}return}fq[sekce()]=i.value;
   if($('#obrz',box)){var qq=bezD(i.value).trim(),nn=zvyrazni(qq,qq!==qPosl);qPosl=qq;qStav(i,qq,nn);var zz=$('.ob-fq0',box);if(zz)zz.hidden=!(qq&&!nn);return}var q=bezD(i.value).trim(),sl=q?q.split(/\s+/):[],vse=$$('[data-q]',box),n=0;
   vse.forEach(function(el){var ok=sl.every(function(w){return el.dataset.q.indexOf(w)>=0});el.hidden=!ok;if(ok)n++});
   $$('.ob-pan,.ob-hotd,.ob-tl-2>section,.ob-list,.ob-tl',box).forEach(function(g){var d=$$('[data-q]',g);if(!d.length)return;var vid=d.some(function(x){return !x.hidden});g.hidden=!vid;if(g.tagName==='DETAILS'&&q&&vid)g.open=true});
@@ -266,7 +266,7 @@ var hq='';
 var qT=function(r){return esc(bezD([r.jmeno,r.telefon,String(r.telefon||'').replace(/\s/g,''),r.email,r.cislo,mistaTxt(r),(r.mista||[]).map(function(m){return m.replace('-',' ')}).join(' '),sLod(r)?R.lodeKusyTxt(r.lode.kusy):''].join(' ')))};
 var bezD=function(t){return String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')};
 function hledat(){return hl('Hledat',1,1)+'<label class="ob-q">'+sv(IK.hledat,22)+'<span class="sr">Hledat</span><input id="obq" type="search" placeholder="Jméno, telefon, chatka, číslo rezervace…" autocomplete="off" value="'+esc(hq)+'"></label><div id="obqv" aria-live="polite"></div>'}
-function hledatPo(){var i=$('#obq',box);if(!i)return;var vys=function(){hq=i.value;$('#obqv',box).innerHTML=vysledky(hq)};i.addEventListener('input',vys);vys();try{i.setSelectionRange(i.value.length,i.value.length)}catch(e){}}
+function hledatPo(){var i=$('#obq',box);if(!i)return;var vys=function(){hq=i.value;$('#obqv',box).innerHTML=vysledky(hq)};i.addEventListener('input',vys);vys();try{i.focus();i.setSelectionRange(i.value.length,i.value.length)}catch(e){}}
 function vysledky(q){q=bezD(q).trim();if(q.length<2)return '<p class="ob-sum">Napište aspoň 2 znaky. Hledá se ve jménu, telefonu, e-mailu, čísle rezervace, místě (např. „chatka 7“) i datu.</p>';
   var dn=DNES(),slova=q.split(/\s+/),L=R.vse().filter(function(r){if(r.stav==='blk')return false;var t=bezD([r.jmeno,r.telefon,String(r.telefon||'').replace(/\s/g,''),r.email,r.cislo,mistaTxt(r),kr(r.od),kr(r.do),r.lode&&R.lodePocet(r.lode)?'lode '+R.lodeKusyTxt(r.lode.kusy)+' '+kr(r.lode.den):''].join(' '));return slova.every(function(w){return t.indexOf(w)>=0})});
   L.sort(function(a,b){var x=Math.abs(D(a.od)-D(dn)),y=Math.abs(D(b.od)-D(dn));return x-y});
