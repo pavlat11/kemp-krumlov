@@ -363,3 +363,13 @@ html.ob-on,html.ob-on body{background:#F2F4F1}
 .ob-rz .rq{display:none}
 @media (min-width:960px){.ob-qw{max-width:760px}}
 .ob .ob-q input:focus,.ob .ob-q input:focus-visible{outline:none}
+
+/* klik na rezervaci = detail */
+.ob-r[data-det],.ob-k[data-det],.ob-lid li[data-det]{cursor:pointer}
+.ob-r[data-det]:hover{background:#FAFBFA}
+.ob-k[data-det]:hover{box-shadow:0 4px 14px rgba(20,32,26,.12)}
+.ob-jm{border:0;background:none;padding:0;margin:0;font:inherit;color:inherit;text-align:left;cursor:pointer;min-width:0}
+.ob-jm:hover,.ob-jm:hover b{text-decoration:underline;text-underline-offset:3px}
+.ob-r-n .ob-jm b{font-size:16px;font-weight:800}
+.ob-k-n .ob-jm b{font-size:17px;font-weight:800}
+.ob-lid .ob-jm{font-weight:600}

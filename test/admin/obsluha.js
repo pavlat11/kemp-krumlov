@@ -178,8 +178,8 @@ function kartaU(r,typ){var mk=mistoKr(r),hot=typ==='pri'?HOT.pri(r):HOT.odj(r),o
   var b2=!smi||hot?'':cekaZal(r)?'<button type="button" class="ob-mini" data-a="zaloha" data-id="'+r.id+'">Záloha přišla</button>':doplatek(r)?'<button type="button" class="ob-mini" data-a="doplaceno" data-id="'+r.id+'">Doplaceno</button>':'';
   var b=hot?'<button type="button" class="ob-st" data-a="'+(typ==='pri'?'zpetUby':'zpetOdj')+'" data-id="'+r.id+'" title="Vrátit zpět">'+sv(IK.ok,18)+(typ==='pri'?(r.stav==='odj'?'Odjel':'Ubytován'):'Odhlášen')+'</button>'
     :'<button type="button" class="ob-go '+(typ==='pri'?'k-pri':'k-odj')+'" data-a="'+(typ==='pri'?'ubytovat':'odhlasit')+'" data-id="'+r.id+'">'+(typ==='pri'?sv(IK.dovnitr,20)+'Ubytovat':sv(IK.klic,20)+'Odhlásit')+'</button>';
-  return '<div class="ob-r'+(hot?' hot':'')+'"><span class="ob-mi"><small>'+esc(mk.t)+'</small><b>'+esc(mk.n||'')+'</b>'+(mk.vic?'<i>+'+mk.vic+'</i>':'')+'</span>'+
-   '<div class="ob-r-t"><span class="ob-r-n"><b>'+esc(r.jmeno)+'</b>'+(r.telefon?'<a href="tel:'+esc(String(r.telefon).replace(/\s/g,''))+'" class="ob-tl2" aria-label="Zavolat – '+esc(r.jmeno)+'">'+sv(IK.tel,15)+'</a>':'')+'</span><small>'+esc(info)+'</small>'+
+  return '<div class="ob-r'+(hot?' hot':'')+'" data-det="'+r.id+'"><span class="ob-mi"><small>'+esc(mk.t)+'</small><b>'+esc(mk.n||'')+'</b>'+(mk.vic?'<i>+'+mk.vic+'</i>':'')+'</span>'+
+   '<div class="ob-r-t"><span class="ob-r-n">'+'<button type="button" class="ob-jm" data-det="'+r.id+'" title="Detail rezervace"><b>'+esc(r.jmeno)+'</b></button>'+(r.telefon?'<a href="tel:'+esc(String(r.telefon).replace(/\s/g,''))+'" class="ob-tl2" aria-label="Zavolat – '+esc(r.jmeno)+'">'+sv(IK.tel,15)+'</a>':'')+'</span><small>'+esc(info)+'</small>'+
    (!hot&&(ch||b2)?'<span class="ob-r-ch">'+ch+b2+'</span>':'')+(r.zprava&&!hot?'<span class="ob-r-pz">'+sv(IK.zprava,14)+esc(r.zprava)+'</span>':'')+'</div>'+b+'</div>'}
 function ubytovani(){var t=KK.LS.get('o.tab.u','dnes');if(['dnes','plan','kal'].indexOf(t)<0)t='dnes';var X=data(den);
   var odj=X.odj.filter(function(r){return !HOT.odj(r)}),pri=X.pri.filter(function(r){return !HOT.pri(r)}),hot=X.odj.filter(HOT.odj).map(function(r){return [r,'odj']}).concat(X.pri.filter(function(r){return HOT.pri(r)&&!HOT.odj(r)}).map(function(r){return [r,'pri']}));
@@ -202,7 +202,7 @@ function kartaL(r,typ){var l=r.lode,hot=HOT[typ](r),ceka=cekaZal(r),smi=ja.platb
   if(typ==='vyd'){if(hot)b=tlac('','data-a="zpetVyd" data-id="'+r.id+'"','Vydáno',1);else if(ceka)b='<button type="button" class="ob-b" disabled>Vydat až po zaplacení zálohy</button>';else{b=tlac('k-ven','data-a="vydat" data-id="'+r.id+'"',sv(IK.sipven,20)+'Vydat');b2='<button type="button" class="ob-b2" data-a="vydatUpr" data-id="'+r.id+'">Upravit počty</button>'}}
   else{if(hot)b=tlac('','data-a="zpetVyd" data-id="'+r.id+'"','Vráceno',1);else if(!l.vydano)b='<button type="button" class="ob-b" disabled>Lodě nebyly vydány</button>';else{b=tlac('k-zpet','data-a="vratit" data-id="'+r.id+'"',sv(IK.dovnitr,20)+'Vráceno vše');b2='<button type="button" class="ob-b2" data-a="vratitCast" data-id="'+r.id+'">Vrátit jen část</button>'}}
   if(typ==='vra'&&hot)b='<button type="button" class="ob-b hot" disabled>'+sv(IK.ok,20)+'Vráceno</button>';
-  return '<article class="ob-k ob-kl '+(typ==='vyd'?'k-ven':'k-zpet')+(hot?' hot':'')+'"><div class="ob-k-h"><span class="ob-mi cas">'+(kdy?'<b>'+kdy+'</b><small>'+(typ==='vyd'?'odvoz':'vyzved.')+'</small>':'<small>'+(typ==='vyd'?'výdej':'vrácení')+'</small><b>dnes</b>')+'</span><div class="ob-k-n"><b>'+esc(r.jmeno)+'</b><small>'+esc(trasa)+'</small></div>'+tel(r)+'</div>'+
+  return '<article class="ob-k ob-kl '+(typ==='vyd'?'k-ven':'k-zpet')+(hot?' hot':'')+'" data-det="'+r.id+'"><div class="ob-k-h"><span class="ob-mi cas">'+(kdy?'<b>'+kdy+'</b><small>'+(typ==='vyd'?'odvoz':'vyzved.')+'</small>':'<small>'+(typ==='vyd'?'výdej':'vrácení')+'</small><b>dnes</b>')+'</span><div class="ob-k-n">'+'<button type="button" class="ob-jm" data-det="'+r.id+'" title="Detail rezervace"><b>'+esc(r.jmeno)+'</b></button>'+'<small>'+esc(trasa)+'</small></div>'+tel(r)+'</div>'+
    '<ul class="ob-kusy">'+kusyLi(k)+'</ul>'+
    ((pozde||ceka&&typ==='vyd'||jazyk(r))?'<div class="ob-chs">'+(pozde?'<span class="ob-ch zl">Měl vrátit '+kr(posD(r))+'</span>':'')+jazyk(r)+'</div>':'')+
    (ceka&&typ==='vyd'&&!hot?'<div class="ob-zal"><span>Čeká na zálohu'+(r.platba.splatnost?' · propadne '+kr(r.platba.splatnost):'')+'</span>'+(smi?'<button type="button" class="ob-b2" data-a="zaloha" data-id="'+r.id+'">Zaplaceno</button>':'<small>Platbu potvrzuje správce</small>')+'</div>':'')+
@@ -221,7 +221,7 @@ function doprava(){var X=data(den),G=X.jiz.concat(X.vyz).sort(function(a,b){retu
     return '<li class="'+(vy?'vy':'od')+(g.hot?' hot':'')+'"><span class="ob-tl-c">'+(g.cas||'—')+'</span><article class="ob-k"><span class="ob-tag">'+(vy?'Vyzvednutí v cíli':'Odvoz na start')+'</span>'+
      '<h3>'+(vy?esc(R.mistoN(g.misto))+' → kemp':'Kemp → '+esc(R.mistoN(g.misto)))+'</h3>'+
      '<div class="ob-dp"><span>'+sv(IK.lide,18)+'<b>'+g.osob+'</b> '+pl(g.osob,'osoba','osoby','osob')+'</span><span>'+sv(IK.doprava,18)+'<b>'+g.aut+'</b> '+pl(g.aut,'auto','auta','aut')+'</span>'+(nl?'<span>'+sv(IK.pujcovna,18)+'<b>'+nl+'</b> '+pl(nl,'loď','lodě','lodí')+(vy?' naložit':' s sebou')+'</span>':'')+'</div>'+
-     '<ul class="ob-lid">'+g.L.map(function(r){return '<li><span>'+esc(r.jmeno)+' <small>'+(+r[g.kl].osob||0)+' os.</small></span>'+tel(r)+'</li>'}).join('')+'</ul>'+
+     '<ul class="ob-lid">'+g.L.map(function(r){return '<li data-det="'+r.id+'"><span>'+'<button type="button" class="ob-jm" data-det="'+r.id+'" title="Detail rezervace">'+esc(r.jmeno)+'</button>'+'  <small>'+(+r[g.kl].osob||0)+' os.</small></span>'+tel(r)+'</li>'}).join('')+'</ul>'+
      '<div class="ob-k-a">'+(g.hot?tlac('','data-j="'+i+'" data-hot="0"',vy?'Vyzvednuto':'Odvezeno',1):tlac('','data-j="'+i+'" data-hot="1"',vy?'Vyzvednuto':'Odjeto'))+'</div></article></li>'};
   var od=[],vz=[];G.forEach(function(g,i){(g.kl==='vyzved'?vz:od).push(li(g,i))});
   return h+'<ol class="ob-tl ob-tl-v">'+G.map(li).join('')+'</ol><div class="ob-2s ob-tl-2"><section><h2 class="ob-sk-h">Odvoz na start <span>'+od.length+'</span></h2><ol class="ob-tl">'+od.join('')+'</ol></section><section class="m-d"><h2 class="ob-sk-h">Vyzvednutí v cíli <span>'+vz.length+'</span></h2><ol class="ob-tl">'+vz.join('')+'</ol></section></div>'}
@@ -258,7 +258,10 @@ function detail(id){var hid=$('#obskr');if(!hid){hid=document.createElement('div
   if(!hid.otevri)return;hid.otevri(id);var rd=$('#rd',hid);if(!rd)return;
   new MutationObserver(function(m,o){if(rd.hidden){o.disconnect();setTimeout(kresli,30)}}).observe(rd,{attributes:true,attributeFilter:['hidden']});
   var x=$('button',rd);if(x)x.focus()}
-function klik(e){var t=e.target.closest('button,a');if(!t||!A.app.contains(t))return;
+function klik(e){var t=e.target.closest('button,a,input,label,summary,details');
+  /* klik kamkoli na rezervaci (mimo tlačítka) = detail rezervace */
+  if(!t){var d=e.target.closest('[data-det]');if(d&&A.app.contains(d)&&!d.closest('#obrz,#obskr'))detail(d.dataset.det);return}
+  if(!A.app.contains(t)||t.tagName==='INPUT'||t.tagName==='LABEL'||t.tagName==='SUMMARY'||t.tagName==='DETAILS')return;
   if(t.closest('#obrz,#obskr'))return;
   if(t.dataset.nova)return nova(t.dataset.nova,t.dataset.btn);
   if(t.dataset.det)return detail(t.dataset.det); /* plánek a kalendář si klikání obsluhují samy */
