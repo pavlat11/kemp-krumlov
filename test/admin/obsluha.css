@@ -420,3 +420,4 @@ html.ob-on,html.ob-on body{background:#F2F4F1}
   .ob-tiles.n4 .ob-tile-t{margin-top:auto}
 }
 @media (min-width:1200px){.ob-tiles.n4{grid-template-columns:repeat(4,minmax(0,1fr))}.ob-tiles.n4 .ob-tile{min-height:220px}}
+@media (min-width:1200px){.ob-1s{max-width:980px}}
