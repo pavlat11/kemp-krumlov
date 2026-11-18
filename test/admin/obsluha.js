@@ -191,7 +191,7 @@ function ubytovani(){var t=KK.LS.get('o.tab.u','dnes');if(['dnes','plan','kal'].
   var odj=X.odj.filter(function(r){return !HOT.odj(r)}),pri=X.pri.filter(function(r){return !HOT.pri(r)}),hot=X.odj.filter(HOT.odj).map(function(r){return [r,'odj']}).concat(X.pri.filter(function(r){return HOT.pri(r)&&!HOT.odj(r)}).map(function(r){return [r,'pri']}));
   var h=hl('Ubytování',1,1)+bar(seg('u',[['dnes','Seznam',odj.length+pri.length,'seznam'],['plan','Plánek',null,'prehled'],['kal','Kalendář',null,'kal']],t),t==='dnes'?'':'Hledat a zvýraznit – jméno, chatka…');
   if(t!=='dnes')return h+'<div class="ob-rz" id="obrz"></div>';
-  h+='<div class="ob-akce"><button type="button" class="ob-go ob-go2" data-nova="ubytovani">+ Nová rezervace</button><button type="button" class="ob-go k-pri" data-nova="ubytovani" data-btn="ubyt">'+sv(IK.ubytovani,20)+'Ubytovat hosta</button></div>';
+  h+='<div class="ob-akce"><button type="button" class="ob-go" data-nova="ubytovani">'+sv('<path d="M12 5v14M5 12h14"/>',20)+'Nová rezervace</button><button type="button" class="ob-go k-pri" data-nova="ubytovani" data-btn="ubyt">'+sv(IK.ubytovani,20)+'Ubytovat hosta</button></div>';
   var srt=function(a,b){return mistaTxt(a).localeCompare(mistaTxt(b),'cs',{numeric:true})};
   var pan=function(nad,L,typ){return L.length?'<section class="ob-pan k-'+typ+'"><h2 class="ob-pan-h">'+sv(IK[typ==='pri'?'dovnitr':'sipven'],18)+nad+'<span>'+L.length+'</span></h2>'+L.sort(srt).map(function(r){return kartaU(r,typ)}).join('')+'</section>':''};
   h+=denNav()+'<p class="ob-sum">V kempu '+X.ted.length+' '+pl(X.ted.length,'rezervace','rezervace','rezervací')+' · přijede '+X.pri.length+' · odjede '+X.odj.length+'</p>';
