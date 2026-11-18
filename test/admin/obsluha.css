@@ -432,3 +432,4 @@ select[data-u=role]{min-width:132px}
 .ob-hb svg{flex:none}
 @media (max-width:640px){.ob-top .ob-zpet{display:none}.ob-hb{min-width:44px;width:44px;min-height:44px;padding:0;border-radius:999px}.ob-hb span{display:none}.ob-ha{gap:6px}}
 @media print{.ob-ha{display:none!important}}
+.ob-rz .rz-ak{display:none!important}
