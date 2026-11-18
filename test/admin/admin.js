@@ -1501,7 +1501,7 @@ function datum(t){return t?new Date(t).toLocaleString('cs-CZ',{day:'numeric',mon
 function uzivatele(m){
   return KK.uzivatele.seznam().then(function(U){
     var ja=KK.auth.meSync(),P=KK.prava.vse(),RO=Object.keys(KK.ROLE),SK=Object.keys(KK.SEKCE).filter(function(k){return k!=='prehled'});
-    var APN={ubytovani:'Ubytování',rezervace:'Rezervace',pujcovna:'Lodě',doprava:'Doprava'};
+    var APN={ubytovani:'Ubytování',pujcovna:'Lodě',doprava:'Doprava'};
     var SKG=KK.SEKCE_SKUPINY,SKL=function(k){var g=SKG.filter(function(x){return x[1].indexOf(k)>=0})[0];return (g&&g[2]?g[2]+' · ':'')+KK.SEKCE[k]};
     var pravaTxt=function(u){if(u.role==='admin')return '<span class="up-v">smí vše</span>';
       if(u.vzhled==='aplikace'){var ap=KK.APP_SEKCE.filter(function(k){return u.prava[k]});return '<span class="up-v up-app">Aplikace</span>'+(ap.length?ap.map(function(k){return '<span class="up-c">'+esc(APN[k])+'</span>'}).join(''):'<span class="mut">bez sekcí</span>')+(u.platby?'':'<span class="up-c up-np">bez plateb</span>')}var a=SK.filter(function(k){return u.prava[k]});return a.length?a.map(function(k){var pe=k.indexOf('pela_')===0;return '<span class="up-c'+(pe?' pe':'')+'">'+esc(SKL(k))+'</span>'}).join(''):'<span class="mut">jen Přehled</span>'};
@@ -1520,7 +1520,7 @@ function uzivatele(m){
       '<label class="f">E-mail<small>Nepovinné – lze se jím i přihlásit</small><input class="inp" name="email" type="email" autocomplete="off"></label>'+
       '<label class="f">Role<select class="inp" name="role">'+RO.map(function(r){return '<option value="'+r+'"'+(r==='obsluha'?' selected':'')+'>'+KK.ROLE[r]+'</option>'}).join('')+'</select></label>'+
       '<fieldset class="f up-f" data-vz><legend>Vzhled administrace<small>Aplikace = velké dlaždice a jen dnešní práce, na mobilu i na PC. Plná = celá administrace podle zaškrtnutých sekcí.</small></legend><div class="vz-g">'+
-        '<label class="vz-o"><input type="radio" name="vzhled" value="aplikace"><span><b>Aplikace pro obsluhu</b><small>Ubytování, Rezervace, Lodě, Doprava – jen to, co je potřeba udělat</small></span></label>'+
+        '<label class="vz-o"><input type="radio" name="vzhled" value="aplikace"><span><b>Aplikace pro obsluhu</b><small>Ubytování, Lodě, Doprava – jen to, co je potřeba udělat</small></span></label>'+
         '<label class="vz-o"><input type="radio" name="vzhled" value="plna"><span><b>Plná administrace</b><small>Rezervace, ceník, web… podle sekcí</small></span></label></div></fieldset>'+
       '<fieldset class="f up-f" data-apsek><legend>Co uvidí v aplikaci<small>Každá zapnutá sekce je jedna velká dlaždice. Když zapnete jen jednu, aplikace se rovnou otevře v ní.</small></legend><div class="sw-l">'+
         KK.APP_SEKCE.map(function(k){return '<label class="sw"><input type="checkbox" name="ap_'+k+'"><span aria-hidden="true"></span>'+esc(APN[k])+'</label>'}).join('')+

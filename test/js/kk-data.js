@@ -54,9 +54,9 @@ function otisk(sul,heslo){var t=sul+'|'+heslo;
 function novaSul(){var a=new Uint8Array(12);(window.crypto||{}).getRandomValues?crypto.getRandomValues(a):a.forEach(function(_,i){a[i]=Math.random()*256|0});return hex(a)}
 function seznamU(){var u=LS.get('uzivatele',null);if(!u||!u.length){u=[{id:'u1',jmeno:'Správce',login:'admin',email:'',role:'admin',aktivni:true,sul:'f90a0a90a9c96c7e24ffd23a',hash:'e6a288fc2c029d30a1faadee820ee0d0984ebe09c842ae636875b36ca1bacb64',vytvoren:Date.now()}];LS.set('uzivatele',u)}return u}
 function ulozU(u){LS.set('uzivatele',u)}
-/* vzhled účtu: 'aplikace' = jednoduchá aplikace pro obsluhu (jen Ubytování, Rezervace, Lodě, Doprava – dnešní práce), 'plna' = celá administrace. Správce má vždy plnou. */
+/* vzhled účtu: 'aplikace' = jednoduchá aplikace pro obsluhu (jen Ubytování, Lodě, Doprava – dnešní práce), 'plna' = celá administrace. Správce má vždy plnou. */
 KK.VZHLED={aplikace:'Aplikace pro obsluhu',plna:'Plná administrace'};
-KK.APP_SEKCE=['ubytovani','rezervace','pujcovna','doprava'];
+KK.APP_SEKCE=['ubytovani','pujcovna','doprava'];
 function vzhledU(x){return x&&x.role!=='admin'&&x.vzhled==='aplikace'?'aplikace':'plna'}
 function verejny(x){return{id:x.id,jmeno:x.jmeno,login:x.login,email:x.email||'',role:x.role,prava:KK.prava.uzivatel(x),vzhled:vzhledU(x),platby:x.platby!==false,aktivni:x.aktivni!==false,vychozi:!!x.vychozi,posledni:x.posledni||null,vytvoren:x.vytvoren||null}}
 function overHeslo(u,heslo){if(u.vychozi&&!u.hash)return Promise.resolve(heslo==='kemp');return otisk(u.sul,heslo).then(function(h){return h===u.hash})}
