@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f6f86"/><stop offset=".55" stop-color="#f3b56a"/><stop offset="1" stop-color="#ffd9a1"/></linearGradient>
+<linearGradient id="w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f8fa0"/><stop offset="1" stop-color="#1b6273"/></linearGradient>
+<radialGradient id="sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff3d6"/><stop offset="1" stop-color="#fff3d6" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="640" height="280" fill="url(#s)"/><rect y="180" width="640" height="100" fill="#24493a"/>
+<g transform="translate(0 -62)">
+<rect y="-62" width="640" height="62" fill="#2f6f86"/>
+<circle cx="140" cy="112" r="70" fill="url(#sun)"/><circle cx="140" cy="112" r="20" fill="#fff1cf"/>
+<path d="M0 128 C90 104 170 120 260 106 S420 92 500 112 S600 102 640 110 V170 H0Z" fill="#3c6b4f"/>
+<g fill="#2b5240"><rect x="520" y="58" width="16" height="56"/><path d="M516 60 528 32 540 60Z"/><rect x="536" y="82" width="56" height="32"/><path d="M532 84h64l-8-12h-48z"/></g>
+<rect y="146" width="640" height="30" fill="url(#w)"/>
+<g stroke="#9fd3dc" stroke-width="2" stroke-linecap="round" opacity=".6"><path d="M60 158h40M300 162h50M480 156h36"/></g>
+<path d="M0 172 H640 V280 H0Z" fill="#24493a"/>
+<g fill="#1b3a2d"><path d="M14 176 30 132 46 176Z"/><path d="M600 176 616 136 632 176Z"/></g>
+<path d="M0 206 H640 V246 H0Z" fill="#3a3f3c"/>
+<path d="M0 226 H640" stroke="#e8d3a8" stroke-width="3" stroke-dasharray="26 18"/>
+<g transform="translate(150 132)">
+<ellipse cx="190" cy="98" rx="210" ry="7" fill="#000" opacity=".25"/>
+<!-- přívěs s loděmi -->
+<path d="M18 74h146" stroke="#2a2e2c" stroke-width="5"/><path d="M164 74h30" stroke="#2a2e2c" stroke-width="4"/>
+<path d="M40 74V40M140 74V40M40 40h100" stroke="#2a2e2c" stroke-width="4"/>
+<path d="M4 34 Q90 48 176 34 L170 42 Q90 54 10 42Z" fill="#d6402b"/>
+<path d="M8 22 Q90 36 172 22 L166 30 Q90 42 14 30Z" fill="#2f8a5a"/>
+<path d="M12 10 Q90 24 168 10 L162 18 Q90 30 18 18Z" fill="#f4a64a"/>
+<circle cx="90" cy="84" r="13" fill="#1b1d1c"/><circle cx="90" cy="84" r="5" fill="#9aa39e"/>
+<!-- dodávka -->
+<g transform="translate(196 0)">
+<path d="M0 16 Q0 4 12 4 H118 Q130 4 138 16 L160 44 Q170 48 170 58 V80 H0Z" fill="#fff8ec"/>
+<path d="M118 10 H128 L150 42 H118Z" fill="#9fd3dc" stroke="#2a2e2c" stroke-width="2"/>
+<rect x="10" y="12" width="96" height="30" rx="6" fill="#9fd3dc" stroke="#2a2e2c" stroke-width="2"/>
+<path d="M0 56 H170" stroke="#f4a64a" stroke-width="8"/>
+<path d="M0 80 H170 V58" stroke="#2a2e2c" stroke-width="2" fill="none"/>
+<rect x="160" y="60" width="10" height="6" rx="2" fill="#ffd27a"/>
+<circle cx="36" cy="84" r="14" fill="#1b1d1c"/><circle cx="36" cy="84" r="6" fill="#9aa39e"/>
+<circle cx="134" cy="84" r="14" fill="#1b1d1c"/><circle cx="134" cy="84" r="6" fill="#9aa39e"/>
+<g fill="#13302a"><circle cx="34" cy="26" r="6"/><circle cx="58" cy="25" r="6"/><circle cx="82" cy="26" r="6"/><circle cx="136" cy="26" r="5"/></g>
+</g>
+</g>
+</g></svg>

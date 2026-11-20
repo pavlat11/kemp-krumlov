@@ -3514,8 +3514,8 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-nab .rz-nb.v3:hover{transform:translateY(-2px);box-shadow:0 0 0 2px #cdbf9f,0 18px 36px -24px #0b2419aa}
 .rz-nab .rz-nb.v3.on{box-shadow:0 0 0 3px #2f7d4c,0 20px 40px -26px #2f7d4caa}
 .rz-nb.v3 .rz-nb-t{position:relative;display:block;height:200px;padding:0;overflow:hidden;background:#12626f center/cover no-repeat}
-.rz-nb.v3.lod .rz-nb-t{background-image:linear-gradient(180deg,rgba(6,30,22,0) 35%,rgba(6,30,22,.86)),url("../img/inl-02-1024.webp")}
-.rz-nb.v3.dop .rz-nb-t{background-image:linear-gradient(180deg,rgba(30,20,6,0) 35%,rgba(30,20,6,.86)),url("../img/inl-01.webp")}
+.rz-nb.v3.lod .rz-nb-t{background-image:linear-gradient(180deg,rgba(6,30,22,0) 45%,rgba(6,30,22,.85)),url("../img/nab-lode.svg");background-position:center 30%}
+.rz-nb.v3.dop .rz-nb-t{background-image:linear-gradient(180deg,rgba(30,20,6,0) 45%,rgba(30,20,6,.85)),url("../img/nab-doprava.svg");background-position:center 30%}
 .rz-nb.v3 .tag{position:absolute;left:14px;top:14px;padding:5px 11px;border-radius:999px;background:rgba(11,36,25,.72);backdrop-filter:blur(6px);color:#fff;font-size:12px;font-weight:800;letter-spacing:.02em}
 .rz-nb.v3.lod .tag{background:#f4a64a;color:#0b2419}
 .rz-nb.v3 .ck3{position:absolute;right:14px;top:14px;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.25);border:2px solid #fff;backdrop-filter:blur(6px);color:transparent;transition:.2s}
@@ -3550,3 +3550,4 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-nb.v3.on .cta .a1 svg{color:#fff}
 @media(max-width:700px){.rz-nb.v3 .rz-nb-t{height:170px}.rz-nb.v3 .nd{font-size:21px}.rz-nb.v3 .sl{font-size:13px}}
 .rz-nb.v3.on .cta .a0{display:none}.rz-nb.v3.on .cta .a1{display:inline-flex;align-items:center;gap:8px}
+.rz-nb.v3 .rz-nb-t{height:236px}@media(max-width:700px){.rz-nb.v3 .rz-nb-t{height:200px}}
