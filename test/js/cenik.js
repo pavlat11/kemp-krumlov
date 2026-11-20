@@ -160,23 +160,30 @@ function prepis(el,text){
 var tb=document.querySelector('#rzPrice tbody');
 if(tb){
   var esc=function(s){return String(s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+  var MZ=function(m){return JZ!=='cs'&&window.KKL?KKL.mesic(m-1):KKC.mesic[m-1]};
+  var IC={osoby:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.2c2.8.3 5 2.6 5 5.8"/>',ubytovani:'<path d="M3 20 12 4l9 16H3z"/><path d="M12 4v16M9 20l3-6 3 6"/>',doplnky:'<rect x="3" y="11" width="18" height="6" rx="2"/><path d="M5 11l2-5h10l2 5M7 17v2M17 17v2"/>',lode:'<path d="M2 15h20l-3 4H5l-3-4z"/><path d="M12 15V4l6 8h-6"/>',sluzby:'<path d="m12 3 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9L12 3z"/>'};
+  var svg=function(k){return '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+IC[k]+'</svg>'};
+  var S=[],sez=MZ(C.sezona.hlavniOd)+'–'+MZ(C.sezona.hlavniDo);
+  var hlav=function(a,b){return '<div class="ck-r ck-rh"><span></span>'+(b?'<span>'+a+'</span><span>'+b+'</span>':'<span class="ck-1">'+a+'</span>')+'</div>'};
+  var rad=function(n,pz,a,b){return '<div class="ck-r"><span class="ck-n">'+esc(n)+(pz?'<small>'+esc(pz)+'</small>':'')+'</span>'+(b==null?'<b class="ck-1">'+a+'</b>':'<b>'+a+'</b><b'+(a===b?' class="ck-st"':'')+'>'+b+'</b>')+'</div>'};
+  var sek=function(k,nad,pod,obsah){S.push([k,nad]);return '<div class="ck-s" id="ck-'+k+'"><h4 class="ck-h"><span class="ck-ic">'+svg(k)+'</span><span>'+esc(nad)+(pod?'<small>'+esc(pod)+'</small>':'')+'</span></h4><div class="ck-t">'+obsah+'</div></div>'};
   var h='';
   ['osoby','ubytovani','doplnky'].forEach(function(kat){
     var pol=KKC.kat(kat).filter(function(p){return p.skryt!==1});if(!pol.length)return;
-    h+='<tr class="ck-kat"><th colspan="3" scope="colgroup">'+esc(C.kategorie[kat].n)+'</th></tr>';
-    pol.forEach(function(p){var pozn=p.pozn;if(p.luzka)pozn=(pozn?L(pozn)+', ':'')+L('kapacita')+' '+p.luzka;
-      h+='<tr><td>'+esc(p.n)+(pozn?' <small>'+esc(pozn)+'</small>':'')+'</td>'+(HZ?'<td>'+KKC.t(p.k,'a')+'</td><td>'+KKC.t(p.k,'b')+'</td>':'<td colspan="2">'+KKC.t(p.k,'a')+'</td>')+'</tr>'});
-  });
+    var o=HZ?hlav(L('Sezóna')+'<small>'+esc(sez)+'</small>',L('Mimo sezónu')):hlav(L('Cena'));
+    pol.forEach(function(p){var pozn=p.pozn?L(p.pozn):'';if(p.luzka)pozn=(pozn?pozn+', ':'')+L('kapacita')+' '+p.luzka;o+=rad(p.n,pozn,KKC.t(p.k,'a'),HZ?KKC.t(p.k,'b'):null)});
+    h+=sek(kat,C.kategorie[kat].n,kat==='osoby'||kat==='ubytovani'?L('za noc'):'',o)});
   var lo=KKC.kat('lode').filter(function(p){return p.skryt!==1});
-  if(lo.length){h+='<tr class="ck-kat"><th colspan="3" scope="colgroup">'+esc(L('Půjčovna lodí'))+' <small>'+esc(L('za loď a den: 1–2 dny / 3 a více dní'))+'</small></th></tr>';
-   lo.forEach(function(p){h+='<tr><td>'+esc(p.n)+(p.pozn?' <small>'+esc(p.pozn)+'</small>':'')+'</td><td>'+fmt(+p.a||0)+' Kč</td><td>'+fmt(p.b==null?+p.a||0:+p.b)+' Kč</td></tr>'});
-   KKC.kat('navoz').forEach(function(p){h+='<tr><td>'+esc(L('Návoz lodí'))+' <small>'+esc(p.n)+'</small></td><td colspan="2">'+fmt(+p.a||0)+(p.b!=null&&+p.b!==+p.a?' / '+fmt(+p.b):'')+' Kč</td></tr>'})}
-  var sl=C.sluzby||[];
-  if(sl.length){h+='<tr class="ck-kat"><th colspan="3" scope="colgroup">Služby v kempu</th></tr>';sl.forEach(function(p){if(p.n)h+='<tr><td>'+esc(p.n)+'</td><td colspan="2">'+esc(p.t)+'</td></tr>'})}
-  tb.innerHTML=h;
-  var ths=document.querySelectorAll('#rzPrice thead th');if(!HZ&&ths.length===3){ths[1].colSpan=2;ths[1].innerHTML='Cena';ths[1].removeAttribute('data-t');ths[2].remove()}
-  var th=HZ&&document.querySelector('#rzPrice thead th small');var MZ=function(m){return JZ!=='cs'&&window.KKL?KKL.mesic(m-1):KKC.mesic[m-1]};if(th)th.textContent=MZ(C.sezona.hlavniOd)+'–'+MZ(C.sezona.hlavniDo);
-  var no=document.querySelector('#rzPrice .note');if(no)no.textContent=L('Ceny za noc.')+(KKC.slevyText()?' '+L('Sleva:')+' '+KKC.slevyText()+'.':'');
+  if(lo.length){var o=hlav(L('1–2 dny'),L('3 a více dní'));lo.forEach(function(p){o+=rad(p.n,p.pozn,fmt(+p.a||0)+' Kč',fmt(p.b==null?+p.a||0:+p.b)+' Kč')});
+    var nv=KKC.kat('navoz');if(nv.length){o+='<div class="ck-sub">'+esc(L('Návoz lodí'))+'</div>';nv.forEach(function(p){o+=rad(p.n,'',fmt(+p.a||0)+' Kč'+(p.b!=null&&+p.b!==+p.a?' / '+fmt(+p.b)+' Kč':''),null)})}
+    h+=sek('lode',L('Půjčovna lodí'),L('cena za loď a den'),o)}
+  var sl=(C.sluzby||[]).filter(function(p){return p.n});
+  if(sl.length){var o='';sl.forEach(function(p){o+='<div class="ck-r ck-rs"><span class="ck-n">'+esc(p.n)+'</span><b class="ck-1">'+esc(p.t)+'</b></div>'});h+=sek('sluzby','Služby v kempu','',o)}
+  var sv=KKC.slevyText(),top='<nav class="ck-nav" aria-label="'+esc(L('Části ceníku'))+'">'+S.map(function(x){return '<a href="#ck-'+x[0]+'">'+svg(x[0])+esc(x[1])+'</a>'}).join('')+'</nav>'+
+    (sv?'<div class="ck-sl"><b>'+esc(L('Delší pobyt = levnější'))+'</b><span>'+sv.split(' · ').map(function(x){return '<i>'+esc(x)+'</i>'}).join('')+'</span></div>':'');
+  var tab=tb.closest('table'),box=document.createElement('div');box.className='ck';box.innerHTML=top+h;tab.parentNode.insertBefore(box,tab);tab.remove();
+  box.querySelector('.ck-nav').addEventListener('click',function(e){var a=e.target.closest('a');if(!a)return;e.preventDefault();var t=box.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})});
+  var no=document.querySelector('#rzPrice .note');if(no)no.textContent=L('Ceny jsou za noc, u lodí za loď a den. Místní poplatek je v ceně za osobu.');
 }
 /* ---- 3) přepínač Kč / € – v ceníku, v kalkulačce rezervace a u dopravy ---- */
 var P=window.KKP;
@@ -195,7 +202,7 @@ if(P&&P.euraPovolena&&!P.EDIT){
   var rb=document.querySelector('.rz-bar-sum');prepinac(rb,null,'kk-mena--tmavy kk-mena--bar');
   var poz=document.createElement('p');poz.className='kk-mena-pozn';poz.setAttribute('data-bez-meny','');
   poz.textContent=EN?'Euro prices are approximate (1 € = '+P.kurz+' CZK). Payment is in CZK.':DE?'Preise in Euro sind ungefähr (1 € = '+P.kurz+' CZK). Bezahlt wird in CZK.':'Ceny v eurech jsou orientační (1 € = '+P.kurz+' Kč). Platí se v korunách.';
-  var tab=document.querySelector('#rzPrice table');if(tab&&tab.parentNode)tab.parentNode.insertBefore(poz,tab);
+  var tab=document.querySelector('#rzPrice .ck')||document.querySelector('#rzPrice table');if(tab&&tab.parentNode)tab.parentNode.insertBefore(poz,tab);
   var stavM=function(){var m=P.mena();[].forEach.call(document.querySelectorAll('.kk-mena button'),function(b){b.setAttribute('aria-pressed',String(b.dataset.m===m))});poz.hidden=m!=='EUR'};
   document.addEventListener('kk-mena',stavM);stavM();
 }
