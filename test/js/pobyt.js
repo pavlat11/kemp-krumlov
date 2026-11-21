@@ -229,7 +229,7 @@ if(lodW&&LODE.length&&REKA.length>1){lodOk=true;const t=x=>KL.t(x);
   <div class="rz-lf"><span>${t('Na kolik dní')}</span><div id="rzLdni"></div></div>
   <label class="rz-lf"><span>${t('Odkud poplujete')}</span><select id="rzLod"></select></label>
   <label class="rz-lf"><span>${t('Kde skončíte')}</span><select id="rzLkam"></select></label>
-  <p class="rz-lod-i" id="rzLodI"></p></div>`;
+  <div class="rz-lod-i" id="rzLodI"></div></div>`;
  LODE.forEach(p=>{const c=document.createElement('div');c.className='rz-lod';
   c.innerHTML=`<span class="tx"><b>${KL.t(p.n)}</b><small>${p.pozn?KL.t(p.pozn):''}</small><em class="fr"></em></span><span class="pr"><strong>${KC.fmt(+p.a||0)} Kč</strong><small>${t('za den')}${p.b!=null&&+p.b!==+p.a?' · '+t('od 3 dnů')+' '+KC.fmt(+p.b)+' Kč':''}</small></span>`;
   p.st=stepper(()=>S.l.kusy[p.k],v=>{const b=S.l.kusy[p.k];if(v>b&&v>Math.max(0,lodFree()[p.k]||0)){warn(t('Víc lodí tohoto typu na tento den už nemáme.'));return}
@@ -324,7 +324,8 @@ function lodRender(){if(!lodOk)return;if(S.l.pref&&S.l.den){const f=lodFree();if
  lodW.dniSt.upd();
  setOpts($('rzLod'),REKA.slice(0,-1).map(x=>`<option value="${x.k}">${KL.t(x.n)}</option>`).join(''));$('rzLod').value=S.l.odkud;
  setOpts($('rzLkam'),REKA.filter((x,i)=>i>oi).map(x=>`<option value="${x.k}">${KL.t(x.n)}</option>`).join(''));$('rzLkam').value=S.l.kam;
- const cl=KR.cenaLodi(lodeObj());$('rzLodI').textContent=`${KL.t('V ceně jsou pádla, vesty a barely.')} ${KL.t('Návoz lodí')} (${fmt(cl.navoz)}) ${KL.t('není započítaný v ceně – platí se až na místě, vždy jen jeden, i když jedete třeba z Vyššího Brodu do Boršova.')}`}
+ const cl=KR.cenaLodi(lodeObj()),NV=KC.kat('navoz').filter(p=>p.skryt!==1),sc=(KC.data&&KC.data.kategorie&&KC.data.kategorie.navoz&&KC.data.kategorie.navoz.sloupce)||['Bližší místa','Vzdálenější místa'];
+ $('rzLodI').innerHTML=`<p>${KL.t('V ceně jsou pádla, vesty a barely.')} <b>${KL.t('Návoz lodí')} ${cl.navoz?'('+fmt(cl.navoz)+') ':''}${KL.t('není započítaný v ceně – platí se až na místě, vždy jen jeden, i když jedete třeba z Vyššího Brodu do Boršova.')}</b></p>`+(NV.length?`<table class="rz-nvt"><caption>${KL.t('Ceník návozu lodí')}</caption><thead><tr><th></th><th${cl.navoz&&!cl.daleko?' class="on"':''}>${KL.t(sc[0])}</th><th${cl.daleko?' class="on"':''}>${KL.t(sc[1])}</th></tr></thead><tbody>${NV.map(p=>{const a=+p.a||0,b=p.b==null?a:+p.b,me=p.k===cl.nk;return `<tr${me?' class="on"':''}><th>${KL.t(p.n)}</th><td${me&&!cl.daleko?' class="me"':''}>${fmt(a)}</td><td${me&&cl.daleko?' class="me"':''}>${fmt(b)}</td></tr>`}).join('')}</tbody></table>`:'')}
 const lodeTxt=()=>{const l=lodeObj();if(!l)return '';const d=lodDays().find(x=>iso(x)===l.den);return LODE.filter(p=>l.kusy[p.k]).map(p=>`${l.kusy[p.k]}× ${KL.male(KL.t(p.n))}`).join(', ')+` · ${d?fD(d):''}${l.dni>1?' ('+l.dni+' '+plural(l.dni,'den','dny','dní')+')':''} · ${KL.t(KR.mistoN(l.odkud))} → ${KL.t(KR.mistoN(l.kam))}`};
 const doprTxt=()=>{const d=doprObj(),v=vyzvObj(),o=[];if(d){const a=KR.aut(d.osob);o.push(`${KL.t(KR.mistoN(d.misto))}, ${d.cas} · ${a} ${plural(a,'auto','auta','aut')}`)}if(v){const a=KR.aut(v.osob);o.push(`${KL.t('vyzvednutí')} ${KL.t(KR.mistoN(v.misto))}, ${v.cas} · ${a} ${plural(a,'auto','auta','aut')}`)}return o.join(' + ')};
 

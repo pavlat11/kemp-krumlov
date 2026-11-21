@@ -3554,3 +3554,17 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .ck-sub small{display:block;margin-top:4px;font-size:12.5px;font-weight:600;text-transform:none;letter-spacing:0;color:#7a4508}
 #rzLines li.rz-mimo em{font-size:.85em;font-weight:700;color:#b56a10}
 #rzLines li.rz-mimo span{opacity:.85}
+
+/* ceník návozu v kroku Lodě */
+.rz-lod-i p{margin:0 0 10px}
+.rz-lod-i p b{color:#9a560a}
+.rz-nvt{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;background:#fff;border:1px solid #eee7da;border-radius:14px;overflow:hidden}
+.rz-nvt caption{caption-side:top;text-align:left;padding:0 2px 6px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#b56a10}
+.rz-nvt th,.rz-nvt td{padding:8px 12px;border-top:1px solid #f1ece2;text-align:right;white-space:nowrap}
+.rz-nvt thead th{border-top:0;font-size:12px;font-weight:700;color:#6b756f;background:#f6f1e6}
+.rz-nvt thead th.on{color:#0b2419}
+.rz-nvt tbody th{text-align:left;font-weight:600;color:#3d4b43;white-space:normal}
+.rz-nvt td{font-weight:700;color:#0b2419;font-variant-numeric:tabular-nums}
+.rz-nvt tr.on{background:#fff7ec}
+.rz-nvt td.me{background:#f4a64a;color:#0b2419;font-weight:800}
+@media(max-width:560px){.rz-nvt th,.rz-nvt td{padding:7px 8px}}
