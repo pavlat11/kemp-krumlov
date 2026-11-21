@@ -43,9 +43,9 @@ var VYCHOZI={verze:1,
   {k:'baraka',kat:'lode',n:'Baraka',pozn:'2 osoby',a:750,b:550,osob:2},
   {k:'nav1',kat:'navoz',n:'Jeden den, do 10 lodí',a:200,b:600},{k:'nav2',kat:'navoz',n:'Jeden den, 10 a více lodí',a:500,b:1000},
   {k:'nav3',kat:'navoz',n:'Více dní, do 10 lodí',a:400},{k:'nav4',kat:'navoz',n:'Více dní, 10 a více lodí',a:800},
-  {k:'dop1',kat:'doprava',n:'Vyšší Brod',a:1150,vzd:1},{k:'dop2',kat:'doprava',n:'Rožmberk nad Vltavou',a:850,vzd:1},{k:'dop3',kat:'doprava',n:'Nahořany',a:650},
-  {k:'dop4',kat:'doprava',n:'Kemp Vltava',a:550},{k:'dop5',kat:'doprava',n:'Viking / Pískárna',a:500},{k:'dop6',kat:'doprava',n:'Vltavan / Spolí',a:350},
-  {k:'dop7',kat:'doprava',n:'Centrum',a:250},{k:'dop8',kat:'doprava',n:'Zlatá Koruna',a:350},{k:'dop9',kat:'doprava',n:'Boršov',a:900,vzd:1}
+  {k:'dop1',kat:'doprava',n:'Vyšší Brod',a:1150,vzd:1,n1:600,n10:1000,d1:400,d10:800},{k:'dop2',kat:'doprava',n:'Rožmberk nad Vltavou',a:850,vzd:1,n1:600,n10:1000,d1:400,d10:800},{k:'dop3',kat:'doprava',n:'Nahořany',a:650,n1:200,n10:500,d1:400,d10:800},
+  {k:'dop4',kat:'doprava',n:'Kemp Vltava',a:550,n1:200,n10:500,d1:400,d10:800},{k:'dop5',kat:'doprava',n:'Viking / Pískárna',a:500,n1:200,n10:500,d1:400,d10:800},{k:'dop6',kat:'doprava',n:'Vltavan / Spolí',a:350,n1:200,n10:500,d1:400,d10:800},
+  {k:'dop7',kat:'doprava',n:'Centrum',a:250,n1:200,n10:500,d1:400,d10:800},{k:'dop8',kat:'doprava',n:'Zlatá Koruna',a:350,n1:200,n10:500,d1:400,d10:800},{k:'dop9',kat:'doprava',n:'Boršov',a:900,vzd:1,n1:600,n10:1000,d1:400,d10:800}
  ],
  /* měna: eur = nabízet přepínač Kč/€, kurz Kč za 1 €, zaokr = zaokrouhlení eur (1 | 0.5 | 0.1) */
  mena:{eur:true,kurz:25,zaokr:1},
@@ -63,6 +63,9 @@ function doplň(u){u.slevy=slevyNove(u.slevy);(u.polozky||[]).forEach(function(p
   ['navoz','lode'].forEach(function(kat){if(u.polozky.some(function(p){return p.kat===kat}))return;var nove=JSON.parse(JSON.stringify(VYCHOZI.polozky.filter(function(p){return p.kat===kat}))),i=u.polozky.findIndex(function(p){return p.kat==='doprava'});u.polozky.splice.apply(u.polozky,[i<0?u.polozky.length:i,0].concat(nove))});
   /* návoz: druhý sloupec (vzdálenější místa, web PE-LA) ve starším ceníku chybí */
   u.polozky.forEach(function(p){if(p.kat==='doprava'&&p.vzd===undefined){var v0=VYCHOZI.polozky.filter(function(x){return x.k===p.k})[0];p.vzd=v0&&v0.vzd?1:0}});
+  /* ceny návozu u každé zastávky (n1 = 1 den do 10 lodí, n10 = 1 den 10+, d1 = více dní do 10, d10 = více dní 10+); starší ceník je doplní z obecných cen návozu */
+  var NVc=function(k,b){var x=u.polozky.filter(function(p){return p.k===k})[0]||VYCHOZI.polozky.filter(function(p){return p.k===k})[0]||{};return b&&x.b!=null?+x.b:+x.a||0};
+  u.polozky.forEach(function(p){if(p.kat!=='doprava'||p.n1!==undefined)return;var f=!!p.vzd;p.n1=NVc('nav1',f);p.n10=NVc('nav2',f);p.d1=NVc('nav3',f);p.d10=NVc('nav4',f)});
   u.polozky.forEach(function(p){if(p.kat==='navoz'&&p.b==null){var v=VYCHOZI.polozky.filter(function(x){return x.k===p.k})[0];if(v&&v.b!=null)p.b=v.b}});
   return u}
 function nacti(){
@@ -176,7 +179,7 @@ if(tb){
     h+=sek(kat,C.kategorie[kat].n,kat==='osoby'||kat==='ubytovani'?L('za noc'):'',o)});
   var lo=KKC.kat('lode').filter(function(p){return p.skryt!==1});
   if(lo.length){var o=hlav(L('1–2 dny'),L('3 a více dní'));lo.forEach(function(p){o+=rad(p.n,p.pozn,fmt(+p.a||0)+' Kč',fmt(p.b==null?+p.a||0:+p.b)+' Kč')});
-    var nv=KKC.kat('navoz');if(nv.length){var sc=(C.kategorie.navoz&&C.kategorie.navoz.sloupce)||['',''];o+='<div class="ck-sub">'+esc(L('Návoz lodí'))+'<small>'+esc(L('Není v ceně rezervace – platí se na místě, vždy jen jeden návoz bez ohledu na trasu.'))+'</small></div>'+hlav(L(sc[0]),L(sc[1]));nv.forEach(function(p){o+=rad(p.n,'',fmt(+p.a||0)+' Kč',fmt(p.b==null?+p.a||0:+p.b)+' Kč')})}
+    var ZS=KKC.kat('doprava').filter(function(p){return p.skryt!==1&&p.n1!=null});if(ZS.length){o+='<div class="ck-sub">'+esc(L('Návoz lodí podle místa'))+'<small>'+esc(L('Není v ceně rezervace – platí se na místě, vždy jen jeden návoz bez ohledu na trasu.'))+' '+esc(L('Platí dražší z místa startu a cíle. Kemp Krumlov se nepočítá.'))+'</small></div>'+hlav(L('1 den'),L('více dní'));ZS.forEach(function(p){o+=rad(p.n,(+p.n10||+p.d10)?L('10 a více lodí')+': '+fmt(+p.n10||0)+' / '+fmt(+p.d10||0)+' Kč':'',fmt(+p.n1||0)+' Kč',fmt(+p.d1||0)+' Kč')})}
     h+=sek('lode',L('Půjčovna lodí'),L('cena za loď a den'),o)}
   var sl=(C.sluzby||[]).filter(function(p){return p.n});
   if(sl.length){var o='';sl.forEach(function(p){o+='<div class="ck-r ck-rs"><span class="ck-n">'+esc(p.n)+'</span><b class="ck-1">'+esc(p.t)+'</b></div>'});h+=sek('sluzby','Služby v kempu','',o)}
@@ -272,7 +275,9 @@ var R=window.KKR={
  lodeVolno:function(den,dni,krome){var c=R.lodeCelkem(),v=Object.assign({},c);R.lodeDny({den:den,dni:dni}).forEach(function(d){var o=R.lodeObs(d,krome);Object.keys(c).forEach(function(k){v[k]=Math.min(v[k],c[k]-(o[k]||0))})});return v},
  lodeChybi:function(l,krome){if(!l||!R.lodePocet(l))return [];var v=R.lodeVolno(l.den,l.dni,krome),p=R.lodePotreba(l),ch=[];Object.keys(p).forEach(function(k){if(p[k]>(v[k]||0)){var t=window.KKC&&KKC.p(k);ch.push((t?t.n:R.VYB[k]||k)+' (volných '+Math.max(0,v[k]||0)+', potřeba '+p[k]+')')}});return ch},
  cenaLodi:function(l){var o={pujc:0,navoz:0,celkem:0};if(!l||!window.KKC)return o;var dni=Math.max(1,+l.dni||1),n=R.lodePocet(l);if(!n)return o;Object.keys(l.kusy).forEach(function(k){o.pujc+=(+l.kusy[k]||0)*KKC.lod(k,dni)*dni});
-  var nk=dni>1?(n>=10?'nav4':'nav3'):(n>=10?'nav2':'nav1'),np=KKC.p(nk),pa=window.KKC&&KKC.p(l.odkud),pb=window.KKC&&KKC.p(l.kam);o.daleko=!!((pa&&pa.vzd)||(pb&&pb.vzd));o.nk=nk;o.navoz=np?(o.daleko&&np.b!=null?+np.b||0:+np.a||0):0;o.celkem=o.pujc;return o}/* návoz lodí NENÍ v ceně – platí se na místě, vždy jen jeden (bez ohledu na trasu) */,
+  var nk=dni>1?(n>=10?'nav4':'nav3'):(n>=10?'nav2':'nav1'),np=KKC.p(nk),pa=window.KKC&&KKC.p(l.odkud),pb=window.KKC&&KKC.p(l.kam);o.daleko=!!((pa&&pa.vzd)||(pb&&pb.vzd));o.nk=nk;o.navoz=np?(o.daleko&&np.b!=null?+np.b||0:+np.a||0):0;
+  /* ceny u zastávek mají přednost – platí ta dražší ze startu a cíle (návoz je vždy jen jeden) */
+  var pk=dni>1?(n>=10?'d10':'d1'):(n>=10?'n10':'n1');o.pk=pk;o.zast='';[pa,pb].forEach(function(p){if(p&&p.kat==='doprava'&&p[pk]!=null&&(o.zast===''||+p[pk]>o.navoz)){o.navoz=+p[pk]||0;o.zast=p.k}});o.celkem=o.pujc;return o}/* návoz lodí NENÍ v ceně – platí se na místě, vždy jen jeden (bez ohledu na trasu) */,
  aut:function(osob){return Math.max(1,Math.ceil((+osob||0)/8))},
  cenaDopravy:function(d){if(!d||!d.misto||d.misto==='kemp'||!window.KKC)return 0;var p=KKC.p(d.misto);return p?(+p.a||0)*R.aut(d.osob):0},
  lodeTxt:function(l,j){if(!l||!R.lodePocet(l))return '';var a=Object.keys(l.kusy).filter(function(k){return +l.kusy[k]>0}).map(function(k){var p=window.KKC&&KKC.p(k);return l.kusy[k]+'× '+(p?(j&&j!=='cs'&&p['n_'+j])||p.n:k)}),d=l.den.split('-'),dni=Math.max(1,+l.dni||1),W={cs:['den','dny','dní'],en:['day','days','days'],de:['Tag','Tage','Tage']}[j||'cs']||['den','dny','dní'];
