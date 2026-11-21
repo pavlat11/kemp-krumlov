@@ -276,6 +276,9 @@ var R=window.KKR={
  lodeCelkem:function(){var S=R.sklad(),c=Object.assign({},S.vyb);Object.keys(S.lode).forEach(function(k){c[k]=+S.lode[k].ks||0});R.poskozene().forEach(function(x){if(x.k in c)c[x.k]=Math.max(0,c[x.k]-(+x.ks||0))});return c},
  /* poškozené / v opravě: [{id,k,ks,popis,kdy,kdo}] – odečítají se ze skladu, dokud je někdo neoznačí jako opravené */
  poskozene:function(){return (R.nast().poskozeno||[]).filter(function(x){return x&&x.k&&+x.ks>0})},
+ /* kolik kusů čeho může host ještě nahlásit jako poškozené/ztracené: co měl půjčené minus to, co už u něj nahlášené je (a není opravené) */
+ poskozMax:function(rid){var r=R.vse().filter(function(x){return x.id===rid})[0];if(!r||!r.lode)return null;var m=Object.assign({},r.lode.vydano?r.lode.vydano.kusy:R.lodePotreba(r.lode));
+  (r.poskozeno||[]).forEach(function(p){if(!p.opraveno&&p.k in m)m[p.k]=Math.max(0,m[p.k]-(+p.ks||0))});return m},
  poskozTyp:function(x){return x&&x.typ==='ztraceno'?'Ztraceno':'Poškozeno'},
  poskozNazev:function(k){var p=window.KKC&&KKC.p(k);return R.VYB[k]||(p?p.n:k)},
  poskozPridej:function(k,ks,popis,kdo,rid,typ){var n=R.nast(),r=rid?R.vse().filter(function(x){return x.id===rid})[0]:null,z={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),k:k,ks:Math.max(1,Math.round(+ks||1)),typ:typ==='ztraceno'?'ztraceno':'poskozeno',popis:String(popis||'').trim(),kdy:Date.now(),kdo:kdo||''};if(r){z.rez=r.id;z.cislo=r.cislo||'';z.jmeno=r.jmeno||''}

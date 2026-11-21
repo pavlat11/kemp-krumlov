@@ -1632,3 +1632,4 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .rpo-c{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line,#e5e5e5);border-radius:10px;cursor:pointer}.rpo-c span{flex:1;font-weight:700}.rpo-c .num{width:70px}
 .rpo-l li.zt{background:#F4F0FA}.rpo-l li.zt .rpo-n b{color:#4A3378}
 .rpo-g .rpo-p{flex:1 1 320px}.rpo-g .rpo-p .inp{width:100%}
+.rpo-c.off{opacity:.4}

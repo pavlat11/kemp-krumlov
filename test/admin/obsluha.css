@@ -658,3 +658,4 @@ select[data-u=role]{min-width:132px}
 .ob-po-l li.zt{background:#F4F0FA}.ob-po-l li.zt b{color:#4A3378}
 .ob-po-p{display:flex;flex-direction:column;gap:5px;margin:0;font-size:13.5px;font-weight:700}
 .ob-po textarea,.ob-po select{text-align:left!important}
+.ob-po-i li.off{opacity:.45}
