@@ -1602,4 +1602,18 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .rv-t thead th.ted.kx button{background:var(--deep)}
 .pjc-nv{display:block;margin-top:4px;font-weight:800;color:#9A560A}
 .rdn-u .nav dt,.rdn-u .nav dd{color:#9A560A;font-weight:800}
-.ct .nvh{background:#FFF4E6;color:#9A560A;white-space:nowrap;font-size:12px}.ct .nvc{background:#FFFAF3}.ct .nvc .num{width:76px}
+
+/* Ceník → Doprava: skupiny sloupců */
+.ct-dop th small{display:block;font-size:11px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--mut,#6b756f)}
+.ct-dop .cdg th{vertical-align:bottom}
+.ct-dop .nvg{text-align:center;background:#FFF1DF;color:#9A560A;border-radius:10px 10px 0 0;font-size:12px;white-space:nowrap}
+.ct-dop .nvg2{background:#FBE4CC;color:#7A3F06}
+.ct-dop .nvh{background:#FFF1DF;color:#9A560A;font-size:11.5px;white-space:nowrap}
+.ct-dop .nvh2{background:#FBE4CC;color:#7A3F06}
+.ct-dop td.nvc{background:#FFF8EF}.ct-dop td.nvc2{background:#FDF0E1}
+.ct-dop .nvs{border-left:3px solid #fff}
+.ct-dop .nvc .num{width:88px}
+.ct-dop td:nth-child(2) .inp{width:130px}
+.ct-dop .nvh{text-align:center}
+.ct-dop .cdo{white-space:nowrap}
+.ck-tip{margin:-4px 0 12px;padding:10px 14px 10px 30px;border-radius:12px;background:#F6F4EE;color:var(--mut,#56625a);font-size:13.5px;line-height:1.55}
