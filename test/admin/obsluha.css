@@ -659,3 +659,4 @@ select[data-u=role]{min-width:132px}
 .ob-po-p{display:flex;flex-direction:column;gap:5px;margin:0;font-size:13.5px;font-weight:700}
 .ob-po textarea,.ob-po select{text-align:left!important}
 .ob-po-i li.off{opacity:.45}
+.ob-po-fix{display:flex;flex-direction:column;gap:2px;padding:10px 14px;border-radius:12px;background:#F2F4F1;border:1.5px solid var(--line)}.ob-po-fix small{font-size:12px;font-weight:700;color:var(--mut)}.ob-po-fix b{font-size:16px}.ob-po-fix span{font-size:13px;color:var(--mut)}
