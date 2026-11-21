@@ -636,3 +636,7 @@ select[data-u=role]{min-width:132px}
 .ob-po-p{grid-column:1/-1}.ob-po-f textarea{resize:vertical;font:inherit}
 .ob-po form,.ob-po .ob-po-l li span,.ob-po .f{text-align:left}.ob-po h2{text-align:left}.ob-po select,.ob-po textarea,.ob-po input{text-align:left}.ob-po .ob-po-ks input{text-align:center}
 .ob-po textarea::placeholder{text-align:left}.ob-po select{text-align-last:left}
+.ob-po-r{grid-column:1/-1}
+.ob-po-rz{color:#3C4740;font-weight:700}
+.ob-ikp{color:#B3261E}.ob-ikp:hover{background:#FDE7E4}
+.ob-ch-po{background:#FDE7E4!important;color:#B3261E!important;font-weight:800}
