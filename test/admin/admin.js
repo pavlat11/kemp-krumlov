@@ -454,7 +454,7 @@ function cenik(m){
         '<p class="mut" style="margin:0 0 12px">Jen text do ceníku na webu (např. sprcha, úschovna). Do ceny rezervace se nepočítají, cenu napište i s jednotkou.</p>'+
         (C.sluzby.length?'<div class="tw-wrap"><table class="ct"><thead><tr><th>Služba</th><th>Cena a podmínky (text)</th><th><span class="sr">Akce</span></th></tr></thead><tbody>'+C.sluzby.map(function(x,i){return '<tr><td><input class="inp" data-sv="'+i+'" data-f="'+pole('n')+'" value="'+esc(hod(x,'n'))+'"'+ph(x,'n')+' aria-label="Název služby'+(PR?' – '+KK.JAZYKY[J]:'')+'"></td><td><input class="inp" data-sv="'+i+'" data-f="'+pole('t')+'" value="'+esc(hod(x,'t'))+'"'+(PR?ph(x,'t'):' placeholder="např. 20 Kč / 4 min"')+' aria-label="Cena a podmínky – '+esc(x.n)+'"></td><td class="c"><button type="button" class="btn ic dan" data-svd="'+i+'" aria-label="Smazat službu – '+esc(x.n)+'">'+SV(IC.kos,18)+'</button></td></tr>'}).join('')+'</tbody></table></div>':'<p class="mut">Žádné služby – v ceníku na webu se sekce nezobrazí.</p>')+'</section>';
       var kempI=-1;
-      Object.keys(C.kategorie).forEach(function(kat){
+      Object.keys(C.kategorie).forEach(function(kat){if(kat==='navoz')return;/* návoz se nastavuje u zastávek v Dopravě */
         var K=C.kategorie[kat],pol=C.polozky.filter(function(p){return p.kat===kat}),dva=K.sloupce.length>1&&(HZ||kat==='lode'||kat==='navoz'),SL=dva||K.sloupce.length<2?K.sloupce:['Cena'],ub=kat==='ubytovani',dop=kat==='doplnky',slu=kat==='sluzby',rez=ub||dop,lod=kat==='lode',dpr=kat==='doprava',oso=kat==='osoby';
         if(kat==='lode')h+=ckg('pujc');if(kat==='doprava')h+=ckg('dop');
         h+='<section class="card ck ck-'+(lod||kat==='navoz'?'pujc':dpr?'dop':'kemp')+'" style="margin-bottom:16px"><div class="row" style="margin-bottom:10px"><h2 style="margin:0">'+esc(K.n)+'</h2>'+(oso||ub||dop?'<span class="badge ck-web" title="Zobrazuje se v ceníku na webu">Ceník</span>':'')+'<span class="sp"></span>'+(K.pevne?'<span class="badge">pevné položky</span>':'<button type="button" class="btn sm pri" data-add="'+kat+'">+ Přidat položku</button>')+'</div>'+
@@ -511,6 +511,7 @@ function cenik(m){
       else if(b.id==='sbz'){C=JSON.parse(puv);kresli()}
       else if(b.id==='cr'){ptej('Vrátit celý ceník na výchozí hodnoty?\n\nVšechny vaše ceny a položky se přepíšou. Nejde to vrátit.',{ok:'Vrátit výchozí',nebezp:1}).then(function(ok){if(ok)KK.cenik.obnov().then(function(){C=JSON.parse(JSON.stringify(KKC.vychozi));puv=JSON.stringify(C);kresli();toast('Ceník vrácen na výchozí.')})})}
       else if(b.id==='sbu'){
+        if(KKC.navozZeZastavek)KKC.navozZeZastavek(C);
         var chyba=C.polozky.find(function(p){return !String(p.n).trim()});
         if(chyba){toast('Každá položka musí mít název.',1);var ix=C.polozky.indexOf(chyba),el=$('input[data-i="'+ix+'"][data-f=n]',m);if(el){el.setAttribute('aria-invalid','true');el.focus()}return}
         var o=C.sezona.otevrenoOd,d2=C.sezona.otevrenoDo;if(!C.sezona.celorocne&&d2<=o){toast('Konec sezóny musí být po jejím začátku.',1);return}

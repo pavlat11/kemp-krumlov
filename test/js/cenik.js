@@ -67,7 +67,10 @@ function doplň(u){u.slevy=slevyNove(u.slevy);(u.polozky||[]).forEach(function(p
   var NVc=function(k,b){var x=u.polozky.filter(function(p){return p.k===k})[0]||VYCHOZI.polozky.filter(function(p){return p.k===k})[0]||{};return b&&x.b!=null?+x.b:+x.a||0};
   u.polozky.forEach(function(p){if(p.kat!=='doprava'||p.n1!==undefined)return;var f=!!p.vzd;p.n1=NVc('nav1',f);p.n10=NVc('nav2',f);p.d1=NVc('nav3',f);p.d10=NVc('nav4',f)});
   u.polozky.forEach(function(p){if(p.kat==='navoz'&&p.b==null){var v=VYCHOZI.polozky.filter(function(x){return x.k===p.k})[0];if(v&&v.b!=null)p.b=v.b}});
+  navozZeZastavek(u);
   return u}
+/* obecné ceny návozu (nav1–nav4, používá web PE-LA) se odvozují ze zastávek: bližší = nejnižší, vzdálenější = nejvyšší cena */
+function navozZeZastavek(u){var Z=(u.polozky||[]).filter(function(p){return p.kat==='doprava'&&p.skryt!==1&&p.n1!=null});if(!Z.length)return;[['nav1','n1'],['nav2','n10'],['nav3','d1'],['nav4','d10']].forEach(function(x){var p=u.polozky.filter(function(q){return q.k===x[0]})[0];if(!p)return;var v=Z.map(function(z){return +z[x[1]]||0});p.a=Math.min.apply(null,v);p.b=Math.max.apply(null,v)})}
 function nacti(){
   if(window.KK_CENIK_DATA)return doplň(window.KK_CENIK_DATA);
   try{var u=JSON.parse(localStorage.getItem('kkt.cenik')||'null');if(u&&u.verze===1&&u.polozky)return doplň(u)}catch(e){}
@@ -81,7 +84,7 @@ var HZ=C.sezona.hlavniZap!==false;
 var mapa={};C.polozky.forEach(function(p){mapa[p.k]=p});
 var fmt=function(n){return Math.round(n).toLocaleString('cs-CZ').replace(/\s/g,' ')};
 var KKC=window.KKC={
-  data:C,vychozi:VYCHOZI,fmt:fmt,doplň:doplň,
+  data:C,vychozi:VYCHOZI,fmt:fmt,doplň:doplň,navozZeZastavek:navozZeZastavek,
   /* po uložení ceníku v administraci – nové ceny a slevy platí hned, bez obnovení stránky */
   obnov:function(u){u=doplň(JSON.parse(JSON.stringify(u)));Object.keys(C).forEach(function(k){delete C[k]});Object.assign(C,u);mapa={};C.polozky.forEach(function(p){mapa[p.k]=p});HZ=C.sezona.hlavniZap!==false;KKC.jednaCena=!HZ;KKC.celorocne=C.sezona.celorocne===true},
   p:function(k){return mapa[k]},
