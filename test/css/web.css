@@ -3551,3 +3551,6 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 @media(max-width:700px){.rz-nb.v3 .rz-nb-t{height:170px}.rz-nb.v3 .nd{font-size:21px}.rz-nb.v3 .sl{font-size:13px}}
 .rz-nb.v3.on .cta .a0{display:none}.rz-nb.v3.on .cta .a1{display:inline-flex;align-items:center;gap:8px}
 .rz-nb.v3 .rz-nb-t{height:236px}@media(max-width:700px){.rz-nb.v3 .rz-nb-t{height:200px}}
+.ck-sub small{display:block;margin-top:4px;font-size:12.5px;font-weight:600;text-transform:none;letter-spacing:0;color:#7a4508}
+#rzLines li.rz-mimo em{font-size:.85em;font-weight:700;color:#b56a10}
+#rzLines li.rz-mimo span{opacity:.85}

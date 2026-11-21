@@ -175,7 +175,7 @@ if(tb){
     h+=sek(kat,C.kategorie[kat].n,kat==='osoby'||kat==='ubytovani'?L('za noc'):'',o)});
   var lo=KKC.kat('lode').filter(function(p){return p.skryt!==1});
   if(lo.length){var o=hlav(L('1–2 dny'),L('3 a více dní'));lo.forEach(function(p){o+=rad(p.n,p.pozn,fmt(+p.a||0)+' Kč',fmt(p.b==null?+p.a||0:+p.b)+' Kč')});
-    var nv=KKC.kat('navoz');if(nv.length){o+='<div class="ck-sub">'+esc(L('Návoz lodí'))+'</div>';nv.forEach(function(p){o+=rad(p.n,'',fmt(+p.a||0)+' Kč'+(p.b!=null&&+p.b!==+p.a?' / '+fmt(+p.b)+' Kč':''),null)})}
+    var nv=KKC.kat('navoz');if(nv.length){var sc=(C.kategorie.navoz&&C.kategorie.navoz.sloupce)||['',''];o+='<div class="ck-sub">'+esc(L('Návoz lodí'))+'<small>'+esc(L('Není v ceně rezervace – platí se na místě, vždy jen jeden návoz bez ohledu na trasu.'))+'</small></div>'+hlav(L(sc[0]),L(sc[1]));nv.forEach(function(p){o+=rad(p.n,'',fmt(+p.a||0)+' Kč',fmt(p.b==null?+p.a||0:+p.b)+' Kč')})}
     h+=sek('lode',L('Půjčovna lodí'),L('cena za loď a den'),o)}
   var sl=(C.sluzby||[]).filter(function(p){return p.n});
   if(sl.length){var o='';sl.forEach(function(p){o+='<div class="ck-r ck-rs"><span class="ck-n">'+esc(p.n)+'</span><b class="ck-1">'+esc(p.t)+'</b></div>'});h+=sek('sluzby','Služby v kempu','',o)}
@@ -271,7 +271,7 @@ var R=window.KKR={
  lodeVolno:function(den,dni,krome){var c=R.lodeCelkem(),v=Object.assign({},c);R.lodeDny({den:den,dni:dni}).forEach(function(d){var o=R.lodeObs(d,krome);Object.keys(c).forEach(function(k){v[k]=Math.min(v[k],c[k]-(o[k]||0))})});return v},
  lodeChybi:function(l,krome){if(!l||!R.lodePocet(l))return [];var v=R.lodeVolno(l.den,l.dni,krome),p=R.lodePotreba(l),ch=[];Object.keys(p).forEach(function(k){if(p[k]>(v[k]||0)){var t=window.KKC&&KKC.p(k);ch.push((t?t.n:R.VYB[k]||k)+' (volných '+Math.max(0,v[k]||0)+', potřeba '+p[k]+')')}});return ch},
  cenaLodi:function(l){var o={pujc:0,navoz:0,celkem:0};if(!l||!window.KKC)return o;var dni=Math.max(1,+l.dni||1),n=R.lodePocet(l);if(!n)return o;Object.keys(l.kusy).forEach(function(k){o.pujc+=(+l.kusy[k]||0)*KKC.lod(k,dni)*dni});
-  var nk=dni>1?(n>=10?'nav4':'nav3'):(n>=10?'nav2':'nav1'),np=KKC.p(nk);o.navoz=np?+np.a||0:0;o.celkem=o.pujc+o.navoz;return o},
+  var nk=dni>1?(n>=10?'nav4':'nav3'):(n>=10?'nav2':'nav1'),np=KKC.p(nk);o.navoz=np?+np.a||0:0;o.celkem=o.pujc;return o}/* návoz lodí NENÍ v ceně – platí se na místě, vždy jen jeden (bez ohledu na trasu) */,
  aut:function(osob){return Math.max(1,Math.ceil((+osob||0)/8))},
  cenaDopravy:function(d){if(!d||!d.misto||d.misto==='kemp'||!window.KKC)return 0;var p=KKC.p(d.misto);return p?(+p.a||0)*R.aut(d.osob):0},
  lodeTxt:function(l,j){if(!l||!R.lodePocet(l))return '';var a=Object.keys(l.kusy).filter(function(k){return +l.kusy[k]>0}).map(function(k){var p=window.KKC&&KKC.p(k);return l.kusy[k]+'× '+(p?(j&&j!=='cs'&&p['n_'+j])||p.n:k)}),d=l.den.split('-'),dni=Math.max(1,+l.dni||1),W={cs:['den','dny','dní'],en:['day','days','days'],de:['Tag','Tage','Tage']}[j||'cs']||['den','dny','dní'];
@@ -415,7 +415,7 @@ var R=window.KKR={
  ukazka:function(vse){var v=vse?0:cti('kkt.rez.ukazka',0),n=0,m0={};m0[K]=cti(K,[]);m0[KC]=cti(KC,0);mem=m0;try{var t=new Date(),Y=t.getFullYear()+(t.getMonth()>7?1:0),J=['Novákovi','Müller','Dvořák','Jansen','Kolářová','Veselý','Jelínek','Schmidt','Svoboda','Fischer','Černý','Weber','Procházka','de Vries','Kučera','Horák','Bauer','Marková','Němec','Visser','Pokorná','Hofmann','Král','Urban'],ST=['pot'],C={chatka:890,podsad:300,teepee:700};
   var dd=function(k){var x=new Date(t.getFullYear(),t.getMonth(),t.getDate()+k);return I(x)},jl=function(d){return I(new Date(Y,6,d))};
   var p=function(m,od,dk,st,jm){try{var k=m.split('-')[0];R.pridej(st==='blk'?{mista:[m],od:od,do:dk,jmeno:jm,stav:'blk',zprava:'Testovací data'}:{mista:[m],od:od,do:dk,jmeno:jm||J[n%J.length],stav:st||ST[n%ST.length],osoby:{dosp:k==='podsad'?2:2+n%3,dite:k==='podsad'?0:n%3,zak:0},telefon:'+420 777 000 '+('00'+(100+n)).slice(-3),cena:C[k]*R.noci(od,dk).length,zdroj:n%3?'web':'rucne',kdo:'ukázka',zprava:'Testovací data'});n++}catch(e){}};
-  if(!vse&&v<7){m0[K]=[];m0[KC]=0} /* přechod na novou sadu: staré testovací rezervace pryč */
+  if(!vse&&v<8){m0[K]=[];m0[KC]=0} /* přechod na novou sadu: staré testovací rezervace pryč */
   var sd=20261116,rn=function(){sd=(sd*16807)%2147483647;return sd/2147483647},ri=function(a,b){return a+Math.floor(rn()*(b-a+1))},pick=function(A){return A[Math.floor(rn()*A.length)]};
   var JN=['Jana Nováková','Petr Dvořák','Lukas Müller','Tereza Svobodová','Martin Černý','Anna Schmidt','Tomáš Procházka','Eva Kučerová','Jan Veselý','Sophie Weber','Pavel Horák','Lenka Němcová','Daan de Vries','Michal Marek','Kateřina Pokorná','Jonas Fischer','Ondřej Král','Barbora Jelínková','Emma Jansen','Jiří Růžička','Markéta Benešová','Felix Wagner','David Fiala','Hana Sedláčková','Piotr Kowalski','Vojtěch Doležal','Klára Zemanová','Lisa Hoffmann','Radek Kolář','Monika Navrátilová','Tim Peeters','Filip Urban','Veronika Šimková','Max Becker','Josef Vlček','Lucie Kadlecová','Ruud Visser','Adam Polák','Nikola Hájková','Stefan Klein'];
   var JZ=['cs','cs','cs','cs','cs','de','de','en','nl','pl'],hn=0,dd=function(k){var x=new Date(t.getFullYear(),t.getMonth(),t.getDate()+k);return I(x)},dnes=dd(0);
@@ -476,7 +476,7 @@ var R=window.KKR={
    [[0,'dop1','9:00',4,2],[1,'dop2','10:00',6,3],[3,'dop4','9:30',3,2],[5,'dop1','8:30',8,4],[8,'dop3','11:00',2,1],[11,'dop2','9:00',5,2],[0,'dop8','16:00',3,1,1],[2,'dop9','17:00',5,2,1],[6,'dop8','15:30',2,1,1]].forEach(function(x,i){try{var dp={misto:x[1],osob:x[3],cas:x[2],den:dd(x[0])},zp=!!x[5],cn=R.cenaDopravy(dp)+x[4]*(190+x[3]*200);
      R.pridej({mista:[],dalsi:{stan:1,karavan:0},od:dd(x[0]-1),do:dd(x[0]-1+x[4]),jmeno:JM[(i+11)%JM.length]+' (vlastní lodě)',stav:x[0]<=0?'uby':'pot',osoby:{dosp:x[3],dite:0,zak:0},telefon:'+420 60'+i+' 2'+(20+i)+' 5'+(10+i),email:'doprava'+(i+1)+'@example.com',zdroj:'web',jazyk:'cs',doprava:zp?null:dp,vyzved:zp?dp:null,cena:cn,zprava:zp?'Lodě máme vlastní, poplujeme z kempu – prosíme vyzvednout v cíli.':'Lodě máme vlastní, chceme jen odvoz na start.',ukazka:1});n++}catch(e){}})}
   }finally{mem=null;pis(K,m0[K]);pis(KC,m0[KC])}
-  pis('kkt.rez.ukazka',7);return n}
+  pis('kkt.rez.ukazka',8);return n}
 };
 try{if(cti('kkt.rez.ukazka',0)<6)R.ukazka()}catch(e){}
 })();
