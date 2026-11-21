@@ -261,7 +261,7 @@ Upravený text s cenou se ukládá se značkou `{price:klic}`, takže se cena d�
 - Nová pole v šablonách: `{prijezd}`, `{odvoz}`, `{navoz}`, `{recenze}`.
 
 ## Poškozené vybavení
-- `nastaveni.poskozeno = [{id, k, ks, popis, kdy, kdo}]` – kusy se odečítají ze skladu (`lodeCelkem`) a nenabízí se k půjčení, dokud je někdo neoznačí jako opravené. Nahlásit jde v administraci (Nastavení → Půjčovna) i z aplikace obsluhy (Lodě → Poškození).
+- `nastaveni.poskozeno = [{id, k, ks, typ: "poskozeno"|"ztraceno", popis, kdy, kdo, rez, cislo, jmeno}]` (rez = id rezervace, kopie i v `rezervace.poskozeno` + záznam v `hist`) – kusy se odečítají ze skladu (`lodeCelkem`) a nenabízí se k půjčení, dokud je někdo neoznačí jako opravené. Nahlásit jde v administraci (Nastavení → Půjčovna) i z aplikace obsluhy (Lodě → Poškození).
 
 ## Spuštění naostro (SEO)
 - Ve všech stránkách v `/test/` je `<meta name="robots" content="noindex, nofollow">` – **při spuštění smazat**.

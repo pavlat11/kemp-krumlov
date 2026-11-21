@@ -276,16 +276,17 @@ var R=window.KKR={
  lodeCelkem:function(){var S=R.sklad(),c=Object.assign({},S.vyb);Object.keys(S.lode).forEach(function(k){c[k]=+S.lode[k].ks||0});R.poskozene().forEach(function(x){if(x.k in c)c[x.k]=Math.max(0,c[x.k]-(+x.ks||0))});return c},
  /* poškozené / v opravě: [{id,k,ks,popis,kdy,kdo}] – odečítají se ze skladu, dokud je někdo neoznačí jako opravené */
  poskozene:function(){return (R.nast().poskozeno||[]).filter(function(x){return x&&x.k&&+x.ks>0})},
+ poskozTyp:function(x){return x&&x.typ==='ztraceno'?'Ztraceno':'Poškozeno'},
  poskozNazev:function(k){var p=window.KKC&&KKC.p(k);return R.VYB[k]||(p?p.n:k)},
- poskozPridej:function(k,ks,popis,kdo,rid){var n=R.nast(),r=rid?R.vse().filter(function(x){return x.id===rid})[0]:null,z={id:'p'+Date.now().toString(36),k:k,ks:Math.max(1,Math.round(+ks||1)),popis:String(popis||'').trim(),kdy:Date.now(),kdo:kdo||''};if(r){z.rez=r.id;z.cislo=r.cislo||'';z.jmeno=r.jmeno||''}
+ poskozPridej:function(k,ks,popis,kdo,rid,typ){var n=R.nast(),r=rid?R.vse().filter(function(x){return x.id===rid})[0]:null,z={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),k:k,ks:Math.max(1,Math.round(+ks||1)),typ:typ==='ztraceno'?'ztraceno':'poskozeno',popis:String(popis||'').trim(),kdy:Date.now(),kdo:kdo||''};if(r){z.rez=r.id;z.cislo=r.cislo||'';z.jmeno=r.jmeno||''}
   n.poskozeno=(n.poskozeno||[]).concat([z]);R.ulozNast(n);
   /* záznam i do historie rezervace, ať je u hosta vidět, co poškodil */
-  if(r&&R.uprav)try{R.uprav(r.id,{poskozeno:(r.poskozeno||[]).concat([{id:z.id,k:k,ks:z.ks,popis:z.popis,kdy:z.kdy,kdo:z.kdo}]),hist:(r.hist||[]).concat([{t:z.kdy,kdo:kdo||'',co:'Poškozeno: '+z.ks+'× '+R.poskozNazev(k)+(z.popis?' – '+z.popis:'')}]).slice(-30)})}catch(x){}
+  if(r&&R.uprav)try{R.uprav(r.id,{poskozeno:(r.poskozeno||[]).concat([{id:z.id,k:k,ks:z.ks,typ:z.typ,popis:z.popis,kdy:z.kdy,kdo:z.kdo}]),hist:(r.hist||[]).concat([{t:z.kdy,kdo:kdo||'',co:(z.typ==='ztraceno'?'Ztraceno: ':'Poškozeno: ')+z.ks+'× '+R.poskozNazev(k)+(z.popis?' – '+z.popis:'')}]).slice(-30)})}catch(x){}
   return z},
  /* rezervace s loděmi, ke kterým jde poškození přiřadit: lodě má host teď u sebe, nebo je vracel/vydával v posledních dnech */
  poskozRez:function(den){var d=den||new Date().toISOString().slice(0,10),od=new Date(new Date(d).getTime()-3*864e5).toISOString().slice(0,10);return R.vse().filter(function(r){if(!r.lode||!R.lodePocet(r.lode)||r.stav==='zru'||r.stav==='blk')return false;var a=r.lode.den,b=R.lodeDny(r.lode).pop()||a;return a<=d&&b>=od}).sort(function(a,b){return (a.jmeno||'').localeCompare(b.jmeno||'','cs')})},
  poskozOprav:function(id,kdo){var n=R.nast(),x=(n.poskozeno||[]).filter(function(y){return y.id===id})[0];n.poskozeno=(n.poskozeno||[]).filter(function(y){return y.id!==id});R.ulozNast(n);
-  if(x&&x.rez&&R.uprav)try{var r=R.vse().filter(function(q){return q.id===x.rez})[0];if(r)R.uprav(r.id,{poskozeno:(r.poskozeno||[]).map(function(p){return p.id===id?Object.assign({},p,{opraveno:Date.now()}):p}),hist:(r.hist||[]).concat([{t:Date.now(),kdo:kdo||'',co:'Opraveno: '+x.ks+'× '+R.poskozNazev(x.k)}]).slice(-30)})}catch(e){}},
+  if(x&&x.rez&&R.uprav)try{var r=R.vse().filter(function(q){return q.id===x.rez})[0];if(r)R.uprav(r.id,{poskozeno:(r.poskozeno||[]).map(function(p){return p.id===id?Object.assign({},p,{opraveno:Date.now()}):p}),hist:(r.hist||[]).concat([{t:Date.now(),kdo:kdo||'',co:(x.typ==='ztraceno'?'Nalezeno / doplněno: ':'Opraveno: ')+x.ks+'× '+R.poskozNazev(x.k)}]).slice(-30)})}catch(e){}},
  /* volné kusy pro celé období (nejhorší den) */
  lodeVolno:function(den,dni,krome){var c=R.lodeCelkem(),v=Object.assign({},c);R.lodeDny({den:den,dni:dni}).forEach(function(d){var o=R.lodeObs(d,krome);Object.keys(c).forEach(function(k){v[k]=Math.min(v[k],c[k]-(o[k]||0))})});return v},
  lodeChybi:function(l,krome){if(!l||!R.lodePocet(l))return [];var v=R.lodeVolno(l.den,l.dni,krome),p=R.lodePotreba(l),ch=[];Object.keys(p).forEach(function(k){if(p[k]>(v[k]||0)){var t=window.KKC&&KKC.p(k);ch.push((t?t.n:R.VYB[k]||k)+' (volných '+Math.max(0,v[k]||0)+', potřeba '+p[k]+')')}});return ch},
