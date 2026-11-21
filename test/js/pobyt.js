@@ -382,7 +382,7 @@ function texty(){const Z=KR&&KR.zaloha?KR.zaloha():null,zap=!!(Z&&Z.zap);
  tx(24,'Zkontrolujte a odešlete');tx(15,S.mod==='lod'?'Vyplutí':null);tx(16,S.mod==='lod'?'Vrácení':null);tx(4,ch);tx(3,zap?'Vyberte termín, ubytování a počet osob – cenu uvidíte hned. Rezervaci potvrdíte zaplacením zálohy, pokyny pošleme e-mailem.':null);
  tx(37,zap?'Cena podle ceníku. Zálohu zaplatíte převodem, zbytek až na místě.':null);
  tx(25,zap?'Na e-mail vám pošleme číslo rezervace a pokyny k zaplacení zálohy.':null);tx(28,zap?'E-mail *':null)}
-function render(){Object.keys(MISTA).forEach(k=>{S.c[k]=S.c[k].filter(n=>freeU(k,n));if(k in S.q)S.q[k]=S.c[k].length});lodMod();if(denMod()){TYPES.forEach(t=>{S.q[t.k]=0;if(S.c[t.k])S.c[t.k]=[]});EXTRAS.forEach(x=>{S[x.k]=0})}lodFix();xLimit();R=compute();lodRender();dopRender();nocRender();const pending=S.from&&!S.to;if(S.to&&!$('rzWarn').hidden)warn(KL.t(''));
+function render(){{const cw=$("rzCasW");if(cw)cw.hidden=S.mod==="lod"}Object.keys(MISTA).forEach(k=>{S.c[k]=S.c[k].filter(n=>freeU(k,n));if(k in S.q)S.q[k]=S.c[k].length});lodMod();if(denMod()){TYPES.forEach(t=>{S.q[t.k]=0;if(S.c[t.k])S.c[t.k]=[]});EXTRAS.forEach(x=>{S[x.k]=0})}lodFix();xLimit();R=compute();lodRender();dopRender();nocRender();const pending=S.from&&!S.to;if(S.to&&!$('rzWarn').hidden)warn(KL.t(''));
  paintCal();
  $('rzFromT').textContent=S.from?fD(S.from):'vyberte';$('rzFromT').classList.toggle('wait',!S.from);
  const toT=$('rzToT');toT.textContent=S.to?fD(S.to):S.from?'vyberte':'–';toT.classList.toggle('wait',!!pending);
@@ -414,7 +414,7 @@ function render(){Object.keys(MISTA).forEach(k=>{S.c[k]=S.c[k].filter(n=>freeU(k
  set('dospeli',S.dosp);set('deti',S.dite);set('zaci',S.zak);set('doplnky',extrasTxt()||'žádné');set('cena',R.total);set('lode',lodeTxt());set('doprava',doprTxt());set('zaloha',R.zal||'');
  set('souhrn',summaryText());
  navState()}
-function summaryText(){return `${S.mod==='lod'&&S.d0?'Den vyplutí: '+fDY(S.d0)+(R.n?'\nNocleh: '+useky().map(u=>fDY(u[0])+' – '+fDY(u[1])).join(' a ')+' ('+R.n+' '+plural(R.n,'noc','noci','nocí')+')':''):'Termín: '+fDY(S.from)+' – '+fDY(S.to)+' ('+R.n+' '+plural(R.n,'noc','noci','nocí')+')'}\nOsoby: ${peopleTxt()}\nUbytování: ${typeTxt()}\nDoplňky: ${extrasTxt()||'žádné'}${lodeTxt()?'\nLodě: '+lodeTxt():''}${doprTxt()?'\nDoprava osob: '+doprTxt():''}\n${R.zal?'Cena':'Orientační cena'}: ${fmt(R.total)}${R.disc?` (vč. slevy ${Math.round(R.disc*100)} %)`:''}${R.zal?'\nZáloha předem: '+fmt(R.zal):''}${KL.jazyk!=='cs'?'\nJazyk webu: '+KL.jazyk.toUpperCase():''}`}
+function summaryText(){return `${S.mod==='lod'&&S.d0?'Den vyplutí: '+fDY(S.d0)+(R.n?'\nNocleh: '+useky().map(u=>fDY(u[0])+' – '+fDY(u[1])).join(' a ')+' ('+R.n+' '+plural(R.n,'noc','noci','nocí')+')':''):'Termín: '+fDY(S.from)+' – '+fDY(S.to)+' ('+R.n+' '+plural(R.n,'noc','noci','nocí')+')'}${S.mod!=='lod'&&form.elements.cas_prijezdu&&form.elements.cas_prijezdu.value?'\nPříjezd kolem: '+form.elements.cas_prijezdu.value:''}\nOsoby: ${peopleTxt()}\nUbytování: ${typeTxt()}\nDoplňky: ${extrasTxt()||'žádné'}${lodeTxt()?'\nLodě: '+lodeTxt():''}${doprTxt()?'\nDoprava osob: '+doprTxt():''}\n${R.zal?'Cena':'Orientační cena'}: ${fmt(R.total)}${R.disc?` (vč. slevy ${Math.round(R.disc*100)} %)`:''}${R.zal?'\nZáloha předem: '+fmt(R.zal):''}${KL.jazyk!=='cs'?'\nJazyk webu: '+KL.jazyk.toUpperCase():''}`}
 
 /* ---------- kroky / průvodce ----------
    Host na začátku zvolí, čím začne (S.mod). Druhou část mu průvodce nabídne na konci, dopravu úplně nakonec:
@@ -482,6 +482,12 @@ form.addEventListener('submit',e=>{e.preventDefault();submit()});
 function fieldErr(name,msg){const inp=form.elements[name],lab=inp.closest('.rz-f');let em=lab.querySelector('em');
  if(msg){if(!em){em=document.createElement('em');em.id='err-'+name;lab.append(em)}em.textContent=msg;lab.classList.add('err');inp.setAttribute('aria-invalid','true');inp.setAttribute('aria-describedby','err-'+name)}else{if(em)em.remove();lab.classList.remove('err');inp.removeAttribute('aria-invalid');inp.removeAttribute('aria-describedby')}}
 ['jmeno','telefon','email'].forEach(n=>form.elements[n].addEventListener('input',()=>fieldErr(n,'')));
+/* přibližný čas příjezdu – jen u pobytu, popisky podle jazyka */
+{const w=$('rzCasW');if(w){$('rzCasL').textContent=KL.t('Přibližný čas příjezdu');const o=$('rzCas').options;o[0].textContent=KL.t('Zatím nevím');o[1].textContent=KL.t('do 10:00');o[7].textContent=KL.t('po 20:00')}}
+/* krátká cesta pro vodáky: tlačítko „Jen lodě na den“ (data-rzmod) nebo odkaz #jen-lode rovnou otevře rezervaci lodí */
+const rzMod=m=>{const b=document.querySelector('[data-mod="'+m+'"]');if(b&&S.mod!==m)b.click();const sec=document.getElementById('rezervace');if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'})};
+document.addEventListener('click',e=>{const a=e.target.closest('[data-rzmod]');if(!a)return;e.preventDefault();rzMod(a.dataset.rzmod)});
+if(location.hash==='#jen-lode')setTimeout(()=>rzMod('lod'),300);
 function submit(){
  if(!S.mod){go('volba');return}if(!S.to){go('termin');warn(KL.t(S.mod==='lod'?'Vyberte v kalendáři den vyplutí.':'Vyberte v kalendáři termín pobytu.'));return}
  if(!SEL().length&&!nLodi()){go(S.mod==='lod'?'lode':'uby');warn(KL.t(S.mod==='lod'?'Vyberte prosím aspoň jednu loď.':'Vyberte prosím aspoň jedno ubytování.'));return}
@@ -498,7 +504,7 @@ function submit(){
  else if(window.KKR){let r;
    const mista=[].concat(...Object.keys(MISTA).map(k=>S.c[k].map(n=>k+'-'+n)),S.q.teepee?['teepee-1']:[]);
   const lo=lodeObj(),dp=doprObj(),od=iso(S.from),dk=denMod()&&lo?KKR.lodeDny(lo).pop():iso(S.to),pb=KKR.novaPlatba(Math.round(R.total),lo&&lo.den<od?lo.den:od);
-  const UG=S.mod==='lod'&&S.nc&&useky().length>1?useky():null,st0=pb?'pop':KKR.stavWeb(mista,{stan:S.q.stan||0,karavan:S.q.karavan||0}),zak={dalsi:{stan:S.q.stan||0,karavan:S.q.karavan||0},osoby:Object.assign({dosp:S.dosp,dite:S.dite,zak:S.zak},...OS_VLASTNI.filter(p=>S[p.k]).map(p=>({[p.k]:S[p.k]}))),jmeno:f.jmeno.value.trim(),telefon:f.telefon.value.trim(),email:f.email.value.trim(),zdroj:'web',jazyk:KL.jazyk};
+  const UG=S.mod==='lod'&&S.nc&&useky().length>1?useky():null,st0=pb?'pop':KKR.stavWeb(mista,{stan:S.q.stan||0,karavan:S.q.karavan||0}),zak={dalsi:{stan:S.q.stan||0,karavan:S.q.karavan||0},osoby:Object.assign({dosp:S.dosp,dite:S.dite,zak:S.zak},...OS_VLASTNI.filter(p=>S[p.k]).map(p=>({[p.k]:S[p.k]}))),jmeno:f.jmeno.value.trim(),telefon:f.telefon.value.trim(),email:f.email.value.trim(),prijezd:S.mod==='lod'?'':(f.cas_prijezdu?f.cas_prijezdu.value:''),zdroj:'web',jazyk:KL.jazyk};
     try{if(UG&&UG.some(u=>KKR.kolize(mista,iso(u[0]),iso(u[1])).length))throw new Error('obsazeno');/* noc před a po plavbě = dvě navazující rezervace; cena, záloha, lodě a doprava jsou u první */
    const u0=UG?UG[0]:null,txU=UG?KL.t('Nocleh rozdělený')+': '+UG.map(u=>fD(u[0])+' – '+fD(u[1])).join(' a '):'';
    r=KKR.pridej(Object.assign({stav:st0,od:u0?iso(u0[0]):od,do:u0?iso(u0[1]):dk,lode:lo,doprava:dp,vyzved:vyzvObj(),platba:pb,mista,zprava:[f.zprava.value.trim(),txU].filter(Boolean).join('\n'),cena:Math.round(R.total)},zak));
@@ -507,6 +513,17 @@ function submit(){
   done(false,r);nactiBusy();drawCal()}
  else{const body=`${summaryText()}\n\nJméno: ${f.jmeno.value}\nTelefon: ${f.telefon.value}\nE-mail: ${f.email.value||'-'}\nZpráva: ${f.zprava.value||'-'}`;
   location.href=`mailto:kempkrumlov2017@gmail.com?subject=${encodeURIComponent('Poptávka pobytu '+fDY(S.from)+' – '+fDY(S.to))}&body=${encodeURIComponent(body)}`;done(true)}}
+/* QR platba (SPAYD – české bankovní aplikace) na zálohu: účet z Nastavení rezervací → Zálohy, VS = číslo rezervace */
+function ibanCZ(u){u=String(u||'').replace(/\s/g,'').toUpperCase();if(/^CZ\d{22}$/.test(u))return u;const m=u.match(/^(?:(\d{1,6})-)?(\d{2,10})\/(\d{4})$/);if(!m)return '';
+ const bban=m[3]+(m[1]||'').padStart(6,'0')+m[2].padStart(10,'0');let r=0;for(const ch of bban+'123500')r=(r*10+ +ch)%97;return 'CZ'+String(98-r).padStart(2,'0')+bban}
+function qrPlatba(rz){let b=$('rzQR');if(b)b.remove();const Z=window.KKR&&KKR.zaloha?KKR.zaloha():{},ib=ibanCZ(Z.ucet);if(!rz||!rz.platba||!ib||!(+rz.platba.zaloha))return;
+ const vs=String(rz.cislo||'').replace(/\D/g,'').slice(-10),am=(+rz.platba.zaloha).toFixed(2),dt=(rz.platba.splatnost||'').replace(/-/g,''),
+  spd='SPD*1.0*ACC:'+ib+'*AM:'+am+'*CC:CZK'+(vs?'*X-VS:'+vs:'')+(dt?'*DT:'+dt:'')+'*MSG:'+('KEMP KRUMLOV '+(rz.cislo||'')).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\*/g,'').slice(0,60);
+ b=document.createElement('div');b.id='rzQR';b.className='rz-qr';const sd=(rz.platba.splatnost||'').split('-');
+ b.innerHTML=`<div class="rz-qr-c" aria-hidden="true"></div><div class="rz-qr-t"><b>${KL.t('Zaplaťte zálohu QR platbou')}</b><small>${KL.t('Naskenujte kód v aplikaci své banky – vše se vyplní samo.')}</small><dl><dt>${KL.t('Částka')}</dt><dd>${fmt(+rz.platba.zaloha)}</dd><dt>${KL.t('Účet')}</dt><dd>${String(Z.ucet).replace(/[<>&"]/g,"")}</dd>${vs?`<dt>${KL.t('Variabilní symbol')}</dt><dd>${vs}</dd>`:''}${sd.length===3?`<dt>${KL.t('Splatnost')}</dt><dd>${+sd[2]}. ${+sd[1]}. ${sd[0]}</dd>`:''}</dl></div>`;
+ $('rzDoneP').after(b);
+ const kresli=()=>{try{const q=qrcode(0,'M');q.addData(spd);q.make();b.querySelector('.rz-qr-c').innerHTML=q.createSvgTag({cellSize:5,margin:2,scalable:true})}catch(x){b.remove()}};
+ if(window.qrcode)kresli();else{const sc=document.createElement('script');sc.src=(document.querySelector('script[src*="pobyt.js"]').src.replace(/pobyt\.js.*$/,''))+'vendor/qrcode.js';sc.onload=kresli;sc.onerror=()=>b.remove();document.head.append(sc)}}
 function warnSend(){alert('Poptávku se nepodařilo odeslat. Zkuste to prosím znovu nebo zavolejte na +420 720 514 943.')}
 let ULOZENO=false;
 function done(viaMail,rz){const f=form.elements;ULOZENO=!!rz;$('rzAgain').textContent=KL.t(rz?'Nová rezervace':'Upravit poptávku');
@@ -516,6 +533,7 @@ function done(viaMail,rz){const f=form.elements;ULOZENO=!!rz;$('rzAgain').textCo
   $('rzDoneP').textContent=KL.t(hned?'Číslo rezervace':'Číslo poptávky')+' '+rz.cislo+'. '+KL.t(hned?'Místo je zarezervované na vaše jméno.':'Místo vám držíme, ozveme se s potvrzením.')}
  if(rz&&rz.platba){const z=rz.platba,sd=z.splatnost.split('-');$('rzDoneH').textContent=KL.t('Rezervace přijata – zbývá zaplatit zálohu');
   $('rzDoneP').textContent=`${KL.t('Číslo rezervace')} ${rz.cislo}. ${KL.t('Na e-mail vám posíláme pokyny k platbě.')} ${KL.t('Záloha')} ${fmt(z.zaloha)}, ${KL.t('splatnost')} ${+sd[2]}. ${+sd[1]}. ${sd[0]}. ${KL.t('Do té doby vám vše držíme.')}`}
+ qrPlatba(rz);
  $('rzDoneSum').innerHTML=summaryText().split('\n').map(l=>{const i=l.indexOf(':');return `<b>${l.slice(0,i+1)}</b>${l.slice(i+1)}`}).join('<br>');
  form.hidden=true;const d=$('rzDone');d.hidden=false;
  d.scrollIntoView({behavior:'smooth',block:'center'});d.focus({preventScroll:true})}

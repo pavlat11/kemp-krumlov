@@ -1617,3 +1617,12 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .ct-dop .nvh{text-align:center}
 .ct-dop .cdo{white-space:nowrap}
 .ck-tip{margin:-4px 0 12px;padding:10px 14px 10px 30px;border-radius:12px;background:#F6F4EE;color:var(--mut,#56625a);font-size:13.5px;line-height:1.55}
+.sb-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.sb-2 small{display:block;margin-top:4px;font-size:12.5px}
+.sb-auto{margin:0 0 10px}
+.sb-war{margin:0 0 10px;padding:8px 12px;border-radius:10px;background:#FFF4E6;color:#9A560A;font-size:13.5px;font-weight:700}
+.rpo-l{margin:0 0 14px;padding:0;list-style:none;border:1px solid var(--line,#e5e5e5);border-radius:12px;overflow:hidden}
+.rpo-l li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;background:#FFF6F4}
+.rpo-l li+li{border-top:1px solid #F3DAD5}
+.rpo-n{display:flex;flex-direction:column;gap:2px}.rpo-n b{color:#9B2C1F}.rpo-n small{font-size:13px}
+.rpo-f{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px}.rpo-f .f{margin:0}.rpo-f .rpo-p{flex:1 1 220px}.rpo-f .num{width:80px}
