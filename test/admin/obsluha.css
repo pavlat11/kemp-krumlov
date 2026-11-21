@@ -624,3 +624,15 @@ select[data-u=role]{min-width:132px}
 @media print{.ob-rid-d{display:block;margin:0 0 10px;font-size:16px;font-weight:800}.ob-ha{display:none!important}}
 .ob-hbz{text-decoration:none}
 @media print{#tisk .ob-rid{display:block}#tisk .ob-rid>li{display:grid;grid-template-columns:52pt 1fr;gap:8pt;margin:0 0 6pt;padding:6pt;border:.6pt solid #888;border-left:3pt solid #000;border-radius:0;break-inside:avoid}#tisk .ob-rid>li.hot{display:none}#tisk .ob-rid-c b{font-size:16pt}#tisk .ob-rid-c small{font-size:7pt}#tisk .ob-rid-b h3{font-size:12pt;margin:0 0 2pt}#tisk .ob-rid-n{display:block;margin:0 0 2pt;font-size:10pt;font-weight:700}#tisk .ob-rid-n span{margin-right:10pt}#tisk .ob-rid-n svg,#tisk .ob-b,#tisk svg{display:none}#tisk .ob-rid-b ul{margin:2pt 0 0;padding:0;list-style:none}#tisk .ob-rid-b ul li{padding:1.5pt 0;border-top:.4pt solid #ccc;font-size:9.5pt}#tisk .ob-rid-b a{color:#000;text-decoration:none;font-weight:700}#tisk .ob-rid-s{font-size:10pt;margin:0 0 6pt}}
+
+/* poškozené lodě a vybavení (dialog v aplikaci) */
+.ob-po{width:min(560px,calc(100% - 24px))}
+.ob-po-l{margin:0 0 14px;padding:0;list-style:none;border-radius:12px;overflow:hidden;border:1px solid #F3DAD5}
+.ob-po-l li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#FFF6F4}
+.ob-po-l li+li{border-top:1px solid #F3DAD5}
+.ob-po-l li span{display:flex;flex-direction:column;gap:2px;min-width:0}.ob-po-l b{color:#9B2C1F}.ob-po-l small{font-size:13px}
+.ob-po-f{display:grid;grid-template-columns:1fr 100px;gap:10px}
+.ob-po-f .f{display:flex;flex-direction:column;gap:5px;margin:0;font-size:13.5px;font-weight:700}
+.ob-po-p{grid-column:1/-1}.ob-po-f textarea{resize:vertical;font:inherit}
+.ob-po form,.ob-po .ob-po-l li span,.ob-po .f{text-align:left}.ob-po h2{text-align:left}.ob-po select,.ob-po textarea,.ob-po input{text-align:left}.ob-po .ob-po-ks input{text-align:center}
+.ob-po textarea::placeholder{text-align:left}.ob-po select{text-align-last:left}
