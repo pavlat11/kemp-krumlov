@@ -43,9 +43,9 @@ var VYCHOZI={verze:1,
   {k:'baraka',kat:'lode',n:'Baraka',pozn:'2 osoby',a:750,b:550,osob:2},
   {k:'nav1',kat:'navoz',n:'Jeden den, do 10 lodí',a:200,b:600},{k:'nav2',kat:'navoz',n:'Jeden den, 10 a více lodí',a:500,b:1000},
   {k:'nav3',kat:'navoz',n:'Více dní, do 10 lodí',a:400},{k:'nav4',kat:'navoz',n:'Více dní, 10 a více lodí',a:800},
-  {k:'dop1',kat:'doprava',n:'Vyšší Brod',a:1150},{k:'dop2',kat:'doprava',n:'Rožmberk nad Vltavou',a:850},{k:'dop3',kat:'doprava',n:'Nahořany',a:650},
+  {k:'dop1',kat:'doprava',n:'Vyšší Brod',a:1150,vzd:1},{k:'dop2',kat:'doprava',n:'Rožmberk nad Vltavou',a:850,vzd:1},{k:'dop3',kat:'doprava',n:'Nahořany',a:650},
   {k:'dop4',kat:'doprava',n:'Kemp Vltava',a:550},{k:'dop5',kat:'doprava',n:'Viking / Pískárna',a:500},{k:'dop6',kat:'doprava',n:'Vltavan / Spolí',a:350},
-  {k:'dop7',kat:'doprava',n:'Centrum',a:250},{k:'dop8',kat:'doprava',n:'Zlatá Koruna',a:350},{k:'dop9',kat:'doprava',n:'Boršov',a:900}
+  {k:'dop7',kat:'doprava',n:'Centrum',a:250},{k:'dop8',kat:'doprava',n:'Zlatá Koruna',a:350},{k:'dop9',kat:'doprava',n:'Boršov',a:900,vzd:1}
  ],
  /* měna: eur = nabízet přepínač Kč/€, kurz Kč za 1 €, zaokr = zaokrouhlení eur (1 | 0.5 | 0.1) */
  mena:{eur:true,kurz:25,zaokr:1},
@@ -62,6 +62,7 @@ function doplň(u){u.slevy=slevyNove(u.slevy);(u.polozky||[]).forEach(function(p
   /* půjčovna: starší ceník ještě lodě a návoz nemá – doplní se výchozí (před dopravu) */
   ['navoz','lode'].forEach(function(kat){if(u.polozky.some(function(p){return p.kat===kat}))return;var nove=JSON.parse(JSON.stringify(VYCHOZI.polozky.filter(function(p){return p.kat===kat}))),i=u.polozky.findIndex(function(p){return p.kat==='doprava'});u.polozky.splice.apply(u.polozky,[i<0?u.polozky.length:i,0].concat(nove))});
   /* návoz: druhý sloupec (vzdálenější místa, web PE-LA) ve starším ceníku chybí */
+  u.polozky.forEach(function(p){if(p.kat==='doprava'&&p.vzd===undefined){var v0=VYCHOZI.polozky.filter(function(x){return x.k===p.k})[0];p.vzd=v0&&v0.vzd?1:0}});
   u.polozky.forEach(function(p){if(p.kat==='navoz'&&p.b==null){var v=VYCHOZI.polozky.filter(function(x){return x.k===p.k})[0];if(v&&v.b!=null)p.b=v.b}});
   return u}
 function nacti(){
@@ -271,7 +272,7 @@ var R=window.KKR={
  lodeVolno:function(den,dni,krome){var c=R.lodeCelkem(),v=Object.assign({},c);R.lodeDny({den:den,dni:dni}).forEach(function(d){var o=R.lodeObs(d,krome);Object.keys(c).forEach(function(k){v[k]=Math.min(v[k],c[k]-(o[k]||0))})});return v},
  lodeChybi:function(l,krome){if(!l||!R.lodePocet(l))return [];var v=R.lodeVolno(l.den,l.dni,krome),p=R.lodePotreba(l),ch=[];Object.keys(p).forEach(function(k){if(p[k]>(v[k]||0)){var t=window.KKC&&KKC.p(k);ch.push((t?t.n:R.VYB[k]||k)+' (volných '+Math.max(0,v[k]||0)+', potřeba '+p[k]+')')}});return ch},
  cenaLodi:function(l){var o={pujc:0,navoz:0,celkem:0};if(!l||!window.KKC)return o;var dni=Math.max(1,+l.dni||1),n=R.lodePocet(l);if(!n)return o;Object.keys(l.kusy).forEach(function(k){o.pujc+=(+l.kusy[k]||0)*KKC.lod(k,dni)*dni});
-  var nk=dni>1?(n>=10?'nav4':'nav3'):(n>=10?'nav2':'nav1'),np=KKC.p(nk);o.navoz=np?+np.a||0:0;o.celkem=o.pujc;return o}/* návoz lodí NENÍ v ceně – platí se na místě, vždy jen jeden (bez ohledu na trasu) */,
+  var nk=dni>1?(n>=10?'nav4':'nav3'):(n>=10?'nav2':'nav1'),np=KKC.p(nk),pa=window.KKC&&KKC.p(l.odkud),pb=window.KKC&&KKC.p(l.kam);o.daleko=!!((pa&&pa.vzd)||(pb&&pb.vzd));o.navoz=np?(o.daleko&&np.b!=null?+np.b||0:+np.a||0):0;o.celkem=o.pujc;return o}/* návoz lodí NENÍ v ceně – platí se na místě, vždy jen jeden (bez ohledu na trasu) */,
  aut:function(osob){return Math.max(1,Math.ceil((+osob||0)/8))},
  cenaDopravy:function(d){if(!d||!d.misto||d.misto==='kemp'||!window.KKC)return 0;var p=KKC.p(d.misto);return p?(+p.a||0)*R.aut(d.osob):0},
  lodeTxt:function(l,j){if(!l||!R.lodePocet(l))return '';var a=Object.keys(l.kusy).filter(function(k){return +l.kusy[k]>0}).map(function(k){var p=window.KKC&&KKC.p(k);return l.kusy[k]+'× '+(p?(j&&j!=='cs'&&p['n_'+j])||p.n:k)}),d=l.den.split('-'),dni=Math.max(1,+l.dni||1),W={cs:['den','dny','dní'],en:['day','days','days'],de:['Tag','Tage','Tage']}[j||'cs']||['den','dny','dní'];
