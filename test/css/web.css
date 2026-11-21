@@ -1107,7 +1107,7 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
 @media(max-width:760px){.ft .foot-sky svg{height:96px}}
 
 /* ===== KONTAKT: fotka v pozadí ===== */
-.kt{background:#0b2419 url("../img/inl-01.webp") center 38%/cover no-repeat;isolation:isolate;overflow:hidden}
+.kt{background:#0b2419 image-set(url("../img/inl-01-1024.webp") 1x,url("../img/inl-01.webp") 2x) center 38%/cover no-repeat;isolation:isolate;overflow:hidden}
 .kt::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(180deg,rgba(11,36,25,.80) 0%,rgba(11,36,25,.60) 42%,rgba(11,36,25,.88) 100%)}
 .kt::after{content:"";position:absolute;left:0;right:0;bottom:0;height:170px;z-index:-1;background:linear-gradient(180deg,rgba(250,246,238,0),var(--cream) 92%);pointer-events:none}
 .kt .wrap{position:relative;z-index:1}
@@ -1533,7 +1533,7 @@ section#o-kempu.ok2::before,section#o-kempu.ok2::after{display:none!important}
 @media not all{#ubytovani .ub-card,#ubytovani .ub-media img{transition:none!important;transform:none!important;opacity:1!important}}
 
 /* ===== ubytovani-bg ===== */
-#ubytovani.ub-sec{--ub-bg:url("../img/inl-12.webp");background:#0b2419 center 60%/cover no-repeat}
+#ubytovani.ub-sec{--ub-bg:image-set(url("../img/inl-12-1024.webp") 1x,url("../img/inl-12.webp") 2x);background:#0b2419 center 60%/cover no-repeat}
 #ubytovani.ub-sec::before{content:"";position:absolute;inset:0;width:auto;height:auto;border-radius:0;left:0;top:0;z-index:0;
  background:linear-gradient(180deg,rgba(8,24,17,.88) 0%,rgba(8,24,17,.55) 30%,rgba(8,24,17,.45) 65%,rgba(8,24,17,.85) 100%),
  radial-gradient(ellipse at 50% 60%,rgba(8,24,17,0) 0%,rgba(8,24,17,.35) 100%)}
@@ -1564,7 +1564,7 @@ h1 em:not(.hero *),h2 em:not(.hero *),h3 em:not(.hero *){font-style:normal!impor
 .btn,button,.ub-cta,.ub-headbtn{font-weight:700}
 
 /* ===== rezervace-css ===== */
-#rezervace.rz{--rz-bg:url("../img/inl-13.webp")}
+#rezervace.rz{--rz-bg:image-set(url("../img/inl-13-1024.webp") 1x,url("../img/inl-13.webp") 2x)}
 #rezervace.rz{--rz-f:#0b2419;--rz-f2:#123426;--rz-sun:#f4a64a;--rz-sun2:#ffc978;--rz-cream:#f7f2e8;--rz-line:#e7e0d2;--rz-mut:#6b756f;
 position:relative;overflow:clip;color:#0b2419;padding:clamp(80px,9vw,130px) 0 clamp(70px,8vw,110px);background:#0b2419 var(--rz-bg) center 65%/cover no-repeat;scroll-margin-top:70px}
 #rezervace.rz::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,24,17,.94) 0%,rgba(8,24,17,.62) 26%,rgba(8,24,17,.55) 60%,rgba(8,24,17,.94) 100%)}
@@ -3346,7 +3346,7 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-nab .rz-nb.v2.on{box-shadow:0 0 0 3px #2f7d4c,0 26px 44px -26px #2f7d4caa}
 .rz-nb.v2 .rz-nb-t{position:relative;display:block;height:190px;padding:0;background:#12626f center/cover no-repeat;overflow:hidden}
 .rz-nb.v2.lod .rz-nb-t{background-image:linear-gradient(180deg,rgba(8,40,46,.05) 30%,rgba(8,40,46,.88)),url("../img/inl-02-1024.webp");background-position:center,18% center}
-.rz-nb.v2.dop .rz-nb-t{background-image:linear-gradient(180deg,rgba(74,38,4,.1) 30%,rgba(74,38,4,.9)),url("../img/inl-01.webp");background-position:center,70% 85%}
+.rz-nb.v2.dop .rz-nb-t{background-image:linear-gradient(180deg,rgba(74,38,4,.1) 30%,rgba(74,38,4,.9)),image-set(url("../img/inl-01-1024.webp") 1x,url("../img/inl-01.webp") 2x);background-position:center,70% 85%}
 .rz-nb.v2 .rz-nb-t{transition:background-size .5s}
 .rz-nb.v2 .tag{position:absolute;left:14px;top:14px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.94);color:#0b2419;font-size:12.5px;font-weight:800;letter-spacing:.01em}
 .rz-nb.v2 .cn{position:absolute;right:14px;top:14px;flex-direction:row;align-items:baseline;gap:5px;padding:7px 14px;border-radius:16px;background:#f4a64a;color:#0b2419;box-shadow:0 10px 22px -10px #000a}

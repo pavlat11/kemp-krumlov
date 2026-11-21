@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Připraveno pro ostrý web: při spuštění zkopírovat do kořene a do robots.txt přidat řádek
+     Sitemap: https://www.kemp-krumlov.cz/sitemap.xml -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.kemp-krumlov.cz/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.kemp-krumlov.cz/pela/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.kemp-krumlov.cz/pela/kanoe.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.kemp-krumlov.cz/pela/rafty.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.kemp-krumlov.cz/pela/vybaveni.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.kemp-krumlov.cz/gdpr.html</loc><changefreq>yearly</changefreq><priority>0.2</priority></url>
+</urlset>

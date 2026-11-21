@@ -238,3 +238,32 @@ Upravený text s cenou se ukládá se značkou `{price:klic}`, takže se cena d�
 - S `vzhled='aplikace'` smí účet jen sekce `ubytovani`, `pujcovna`, `doprava` (+ vlastní účet) – na serveru to musí hlídat i middleware/Policy, ne jen vzhled.
 - Akce z aplikace jsou stejné úpravy rezervace jako v plné administraci (stav `uby`/`odj`, `platba.stav`, `lode.vydano`/`lode.vraceno`) se zápisem do `hist`.
 - Nově: `doprava.hotovo` a `vyzved.hotovo` = `{kdy, kdo}` – obsluha označila odvoz na start / vyzvednutí v cíli jako hotové.
+
+## Kontrola obsazenosti při odeslání
+- Web už teď těsně před uložením znovu kontroluje volná místa a vybavení (`KKR.pridej` vyhodí chybu „obsazeno“ / „vybavení“ a host dostane hlášku). Na serveru se to musí udělat znovu **v transakci se zámkem** (např. `SELECT … FOR UPDATE` nad dny/místy), jinak dva hosté odeslaní ve stejnou chvíli mohou zabrat totéž.
+
+## Návoz lodí
+- Není v ceně rezervace (`cena` ho neobsahuje), platí se na místě. Cena = `cenaLodi(l).navoz` – dražší ze zastávky startu a cíle (`polozky` kat. `doprava`: `n1`, `n10`, `d1`, `d10`), vždy jen jeden.
+- Obecné `nav1`–`nav4` se dopočítávají ze zastávek (nejnižší / nejvyšší) jen kvůli webu PE-LA.
+
+## QR platba
+- Po odeslání rezervace se zálohou web ukáže QR kód (formát SPAYD, české bankovní aplikace): `SPD*1.0*ACC:<IBAN>*AM:<záloha>*CC:CZK*X-VS:<číslice z čísla rezervace>*DT:<splatnost>*MSG:…`. IBAN se počítá z čísla účtu v Nastavení → Zálohy. Stejný QR kód (jako obrázek PNG) dejte i do e-mailu „Výzva k zaplacení zálohy“.
+
+## Čas příjezdu
+- Rezervace má nové pole `prijezd` (text, např. `14–16`, `po 20:00`) – vyplní host na webu nebo obsluha v administraci. Použije ho e-mail „Den před příjezdem“ (`{prijezd}`) a aplikace obsluhy.
+
+## Automatické e-maily (cron)
+- Nové šablony `predPrijezdem`, `plavba`, `recenze` (Rezervace → Nastavení → E-maily). Server je posílá plánovačem (Laravel scheduler):
+  - `predPrijezdem` – den před `od` v 10:00, rezervace ve stavu `pot` s ubytováním a e-mailem,
+  - `plavba` – v den `lode.den` v 7:00, jen rezervace s loděmi,
+  - `recenze` – den po `do` v 11:00, stav `odj` (nebo `pot` po termínu), jen jednou.
+- Každý typ jde vypnout (`nastaveni.autoMail[typ] === false`). Odkaz na recenze je `nastaveni.recenzeUrl` (`{recenze}`). Odeslání si zapište do rezervace (např. `maily.predPrijezdem = čas`), ať se nepošle dvakrát.
+- Nová pole v šablonách: `{prijezd}`, `{odvoz}`, `{navoz}`, `{recenze}`.
+
+## Poškozené vybavení
+- `nastaveni.poskozeno = [{id, k, ks, popis, kdy, kdo}]` – kusy se odečítají ze skladu (`lodeCelkem`) a nenabízí se k půjčení, dokud je někdo neoznačí jako opravené. Nahlásit jde v administraci (Nastavení → Půjčovna) i z aplikace obsluhy (Lodě → Poškození).
+
+## Spuštění naostro (SEO)
+- Ve všech stránkách v `/test/` je `<meta name="robots" content="noindex, nofollow">` – **při spuštění smazat**.
+- `test/sitemap.xml` zkopírovat do kořene a do `robots.txt` přidat `Sitemap: https://www.kemp-krumlov.cz/sitemap.xml`.
+- Ukázková data (generátor v `cenik.js`) na ostrém webu nesmí běžet – při prvním načtení zabírají asi 1 s. Bez nich vychází web v Lighthouse kolem 80 bodů výkonu.

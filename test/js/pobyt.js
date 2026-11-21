@@ -168,7 +168,7 @@ PEOPLE.forEach(r=>{const c=document.createElement('div');c.className='rz-pc';
 
 /* ---------- ubytování ---------- */
 TYPES.forEach(t=>{const b=document.createElement('div');b.className='rz-row';b.style.setProperty('--c',t.c);
- b.innerHTML=`<span class="ph" style="background-image:url(${t.img})"><i class="n"></i></span><span class="tx"><b>${t.n}</b><small>${t.s}</small><span class="tg"><em>${t.bed}</em><em class="bd ${t.bc||''}" data-bd>${t.bd}</em>${t.minOs?`<em class="bd mo">${KL.t('jen pro skupiny od')} ${t.minOs} ${KL.t('osob')}</em>`:''}</span></span><span class="rt"><span class="pr">${KL.t(t.per+' + osoby')}<strong>${t.pr.replace(/<\/?strong>/g,'')}</strong></span></span>`;
+ b.innerHTML=`<span class="ph" data-bg="${t.img}"><i class="n"></i></span><span class="tx"><b>${t.n}</b><small>${t.s}</small><span class="tg"><em>${t.bed}</em><em class="bd ${t.bc||''}" data-bd>${t.bd}</em>${t.minOs?`<em class="bd mo">${KL.t('jen pro skupiny od')} ${t.minOs} ${KL.t('osob')}</em>`:''}</span></span><span class="rt"><span class="pr">${KL.t(t.per+' + osoby')}<strong>${t.pr.replace(/<\/?strong>/g,'')}</strong></span></span>`;
  const st=stepper(()=>S.q[t.k],v=>{if(v>S.q[t.k]&&t.minOs&&persons()<t.minOs){warn(KL.t(t.n)+': '+KL.t('rezervace jen pro skupiny od')+' '+t.minOs+' '+KL.t('osob')+'.');return}if(v>S.q[t.k]&&!freeK(t.k)){warn(KL.t(t.n)+' '+KL.t('je ve vybraném termínu obsazená, zkuste jiné ubytování.'));return}if(MISTA[t.k]){if(!setCount(t.k,v))warn(KL.t('Více volných míst tohoto typu ve vašem termínu nemáme.'));t.open=true}else S.q[t.k]=v;if(t.k==='karavan'&&v&&('elek' in S)&&!S.elek)S.elek=1},()=>0,MAXQ[t.k]||20);b.querySelector('.rt').append(st);t.st=st;
  $('rzTypes').append(b);t.el=b});
 /* typy, které se nerezervují – jen informace */
@@ -482,6 +482,8 @@ form.addEventListener('submit',e=>{e.preventDefault();submit()});
 function fieldErr(name,msg){const inp=form.elements[name],lab=inp.closest('.rz-f');let em=lab.querySelector('em');
  if(msg){if(!em){em=document.createElement('em');em.id='err-'+name;lab.append(em)}em.textContent=msg;lab.classList.add('err');inp.setAttribute('aria-invalid','true');inp.setAttribute('aria-describedby','err-'+name)}else{if(em)em.remove();lab.classList.remove('err');inp.removeAttribute('aria-invalid');inp.removeAttribute('aria-describedby')}}
 ['jmeno','telefon','email'].forEach(n=>form.elements[n].addEventListener('input',()=>fieldErr(n,'')));
+/* fotky ubytování se načtou až když se k nim host doroluje (rychlejší první načtení stránky) */
+{const L=[...document.querySelectorAll('#rezervace [data-bg]')],uk=e=>{e.style.backgroundImage='url('+e.dataset.bg+')';e.removeAttribute('data-bg')};if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){uk(x.target);io.unobserve(x.target)}}),{rootMargin:'300px'});L.forEach(e=>io.observe(e))}else L.forEach(uk)}
 /* přibližný čas příjezdu – jen u pobytu, popisky podle jazyka */
 {const w=$('rzCasW');if(w){$('rzCasL').textContent=KL.t('Přibližný čas příjezdu');const o=$('rzCas').options;o[0].textContent=KL.t('Zatím nevím');o[1].textContent=KL.t('do 10:00');o[7].textContent=KL.t('po 20:00')}}
 /* krátká cesta pro vodáky: tlačítko „Jen lodě na den“ (data-rzmod) nebo odkaz #jen-lode rovnou otevře rezervaci lodí */
