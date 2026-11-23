@@ -3626,3 +3626,17 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .kv-roh span{font-size:11px;opacity:.75;margin-top:1px}
 .kv-roh em{font-style:normal;font-size:10.5px;font-weight:800;color:#0b2419;padding:3px 7px;border-radius:999px;margin-top:7px;white-space:nowrap}
 @media(max-width:760px){.kv-rohw{top:92px;right:14px}.kv-roh{width:82px}.kv-roh b{font-size:23px}}
+/* stav vody – sladění s hero (tmavé sklo jako štítek sezóny a tlačítka) */
+.kv-bub{background:rgba(7,27,19,.58);color:#fff;border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 18px 40px -18px rgba(0,0,0,.7);padding:9px 14px 9px 9px;border-radius:16px}
+.kv-bub::after{background:rgba(7,27,19,.58);border:1px solid rgba(255,255,255,.18);border-left:0;border-bottom:0;right:-7px;width:12px;height:12px;margin-top:-6px;border-radius:0 3px 0 0;backdrop-filter:blur(12px)}
+.kv-ic{background:rgba(91,209,216,.16)!important;border:1px solid rgba(91,209,216,.35);width:38px;height:38px;border-radius:50%}
+.kv-ic svg{stroke:#5bd1d8}
+.kv-bt small{color:#5bd1d8;font-size:10px}
+.kv-bt b{color:#fff;font-size:18px}.kv-bt b i{color:rgba(255,255,255,.6)}
+.kv-bt em{display:inline-flex;align-items:center;gap:5px;color:rgba(255,255,255,.85)!important;font-weight:700}
+.kv-bt em::before{content:"";width:7px;height:7px;border-radius:50%;background:#2fb36b;box-shadow:0 0 0 3px rgba(47,179,107,.25)}
+.kv-nizky .kv-bt em::before{background:#e0a43a}.kv-vys .kv-bt em::before{background:#e07a2f}.kv-neb .kv-bt em::before{background:#d64545}
+.kv-bw{border-left-color:rgba(255,255,255,.16)}.kv-bw b{color:#fff}.kv-bw small{color:rgba(255,255,255,.6)}
+.kv-roh{background:rgba(7,27,19,.58);border-color:rgba(255,255,255,.18);border-radius:16px;width:96px;padding:11px 8px 9px}
+.kv-roh em{color:#0b2419}
+@media(max-width:760px){.kv-roh{width:80px;padding:9px 6px 8px}.kv-roh b{font-size:22px}.kv-rohw{top:88px;right:12px}}
