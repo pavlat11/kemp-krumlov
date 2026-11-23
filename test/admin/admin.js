@@ -1088,7 +1088,7 @@ function rezervace(m,sekV){
       '<div class="rtk" role="group" aria-label="Co je potřeba udělat">'+UK.map(function(u){var n=poc[u[0]],on=F.stav===u[0];
         return '<button type="button" class="rtk-t '+u[3]+(n?'':' nic')+(on?' on':'')+(u[4]?' hot':'')+'" data-fs="'+(on?'':u[0])+'" aria-pressed="'+on+'"><b>'+n+'</b><span>'+u[1]+'</span><small>'+(n?u[2]:u[5]||'vše hotovo')+'</small></button>'}).join('')+'</div>'+
       '<section class="rlb">'+
-      '<div class="rzt" role="tablist" aria-label="Skupiny rezervací">'+TB.map(function(x){var n=TC[x[0]]||0,on=F.typ===x[0]||!x[0]&&!F.typ;return '<button type="button" role="tab" class="'+x[2]+(n?'':' nic')+'" data-ft="'+x[0]+'" aria-selected="'+on+'"'+(x[0]==='skup'?' title="Rezervace od '+SKUP_OS+' osob nebo na 3 a více míst"':'')+'><i class="rzt-i t-'+(x[0]||'vse')+'">'+SV(TI[x[0]],16)+'</i>'+x[1]+'<small>'+n+'</small></button>'}).join('')+'</div>'+
+      '<div class="rzt" role="tablist" aria-label="Skupiny rezervací">'+TB.map(function(x){var n=TC[x[0]]||0,on=F.typ===x[0]||!x[0]&&!F.typ;return '<button type="button" role="tab" class="'+x[2]+(n?'':' nic')+'" data-ft="'+x[0]+'" aria-selected="'+on+'"'+(x[0]==='skup'?' data-tip="Skupina = rezervace od '+SKUP_OS+' osob nebo na 3 a více míst" aria-description="Rezervace od '+SKUP_OS+' osob nebo na 3 a více míst"':'')+'><i class="rzt-i t-'+(x[0]||'vse')+'">'+SV(TI[x[0]],16)+'</i>'+x[1]+'<small>'+n+'</small></button>'}).join('')+'</div>'+
       '<div class="rlb-f">'+(L.length?'<label class="rlb-va" title="Vybrat všechny zobrazené rezervace"><input type="checkbox" data-va aria-label="Vybrat vše zobrazené"><span>Vybrat vše</span></label>':'')+
         '<select class="inp'+(F.obd!=='bud'?' on':'')+'" data-f="obd" aria-label="Období">'+opt(OB,F.obd)+'</select>'+
         '<select class="inp rl-ss'+(F.stav?' on':'')+'" data-f="stav" aria-label="Stav"><option value="">Všechny stavy</option>'+SF.map(function(g){return '<optgroup label="'+g[0]+'">'+g[1].map(function(x){return '<option value="'+x[0]+'"'+(F.stav===x[0]?' selected':'')+(poc[x[0]]||F.stav===x[0]?'':' disabled')+'>'+x[1]+' ('+poc[x[0]]+')</option>'}).join('')+'</optgroup>'}).join('')+'</select>'+
@@ -1751,3 +1751,10 @@ function sezona(box){var R=window.KKR,kc=function(n){return Math.round(n||0).toL
   document.addEventListener('mouseout',function(e){if(posl&&!(e.relatedTarget&&e.relatedTarget.closest&&e.relatedTarget.closest('.rv-t td.rv-c'))){posl=null;vycisti()}})})();
 KK.auth.me().then(function(s){s?shell(s):login()});
 })();
+/* plovoucí nápověda pro prvky s data-tip */
+(function(){var t=null;function pryc(){if(t){t.remove();t=null}}
+ function uka(el){pryc();t=document.createElement('div');t.className='kk-tip';t.setAttribute('role','tooltip');t.textContent=el.getAttribute('data-tip');document.body.appendChild(t);var r=el.getBoundingClientRect(),w=t.offsetWidth,x=Math.min(Math.max(r.left+r.width/2,w/2+8),innerWidth-w/2-8);t.style.left=x+'px';t.style.top=(r.bottom+10)+'px'}
+ document.addEventListener('mouseover',function(e){var el=e.target.closest&&e.target.closest('[data-tip]');if(el)uka(el);else pryc()});
+ document.addEventListener('focusin',function(e){var el=e.target.closest&&e.target.closest('[data-tip]');if(el)uka(el);else pryc()});
+ document.addEventListener('scroll',pryc,true);document.addEventListener('click',pryc,true)})();
+
