@@ -3652,3 +3652,8 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .kv-tep{width:84px;height:84px;display:grid;place-items:center;align-content:center;gap:1px;border-radius:16px;background:rgba(7,27,19,.58);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;box-shadow:0 18px 40px -18px rgba(0,0,0,.7);font-family:"Plus Jakarta Sans",Arial,sans-serif;line-height:1.1}
 .kv-tep svg{color:#5bd1d8;margin-bottom:3px}.kv-tep b{font-size:19px;font-weight:800}.kv-tep small{font-size:11px;color:rgba(255,255,255,.65)}
 @media(max-width:760px){.kv-rohw{display:none}}
+/* sjednocení dlaždic vpravo */
+.kv-rohw{align-items:stretch;width:200px}
+.kv-rohw .kv-bub{width:100%}
+.kv-bt em.kv-em0::before{display:none}
+.kv-bt em.kv-em0{color:rgba(255,255,255,.6)!important;font-weight:600}
