@@ -1164,6 +1164,7 @@ function rezervace(m,sekV){
         '<div class="sb-2"><label class="sb-l sb-em">E-mail kempu pro upozornění<input class="inp" type="email" id="sbem" placeholder="např. info@kemp-krumlov.cz" value="'+esc(n.emailKemp||'')+'"'+dis+'></label><label class="sb-l sb-em">Odkaz na hodnocení na Googlu<input class="inp" type="url" id="sbrc" placeholder="https://g.page/r/…/review" value="'+esc(n.recenzeUrl||'')+'"'+dis+'><small class="mut">Najdete ho v Google Firmě → Požádat o recenze.</small></label></div>'+
         '<div class="sb-ty" role="tablist" aria-label="Druh e-mailu">'+R.SABL_TYPY.map(function(x){return '<button type="button" role="tab" data-sb="'+x.k+'" aria-selected="'+(x.k===sbT)+'"><b>'+esc(x.n)+'</b><small>'+(x.kdo==='kemp'?'pro kemp':x.auto?'automaticky · pro hosta':'pro hosta')+'</small></button>'}).join('')+'</div>'+
         '<div id="sbed">'+sbHtml()+'</div></section>';
+    if(nT!=='data')return h;
     return h+'<section class="card"><h2>Testovací data</h2><p class="mut" style="margin:0 0 12px">'+SV(IC.zamek,16)+' V náhledu jsou rezervace uložené jen v tomto prohlížeči. Host na jiném počítači je neuvidí a jeho rezervace se k vám nedostane. Sdílená obsazenost bude fungovat po spuštění na serveru.</p>'+
       '<div class="row"><button type="button" class="btn gh" data-a="ukazka">Vložit testovací data</button><button type="button" class="btn gh" data-a="vymaz">Smazat všechny rezervace</button></div></section>';
   }
