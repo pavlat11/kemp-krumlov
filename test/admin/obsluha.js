@@ -148,11 +148,12 @@ function sekce(){var h=location.hash.replace(/^#o\/?/,'').split('/')[0],M=moduly
 function navOdkazy(cls){var M=moduly(),s=sekce(),a=[];if(M.length>1)a.push(['','Přehled','prehled']);M.forEach(function(k){a.push([k,MOD[k].n,k])});a.push(['hledat','Hledat','hledat']);
   return a.map(function(x){return '<a class="'+cls+(MOD[x[0]]?' m-'+MOD[x[0]].c:'')+(x[0]==='hledat'?' ob-nvh':'')+'" href="#o'+(x[0]?'/'+x[0]:'')+'"'+(x[0]===s?' aria-current="page"':'')+'>'+sv(IK[x[2]],24)+'<span>'+x[1]+'</span></a>'}).join('')}
 function spravce(c){var n=(R.nast()||{}).spravce||{},t=(n.tel||'').trim();if(!t)return '';var h='tel:'+t.replace(/[^\d+]/g,'');return c==='d'?'<a class="btn" href="'+esc(h)+'">Zavolat správci'+(n.jmeno?' ('+esc(n.jmeno)+')':'')+' · '+esc(t)+'</a>':'<a class="ob-sp" href="'+esc(h)+'">'+sv(IK.tel||'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',18)+'<span><small>Správce'+(n.jmeno?' · '+esc(n.jmeno):'')+'</small><b>'+esc(t)+'</b></span></a>'}
+function voda(){if(!window.KKV)return '';var D=KKV.data(),x=D.st[0],S=KKV.stav(x.q);return '<details class="ob-vo kv-'+S.k+'"><summary><span class="kv-dot" style="background:'+S.c+'"></span><span><b>Vltava '+String(x.q).replace('.',',')+' m³/s</b><small>'+S.t+'</small></span>'+sv('<path d="M6 9l6 6 6-6"/>',16)+'</summary>'+KKV.karta()+'</details>'}
 function kostra(){var nah=ja.role==='admin',M=moduly();
   document.documentElement.classList.add('ob-on');
   A.app.innerHTML=(nah?'<div class="ob-nah" role="status"><span><b>Náhled</b> – takhle vidí administraci obsluha s aplikací.</span><button type="button" id="obx">Zpět do administrace</button></div>':'')+
    '<div class="ob'+(M.length<2?' jedna':'')+'"><nav class="ob-side" aria-label="Aplikace obsluhy"><div class="ob-logo">'+sv(IK.pujcovna,22)+'<span>Kemp Krumlov<small>obsluha</small></span></div><div class="ob-sn" id="obsn"></div>'+
-   spravce()+'<div class="ob-who"><span><b>'+esc(ja.jmeno)+'</b><small>'+(nah?'Správce · náhled':'Obsluha')+'</small></span><button type="button" class="ob-ic" data-ucet aria-label="Účet a odhlášení">'+sv(IK.ven,20)+'</button></div></nav>'+
+   voda()+spravce()+'<div class="ob-who"><span><b>'+esc(ja.jmeno)+'</b><small>'+(nah?'Správce · náhled':'Obsluha')+'</small></span><button type="button" class="ob-ic" data-ucet aria-label="Účet a odhlášení">'+sv(IK.ven,20)+'</button></div></nav>'+
    '<div class="ob-main"><main id="main" class="ob-c" tabindex="-1"></main></div>'+
    '<nav class="ob-tab" id="obtab" aria-label="Hlavní menu"></nav></div>';
   box=$('#main');
@@ -161,7 +162,7 @@ function kostra(){var nah=ja.role==='admin',M=moduly();
 }
 function ucetMenu(){var d=document.createElement('dialog');d.className='dlg ob-dlg';d.setAttribute('aria-labelledby','obuh');
   d.innerHTML='<form method="dialog" novalidate><h2 id="obuh">'+esc(ja.jmeno)+'</h2><p class="mut">Přihlášen jako '+esc(ja.login||'')+'</p>'+
-   (spravce('d')?'<p>'+spravce('d')+'</p>':'')+'<details><summary>Změnit heslo</summary><div class="ob-hes"><label class="f">Současné heslo<input class="inp" type="password" name="s" autocomplete="current-password"></label><label class="f">Nové heslo<small>Aspoň 8 znaků</small><input class="inp" type="password" name="n" autocomplete="new-password"></label><p class="err-msg" role="alert" hidden></p><button type="button" class="btn pri" data-h>Uložit heslo</button></div></details>'+
+   voda()+(spravce('d')?'<p>'+spravce('d')+'</p>':'')+'<details><summary>Změnit heslo</summary><div class="ob-hes"><label class="f">Současné heslo<input class="inp" type="password" name="s" autocomplete="current-password"></label><label class="f">Nové heslo<small>Aspoň 8 znaků</small><input class="inp" type="password" name="n" autocomplete="new-password"></label><p class="err-msg" role="alert" hidden></p><button type="button" class="btn pri" data-h>Uložit heslo</button></div></details>'+
    '<div class="ob-dlg-b"><button type="button" class="btn gh" data-z>Zavřít</button><button type="button" class="btn dan2" data-o>Odhlásit se</button></div></form>';
   document.body.appendChild(d);var zav=function(){try{d.close()}catch(e){}d.remove()};
   d.addEventListener('cancel',function(e){e.preventDefault();zav()});d.addEventListener('click',function(e){if(e.target===d)zav()});
@@ -269,7 +270,7 @@ function radekL(r,typ){var l=r.lode,k=kusyRoz(lodKusy(r,typ)),kdy=lodKdy(r,typ);
 function pujcovna(){var t=KK.LS.get('o.tab.l','vyd');if(['vyd','vra','dost'].indexOf(t)<0)t='vyd';var X=data(den);
   var sgL=seg('l',[['vyd','Výdej',zbyva(X.vyd,'vyd'),'sipven','k-ven'],['vra','Vrácení',zbyva(X.vra,'vra'),'dovnitr','k-zpet'],['dost','Dostupnost',null,'dost']],t);var h=hl('Lodě',1,1,0,'<button type="button" class="ob-go ob-hb ob-hbz" data-a="poskozeni" aria-label="Nahlásit poškození" title="Nahlásit poškozenou loď nebo vybavení">'+sv('<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',20)+'<span>Poškození</span></button><button type="button" class="ob-go ob-hb" data-nova="pujcovna" aria-label="Půjčit loď">'+sv(IK.pujcovna,20)+'<span>Půjčit loď</span></button>')+(t==='dost'?'<div class="ob-bar">'+sgL+'</div>':bar(sgL,'Hledat hosta, loď, telefon…'));
   if(t==='dost')return h+'<hr class="ob-sep"><div class="ob-rz" id="obrz" data-sek="pujcovna"></div>';
-  h+=denNav()+(window.KKV&&den===DNES()?KKV.karta():'')+'<hr class="ob-sep">';
+  h+=denNav()+'<hr class="ob-sep">';
   var T=X[t].filter(function(r){return !HOT[t](r)}).sort(function(a,b){return cas(lodKdy(a,t)||'99',lodKdy(b,t)||'99')}),H=X[t].filter(function(r){return HOT[t](r)}).sort(function(a,b){return cas(lodKdy(a,t)||'99',lodKdy(b,t)||'99')});
   if(!T.length&&!H.length)return h+prazdne(t==='vyd'?'Žádné lodě k vydání.':'Žádné lodě k vrácení.');
   var S={};T.forEach(function(r){var k=lodKusy(r,t);Object.keys(k||{}).forEach(function(x){S[x]=(S[x]||0)+(+k[x]||0)})});var sr=kusyRoz(S);

@@ -673,3 +673,18 @@ select[data-u=role]{min-width:132px}
 .kv-kz{margin-top:8px;font-size:11px;color:#8a948e}
 @media(max-width:560px){.kv-kb{grid-template-columns:1fr 1fr}.kv-kg{grid-column:1/-1}.kv-kg .kv-sp{width:100%}}
 @media(max-width:560px){.kv-k{padding:10px 12px}.kv-kb>.kv-kg{display:none}.kv-kb{gap:8px;margin-top:8px}.kv-kb b{font-size:16px}.kv-kh b{font-size:14px}.kv-c{font-size:11px}}
+/* stav vody v menu */
+.ob-vo{margin:auto 0 8px;border-radius:14px;background:#fff;box-shadow:0 1px 2px rgba(20,32,26,.08)}
+.ob-vo+.ob-sp{margin-top:0}
+.ob-vo summary{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;list-style:none}
+.ob-vo summary::-webkit-details-marker{display:none}
+.ob-vo summary>span:nth-child(2){flex:1;display:flex;flex-direction:column;min-width:0}
+.ob-vo summary b{font-size:14px;font-weight:800}.ob-vo summary small{font-size:12px;color:var(--mut)}
+.ob-vo summary svg{flex:none;color:var(--mut);transition:transform .2s}.ob-vo[open] summary svg{transform:rotate(180deg)}
+.ob-vo .kv-k{margin:0;border:0;box-shadow:none;padding:0 12px 10px;background:none}
+.ob-vo .kv-kh{display:none}
+.ob-vo .kv-kb{grid-template-columns:1fr;gap:6px;margin-top:0}
+.ob-vo .kv-kb>div{padding:6px 8px}.ob-vo .kv-kb b{font-size:15px}
+.ob-vo .kv-kb>.kv-kg{display:grid}.ob-vo .kv-sp{width:100%}
+dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid var(--line)}
+@media print{.ob-vo{display:none}}
