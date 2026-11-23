@@ -1636,3 +1636,4 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 /* nápověda (data-tip) – plovoucí bublina, nevadí jí posuvný řádek záložek */
 .kk-tip{position:fixed;z-index:9999;background:#14201a;color:#fff;font-size:12.5px;font-weight:600;line-height:1.35;padding:8px 11px;border-radius:10px;max-width:380px;box-shadow:0 10px 24px -10px rgba(0,0,0,.5);pointer-events:none;transform:translateX(-50%)}
 .kk-tip::before{content:"";position:absolute;left:50%;top:-5px;width:10px;height:10px;margin-left:-5px;background:#14201a;transform:rotate(45deg)}
+.sb-sto{display:block;margin:-4px 0 12px;padding:10px 12px;border-radius:12px;background:#f3efe6;font-size:13.5px;color:#4d5a52}.sb-sto svg{flex:none;margin-top:2px}
