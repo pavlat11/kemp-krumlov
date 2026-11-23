@@ -3640,3 +3640,9 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .kv-roh{background:rgba(7,27,19,.58);border-color:rgba(255,255,255,.18);border-radius:16px;width:96px;padding:11px 8px 9px}
 .kv-roh em{color:#0b2419}
 @media(max-width:760px){.kv-roh{width:80px;padding:9px 6px 8px}.kv-roh b{font-size:22px}.kv-rohw{top:88px;right:12px}}
+/* stav vody – PC vpravo nahoře, mobil pod tlačítky */
+.kv-rohw{top:104px;right:max(28px,calc(50% - 620px))}
+.kv-rohw .kv-bub::after{display:none}
+#vodaHero{display:none}
+@media(max-width:760px){.kv-rohw{display:none}#vodaHero{display:block;margin:4px 0 40px}.kv-hero{display:flex}}
+@media(max-width:760px){html body #top.hero.kk2-part{height:auto!important;max-height:none!important}}
