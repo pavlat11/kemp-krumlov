@@ -267,3 +267,9 @@ Upravený text s cenou se ukládá se značkou `{price:klic}`, takže se cena d�
 - Ve všech stránkách v `/test/` je `<meta name="robots" content="noindex, nofollow">` – **při spuštění smazat**.
 - `test/sitemap.xml` zkopírovat do kořene a do `robots.txt` přidat `Sitemap: https://www.kemp-krumlov.cz/sitemap.xml`.
 - Ukázková data (generátor v `cenik.js`) na ostrém webu nesmí běžet – při prvním načtení zabírají asi 1 s. Bez nich vychází web v Lighthouse kolem 80 bodů výkonu.
+
+## Stav vody na Vltavě (KKV v js/cenik.js)
+- Testovací verze ukazuje **ukázková data**. Naostro: cron každou hodinu stáhne aktuální data ČHMÚ (opendata.chmi.cz, adresář hydrology /now/) pro stanice **Vyšší Brod** (objekt 307036) a **Český Krumlov**: stav [cm], průtok [m³/s], teplota vody; uloží poslední hodnotu a denní hodnoty za 7 dní.
+- Endpoint `GET /api/voda` → `{cas:"10:00", st:[{n,q,h,t,tr}], hist:[{d,q}]}` (tr = -1 klesá / 0 / 1 stoupá). Frontend ho jen vloží do `kkt.voda.data` (stejný tvar), zbytek už je hotový.
+- Hranice semaforu `kkt.voda.prahy` {nizky, vysoky, nebezp} v m³/s (výchozí 5 / 30 / 60) – nastaví správce.
+- Vždy zobrazit „Zdroj: ČHMÚ, operativní neověřená data“.

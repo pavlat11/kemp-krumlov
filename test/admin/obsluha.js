@@ -269,7 +269,7 @@ function radekL(r,typ){var l=r.lode,k=kusyRoz(lodKusy(r,typ)),kdy=lodKdy(r,typ);
 function pujcovna(){var t=KK.LS.get('o.tab.l','vyd');if(['vyd','vra','dost'].indexOf(t)<0)t='vyd';var X=data(den);
   var sgL=seg('l',[['vyd','Výdej',zbyva(X.vyd,'vyd'),'sipven','k-ven'],['vra','Vrácení',zbyva(X.vra,'vra'),'dovnitr','k-zpet'],['dost','Dostupnost',null,'dost']],t);var h=hl('Lodě',1,1,0,'<button type="button" class="ob-go ob-hb ob-hbz" data-a="poskozeni" aria-label="Nahlásit poškození" title="Nahlásit poškozenou loď nebo vybavení">'+sv('<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>',20)+'<span>Poškození</span></button><button type="button" class="ob-go ob-hb" data-nova="pujcovna" aria-label="Půjčit loď">'+sv(IK.pujcovna,20)+'<span>Půjčit loď</span></button>')+(t==='dost'?'<div class="ob-bar">'+sgL+'</div>':bar(sgL,'Hledat hosta, loď, telefon…'));
   if(t==='dost')return h+'<hr class="ob-sep"><div class="ob-rz" id="obrz" data-sek="pujcovna"></div>';
-  h+=denNav()+'<hr class="ob-sep">';
+  h+=denNav()+(window.KKV&&den===DNES()?KKV.karta():'')+'<hr class="ob-sep">';
   var T=X[t].filter(function(r){return !HOT[t](r)}).sort(function(a,b){return cas(lodKdy(a,t)||'99',lodKdy(b,t)||'99')}),H=X[t].filter(function(r){return HOT[t](r)}).sort(function(a,b){return cas(lodKdy(a,t)||'99',lodKdy(b,t)||'99')});
   if(!T.length&&!H.length)return h+prazdne(t==='vyd'?'Žádné lodě k vydání.':'Žádné lodě k vrácení.');
   var S={};T.forEach(function(r){var k=lodKusy(r,t);Object.keys(k||{}).forEach(function(x){S[x]=(S[x]||0)+(+k[x]||0)})});var sr=kusyRoz(S);

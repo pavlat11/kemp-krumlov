@@ -660,3 +660,16 @@ select[data-u=role]{min-width:132px}
 .ob-po textarea,.ob-po select{text-align:left!important}
 .ob-po-i li.off{opacity:.45}
 .ob-po-fix{display:flex;flex-direction:column;gap:2px;padding:10px 14px;border-radius:12px;background:#F2F4F1;border:1.5px solid var(--line)}.ob-po-fix small{font-size:12px;font-weight:700;color:var(--mut)}.ob-po-fix b{font-size:16px}.ob-po-fix span{font-size:13px;color:var(--mut)}
+/* stav vody (Lodě) */
+.kv-k{margin:12px 0 4px;border-radius:16px;background:#fff;border:1px solid rgba(16,36,27,.1);padding:12px 14px;box-shadow:0 1px 2px rgba(15,34,25,.05)}
+.kv-kh{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.kv-kh b{font-size:15px}
+.kv-dot{width:11px;height:11px;border-radius:50%;flex:none;box-shadow:0 0 0 4px rgba(47,179,107,.2)}
+.kv-nizky .kv-dot{box-shadow:0 0 0 4px rgba(224,164,58,.25)}.kv-vys .kv-dot,.kv-neb .kv-dot{box-shadow:0 0 0 4px rgba(214,69,69,.22)}
+.kv-c{margin-left:auto;font-size:12px;color:#6b766f}
+.kv-kb{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;margin-top:10px}
+.kv-kb>div{display:grid;gap:1px;padding:8px 10px;border-radius:12px;background:#f3f6f4}
+.kv-kb span{font-size:12px;color:#6b766f}.kv-kb b{font-size:18px}.kv-kb small{font-size:12px;color:#6b766f}
+.kv-kg{color:#1aa6b0}.kv-kg .kv-sp{margin-top:4px}
+.kv-kz{margin-top:8px;font-size:11px;color:#8a948e}
+@media(max-width:560px){.kv-kb{grid-template-columns:1fr 1fr}.kv-kg{grid-column:1/-1}.kv-kg .kv-sp{width:100%}}
+@media(max-width:560px){.kv-k{padding:10px 12px}.kv-kb>.kv-kg{display:none}.kv-kb{gap:8px;margin-top:8px}.kv-kb b{font-size:16px}.kv-kh b{font-size:14px}.kv-c{font-size:11px}}
