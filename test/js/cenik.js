@@ -524,7 +524,8 @@ try{if(cti('kkt.rez.ukazka',0)<6)R.ukazka()}catch(e){}
 (function(){
 var LSG=function(k,d){try{var v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}};
 var T=function(s){return window.KL&&KL.t?KL.t(s):s};
-function prahy(){var p=LSG('kkt.voda.prahy',null)||{};return{nizky:+p.nizky||5,vysoky:+p.vysoky||30,nebezp:+p.nebezp||60}}
+function nv(){return (LSG('kkt.rez.nast',{})||{}).voda||{}}
+function prahy(){var p=nv();return{nizky:+p.nizky||5,vysoky:+p.vysoky||30,nebezp:+p.nebezp||60}}
 function data(){var srv=LSG('kkt.voda.data',null);if(srv&&srv.st)return srv;
   var d=new Date(),h=d.getHours(),hist=[],i,b=7.4;
   for(i=6;i>=0;i--){var x=new Date(d);x.setDate(d.getDate()-i);var s=x.getDate()*7+x.getMonth()*3;hist.push({d:x.getDate()+'. '+(x.getMonth()+1)+'.',q:Math.round((b+Math.sin(s)*1.1+(6-i)*.12)*10)/10})}
@@ -538,13 +539,15 @@ function spark(hist,w,hg){var mx=Math.max.apply(0,hist.map(function(x){return x.
   var pts=hist.map(function(x,i){return[Math.round(i*st),Math.round(hg-(x.q-mn)/(mx-mn)*hg)]});
   return '<svg class="kv-sp" viewBox="0 -3 '+w+' '+(hg+6)+'" width="'+w+'" height="'+hg+'" aria-hidden="true"><path d="M'+pts.map(function(p){return p.join(' ')}).join('L')+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="'+pts[pts.length-1][0]+'" cy="'+pts[pts.length-1][1]+'" r="3.2" fill="currentColor"/></svg>'}
 var TR=['↘','→','↗'],TRT=[T('klesá'),T('ustálený'),T('stoupá')];
-function pruh(cls){var D=data(),s=D.st[0],S=stav(s.q);
+function pruh(cls){if(nv().web===0)return '';var D=data(),s=D.st[0],S=stav(s.q);
   return '<div class="kv '+(cls||'')+' kv-'+S.k+'" title="'+T('Zdroj: ČHMÚ, stanice')+' '+s.n+(D.ukazka?' · '+T('ukázková data'):'')+'"><span class="kv-dot" style="background:'+S.c+'"></span><span class="kv-l">'+T('Vltava dnes')+'</span><b class="kv-q">'+f(s.q)+' m³/s</b><span class="kv-tr">'+TR[s.tr+1]+' '+TRT[s.tr+1]+'</span><span class="kv-s">'+S.t+'</span>'+(s.t!=null?'<span class="kv-t">'+T('voda')+' '+f(s.t)+' °C</span>':'')+'<span class="kv-c">'+s.n+' · '+D.cas+'</span></div>'}
 function karta(){var D=data(),s=D.st[0],S=stav(s.q);
   return '<div class="kv-k kv-'+S.k+'"><div class="kv-kh"><span class="kv-dot" style="background:'+S.c+'"></span><b>'+S.t+'</b><span class="kv-c">'+T('aktualizováno')+' '+D.cas+(D.ukazka?' · '+T('ukázková data'):'')+'</span></div><div class="kv-kb">'+D.st.map(function(x){return '<div><span>'+x.n+'</span><b>'+f(x.q)+' m³/s</b><small>'+x.h+' cm · '+TR[x.tr+1]+' '+TRT[x.tr+1]+(x.t!=null?' · '+f(x.t)+' °C':'')+'</small></div>'}).join('')+'<div class="kv-kg"><span>'+T('Posledních 7 dní')+'</span>'+spark(D.hist,150,34)+'</div></div><div class="kv-kz">'+T('Zdroj: ČHMÚ, operativní neověřená data')+'</div></div>'}
 function bublina(){var D=data(),s=D.st[0],S=stav(s.q);
   return '<div class="kv-bub kv-'+S.k+'" title="'+T('Zdroj: ČHMÚ, stanice')+' '+s.n+' · '+D.cas+(D.ukazka?' · '+T('ukázková data'):'')+'"><span class="kv-ic" style="background:'+S.c+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></span><span class="kv-bt"><small>'+T('Vltava dnes')+'</small><b>'+f(s.q)+' m³/s <i>'+TR[s.tr+1]+'</i></b><em style="color:'+S.c+'">'+S.t+'</em></span>'+(s.t!=null?'<span class="kv-bw"><b>'+Math.round(s.t)+'°</b><small>'+T('voda')+'</small></span>':'')+'</div>'}
-window.KKV={bublina:bublina,data:data,stav:stav,prahy:prahy,pruh:pruh,karta:karta};
-function web(){var e=document.getElementById('vodaHero');if(e)e.innerHTML=pruh('kv-hero');var m=document.getElementById('vodaMapa');if(m){m.innerHTML=bublina();var pos=function(){var c=document.querySelector('#rmap #stops .stop circle'),w=m.parentNode;if(!c||!w)return;var r=c.getBoundingClientRect(),q=w.getBoundingClientRect();var hv=document.getElementById('vodaHero');if(!r.width){m.classList.remove('on');if(hv)hv.hidden=false;return}if(hv)hv.hidden=true;m.style.left=(r.left+r.width/2-q.left)+'px';m.style.top=(r.top-q.top)+'px';m.classList.add('on')};pos();setTimeout(pos,400);setTimeout(pos,1500);addEventListener('resize',pos);addEventListener('load',pos)}var v=document.getElementById('vodaSek');if(v)v.innerHTML=karta()}
+function kostka(){var D=data(),s=D.st[0],S=stav(s.q),kr={nizky:T('Nízký stav'),ok:T('Ideální'),vys:T('Zvýšený'),neb:T('Nesjízdné')}[S.k];
+  return '<div class="kv-roh kv-'+S.k+'" title="'+T('Vltava dnes')+' · '+S.t+' · '+s.n+' '+D.cas+' · '+T('Zdroj: ČHMÚ')+(D.ukazka?' · '+T('ukázková data'):'')+'"><small>'+T('Vltava')+'</small><b>'+f(s.q)+'</b><span>m³/s '+TR[s.tr+1]+'</span><em style="background:'+S.c+'">'+kr+'</em></div>'}
+window.KKV={kostka:kostka,zap:function(k){return nv()[k]!==0},bublina:bublina,data:data,stav:stav,prahy:prahy,pruh:pruh,karta:karta};
+function web(){if(nv().web===0)return;var v=document.getElementById('vodaSek');if(v)v.innerHTML=karta();var hv=document.getElementById('vodaRoh');if(hv)hv.innerHTML=kostka();var m=document.getElementById('vodaMapa');if(m){m.innerHTML=bublina();var pos=function(){var c=document.querySelector('#rmap #stops .stop circle'),w=m.parentNode;if(!c||!w)return;var r=c.getBoundingClientRect(),q=w.getBoundingClientRect();if(!r.width){m.classList.remove('on');if(hv)hv.hidden=false;return}if(hv)hv.hidden=true;m.style.left=(r.left+r.width/2-q.left)+'px';m.style.top=(r.top-q.top)+'px';m.classList.add('on')};pos();setTimeout(pos,400);setTimeout(pos,1500);addEventListener('resize',pos);addEventListener('load',pos)}else if(hv)hv.hidden=false}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',web);else web();
 })();

@@ -273,3 +273,4 @@ Upravený text s cenou se ukládá se značkou `{price:klic}`, takže se cena d�
 - Endpoint `GET /api/voda` → `{cas:"10:00", st:[{n,q,h,t,tr}], hist:[{d,q}]}` (tr = -1 klesá / 0 / 1 stoupá). Frontend ho jen vloží do `kkt.voda.data` (stejný tvar), zbytek už je hotový.
 - Hranice semaforu `kkt.voda.prahy` {nizky, vysoky, nebezp} v m³/s (výchozí 5 / 30 / 60) – nastaví správce.
 - Vždy zobrazit „Zdroj: ČHMÚ, operativní neověřená data“.
+- Zapnutí/vypnutí a hranice jsou v Rezervace → Nastavení → „Stav vody na Vltavě“ (`nast.voda` = {web, app, nizky, vysoky, nebezp}).
