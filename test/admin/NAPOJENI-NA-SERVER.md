@@ -274,3 +274,10 @@ Upravený text s cenou se ukládá se značkou `{price:klic}`, takže se cena d�
 - Hranice semaforu `kkt.voda.prahy` {nizky, vysoky, nebezp} v m³/s (výchozí 5 / 30 / 60) – nastaví správce.
 - Vždy zobrazit „Zdroj: ČHMÚ, operativní neověřená data“.
 - Zapnutí/vypnutí a hranice jsou v Rezervace → Nastavení → „Stav vody na Vltavě“ (`nast.voda` = {web, app, nizky, vysoky, nebezp}).
+
+## Zrušení rezervace hostem (storno.html)
+- E-maily hostům (poptávka, potvrzení, záloha, záloha přijata, den před příjezdem) mají dole tlačítko „Zrušit rezervaci“ → `storno.html?r=<id>&k=<klíč>&lang=`; pole `{storno}` vloží stejný odkaz do textu.
+- Klíč `stok` je náhodný, uložený u rezervace; po zrušení se smaže (odkaz už nejde použít znovu).
+- Server: `GET /api/storno?r&k` → shrnutí rezervace + stav (`ok | zrusena | odjel | pozde | vydano | vypnuto`), `POST /api/storno {r,k,duvod}` → ověří klíč, lhůtu (`nast.storno.dni` dní před příjezdem) a stav, nastaví `stav='zru'`, `stornoHost`, `stornoDuvod`, zapíše historii, uvolní místa/vybavení, pošle hostovi šablonu `zruseno` a kempu `stornoKemp`.
+- Ochrana: limit pokusů na IP, klíč porovnávat v konstantním čase, stránka `noindex`.
+- Nastavení: Rezervace → Nastavení → Rezervování → „Zrušení rezervace hostem“ (`nast.storno` = {zap, dni, pod}).
