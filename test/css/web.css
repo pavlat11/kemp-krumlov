@@ -3600,7 +3600,6 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .kv-rz{display:flex;margin:0 0 12px;padding:10px 14px;border-radius:12px;background:#e2f3f2;color:#10241b}
 .kv-rz .kv-l{font-weight:700}.kv-rz .kv-c{margin-left:auto;font-size:12px}
 @media(max-width:760px){.kv-hero{display:flex}.kv-hero .kv-c{padding-left:0}}
-@media(min-width:761px){#vodaHero{display:none}}
 @media(max-width:760px){.kk2-scope .index-route-transfer .kv-wm{display:none}}
 .kk2-scope .index-route-transfer .kv-wm{position:absolute;left:0;top:0;z-index:4;pointer-events:auto;opacity:0;transform:translate(-26px,calc(-100% - 18px));transition:opacity .5s}
 .kk2-scope .index-route-transfer .kv-wm.on{opacity:1}
@@ -3610,3 +3609,11 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .kv-bt{display:grid;line-height:1.15}.kv-bt small{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#1aa6b0}
 .kv-bt b{font-size:16px;font-weight:800}.kv-bt b i{font-style:normal;font-weight:600;color:#6b766f;font-size:13px}.kv-bt em{font-style:normal;font-size:12px;font-weight:700}
 .kv-bw{display:grid;justify-items:center;line-height:1.1;padding-left:10px;border-left:1px solid rgba(16,36,27,.12)}.kv-bw b{font-size:16px;font-weight:800}.kv-bw small{font-size:11px;color:#6b766f}
+/* bublina vlevo od Vyššího Brodu, šipka doprava */
+.kk2-scope .index-route-transfer .kv-wm{transform:translate(calc(-100% - 20px),-50%)}
+.kv-bub{padding:10px 16px 10px 10px;gap:12px;border-radius:16px}
+.kv-bub::after{left:auto;right:-6px;bottom:auto;top:50%;margin-top:-7px;border-radius:0 3px 0 0}
+.kv-ic{width:40px;height:40px;border-radius:12px}.kv-ic svg{width:19px;height:19px}
+.kv-bt small{font-size:10.5px}.kv-bt b{font-size:18px}.kv-bt em{font-size:12.5px}
+.kv-bw b{font-size:18px}
+#vodaHero{margin-bottom:34px}#vodaHero[hidden]{display:none}
