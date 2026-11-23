@@ -42,7 +42,7 @@ function api(method,path,body){
    server: POST /login {login,heslo} · POST /logout · GET /me · GET/POST/PUT/DELETE /uzivatele · GET/PUT /prava · PUT /me/heslo */
 KK.ROLE={admin:'Správce',obsluha:'Obsluha'};
 /* web kempu a web PE-LA mají práva zvlášť (upravit/galerie/seo = kemp, pela_… = PE-LA); Provoz a Systém jsou společné */
-KK.SEKCE={prehled:'Přehled',upravit:'Upravit web',galerie:'Galerie',seo:'SEO',pela_upravit:'Upravit web',pela_galerie:'Galerie',pela_seo:'SEO',ubytovani:'Ubytování',pujcovna:'Půjčovna lodí',doprava:'Doprava',rez_nastaveni:'Nastavení rezervací',rezervace:'Rezervace',cenik:'Ceník a kapacity',nastaveni:'Nastavení a záloha',zaznam:'Záznam akcí',kalkulace:'Kalkulace'};
+KK.SEKCE={prehled:'Přehled',upravit:'Upravit web',galerie:'Galerie',seo:'SEO',pela_upravit:'Upravit web',pela_galerie:'Galerie',pela_seo:'SEO',ubytovani:'Ubytování',pujcovna:'Půjčovna lodí',doprava:'Doprava',rez_nastaveni:'Nastavení',rezervace:'Rezervace',cenik:'Ceník a kapacity',nastaveni:'Nastavení a záloha',zaznam:'Záznam akcí',kalkulace:'Kalkulace'};
 var PRAVA0={obsluha:{prehled:1,upravit:1,galerie:1,rezervace:1,seo:0,pela_upravit:1,pela_galerie:1,pela_seo:0,ubytovani:1,pujcovna:1,doprava:1,rez_nastaveni:0,cenik:0,nastaveni:0}};
 /* skupiny práv v Uživatelích: [nadpis, klíče, krátký štítek] */
 KK.SEKCE_SKUPINY=[['Web Kemp Krumlov',['upravit','galerie','seo'],'Kemp'],['Web PE-LA',['pela_upravit','pela_galerie','pela_seo'],'PE-LA'],['Provoz',['rezervace','ubytovani','pujcovna','doprava','rez_nastaveni','cenik','kalkulace'],''],['Systém',['zaznam','nastaveni'],'']];
