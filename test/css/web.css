@@ -3646,3 +3646,9 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 #vodaHero{display:none}
 @media(max-width:760px){.kv-rohw{display:none}#vodaHero{display:block;margin:4px 0 40px}.kv-hero{display:flex}}
 @media(max-width:760px){html body #top.hero.kk2-part{height:auto!important;max-height:none!important}}
+/* úplně vpravo + kostka s teplotou vody */
+.kv-rohw{right:20px;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.kv-rohw .kv-bw{display:none}
+.kv-tep{width:84px;height:84px;display:grid;place-items:center;align-content:center;gap:1px;border-radius:16px;background:rgba(7,27,19,.58);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;box-shadow:0 18px 40px -18px rgba(0,0,0,.7);font-family:"Plus Jakarta Sans",Arial,sans-serif;line-height:1.1}
+.kv-tep svg{color:#5bd1d8;margin-bottom:3px}.kv-tep b{font-size:19px;font-weight:800}.kv-tep small{font-size:11px;color:rgba(255,255,255,.65)}
+@media(max-width:760px){.kv-rohw{display:none}}
