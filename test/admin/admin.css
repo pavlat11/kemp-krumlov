@@ -1744,3 +1744,21 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .dp-ok{background:#e7f4ec;color:#1f7a45;border:1px solid #bfe2cc;border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
 .dp-ok:hover{background:#fdecea;color:#9b2c1f;border-color:#efc9c3}
 .dp-t th.dp-hc,.dp-t td.dp-hc{width:140px}
+/* nové okno i pro Ubytovat hosta a Půjčit loď */
+.dlg.pjc.nrz-d{width:min(1100px,calc(100vw - 24px));height:calc(100vh - 24px);max-height:calc(100vh - 24px);padding:0;background:#fbfaf6;overflow:clip;flex-direction:column}
+.dlg.pjc.nrz-d[open]{display:flex}
+.dlg.pjc.nrz-d>.nrz{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;margin:0}
+.nrz-h h2 small{display:block;font-size:13px;font-weight:500;color:var(--mut);margin:2px 0 0}
+.nrz-ro{display:flex;align-items:center;background:#f3efe6;color:#3b463f;font-weight:600}
+.nrz .sw{position:relative}
+.nrz-m .ubq-g{display:grid;grid-template-columns:140px 1fr;align-items:center;gap:10px;margin-top:8px}
+.nrz-m .ubq-g:first-child{margin-top:0}
+.nrz-m .ubq-g>span{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);display:grid}
+.nrz-m .ubq-g>span small{font-size:11px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ok)}
+.nrz-m .ubq-g>div{display:flex;flex-wrap:wrap;gap:6px}
+.nrz-m .ubq-b{min-width:38px;height:38px;padding:0 9px;border-radius:10px;border:1.5px solid #e3dccd;background:#fff;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer}
+.nrz-m .ubq-b.on{background:var(--deep);color:#fff;border-color:var(--deep)}
+.nrz .pct-e:empty{display:none}.nrz .pct-e{margin:0;color:var(--err);font-weight:600;font-size:13.5px}
+.nrz-lk small.zle{color:var(--err)}
+@media(max-width:900px){.dlg.pjc.nrz-d .nrz-b{overflow:auto}.nrz-m .ubq-g{grid-template-columns:1fr}}
+.dlg.pjc.nrz-d{max-width:none}

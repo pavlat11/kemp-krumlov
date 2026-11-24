@@ -394,6 +394,11 @@ function klik(e){var t=e.target.closest('button,a,input,label,summary,details');
 window.KKO={
   /* dialog poškozených / ztracených věcí i pro plnou administraci (Půjčovna lodí, detail rezervace) */
   /* hlídání platby i pro administraci (výdej, vrácení, odhlášení) – go(změny, text do historie) */
+  /* přehled pro řidiče k tisku – i z administrace (Doprava) */
+  ridicTisk:function(d0,api){if(!A)A=api;R=window.KKR;if(!ja)ja=KK.auth.meSync()||{};var old=den;den=d0||DNES();var h;try{h=ridic()}finally{den=old}
+    var x=document.createElement('div');x.innerHTML=h;$$('button',x).forEach(function(b){b.remove()});var ol=$('.ob-rid',x),sm=$('.ob-rid-s',x);
+    var tk=document.getElementById('tisk');if(!tk){tk=document.createElement('div');tk.id='tisk';document.body.appendChild(tk)}
+    tk.innerHTML='<h1>Přehled pro řidiče · '+kr(d0||DNES())+' '+(d0||DNES()).slice(0,4)+'</h1>'+(sm?sm.outerHTML:'')+(ol?ol.outerHTML:'<p>Na tento den žádné jízdy.</p>');print()},
   hlidej:function(r,co,go,api){if(!A)A=api;R=window.KKR;var me=KK.auth.meSync()||ja||{};if(!ja||ja.id!==me.id)ja=Object.assign({},me,{platby:me.role==='admin'||!!me.platby});hlidejPlatbu(r,co,go)},
   poskozeni:function(r0,api,hotovo){if(!A)A=api;R=window.KKR;ja=KK.auth.meSync()||ja||{};den=den||DNES();poHotovo=hotovo||function(){};AKCE.poskozeni(r0)},
   /* má přihlášený dostat aplikaci místo plné administrace? (obsluha se vzhledem aplikace, nebo správce v náhledu) */
