@@ -256,9 +256,9 @@ function lodKdy(r,typ){return typ==='vyd'?(r.doprava&&r.doprava.cas?r.doprava.ca
 function platbaBox(r,smi){var c=+r.cena||0;if(!c)return '';var p=r.platba||{},z=Math.min(+p.zaloha||0,c),st=p.stav||'',dp=doplatek(r),ceka=st==='ceka',vse=st==='vse'||!dp,zok=vse||st==='zal';
   /* pruh po částech: záloha | doplatek; díl se vybarví až když je opravdu zaplacený */
   var dil=function(w,ok,txt,cl){return '<div style="--w:'+w+'"><i class="s'+(ok?' p':'')+'"></i><small class="'+cl+'">'+txt+'</small></div>'};
-  var seg=z&&z<c?dil(z,zok,'záloha '+kc(z)+(zok?' ✓':' ✗'),zok?'grn':ceka?'red':'mut')+dil(c-z,vse,'doplatek '+kc(c-z)+(vse?' ✓':''),vse?'grn':'mut'):dil(1,vse,vse?'zaplaceno celé ✓':'celá částka',vse?'grn':'mut');
+  var seg=z&&z<c?dil(z,zok,'záloha <b>'+kc(z)+'</b>'+(zok?' ✓':' ✗'),zok?'grn':ceka?'red':'mut')+dil(c-z,vse,'doplatek <b>'+kc(c-z)+'</b>'+(vse?' ✓':''),vse?'grn':'mut'):dil(1,vse,vse?'zaplaceno <b>'+kc(c)+'</b> ✓':'celá částka <b>'+kc(c)+'</b>',vse?'grn':'mut');
   var bt=!smi||!dp?'':ceka?'<div class="ob-plb"><button type="button" class="ob-pl-b zal" data-a="zaloha" data-id="'+r.id+'">'+sv(IK.ok,15)+'Záloha '+kc(z)+'</button><button type="button" class="ob-pl-b g" data-a="doplaceno" data-id="'+r.id+'">Vše '+kc(dp)+'</button></div>':'<div class="ob-plb"><button type="button" class="ob-pl-b" data-a="doplaceno" data-id="'+r.id+'">'+sv(IK.ok,15)+'Zaplatil '+kc(dp)+'</button></div>';
-  return '<div class="ob-plx b c '+(!dp?'ok':ceka?'ceka':'dluh')+'"><div class="ob-plh">'+(dp?'<span class="red">zbývá <b>'+kc(dp)+'</b></span>':'<span class="grn"><b>'+sv(IK.ok,16)+'zaplaceno</b></span>')+'<span>z '+kc(c)+'</span></div><div class="ob-pls">'+seg+'</div>'+bt+(!smi&&dp?'<p class="ob-plsp">Platbu potvrzuje správce</p>':'')+'</div>'}
+  return '<div class="ob-plx b c '+(!dp?'ok':ceka?'ceka':'dluh')+'"><div class="ob-plh">'+(dp?'<span class="red">zbývá <b>'+kc(dp)+'</b></span>':'<span class="grn"><b>'+sv(IK.ok,16)+'zaplaceno</b></span>')+'<span class="cel">z <b>'+kc(c)+'</b></span></div><div class="ob-pls">'+seg+'</div>'+bt+(!smi&&dp?'<p class="ob-plsp">Platbu potvrzuje správce</p>':'')+'</div>'}
 
 function kartaL(r,typ){var l=r.lode,ceka=cekaZal(r),smi=ja.platby,dni=Math.max(1,+l.dni||1),pozde=typ==='vra'&&posD(r)<den,pozdeV=typ==='vyd'&&!l.vydano&&l.den<den;
   var k=kusyRoz(lodKusy(r,typ)),kdy=lodKdy(r,typ);
