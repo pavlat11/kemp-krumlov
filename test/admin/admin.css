@@ -1768,13 +1768,12 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .pk-pl.dl b{font-size:17px;font-weight:800}
 .pk-pl.dl.ne{background:#fdecea;border-color:#efb3a8;color:#9b2c1f}
 .pk-pl.ok{display:inline-flex;padding:5px 10px;border-radius:10px;background:#e7f4ec;color:#1f7a45;font-weight:700;font-size:13px}
-/* karty nástěnek – přehlednější pořadí: kdo a co → trasa a telefon → (varování) → platba + hlavní tlačítko → drobné odkazy */
-.pk-f{display:contents}
-.pk-f>a,.pk-f>span:not(.pk-pl){order:5;grid-column:1/-1;margin-top:5px;font-size:13px;justify-self:start}
-.pk-f>span:not(.pk-pl):empty{display:none}
-.pk-w,.pk-pz{order:6}
-.pk-f>.pk-pl{order:7;grid-column:1;justify-self:start;margin-top:12px}
-.pk-c .pk-b{order:7;grid-column:2;margin-top:12px;min-height:40px}
-.pk-f>.pk-pl.dl{min-height:40px;align-items:center}
-.pk-z{order:9;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px dashed #e6e0d3}
+/* karty nástěnek: platba výrazně, ale karta se nezvětšuje */
+.pk-f{margin-top:8px}
+.pk-f>.pk-pl.dl{margin-left:auto}
+.pk-pl.dl{font:inherit;cursor:pointer;padding:4px 10px;min-height:34px;align-items:center}
+.pk-pl.dl b{font-size:16px}
+.pk-pl.dl:hover{background:#fbe2bd;border-color:#e0a24c}.pk-pl.dl.ne:hover{background:#fbd9d3}
+.pk-pl.dl:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.pk-z{justify-content:space-between}
 .pk-z:has(> :only-child){justify-content:flex-end}

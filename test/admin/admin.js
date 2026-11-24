@@ -796,7 +796,7 @@ function rezervace(m,sekV){
   /* karta rezervace: zaplaceno / doplatit + malý ukazatel */
   var plKarta=function(r){if(r.stav==='zru'||!(+r.cena))return '';var ce=+r.cena,p=r.platba,zp=!p?0:p.stav==='vse'?ce:p.stav==='zal'?Math.min(ce,+p.zaloha||0):0,d=ce-zp,pr=Math.round(zp/ce*100);
     return '<span class="rr-pl'+(d?'':' ok')+'"><span class="rr-pl-t"><span class="z"><small>Zaplaceno</small><b>'+kc(zp)+'</b></span><span class="'+(d?'d':'z')+'"><small>Doplatit</small><b>'+(d?kc(d):'nic')+'</b></span></span><i><s style="width:'+pr+'%"></s></i></span>'};
-  var kUhrade=function(r){var p=r.platba;if(!(+r.cena))return '';if(p&&p.stav==='vse')return '<span class="pk-pl ok">✓ zaplaceno</span>';var d=p&&p.stav==='zal'?Math.max(0,(+r.cena||0)-(+p.zaloha||0)):+r.cena||0;return d?'<span class="pk-pl dl'+(p&&p.stav==='ceka'?' ne':'')+'" title="'+(p&&p.stav==='zal'?'Záloha '+kc(+p.zaloha)+' zaplacena, celkem '+kc(+r.cena):p&&p.stav==='ceka'?'Záloha nezaplacena':'Celkem '+kc(+r.cena))+'"><small>Doplatit</small><b>'+kc(d)+'</b></span>':''};
+  var kUhrade=function(r){var p=r.platba;if(!(+r.cena))return '';if(p&&p.stav==='vse')return '<span class="pk-pl ok">✓ zaplaceno</span>';var d=p&&p.stav==='zal'?Math.max(0,(+r.cena||0)-(+p.zaloha||0)):+r.cena||0;return d?'<button type="button" data-zk="'+r.id+'" class="pk-pl dl'+(p&&p.stav==='ceka'?' ne':'')+'" title="Kliknutím přijmout platbu · '+(p&&p.stav==='zal'?'Záloha '+kc(+p.zaloha)+' zaplacena, celkem '+kc(+r.cena):p&&p.stav==='ceka'?'Záloha nezaplacena':'Celkem '+kc(+r.cena))+'"><small>Doplatit</small><b>'+kc(d)+'</b></button>':''};
   var pkKarta=function(r,typ){var l=r.lode,ven=typ==='ven',k=ven?R.lodeVen(r):R.lodePotreba(l),lk=lodK(k),vk=vybK(k),pd=posD(r),po=ven&&pd<dnes;
     var kdy=typ==='vyd'?(r.doprava&&r.doprava.cas?'<span class="pk-t">'+SV(IKO.auto,14)+'odjezd '+esc(r.doprava.cas)+'</span>':'<span class="pk-t">'+(l.odkud==='kemp'?'vyplouvá z kempu':'vlastní doprava')+'</span>')
       :ven?(po?'<span class="pk-t zle">měl vrátit '+KR(pd)+'</span>':pd===dnes?'<span class="pk-t dnes">vrací dnes</span>':'<span class="pk-t">vrátí '+KR(pd)+'</span>')
@@ -1527,6 +1527,7 @@ function rezervace(m,sekV){
       else if(s.a==='qx'){q='';kresli()}
       else if(s.a==='vicf'){vicF=!vicF;kresli()}
       else if(s.zp)zaplat(s.zp,s.zc||'zal');
+      else if(s.zk){var rz=najdi(s.zk);if(rz){var pz=rz.platba||{},dz=pz.stav==='zal'?Math.max(0,(+rz.cena||0)-(+pz.zaloha||0)):+rz.cena||0;ptej('Přijmout platbu?\n\n'+rz.jmeno+' platí '+kc(dz)+(pz.stav==='zal'?' (doplatek po záloze '+kc(+pz.zaloha)+')':pz.stav==='ceka'?' – celou částku, záloha nepřišla':'')+'.\nCelkem '+kc(+rz.cena)+'.',{ok:'Zaplaceno '+kc(dz)}).then(function(a){if(a)zaplat(rz.id,'vse')})}}
       else if(s.kdo){var kd=s.kdo.split('|');kdoDlg(kd[0],kd[1])}
       else if('skl' in s){nT='pujc';KK.LS.set('rez.nt','pujc');location.hash='#rez_nastaveni'}
       else if('pujcit' in s)pujcit();
