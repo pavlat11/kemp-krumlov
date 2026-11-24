@@ -1312,13 +1312,19 @@ function rezervace(m,sekV){
     var HI=hist.filter(function(x){return x.t}).reverse();
     if(HI.length)h+='<details class="rdn-h" open><summary><span>Historie</span><small>'+HI.length+' '+pl(HI.length,'záznam','záznamy','záznamů')+'</small></summary><ol class="rp-hi">'+HI.map(function(x){return '<li><b>'+esc(x.co)+'</b>'+(x.pod&&x.pod.length?'<ul>'+x.pod.map(function(t){return '<li>'+esc(t)+'</li>'}).join('')+'</ul>':'')+'<small>'+cas(x.t)+(x.kdo?' · '+esc(x.kdo):'')+'</small></li>'}).join('')+'</ol></details>';
     /* dole: úprava, krok zpět, zrušení, smazání */
-    var zpet=b||r.stav==='zru'||!maUby(r)?null:({pot:['pop','Vrátit na nepotvrzené'],uby:['pot','Zrušit ubytování'],odj:['uby','Zrušit odhlášení']})[r.stav];
-    h+='<div class="rp-f"><button type="button" class="btn sm" data-e="upr">'+SV(IK.tu,15)+'Upravit</button>'+
-      (zpet?'<button type="button" class="btn sm gh" data-st="'+zpet[0]+'">'+zpet[1]+'</button>':'')+
-      (!b&&r.stav!=='zru'&&r.stav!=='odj'&&maUby(r)&&LK(r)?(r.lode.vydano?'':'<button type="button" class="btn sm gh" data-e="zcl" title="Host si lodě nevyzvedl – ubytování zůstane">Zrušit jen lodě</button>')+(r.stav==='pop'||r.stav==='pot'?'<button type="button" class="btn sm gh" data-e="zcu" title="Host se neubytoval – lodě zůstanou">Zrušit jen ubytování</button>':''):'')+
-      (!b&&r.stav!=='zru'&&(r.zrusCast||[]).length?'<button type="button" class="btn sm gh" data-e="zco">'+(r.zrusCast[r.zrusCast.length-1].co==='lode'?'Obnovit zrušené lodě':'Obnovit zrušené ubytování')+'</button>':'')+
-      (b?'':r.stav==='zru'?'<button type="button" class="btn sm gh" data-st="pop">Obnovit</button>':'<button type="button" class="btn sm gh" data-st="zru">Zrušit rezervaci</button>')+
-      (adm||b?'<button type="button" class="btn sm gh rp-d" data-e="del">Smazat</button>':'')+'</div>';
+    var zpet=b||r.stav==='zru'||!maUby(r)?null:({pot:['pop','Vrátit na nepotvrzené'],uby:['pot','Vrátit ubytování zpět'],odj:['uby','Vrátit odhlášení zpět']})[r.stav];
+    /* zrušení: jedno tlačítko s nabídkou (celá rezervace / jen ubytování / jen lodě) */
+    var ZI=function(a,t,p,nb){return '<button type="button" role="menuitem" class="rzm-i'+(nb?' nb':'')+'" '+a+'><b>'+t+'</b><small>'+p+'</small></button>'},zm=[];
+    if(!b&&r.stav!=='zru'){
+      if(r.stav!=='odj'&&maUby(r)&&LK(r)){if(r.stav==='pop'||r.stav==='pot')zm.push(ZI('data-e="zcu"','Jen ubytování','Host se neubytoval – místo se uvolní, lodě zůstanou'));if(!r.lode.vydano)zm.push(ZI('data-e="zcl"','Jen lodě'+(r.doprava||r.vyzved?' a dopravu':''),'Host si lodě nevyzvedl – ubytování zůstane'))}
+      zm.push(ZI('data-st="zru"','Celou rezervaci','Host odřekl – uvolní se vše, rezervace zůstane jako zrušená',1))}
+    var ob=!b&&r.stav!=='zru'&&(r.zrusCast||[]).length?r.zrusCast[r.zrusCast.length-1]:null;
+    h+='<div class="rp-f"><div class="rp-fl"><button type="button" class="btn sm" data-e="upr">'+SV(IK.tu,15)+'Upravit</button>'+
+      (zpet?'<button type="button" class="btn sm gh" data-st="'+zpet[0]+'">'+SV('<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>',15)+zpet[1]+'</button>':'')+
+      (ob?'<button type="button" class="btn sm gh" data-e="zco">'+SV('<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>',15)+(ob.co==='lode'?'Obnovit zrušené lodě':'Obnovit zrušené ubytování')+'</button>':'')+
+      (r.stav==='zru'&&!b?'<button type="button" class="btn sm gh" data-st="pop">'+SV('<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>',15)+'Obnovit rezervaci</button>':'')+'</div>'+
+      '<div class="rp-fr">'+(zm.length?'<details class="rzm"><summary class="btn sm gh">Zrušit…'+SV('<path d="m6 9 6 6 6-6"/>',14)+'</summary><div class="rzm-m" role="menu">'+zm.join('')+'</div></details>':'')+
+      (adm||b?'<button type="button" class="btn sm gh rp-d" data-e="del">Smazat</button>':'')+'</div></div>';
     dd.innerHTML=h;
     dd.dataset.id=id;dd.hidden=false;
     if(byl){if(tab==='kal'&&!q){kresli();return}$('#rdt',dd).focus({preventScroll:true})}

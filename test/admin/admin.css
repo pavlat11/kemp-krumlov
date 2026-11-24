@@ -1639,3 +1639,17 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .sb-sto{display:block;margin:-4px 0 12px;padding:10px 12px;border-radius:12px;background:#f3efe6;font-size:13.5px;color:#4d5a52}.sb-sto svg{flex:none;margin-top:2px}
 .zl-r{display:inline-block;font-weight:800;color:#1f6d77;background:#e3f1f2;border-radius:7px;padding:1px 7px;text-decoration:none}.zl-r:hover{background:#cfe8ea;text-decoration:underline}.zl-x{color:#8a8473;background:#efece6;text-decoration:line-through}.zl-s{flex:none;font-size:13.5px;font-weight:700;color:#1f6d77;text-decoration:none;padding:6px 12px;border-radius:999px;border:1px solid #d9e6e3}.zl-s:hover{background:#e3f1f2}
 .pct form>p{white-space:pre-line}
+/* patička detailu: vlevo úpravy a kroky zpět, vpravo zrušení (nabídka) a smazání */
+.rp-f{justify-content:space-between;align-items:flex-start;gap:10px}
+.rp-fl,.rp-fr{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.rp-fr{margin-left:auto}.rp-fr .rp-d{margin-left:0}
+.rp-f .btn svg{margin-right:5px;vertical-align:-2px}
+.rzm{position:relative}
+.rzm>summary{list-style:none;display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+.rzm>summary::-webkit-details-marker{display:none}
+.rzm>summary svg{margin:0 0 0 2px!important;transition:transform .15s}.rzm[open]>summary svg{transform:rotate(180deg)}
+.rzm-m{position:absolute;right:0;bottom:calc(100% + 8px);z-index:20;width:300px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px -16px rgba(15,34,25,.35);padding:6px;display:grid;gap:2px}
+.rzm-i{display:grid;gap:2px;text-align:left;background:none;border:0;border-radius:10px;padding:9px 11px;cursor:pointer;font:inherit;color:var(--ink)}
+.rzm-i:hover,.rzm-i:focus-visible{background:#f3efe6;outline:none}
+.rzm-i b{font-size:14px}.rzm-i small{font-size:12.5px;color:var(--mut,#6b665c);line-height:1.35}
+.rzm-i.nb b{color:var(--err)}
