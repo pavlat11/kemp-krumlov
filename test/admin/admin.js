@@ -591,12 +591,25 @@ function rezervace(m,sekV){
   var lsBdg=function(r){var x=LS(r);if(!x||r.stav==='zru')return '';var po=(x==='vyd'||x==='cast')&&posD(r)<dnes;return '<span class="rls '+x+(po?' po':'')+'">'+R.LSTAV[x]+(po?' · po termínu':'')+'</span>'};
   var polLodi=function(k,ven){var P=[];R.lodeTypy().forEach(function(p){if(k[p.k])P.push([p.k,p.n,ven?k[p.k]:k[p.k],k[p.k]])});Object.keys(R.VYB).forEach(function(x){if(k[x])P.push([x,R.VYB[x],k[x],k[x],'vybavení'])});return P};
   var vydej=function(id){var r=najdi(id);if(!r||!r.lode)return;var pt=R.lodePotreba(r.lode),pol=polLodi(pt).map(function(x){var p=R.lodeTypy().filter(function(t){return t.k===x[0]})[0];x[3]=Math.max(x[2],x[2]+5);return x});
-    pocty('Vydat lodě – '+r.jmeno,'Zkontrolujte, co si host skutečně odnáší. Počty jsou předvyplněné podle rezervace.',pol,'Vydat').then(function(k){if(!k)return;var sn=snap(),l=Object.assign({},r.lode,{vydano:{kdy:Date.now(),kdo:ja.jmeno,kusy:k},vraceno:[]});
-      try{zmen(id,{lode:l},'Lodě vydány: '+R.lodeKusyTxt(k));KK.zaznam('Rezervace',(r.cislo||'')+' '+r.jmeno+' – lodě vydány');kresli();tz(r.jmeno+': lodě vydány.',sn)}catch(x){toast(x.message,1)}})};
+    var mi=R.lodeMimo(r,'vyd',dnes);pocty('Vydat lodě – '+r.jmeno,(mi?'⚠ Pozor: '+mi+' Výdej se zapíše jako mimo termín.\n\n':'')+'Zkontrolujte, co si host skutečně odnáší. Počty jsou předvyplněné podle rezervace.',pol,mi?'Vydat mimo termín':'Vydat').then(function(k){if(!k)return;var sn=snap(),l=Object.assign({},r.lode,{vydano:{kdy:Date.now(),kdo:ja.jmeno,kusy:k},vraceno:[]});
+      try{zmen(id,{lode:l},'Lodě vydány: '+R.lodeKusyTxt(k)+(mi?' – '+mi:''));KK.zaznam('Rezervace',(r.cislo||'')+' '+r.jmeno+' – lodě vydány');kresli();tz(r.jmeno+': lodě vydány.',sn)}catch(x){toast(x.message,1)}})};
   var vrat=function(id){var r=najdi(id);if(!r||!r.lode||!r.lode.vydano)return;var ven=R.lodeVen(r);
-    pocty('Vrátit lodě – '+r.jmeno,'Zadejte, kolik čeho host vrací. Když vrací jen část, zbytek zůstane u něj a vrátí ho později.',polLodi(ven,1),'Uložit vrácení').then(function(k){if(!k)return;var sn=snap(),vr=(r.lode.vraceno||[]).concat([{kdy:Date.now(),kdo:ja.jmeno,kusy:k}]),l=Object.assign({},r.lode,{vraceno:vr}),z={lode:l};
+    var mi=R.lodeMimo(r,'vra',dnes);pocty('Vrátit lodě – '+r.jmeno,(mi?'⚠ Pozor: '+mi+' Vrácení se zapíše jako po termínu.\n\n':'')+'Zadejte, kolik čeho host vrací. Když vrací jen část, zbytek zůstane u něj a vrátí ho později.',polLodi(ven,1),mi?'Vrátit po termínu':'Uložit vrácení').then(function(k){if(!k)return;var sn=snap(),vr=(r.lode.vraceno||[]).concat([{kdy:Date.now(),kdo:ja.jmeno,kusy:k}]),l=Object.assign({},r.lode,{vraceno:vr}),z={lode:l};
       var zb={};Object.keys(ven).forEach(function(x){var n=ven[x]-(k[x]||0);if(n>0)zb[x]=n});var vse=!Object.keys(zb).length;if(vse&&JL(r)&&r.stav!=='zru')z.stav='odj';
-      try{zmen(id,z,'Vráceno: '+R.lodeKusyTxt(k)+(vse?' – vše vráceno':' – zbývá vrátit '+R.lodeKusyTxt(zb)));KK.zaznam('Rezervace',(r.cislo||'')+' '+r.jmeno+' – vrácení lodí');kresli();tz(vse?r.jmeno+': vše vráceno.':r.jmeno+': vráceno, zbývá '+R.lodeKusyTxt(zb)+'.',sn)}catch(x){toast(x.message,1)}})};
+      try{zmen(id,z,'Vráceno: '+R.lodeKusyTxt(k)+(vse?' – vše vráceno':' – zbývá vrátit '+R.lodeKusyTxt(zb))+(mi?' – '+mi:''));KK.zaznam('Rezervace',(r.cislo||'')+' '+r.jmeno+' – vrácení lodí');kresli();tz(vse?r.jmeno+': vše vráceno.':r.jmeno+': vráceno, zbývá '+R.lodeKusyTxt(zb)+'.',sn)}catch(x){toast(x.message,1)}})};
+  /* zrušení jen části rezervace: lodě (nevyzvedl) nebo ubytování (neubytoval se); jde vrátit tlačítkem Obnovit */
+  var zrusCast=function(id,co){var r=najdi(id);if(!r)return;var ce=+r.cena||0,cL=r.lode?R.cenaLodi(r.lode).celkem:0,cD=(r.doprava?R.cenaDopravy(r.doprava):0)+(r.vyzved?R.cenaDopravy(r.vyzved):0),
+      p=r.platba,zp=!p?0:p.stav==='vse'?ce:p.stav==='zal'?Math.min(ce,+p.zaloha||0):0,zz=r.zrusCast||[];
+    if(co==='zco'){var o=zz[zz.length-1];if(!o)return;ptej((o.co==='lode'?'Obnovit zrušené lodě':'Obnovit zrušené ubytování')+' – '+r.jmeno+'?\n\nVrátí se do rezervace, cena bude zase '+kc(o.cena)+'.',{ok:'Obnovit'}).then(function(ok){if(!ok)return;var sn=snap(),z={cena:o.cena,zrusCast:zz.slice(0,-1)};
+      Object.keys(o.data).forEach(function(k){z[k]=o.data[k]});try{zmen(id,z,o.co==='lode'?'Lodě obnoveny':'Ubytování obnoveno');KK.zaznam('Rezervace',(r.cislo||'')+' '+r.jmeno+' – '+(o.co==='lode'?'lodě obnoveny':'ubytování obnoveno'));kresli();tz('Obnoveno.',sn)}catch(x){toast(x.message,1)}});return}
+    var L=co==='zcl',nc=L?Math.max(0,ce-cL-cD):Math.min(ce,cL+cD),co2=L?'lodě'+(r.doprava||r.vyzved?' a dopravu':''):'ubytování';
+    var txt='Zrušit jen '+co2+' – '+r.jmeno+'?\n\n'+(L?'Host si lodě nevyzvedl. Ubytování zůstane, lodě'+(r.doprava||r.vyzved?' i doprava':'')+' se uvolní pro ostatní.':'Host se neubytoval. Místo se uvolní, lodě'+(r.doprava?' a doprava':'')+' zůstanou.')+
+      (ce?'\n\nCena: '+kc(ce)+' → '+kc(nc)+'.':'')+(zp>nc?'\nHost už zaplatil '+kc(zp)+' – o vrácení '+kc(zp-nc)+' rozhodněte podle storno podmínek.':'');
+    ptej(txt,{ok:'Zrušit '+(L?'lodě':'ubytování'),nebezp:1}).then(function(ok){if(!ok)return;var sn=snap(),t=Date.now(),z,data;
+      if(L){data={lode:r.lode,doprava:r.doprava||null,vyzved:r.vyzved||null};z={lode:null,doprava:null,vyzved:null}}
+      else{var dn=R.lodeDny(r.lode);data={mista:r.mista||[],dalsi:r.dalsi||{},od:r.od,do:r.do,stav:r.stav};z={mista:[],dalsi:{stan:0,karavan:0},od:r.lode.den,do:dn[dn.length-1]||r.lode.den}}
+      z.cena=nc;z.zrusCast=zz.concat([{co:L?'lode':'uby',t:t,kdo:ja.jmeno,cena:ce,data:data}]);
+      try{zmen(id,z,L?'Zrušeny jen lodě'+(r.doprava||r.vyzved?' a doprava':'')+' – host si je nevyzvedl':'Zrušeno jen ubytování – host se neubytoval',ce!==nc?['Cena: '+kc(ce)+' → '+kc(nc)]:[]);KK.zaznam('Rezervace',(r.cislo||'')+' '+r.jmeno+' – zrušeno jen '+co2);kresli();tz(r.jmeno+': zrušeno jen '+co2+'.',sn)}catch(x){toast(x.message,1)}})};
   /* omyl při výdeji nebo vracení: zrušit výdej (lodě zpět na „rezervované“) nebo poslední vrácení */
   var zrusVydej=function(id){var r=najdi(id);if(!r||!r.lode||!r.lode.vydano)return;ptej('Zrušit výdej lodí – '+r.jmeno+'?\n\nLodě se vrátí do stavu „rezervované“, jako by se nevydaly.'+((r.lode.vraceno||[]).length?' Smaže se i záznam o vrácení.':''),{ok:'Zrušit výdej',ne:'Nechat'}).then(function(a){if(!a)return;
     var sn=snap(),l=Object.assign({},r.lode);delete l.vydano;delete l.vraceno;var z={lode:l};if(JL(r)&&r.stav==='odj')z.stav='pot';
@@ -1298,6 +1311,8 @@ function rezervace(m,sekV){
     var zpet=b||r.stav==='zru'||!maUby(r)?null:({pot:['pop','Vrátit na nepotvrzené'],uby:['pot','Zrušit ubytování'],odj:['uby','Zrušit odhlášení']})[r.stav];
     h+='<div class="rp-f"><button type="button" class="btn sm" data-e="upr">'+SV(IK.tu,15)+'Upravit</button>'+
       (zpet?'<button type="button" class="btn sm gh" data-st="'+zpet[0]+'">'+zpet[1]+'</button>':'')+
+      (!b&&r.stav!=='zru'&&r.stav!=='odj'&&maUby(r)&&LK(r)?(r.lode.vydano?'':'<button type="button" class="btn sm gh" data-e="zcl" title="Host si lodě nevyzvedl – ubytování zůstane">Zrušit jen lodě</button>')+(r.stav==='pop'||r.stav==='pot'?'<button type="button" class="btn sm gh" data-e="zcu" title="Host se neubytoval – lodě zůstanou">Zrušit jen ubytování</button>':''):'')+
+      (!b&&r.stav!=='zru'&&(r.zrusCast||[]).length?'<button type="button" class="btn sm gh" data-e="zco">'+(r.zrusCast[r.zrusCast.length-1].co==='lode'?'Obnovit zrušené lodě':'Obnovit zrušené ubytování')+'</button>':'')+
       (b?'':r.stav==='zru'?'<button type="button" class="btn sm gh" data-st="pop">Obnovit</button>':'<button type="button" class="btn sm gh" data-st="zru">Zrušit rezervaci</button>')+
       (adm||b?'<button type="button" class="btn sm gh rp-d" data-e="del">Smazat</button>':'')+'</div>';
     dd.innerHTML=h;
@@ -1318,6 +1333,7 @@ function rezervace(m,sekV){
     if(b.dataset.st){var nst=b.dataset.st;overDatum(id,nst).then(function(ok){if(!ok)return;try{var sn=snap(),r=zmen(id,{stav:nst},R.STAVY[nst]);KK.zaznam('Rezervace',(r.cislo||'')+' '+r.jmeno+' – '+R.STAVY[r.stav]);kresli();tz(r.jmeno+': '+R.STAVY[r.stav]+'.',sn)}catch(x){toast(x.message,1)}})}
     else if(b.dataset.e==='zav')dd.close();
     else if(b.dataset.e==='upr')form(najdi(id));
+    else if(b.dataset.e==='zcl'||b.dataset.e==='zcu'||b.dataset.e==='zco')zrusCast(id,b.dataset.e);
     else if(b.dataset.e==='del'){var rs=najdi(id);ptej('Smazat '+(rs&&rs.stav==='blk'?'blokaci':'rezervaci')+(rs?' „'+rs.jmeno+'“':'')+'?\n\nZmizí z kalendáře, seznamu i historie. Nejde to vrátit.'+(rs&&rs.stav!=='blk'?'\n\nKdyž host jen odřekl, použijte raději „Zrušit rezervaci“.':''),{ok:'Smazat',nebezp:1}).then(function(ok){if(!ok)return;var sn=snap();R.smaz(id);dd.hidden=true;kresli();tz('Smazáno.',sn)})}});
   function form(r,pre){
     pre=pre||{};var b=r?r.stav==='blk':!!pre.blk,o=(r&&r.osoby)||{},d=(r&&r.dalsi)||{},num=function(n,l,v,ph){return '<label class="f">'+l+'<input class="inp" name="'+n+'" type="number" min="0" inputmode="numeric" value="'+(v||'')+'"'+(ph?' placeholder="'+ph+'"':'')+'></label>'};

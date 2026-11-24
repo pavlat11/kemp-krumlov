@@ -259,6 +259,10 @@ var R=window.KKR={
  mistoN:function(k){if(!k)return '';if(k==='kemp')return 'Kemp Krumlov';var p=window.KKC&&KKC.p(k);return p?p.n:k},
  /* místa na řece po proudu, kemp leží mezi Centrem a Zlatou Korunou */
  mistaReky:function(){var a=[],kde=-1;(window.KKC?KKC.kat('doprava'):[]).forEach(function(p){if(p.skryt===1)return;if(kde<0&&(p.k==='dop8'||p.k==='dop9'))kde=a.length;a.push({k:p.k,n:p.n,cena:+p.a||0})});a.splice(kde<0?a.length:kde,0,{k:'kemp',n:'Kemp Krumlov',cena:0});return a},
+ /* výdej / vrácení mimo plánovaný den → text varování ('' = v pořádku). co: 'vyd' | 'vra' */
+ lodeMimo:function(r,co,dnes){if(!r||!r.lode||!r.lode.den)return '';var t=dnes||I(new Date()),f=function(d){var p=d.split('-');return (+p[2])+'. '+(+p[1])+'.'};
+  if(co==='vyd'){var d=r.lode.den;return t>d?'po termínu – lodě se měly vydat '+f(d):t<d?'dříve – lodě se mají vydat až '+f(d):''}
+  var dn=R.lodeDny(r.lode),k=dn[dn.length-1];return t>k?'po termínu – lodě se měly vrátit '+f(k):''},
  lodeDny:function(l){var r=[];if(!l||!l.den)return r;var d=D(l.den);for(var i=0;i<Math.max(1,+l.dni||1)&&i<60;i++){r.push(I(d));d.setDate(d.getDate()+1)}return r},
  lodePocet:function(l){var n=0;Object.keys((l&&l.kusy)||{}).forEach(function(k){n+=+l.kusy[k]||0});return n},
  /* kolik čeho rezervace potřebuje: {kanoe:2, padla:4, vesty:6, barely:2} */
@@ -464,7 +468,7 @@ var R=window.KKR={
   var n=R.nast();if(x.pred&&n.rada===String(+rok+1).slice(2)&&!cti(KC,0)){n.rada=x.pred.rada;if(!n.rada)delete n.rada;R.ulozNast(n);pis(KC,x.pred.cislo||0)}return x},
  /* ubytovaní hosté, kterým už uplynul den odjezdu, se sami přepnou na „Odjel“ (zapomenuté odhlášení); vrací počet */
  auto:function(dnes){var a=R.vse(),n=0;a.forEach(function(r){if(r.stav==='pop'&&r.platba&&r.platba.stav==='ceka'&&r.platba.splatnost&&r.platba.splatnost<dnes){r.stav='zru';r.hist=(r.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Propadla – záloha nepřišla do '+r.platba.splatnost}]).slice(-30);n++}
-  else if((r.stav==='pot'||r.stav==='pop')&&r.od&&r.od<dnes&&!(r.lode&&r.lode.vydano)){r.stav='zru';r.hist=(r.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Automaticky zrušena – host nepřijel (příjezd '+r.od+')'}]).slice(-30);n++}
+  else if((r.stav==='pot'||r.stav==='pop')&&r.od&&r.od<dnes&&!(r.lode&&(r.lode.vydano||(R.lodePocet(r.lode)&&(R.lodeDny(r.lode).pop()||'')>=dnes)))){r.stav='zru';r.hist=(r.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Automaticky zrušena – host nepřijel (příjezd '+r.od+')'}]).slice(-30);n++}
   else if(r.stav==='uby'&&r.do&&r.do<dnes){r.stav='odj';r.hist=(r.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Automaticky odhlášen (odjezd '+r.do+' už uplynul)'}]).slice(-30);n++}});if(n)pis(K,a);return n},
  obnov:function(a){pis(K,a)}, /* vrácení poslední změny zpět (administrace) */
  smaz:function(id){pis(K,R.vse().filter(function(x){return x.id!==id}))},

@@ -1638,3 +1638,4 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .kk-tip::before{content:"";position:absolute;left:50%;top:-5px;width:10px;height:10px;margin-left:-5px;background:#14201a;transform:rotate(45deg)}
 .sb-sto{display:block;margin:-4px 0 12px;padding:10px 12px;border-radius:12px;background:#f3efe6;font-size:13.5px;color:#4d5a52}.sb-sto svg{flex:none;margin-top:2px}
 .zl-r{display:inline-block;font-weight:800;color:#1f6d77;background:#e3f1f2;border-radius:7px;padding:1px 7px;text-decoration:none}.zl-r:hover{background:#cfe8ea;text-decoration:underline}.zl-x{color:#8a8473;background:#efece6;text-decoration:line-through}.zl-s{flex:none;font-size:13.5px;font-weight:700;color:#1f6d77;text-decoration:none;padding:6px 12px;border-radius:999px;border:1px solid #d9e6e3}.zl-s:hover{background:#e3f1f2}
+.pct form>p{white-space:pre-line}
