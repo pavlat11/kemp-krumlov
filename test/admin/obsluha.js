@@ -244,7 +244,7 @@ function ubytovani(){var t=KK.LS.get('o.tab.u','dnes');if(['dnes','plan','kal'].
   if(!odj.length&&!pri.length&&!hot.length)h+=prazdne('Nikdo nepřijíždí ani neodjíždí.');
   var sb=function(nad,L){return L.length?'<details class="ob-hotd"><summary>'+sv(IK.ok,18)+nad+' <span>'+L.length+'</span></summary><section class="ob-pan">'+L.map(function(x){return kartaU(x[0],x[1])}).join('')+'</section></details>':''};
   var hO=hot.filter(function(x){return x[1]==='odj'}),hU=hot.filter(function(x){return x[1]==='pri'});
-  h+='<div class="ob-2s"><div class="ob-2s-s">'+pan('Odjíždí',odj,'odj',hO,'Odhlášeno')+'</div><div class="ob-2s-s">'+pan('Přijíždí',pri,'pri',hU,'Ubytováno')+'</div></div>';
+  h+='<div class="ob-2s"><div class="ob-2s-s">'+pan('Přijíždí',pri,'pri',hU,'Ubytováno')+'</div><div class="ob-2s-s">'+pan('Odjíždí',odj,'odj',hO,'Odhlášeno')+'</div></div>';
   return h}
 /* lodě: rozdělení kusů na lodě (velké) a vybavení (malé) */
 var kusyRoz=function(k){var L=[],V=[];Object.keys(k||{}).filter(function(x){return +k[x]>0}).forEach(function(x){(x in R.VYB?V:L).push([x,+k[x]])});L.sort(function(a,b){return b[1]-a[1]});
