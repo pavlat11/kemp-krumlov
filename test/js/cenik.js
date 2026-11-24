@@ -303,8 +303,11 @@ var R=window.KKR={
   var pk=dni>1?(n>=10?'d10':'d1'):(n>=10?'n10':'n1');o.pk=pk;o.zast='';[pa,pb].forEach(function(p){if(p&&p.kat==='doprava'&&p[pk]!=null&&(o.zast===''||+p[pk]>o.navoz)){o.navoz=+p[pk]||0;o.zast=p.k}});o.celkem=o.pujc;return o}/* návoz lodí NENÍ v ceně – platí se na místě, vždy jen jeden (bez ohledu na trasu) */,
  aut:function(osob){return Math.max(1,Math.ceil((+osob||0)/8))},
  cenaDopravy:function(d){if(!d||!d.misto||d.misto==='kemp'||!window.KKC)return 0;var p=KKC.p(d.misto);return p?(+p.a||0)*R.aut(d.osob):0},
+ /* období půjčení lodí: „26. 11. → 28. 11. 2026 (3 dny)“ – vždy s datem vrácení */
+ lodeObdobi:function(l,j,bezRoku){if(!l||!l.den)return '';var D=R.lodeDny(l),a=D[0].split('-'),b=D[D.length-1].split('-'),n=D.length,W={cs:['den','dny','dní'],en:['day','days','days'],de:['Tag','Tage','Tage']}[j||'cs']||['den','dny','dní'];
+  var f=function(x){return (+x[2])+'. '+(+x[1])+'.'};return f(a)+(a[0]!==b[0]&&!bezRoku?' '+a[0]:'')+' → '+f(b)+(bezRoku?'':' '+b[0])+' ('+n+' '+(n===1?W[0]:n<5?W[1]:W[2])+')'},
  lodeTxt:function(l,j){if(!l||!R.lodePocet(l))return '';var a=Object.keys(l.kusy).filter(function(k){return +l.kusy[k]>0}).map(function(k){var p=window.KKC&&KKC.p(k);return l.kusy[k]+'× '+(p?(j&&j!=='cs'&&p['n_'+j])||p.n:k)}),d=l.den.split('-'),dni=Math.max(1,+l.dni||1),W={cs:['den','dny','dní'],en:['day','days','days'],de:['Tag','Tage','Tage']}[j||'cs']||['den','dny','dní'];
-  return a.join(', ')+' · '+(+d[2])+'. '+(+d[1])+'. ('+dni+' '+(dni===1?W[0]:dni<5?W[1]:W[2])+')'+(l.odkud||l.kam?' · '+R.mistoN(l.odkud)+' → '+R.mistoN(l.kam):'')},
+  return a.join(', ')+' · '+R.lodeObdobi(l,j,1)+(l.odkud||l.kam?' · '+R.mistoN(l.odkud)+' → '+R.mistoN(l.kam):'')},
  dopravaTxt:function(d,j){if(!d||!d.misto)return '';var W={cs:['osob','auto','auta'],en:['people','van','vans'],de:['Personen','Wagen','Wagen']}[j||'cs']||['osob','auto','auta'],a=R.aut(d.osob),o=+d.osob||0;return R.mistoN(d.misto)+' · '+o+' '+((j||'cs')==='cs'?(o===1?'osoba':o>=2&&o<=4?'osoby':'osob'):W[0])+' · '+a+' '+(a===1?W[1]:W[2])+(d.cas?' · '+d.cas:'')},
  /* doprava na start + vyzvednutí v cíli (rezervace.vyzved = {misto, osob, cas, den}: hosty v cíli vyzvedneme a odvezeme do kempu) */
  dopravaVseTxt:function(r,j){if(!r)return '';var a=[];if(r.doprava&&r.doprava.misto)a.push(R.dopravaTxt(r.doprava,j));if(r.vyzved&&r.vyzved.misto)a.push(({cs:'vyzvednutí v cíli',en:'pick-up at the finish',de:'Abholung am Ziel'}[j||'cs']||'vyzvednutí v cíli')+': '+R.dopravaTxt(r.vyzved,j));return a.join(' + ')},
