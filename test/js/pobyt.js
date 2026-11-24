@@ -226,7 +226,7 @@ if(lodW&&LODE.length&&REKA.length>1){lodOk=true;const t=x=>KL.t(x);
  lodW.innerHTML=`<div class="rz-nab" id="rzNab">${nbK('lod','<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 28c6 7 32 7 38 0M10 28l5-11h18l5 11M24 17V8M24 8l7 4-7 3M6 40c3 2 6 2 9 0s6-2 9 0 6 2 9 0 6-2 9 0"/></svg>','Den na Vltavě','Ráno vás vyvezeme proti proudu a doplujete až ke stanu.',['Pádla, vesty a barel v ceně','Lodě vám přivezeme na start','Bez starostí s autem'],KL.t(KR.mistoN((REKA[0]||{}).k||'')),'⛺ '+KL.t('Kemp'),'Chci na vodu','Jedeme na vodu')}${nbK('dop','<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 32V14h24v18M28 20h9l7 8v4H28"/><circle cx="13" cy="34" r="4"/><circle cx="35" cy="34" r="4"/><path d="M9 20h6M19 20h4"/></svg>','Odvoz na start','Máte vlastní loď? Auto necháte v kempu, na řeku vás odvezeme my.',['Vyjedeme v čas, který si vyberete','Až 8 osob v jednom autě','Vyzvedneme vás i v cíli'],'⛺ '+KL.t('Kemp'),KL.t('kamkoli na řeku'),'Chci odvézt','Odvezete nás')}</div>
   <div class="rz-lod-l" id="rzLodL"></div><div class="rz-lod-o" id="rzLodO" hidden>
   <label class="rz-lf"><span>${t('Den vyplutí')}</span><select id="rzLden"></select></label>
-  <div class="rz-lf"><span>${t('Na kolik dní')}</span><div id="rzLdni"></div></div>
+  <label class="rz-lf"><span>${t('Vrácení lodí')}</span><select id="rzLvdo"></select></label>
   <label class="rz-lf"><span>${t('Odkud poplujete')}</span><select id="rzLod"></select></label>
   <label class="rz-lf"><span>${t('Kde skončíte')}</span><select id="rzLkam"></select></label>
   <div class="rz-lod-i" id="rzLodI"></div></div>`;
@@ -235,7 +235,7 @@ if(lodW&&LODE.length&&REKA.length>1){lodOk=true;const t=x=>KL.t(x);
   p.st=stepper(()=>S.l.kusy[p.k],v=>{const b=S.l.kusy[p.k];if(v>b&&v>Math.max(0,lodFree()[p.k]||0)){warn(t('Víc lodí tohoto typu na tento den už nemáme.'));return}
    S.l.kusy[p.k]=v;if(v>b&&KR.lodeChybi(lodeObj()).length){S.l.kusy[p.k]=b;warn(t('Na tento den už nemáme dost pádel nebo vest. Zavolejte nám, zkusíme to vyřešit.'))}},()=>0,99);
   c.append(p.st);p.el=c;$('rzLodL').append(c)});
- const dniSt=stepper(()=>S.l.dni,v=>{S.l.dni=Math.min(v,lodMaxDni())},()=>1,14);$('rzLdni').append(dniSt);lodW.dniSt=dniSt;
+ $('rzLvdo').addEventListener('change',e=>{S.l.dni=Math.max(1,Math.min(+e.target.value||1,lodMaxDni()));S.lp=false;render()});
  $('rzLden').addEventListener('change',e=>{S.l.den=e.target.value;render()});
  $('rzLod').addEventListener('change',e=>{S.l.odkud=e.target.value;render()});
  $('rzLkam').addEventListener('change',e=>{S.l.kam=e.target.value;render()});
@@ -321,7 +321,7 @@ function lodRender(){if(!lodOk)return;if(S.l.pref&&S.l.den){const f=lodFree();if
  LODE.forEach(p=>{const q=S.l.kusy[p.k],f=Math.max(0,v[p.k]==null?0:v[p.k]);p.el.classList.toggle('on',q>0);p.el.classList.toggle('busy',f<=0&&!q);p.el.querySelector('.fr').textContent=!S.l.den?'':f<=0?KL.t('vše půjčené'):KL.t('volných')+' '+f;p.st.upd()});
  $('rzLodO').hidden=!n;if(!n)return;
  setOpts($('rzLden'),lodDays().map(d=>`<option value="${iso(d)}">${fD(d)}</option>`).join(''));$('rzLden').value=S.l.den;$('rzLden').disabled=S.mod==='lod';
- lodW.dniSt.upd();
+ {const p=(S.l.den||'').split('-'),d0=p.length===3?new Date(+p[0],p[1]-1,+p[2]):null,mx=Math.min(14,lodMaxDni());setOpts($('rzLvdo'),d0?Array.from({length:mx},(_,i)=>`<option value="${i+1}">${fD(addD(d0,i))} (${i+1} ${plural(i+1,'den','dny','dní')})</option>`).join(''):'');$('rzLvdo').value=String(S.l.dni)}
  setOpts($('rzLod'),REKA.slice(0,-1).map(x=>`<option value="${x.k}">${KL.t(x.n)}</option>`).join(''));$('rzLod').value=S.l.odkud;
  setOpts($('rzLkam'),REKA.filter((x,i)=>i>oi).map(x=>`<option value="${x.k}">${KL.t(x.n)}</option>`).join(''));$('rzLkam').value=S.l.kam;
  const lo0=lodeObj(),cl=KR.cenaLodi(lo0),vel=lo0&&KR.lodePocet(lo0)>=10,vic=lo0&&+lo0.dni>1,ZS=KC.kat('doprava').filter(p=>p.skryt!==1&&p.n1!=null),k1=vel?'n10':'n1',k2=vel?'d10':'d1';
