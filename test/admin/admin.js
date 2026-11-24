@@ -1802,4 +1802,7 @@ KK.auth.me().then(function(s){s?shell(s):login()});
  document.addEventListener('mouseover',function(e){var el=e.target.closest&&e.target.closest('[data-tip]');if(el)uka(el);else pryc()});
  document.addEventListener('focusin',function(e){var el=e.target.closest&&e.target.closest('[data-tip]');if(el)uka(el);else pryc()});
  document.addEventListener('scroll',pryc,true);document.addEventListener('click',pryc,true)})();
+/* rozbalovací nabídky (details.rzm) – zavřít kliknutím vedle nebo klávesou Esc */
+document.addEventListener('click',function(e){[].forEach.call(document.querySelectorAll('details.rzm[open]'),function(d){if(!d.contains(e.target))d.open=false})},true);
+document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;[].forEach.call(document.querySelectorAll('details.rzm[open]'),function(d){d.open=false;var s=d.querySelector('summary');if(s)s.focus()})});
 
