@@ -1739,3 +1739,4 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .dlg.rdl.nrz-d>.nrz{flex:1 1 auto;height:auto;min-height:0}
 .dlg.rdl.nrz-d,.nrz-b{overflow:clip}@media(max-width:900px){.nrz-b{overflow:auto}}
 .nrz .sw,.nrz .rm,.rfst-o{position:relative}
+.nrz-dp .nrz-dpp{display:block;padding:8px 0 0}
