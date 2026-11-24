@@ -739,3 +739,15 @@ dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid va
 .ob-plx.b.dluh,.ob-plx.b.ceka{background:#fff6f5;border-color:#efc2bb}
 .ob-plx.dluh .ob-plt b,.ob-plx.ceka .ob-plt b{color:#b3261e}
 .ob-plx.dluh .ob-plt small,.ob-plx.ceka .ob-plt small{color:#b3261e}
+/* platba kompaktně: údaje vlevo, tlačítko vpravo */
+.ob-plx.b{display:grid;grid-template-columns:1fr auto;column-gap:12px;align-items:center;padding:8px 10px;border-radius:12px}
+.ob-plx.b>.ob-plt,.ob-plx.b>.ob-plbar,.ob-plx.b>.ob-pllg,.ob-plx.b>.ob-plsp{grid-column:1}
+.ob-plx.b>.ob-plb{grid-column:2;grid-row:1/span 3;margin:0;flex-direction:column;gap:5px}
+.ob-plx.b .ob-plt span{font-size:10px}
+.ob-plx.b .ob-plt b{font-size:17px}
+.ob-plx.b .ob-plbar{height:6px;margin:4px 0 3px}
+.ob-plx.b .ob-pllg{font-size:11.5px}
+.ob-plx.b .ob-pl-b{min-height:38px;padding:0 14px;font-size:13.5px;border-radius:10px;white-space:nowrap;flex:none}
+.ob-plx.b .ob-plsp{margin:4px 0 0;font-size:11px}
+.ob-plx.b .ob-pl-b:not(.g),.ob-plb .ob-pl-b:not(.zal):not(.g){background:#b3261e;color:#fff}
+.ob-plx.b .ob-pl-b:not(.g):hover{background:#951d17}
