@@ -919,7 +919,7 @@ function rezervace(m,sekV){
     var vse=[],obs={};skupiny().forEach(function(g){g.c.forEach(function(c){vse.push(g.k+'-'+c)})});
     R.vse().forEach(function(r){if(r.stav==='zru')return;if(r.od<=denP&&denP<r.do)(r.mista||[]).forEach(function(m){obs[m]=1})});
     var vol=vse.filter(function(m){return !obs[m]}).length;
-    var h='<section class="card rv pk"><div class="row rv-h"><h2 style="margin:0">'+(jeDnes?'Dnes':DNY[d0.getDay()]+' '+KR(denP))+'</h2><span class="mut">'+['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota'][d0.getDay()].toLowerCase()+' '+d0.getDate()+'. '+(d0.getMonth()+1)+'. '+d0.getFullYear()+'</span><span class="sp"></span>'+denNav()+'<button type="button" class="btn sm" data-a="tisk" data-co="ubyt">'+SV('<path d="M3 11 12 4l9 7M5 10v10h14V10"/>',16)+'Kdo je ubytován</button>'+tiskBtn('Tisk příjezdů a odjezdů')+'</div>'+
+    var h='<section class="card rv pk"><div class="row rv-h"><h2 style="margin:0">'+(jeDnes?'Dnes':DNY[d0.getDay()]+' '+KR(denP))+'</h2><span class="mut">'+['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota'][d0.getDay()].toLowerCase()+' '+d0.getDate()+'. '+(d0.getMonth()+1)+'. '+d0.getFullYear()+'</span><span class="sp"></span>'+denNav()+'<button type="button" class="btn sm" data-a="tisk" data-co="ubyt">'+SV('<path d="M3 11 12 4l9 7M5 10v10h14V10"/>',16)+'Kdo je ubytován</button>'+'<button type="button" class="btn sm" data-a="tisk" data-co="chat" title="Kdo bude ten den v chatkách a kdo z chatek odjíždí – k vytištění">'+SV('<path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/>',16)+'Chatky</button>'+tiskBtn('Tisk příjezdů a odjezdů')+'</div>'+
       '<div class="pk-sum"><div class="pk-s vyd"><b>'+PR.length+'</b><span>přijíždí</span><small>'+osb(PR)+' '+pl(osb(PR),'osoba','osoby','osob')+'</small></div>'+
       '<div class="pk-s ven"><b>'+OD.length+'</b><span>odjíždí</span><small>'+(po?po+' po termínu':'k odhlášení')+'</small></div>'+
       '<div class="pk-s zu"><b>'+ZU.length+'</b><span>zůstává</span><small>'+osb(ZU)+' '+pl(osb(ZU),'host','hosté','hostů')+'</small></div>'+
@@ -1248,6 +1248,14 @@ function rezervace(m,sekV){
         '<h2>Odjíždí ('+odj.length+')</h2>'+TB(odj,[M,JJ,T,O,PZ],raz)+
         '<h2>Úklid po odjezdu ('+ukl.length+')</h2>'+(ukl.length?'<p class="tk-ukl">'+ukl.map(function(u){return '<span><i class="tk-ch"></i>'+esc(u)+'</span>'}).join('')+'</p>':'<p class="tk-nic">Nic.</p>')+
         '<h2>Zůstávají ('+zus.length+')</h2>'+(zus.length?'<ul class="tk-zus">'+zus.sort(raz).map(function(r){return '<li><b>'+esc(kratM(r))+'</b> '+esc(r.jmeno)+' <small>'+os(r)+' os. · do '+KR(r.do)+'</small></li>'}).join('')+'</ul>':'<p class="tk-nic">Nikdo.</p>')}
+    else if(co==='chat'){
+      /* chatky: kdo v nich ten den bude (spí tu noc) a pod tím kdo z chatek odjíždí */
+      var jeCh=function(r){return !JL(r)&&(r.mista||[]).some(function(m){return /^chatka-/.test(m)})},chR=function(a,b){return kratM(a).localeCompare(kratM(b),'cs',{numeric:true})};
+      var chB=vse.filter(function(r){return jeCh(r)&&r.od<=x&&x<r.do}),chO=vse.filter(function(r){return jeCh(r)&&r.do===x}),chS=0;chB.forEach(function(r){chS+=KKC.osobPocet(r.osoby)});
+      var CM=['Chatka',function(r){return '<b>'+esc(kratM(r))+'</b>'}],CJ=['Host',function(r){return '<b>'+esc(r.jmeno)+'</b>'}];
+      h='<h1>Chatky · '+den+'</h1>'+
+        '<h2>V chatkách ('+chB.length+' · hostů '+chS+')</h2>'+TB(chB,[CM,CJ,O,['Termín',function(r){return KR(r.od)+' – '+KR(r.do)+(r.od===x?' <small>(přijede)</small>':'')}],T],chR)+
+        '<h2>Odjíždí z chatek ('+chO.length+')</h2>'+TB(chO,[CM,CJ,O,T],chR)}
     else if(co==='ubyt'){
       /* kdo v kempu spí tu noc: po místech, s osobami, termínem, telefonem a doplatkem; volná místa na konci */
       var nc=vse.filter(function(r){return !JL(r)&&r.od<=x&&x<r.do}),wq=function(r){var m=(r.mista||[])[0];return m?({chatka:0,podsad:1,teepee:2}[m.split('-')[0]]||0):3},rz=function(a,b){return wq(a)-wq(b)||kratM(a).localeCompare(kratM(b),'cs',{numeric:true})},sumO=0;nc.forEach(function(r){sumO+=KKC.osobPocet(r.osoby)});
