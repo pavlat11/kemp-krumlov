@@ -293,12 +293,22 @@ var GJ=[];
 function lodJ(r,g){var l=r.lode;if(!sLod(r))return null;if(g.kl==='doprava'?l.odkud!==g.misto:l.kam!==g.misto)return null;return l.vydano&&g.kl==='vyzved'?R.lodeVen(r):l.vydano?l.vydano.kusy:R.lodePotreba(l)}
 function poCase(g){if(g.hot||den!==DNES()||!g.cas)return '';var p=g.cas.split(':'),t=new Date(),m=t.getHours()*60+t.getMinutes()-(+p[0]*60+(+p[1]||0));
   if(m>5)return '<span class="ob-jz-p zle">'+sv(IKU.hod,14)+(m<90?m+' min':Math.round(m/60)+' h')+' po čase</span>';if(m>-60)return '<span class="ob-jz-p">'+sv(IKU.hod,14)+'za '+(-m)+' min</span>';return ''}
+/* návoz lodí na místo vyplutí a svoz z cíle na daný den – po místech (i lodě hostů bez dopravy osob) */
+function presunLodi(d){var N={},S={},add=function(M,m,r,k){var z=M[m]||(M[m]={m:m,k:{},L:[]});Object.keys(k).forEach(function(x){if(R.lodeTypy().some(function(t){return t.k===x}))z.k[x]=(z.k[x]||0)+(+k[x]||0)});z.L.push(r)};
+  R.vse().forEach(function(r){if(r.stav==='zru'||r.stav==='blk'||!r.lode||!R.lodePocet(r.lode))return;var l=r.lode,dn=R.lodeDny(l);
+    if(l.den===d&&l.odkud&&l.odkud!=='kemp')add(N,l.odkud,r,l.vydano?l.vydano.kusy:l.kusy);
+    if(dn[dn.length-1]===d&&l.kam&&l.kam!=='kemp')add(S,l.kam,r,l.vydano?R.lodeVen(r):l.kusy)});
+  var srt=function(a,b){return poradiM(a.m)-poradiM(b.m)},F=function(M){return Object.keys(M).map(function(k){return M[k]}).filter(function(z){return lodiN(z.k)>0}).sort(srt)};return {nav:F(N),svoz:F(S)}}
+function presunBox(P){if(!P.nav.length&&!P.svoz.length)return '';var tot=function(L){var n=0;L.forEach(function(z){n+=lodiN(z.k)});return n},
+  sek=function(t,cls,L,ik,pr){return '<section class="ob-pr '+cls+'"><h3>'+sv(ik,17)+t+'<b>'+tot(L)+' '+pl(tot(L),'loď','lodě','lodí')+'</b></h3>'+(L.length?'<ul>'+L.map(function(z){return '<li><span>'+pr+esc(R.mistoN(z.m))+'</span><b>'+kusyRoz(z.k).lode.join(' + ')+'</b><small>'+z.L.map(function(r){return esc(r.jmeno)}).join(', ')+'</small></li>'}).join('')+'</ul>':'<p>Nic.</p>')+'</section>'};
+  return '<div class="ob-prs">'+sek('Návoz lodí na start','nav',P.nav,IK.sipven,'→ ')+sek('Svoz lodí z cíle','svz',P.svoz,IK.dovnitr,'← ')+'</div>'}
 function doprava(){var X=data(den),G=X.jiz.concat(X.vyz).sort(function(a,b){return (a.hot?1:0)-(b.hot?1:0)||cas(a.cas,b.cas)||(a.kl==='doprava'?0:1)-(b.kl==='doprava'?0:1)||poradiM(a.misto)-poradiM(b.misto)});GJ=G;
   var os=0,lo=0;G.forEach(function(g){if(g.hot)return;os+=g.osob;g.L.forEach(function(r){var k=lodJ(r,g);if(k)lo+=lodiN(k)})});
   var nJ=X.jiz.filter(function(g){return !g.hot}).length,nV=X.vyz.filter(function(g){return !g.hot}).length;
   var h=hl('Doprava',1,1,0,'<a class="ob-go ob-hb" href="#o/ridic" aria-label="Přehled pro řidiče">'+sv('<rect x="3" y="6" width="13" height="10" rx="2"/><path d="M16 9h3l2 3v4h-5"/><circle cx="7" cy="17" r="2"/><circle cx="18" cy="17" r="2"/>',20)+'<span>Pro řidiče</span></a>')+bar('','Hledat hosta, místo, čas…')+denNav()+'<hr class="ob-sep">';
-  if(!G.length)return h+prazdne('Na tento den žádné jízdy.');
-  h+='<div class="ob-sumt"><div class="t-od"><b>'+nJ+'</b> '+pl(nJ,'odvoz','odvozy','odvozů')+' na start</div><div class="t-vy"><b>'+nV+'</b> '+pl(nV,'vyzvednutí','vyzvednutí','vyzvednutí')+' v cíli</div><div><b>'+os+'</b> '+pl(os,'osoba','osoby','osob')+' k převezení</div><div><b>'+lo+'</b> '+pl(lo,'loď','lodě','lodí')+' k převozu</div></div>';
+  var PL=presunLodi(den);lo=0;PL.nav.concat(PL.svoz).forEach(function(z){lo+=lodiN(z.k)});
+  if(!G.length)return h+(presunBox(PL)||prazdne('Na tento den žádné jízdy.'));
+  h+='<div class="ob-sumt"><div class="t-od"><b>'+nJ+'</b> '+pl(nJ,'odvoz','odvozy','odvozů')+' na start</div><div class="t-vy"><b>'+nV+'</b> '+pl(nV,'vyzvednutí','vyzvednutí','vyzvednutí')+' v cíli</div><div><b>'+os+'</b> '+pl(os,'osoba','osoby','osob')+' k převezení</div><div><b>'+lo+'</b> '+pl(lo,'loď','lodě','lodí')+' k převozu</div></div>'+presunBox(PL);
   var li=function(g,i){var vy=g.kl==='vyzved',S={};
     var lid=g.L.map(function(r){var k=lodJ(r,g),o=+r[g.kl].osob||0;if(k)Object.keys(k).forEach(function(x){S[x]=(S[x]||0)+(+k[x]||0)});var kr=k?kusyRoz(k):null;
       return '<li data-det="'+r.id+'"><div class="ob-jz-n"><button type="button" class="ob-jm" data-det="'+r.id+'" title="Detail rezervace"><b>'+esc(r.jmeno)+'</b></button>'+jazyk(r)+(r.telefon?'<a href="tel:'+esc(String(r.telefon).replace(/\s/g,''))+'" class="ob-tl2" aria-label="Zavolat – '+esc(r.jmeno)+'">'+sv(IK.tel,15)+'</a>':'')+'<span class="ob-jz-o">'+o+' os.</span></div>'+

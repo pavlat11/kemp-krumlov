@@ -722,3 +722,17 @@ dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid va
 .ob-pan .ob-r.ob-u2{grid-template-areas:"mk t t" "p p p" "a a a"}
 .ob-pan .ob-r.ob-u2>.ob-plx{grid-area:p;margin:0}
 @container (min-width:620px){.ob-pan .ob-r.ob-u2{grid-template-areas:"mk t a" "mk p a"}}
+/* Doprava: návoz a svoz lodí */
+.ob-prs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 4px}
+.ob-pr{background:#fff;border:1px solid rgba(16,36,27,.1);border-radius:16px;padding:12px 14px}
+.ob-pr.nav{border-top:4px solid #1f5f8b}.ob-pr.svz{border-top:4px solid #b45a1e}
+.ob-pr h3{margin:0 0 8px;font-size:15px;display:flex;align-items:center;gap:7px}
+.ob-pr h3 b{margin-left:auto;font-size:15px;padding:2px 10px;border-radius:999px;background:#f1ede4}
+.ob-pr.nav h3 svg{color:#1f5f8b}.ob-pr.svz h3 svg{color:#b45a1e}
+.ob-pr ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.ob-pr li{display:grid;grid-template-columns:1fr auto;gap:0 10px;padding-top:8px;border-top:1px solid #efe9dc}
+.ob-pr li:first-child{border-top:0;padding-top:0}
+.ob-pr li span{font-weight:700}.ob-pr li b{font-weight:800;text-align:right}
+.ob-pr li small{grid-column:1/-1;font-size:12px;color:#6b766f}
+.ob-pr p{margin:0;color:#6b766f;font-size:13px}
+@media(max-width:640px){.ob-prs{grid-template-columns:1fr}}
