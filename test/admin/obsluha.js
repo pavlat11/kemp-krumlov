@@ -253,12 +253,12 @@ var IKL={tuzka:'<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/>',
 function lodKusy(r,typ){var l=r.lode,hot=HOT[typ](r),k=typ==='vra'&&l.vydano?R.lodeVen(r):l.vydano?l.vydano.kusy:R.lodePotreba(l);if(typ==='vra'&&hot)k=l.vydano.kusy;return k}
 function lodKdy(r,typ){return typ==='vyd'?(r.doprava&&r.doprava.cas?r.doprava.cas:''):(r.vyzved&&r.vyzved.cas?r.vyzved.cas:'')}
 /* platba přehledně: celkem · záloha (a jestli je zaplacená) · zbývá doplatit + tlačítka pro potvrzení */
-function platbaBox(r,smi){var c=+r.cena||0;if(!c)return '';var p=r.platba||{},z=+p.zaloha||0,st=p.stav||'',dp=doplatek(r),ceka=st==='ceka',zap=st==='vse'?c:st==='zal'?Math.min(z,c):0,pz=Math.round(Math.min(z,c)/c*100),pa=Math.round(zap/c*100);
-  /* pruh: kolik z ceny je zaplaceno (zelená = záloha, světlejší = doplatek); chybějící záloha šrafovaně červeně */
-  var bar=st==='vse'?'<i class="z" style="width:100%"></i>':ceka?'':'<i class="z" style="width:'+pa+'%"></i>';
-  var lg=st==='vse'?'<span>'+(z?'záloha '+kc(z)+' + doplatek '+kc(c-z):'zaplaceno celé')+'</span>':ceka?'<span class="ne">záloha '+kc(z)+' nepřišla</span>':'<span>zaplaceno <b>'+kc(zap)+'</b>'+(zap?' (záloha)':'')+'</span><span>z <b>'+kc(c)+'</b></span>';
+function platbaBox(r,smi){var c=+r.cena||0;if(!c)return '';var p=r.platba||{},z=Math.min(+p.zaloha||0,c),st=p.stav||'',dp=doplatek(r),ceka=st==='ceka',vse=st==='vse'||!dp,zok=vse||st==='zal';
+  /* pruh po částech: záloha | doplatek; díl se vybarví až když je opravdu zaplacený */
+  var dil=function(w,ok,txt,cl){return '<div style="--w:'+w+'"><i class="s'+(ok?' p':'')+'"></i><small class="'+cl+'">'+txt+'</small></div>'};
+  var seg=z&&z<c?dil(z,zok,'záloha '+kc(z)+(zok?' ✓':' ✗'),zok?'grn':ceka?'red':'mut')+dil(c-z,vse,'doplatek '+kc(c-z)+(vse?' ✓':''),vse?'grn':'mut'):dil(1,vse,vse?'zaplaceno celé ✓':'celá částka',vse?'grn':'mut');
   var bt=!smi||!dp?'':ceka?'<div class="ob-plb"><button type="button" class="ob-pl-b zal" data-a="zaloha" data-id="'+r.id+'">'+sv(IK.ok,15)+'Záloha přišla</button><button type="button" class="ob-pl-b g" data-a="doplaceno" data-id="'+r.id+'">Zaplatil vše</button></div>':'<div class="ob-plb"><button type="button" class="ob-pl-b" data-a="doplaceno" data-id="'+r.id+'">'+sv(IK.ok,15)+'Zaplatil</button></div>';
-  return '<div class="ob-plx b '+(!dp?'ok':ceka?'ceka':'dluh')+'"><div class="ob-plt"><span>'+(dp?'Doplatit':'Zaplaceno')+'</span><b>'+(dp?kc(dp):sv(IK.ok,18)+kc(c))+'</b></div><div class="ob-plbar">'+bar+'</div><div class="ob-pllg">'+lg+'</div>'+bt+(!smi&&dp?'<p class="ob-plsp">Platbu potvrzuje správce</p>':'')+'</div>'}
+  return '<div class="ob-plx b c '+(!dp?'ok':ceka?'ceka':'dluh')+'"><div class="ob-plh">'+(dp?'<span class="red">zbývá <b>'+kc(dp)+'</b></span>':'<span class="grn"><b>'+sv(IK.ok,16)+'zaplaceno</b></span>')+'<span>z '+kc(c)+'</span></div><div class="ob-pls">'+seg+'</div>'+bt+(!smi&&dp?'<p class="ob-plsp">Platbu potvrzuje správce</p>':'')+'</div>'}
 
 function kartaL(r,typ){var l=r.lode,ceka=cekaZal(r),smi=ja.platby,dni=Math.max(1,+l.dni||1),pozde=typ==='vra'&&posD(r)<den,pozdeV=typ==='vyd'&&!l.vydano&&l.den<den;
   var k=kusyRoz(lodKusy(r,typ)),kdy=lodKdy(r,typ);

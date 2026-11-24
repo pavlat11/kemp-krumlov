@@ -751,3 +751,25 @@ dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid va
 .ob-plx.b .ob-plsp{margin:4px 0 0;font-size:11px}
 .ob-plx.b .ob-pl-b:not(.g),.ob-plb .ob-pl-b:not(.zal):not(.g){background:#b3261e;color:#fff}
 .ob-plx.b .ob-pl-b:not(.g):hover{background:#951d17}
+/* platba – návrh C: pruh po částech */
+.ob-plx.b>.ob-plh,.ob-plx.b>.ob-pls{grid-column:1}
+.ob-plx.b.c>.ob-plb{grid-row:1/span 2}
+.ob-plh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:12.5px;color:#5b655f}
+.ob-plh b{font-size:17px;font-weight:800;display:inline-flex;align-items:center;gap:3px}
+.ob-plh .red{color:#b3261e}.ob-plh .grn{color:#1f7a45}
+.ob-pls{display:flex;gap:3px;margin-top:5px;min-width:0}
+.ob-pls>div{min-width:0}
+.ob-pls .s{display:block;height:8px;border-radius:5px;background:#e6dfd1}.ob-pls .s.p{background:#2f9a5c}
+.ob-pls small{display:block;font-size:11.5px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ob-pls .red{color:#b3261e;font-weight:700}.ob-pls .grn{color:#1f7a45}.ob-pls .mut{color:#6b766f}
+.ob-plh span{white-space:nowrap}
+.ob-pls>div{flex-basis:0!important;flex-grow:var(--w,1);min-width:max-content}
+.ob-pls small{overflow:visible}
+.ob-plx.b.c{grid-template-areas:"h h" "s b";row-gap:4px}
+.ob-plx.b.c>.ob-plh{grid-area:h;justify-content:flex-start;gap:10px}
+.ob-plx.b.c>.ob-pls{grid-area:s;margin-top:2px}
+.ob-plx.b.c>.ob-plb{grid-area:b;grid-row:auto;align-self:center}
+.ob-plx.b.c>.ob-plsp{grid-column:1/-1}
+.ob-plx.b.c .ob-plb:has(.zal){flex-direction:row}
+.ob-plx.b.c.ceka{grid-template-areas:"h b" "s b"}
+.ob-plx.b.c .ob-plb:has(.zal){flex-direction:column}
