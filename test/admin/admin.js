@@ -554,7 +554,8 @@ function rezervace(m,sekV){
   var najdi=function(id){return R.vse().filter(function(x){return x.id===id})[0]};
   m.innerHTML='<div class="rz-lay"><div id="rzv"></div><aside id="rd" class="rpan" aria-labelledby="rdt" hidden></aside></div><dialog id="rf" class="dlg rdl" aria-labelledby="rft"></dialog>';
   var box=$('#rzv',m),dd=$('#rd',m),df=$('#rf',m),vicF=false;
-  m.otevri=function(id){detail(id)};m.tisk=function(co,den){if(den)denP=den;tisk(co)}; /* aplikace obsluhy otevírá detail rezervace z hledání */
+  m.otevri=function(id){detail(id)};m.tisk=function(co,den){if(den)denP=den;tisk(co)};
+  (function(){var hq=decodeURIComponent(location.hash.split('/')[1]||'');if(!hq)return;history.replaceState(null,'',location.pathname+location.search+'#'+location.hash.slice(1).split('/')[0]);setTimeout(function(){if(najdi(hq))detail(hq);else toast('Rezervace už neexistuje.',1)},0)})(); /* odkaz #rezervace/<id> (např. ze Záznamu akcí) */ /* aplikace obsluhy otevírá detail rezervace z hledání */
   dd.close=function(){if(dd.hidden)return;dd.hidden=true;kresli()};
   var oznac=function(){$$('.sel',box).forEach(function(x){x.classList.remove('sel')});if(!dd.hidden)$$('[data-id="'+dd.dataset.id+'"]',box).forEach(function(x){x.classList.add('sel')})};
   /* změna rezervace se zápisem do její historie */
@@ -1701,10 +1702,18 @@ function kalkulace(m){var R=window.KKR;if(!R||!window.KKC){m.innerHTML='<div cla
 function zaznam(m){
   m.innerHTML='<div class="ph"><div><h1>Záznam akcí</h1><p>Kdo, kdy a co na webu změnil. Ukládá se posledních 2000 záznamů v tomto prohlížeči.</p></div></div>'+
   '<div class="card"><label class="f">Hledat<input class="inp" type="search" id="zq" placeholder="jméno, akce, popis…" autocomplete="off"></label><ul class="szn-a" id="zl" style="margin-top:12px"></ul></div>';
-  var Z=KK.historie();
+  var Z=KK.historie(),R=window.KKR,CIS={};
+  if(R)R.vse().forEach(function(r){if(r.cislo)CIS[r.cislo]=r.id});
+  /* kam vede záznam: sekce podle typu akce, rezervace podle čísla v popisu */
+  var NAST=/šablon|automatický e-mail|e-mail pro upozornění|nastavení záloh|^záloha:|sklad půjčovny|stav vody|storno hostem|kontakt na správce|odkaz na recenze|vše smazáno|testovací/i;
+  function sekce(z){var c=z.co||'',p=z.popis||'';if(/^PE-LA/.test(c))return null;
+    if(c==='Rezervace')return NAST.test(p)?['#rez_nastaveni','Nastavení']:/^(R\d|R-)/.test(p)||/↔/.test(p)?null:['#rezervace','Rezervace'];
+    if(c==='Sezóna')return ['#rez_nastaveni','Nastavení'];if(c==='Ceník')return ['#cenik','Ceník'];if(c==='Galerie')return ['#galerie','Galerie'];if(c==='SEO')return ['#seo','SEO'];
+    if(/^(Uživatelé|Práva)/.test(c))return ['#uzivatele','Uživatelé'];if(/^(Texty|Překlad|Ikony|Fotky na webu)/.test(c))return ['#upravit','Upravit web'];return null}
+  function popis(t){return esc(t).replace(/\bR(?:\d{2}-\d{4}|-\d{4}-\d{3,4})\b/g,function(c){var id=CIS[c];return id?'<a class="zl-r" href="#rezervace/'+encodeURIComponent(id)+'" title="Otevřít rezervaci '+c+'">'+c+'</a>':'<span class="zl-r zl-x" title="Rezervace už neexistuje (smazaná nebo v archivu)">'+c+'</span>'})}
   function kresli(){var q=($('#zq',m).value||'').trim().toLowerCase();
     var sez=Z.filter(function(z){return !q||(z.co+' '+z.popis+' '+z.kdo).toLowerCase().indexOf(q)>=0});
-    $('#zl',m).innerHTML=sez.length?sez.map(function(z){return '<li><div><b>'+esc(z.co)+'</b> '+esc(z.popis)+'<small>'+new Date(z.kdy).toLocaleString('cs-CZ',{day:'numeric',month:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'})+(z.kdo?' · '+esc(z.kdo):'')+'</small></div></li>'}).join(''):'<li class="mut">Žádné záznamy.</li>'}
+    $('#zl',m).innerHTML=sez.length?sez.map(function(z){var k=sekce(z);return '<li><div><b>'+esc(z.co)+'</b> '+popis(z.popis||'')+'<small>'+new Date(z.kdy).toLocaleString('cs-CZ',{day:'numeric',month:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'})+(z.kdo?' · '+esc(z.kdo):'')+'</small></div>'+(k?'<a class="zl-s" href="'+k[0]+'">'+esc(k[1])+' →</a>':'')+'</li>'}).join(''):'<li class="mut">Žádné záznamy.</li>'}
   $('#zq',m).addEventListener('input',kresli);kresli();
 }
 /* ---------- SEZÓNA: uzavření a archiv (jen Správce, potvrzuje se heslem) ---------- */
