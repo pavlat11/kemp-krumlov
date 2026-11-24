@@ -796,7 +796,7 @@ function rezervace(m,sekV){
   /* karta rezervace: zaplaceno / doplatit + malý ukazatel */
   var plKarta=function(r){if(r.stav==='zru'||!(+r.cena))return '';var ce=+r.cena,p=r.platba,zp=!p?0:p.stav==='vse'?ce:p.stav==='zal'?Math.min(ce,+p.zaloha||0):0,d=ce-zp,pr=Math.round(zp/ce*100);
     return '<span class="rr-pl'+(d?'':' ok')+'"><span class="rr-pl-t"><span class="z"><small>Zaplaceno</small><b>'+kc(zp)+'</b></span><span class="'+(d?'d':'z')+'"><small>Doplatit</small><b>'+(d?kc(d):'nic')+'</b></span></span><i><s style="width:'+pr+'%"></s></i></span>'};
-  var kUhrade=function(r){var p=r.platba;if(p&&p.stav==='vse')return '<span class="pk-pl ok">zaplaceno</span>';var d=p&&p.stav==='zal'?Math.max(0,(+r.cena||0)-(+p.zaloha||0)):+r.cena||0;return d?'<span class="pk-pl">doplatit <b>'+kc(d)+'</b></span>':''};
+  var kUhrade=function(r){var p=r.platba;if(!(+r.cena))return '';if(p&&p.stav==='vse')return '<span class="pk-pl ok">✓ zaplaceno</span>';var d=p&&p.stav==='zal'?Math.max(0,(+r.cena||0)-(+p.zaloha||0)):+r.cena||0;return d?'<span class="pk-pl dl'+(p&&p.stav==='ceka'?' ne':'')+'" title="'+(p&&p.stav==='zal'?'Záloha '+kc(+p.zaloha)+' zaplacena, celkem '+kc(+r.cena):p&&p.stav==='ceka'?'Záloha nezaplacena':'Celkem '+kc(+r.cena))+'"><small>Doplatit</small><b>'+kc(d)+'</b></span>':''};
   var pkKarta=function(r,typ){var l=r.lode,ven=typ==='ven',k=ven?R.lodeVen(r):R.lodePotreba(l),lk=lodK(k),vk=vybK(k),pd=posD(r),po=ven&&pd<dnes;
     var kdy=typ==='vyd'?(r.doprava&&r.doprava.cas?'<span class="pk-t">'+SV(IKO.auto,14)+'odjezd '+esc(r.doprava.cas)+'</span>':'<span class="pk-t">'+(l.odkud==='kemp'?'vyplouvá z kempu':'vlastní doprava')+'</span>')
       :ven?(po?'<span class="pk-t zle">měl vrátit '+KR(pd)+'</span>':pd===dnes?'<span class="pk-t dnes">vrací dnes</span>':'<span class="pk-t">vrátí '+KR(pd)+'</span>')
@@ -805,7 +805,7 @@ function rezervace(m,sekV){
     return '<article class="pk-c'+(DRZ[r.id]?' zm'+(Date.now()-DRZ[r.id].t<1500?' zm-n':''):'')+(po?' po':'')+(typ==='vra'?' hot':'')+'"><div class="pk-ch"><button type="button" class="rl-j" data-id="'+r.id+'">'+esc(r.jmeno)+'</button>'+kdy+'</div>'+
       '<div class="pk-l">'+esc(kusyTxt(lk)||'—')+'</div><div class="pk-v">'+esc(R.lodeKusyTxt(vk))+(ven&&LS(r)==='cast'?' · <b>část už vrátil</b>':'')+'</div>'+
       '<div class="pk-m">'+esc(R.mistoN(l.odkud))+' → '+esc(R.mistoN(l.kam))+' · '+R.lodeObdobi(l,0,1)+'</div>'+
-      '<div class="pk-f">'+(r.telefon?'<a href="tel:'+esc(r.telefon.replace(/\s/g,''))+'">'+esc(r.telefon)+'</a>':'<span></span>')+(typ==='vyd'?kUhrade(r):'')+'</div>'+
+      '<div class="pk-f">'+(r.telefon?'<a href="tel:'+esc(r.telefon.replace(/\s/g,''))+'">'+esc(r.telefon)+'</a>':'<span></span>')+(typ!=='vra'?kUhrade(r):'')+'</div>'+
       (typ==='vyd'&&r.platba&&r.platba.stav==='ceka'&&r.stav==='pop'?'<p class="pk-w">Záloha ještě není zaplacená.</p>':'')+
       (lodBtn(r)?lodBtn(r).replace('btn sm pri','btn pri pk-b').replace('>Vydat lodě<','>Vydat lodě →<').replace('>Vrátit lodě<','>Vrátit lodě ✓<'):'')+
       (function(){var P=(r.poskozeno||[]).filter(function(x){return !x.opraveno});return P.length?'<div class="pk-pz">⚠ '+P.map(function(x){return (x.typ==='ztraceno'?'ztraceno ':'poškozeno ')+x.ks+'× '+esc(R.poskozNazev(x.k).toLowerCase())}).join(', ')+'</div>':''})()+
