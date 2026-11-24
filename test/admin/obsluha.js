@@ -8,7 +8,7 @@
    ===================================================================== */
 (function(){
 'use strict';
-var R,A,ja,den,box,poslSek='',slysi=false;
+var R,A,ja,den,box,poslSek='',slysi=false,poHotovo=null;
 var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
 var esc=function(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var D=function(s){var p=s.split('-');return new Date(+p[0],p[1]-1,+p[2])};
@@ -121,13 +121,13 @@ var AKCE={
       f.addEventListener('submit',function(e){e.preventDefault();var C2=R.lodeCelkem(),M2=f.rez.value?R.poskozMax(f.rez.value):null,vyb=[],chyba='';opt.forEach(function(o){var n=Math.round(+f['n_'+o[0]].value||0),mx=M2?(+M2[o[0]]||0):(C2[o[0]]||0);if(f['c_'+o[0]].checked&&n>0){if(n>mx)chyba=o[1]+': '+(M2?'host měl půjčeno jen '+mx+' ks':'skladem je jen '+mx+' ks')+'.';vyb.push([o[0],n])}});
         var er=d.querySelector('.pct-e');if(!vyb.length){er.textContent='Zaškrtněte aspoň jednu věc a nastavte počet.';return}if(chyba){er.textContent=chyba;return}if(!f.popis.value.trim()){er.textContent='Napište prosím do poznámky, co se stalo.';f.popis.focus();return}
         rid=f.rez.value;vyb.forEach(function(v){R.poskozPridej(v[0],v[1],f.popis.value,ja.jmeno,rid,typ)});var txt=vyb.map(function(v){return v[1]+'× '+R.poskozNazev(v[0]).toLowerCase()}).join(', ');
-        KK.zaznam('Rezervace',(typ==='ztraceno'?'ztraceno':'poškozeno')+' z aplikace: '+txt+' – '+f.popis.value.trim());A.toast((typ==='ztraceno'?'Ztraceno':'Poškozeno')+': '+txt+' – odečteno ze skladu.');kresliPo();kresli()})};
+        KK.zaznam('Rezervace',(rid?((R.vse().filter(function(x){return x.id===rid})[0]||{}).cislo||'')+' ':'')+(typ==='ztraceno'?'ztraceno':'poškozeno')+(poHotovo?': ':' z aplikace: ')+txt+' – '+f.popis.value.trim());A.toast((typ==='ztraceno'?'Ztraceno':'Poškozeno')+': '+txt+' – odečteno ze skladu.');kresliPo();(poHotovo||kresli)()})};
     kresliPo();document.body.appendChild(d);
     d.addEventListener('click',function(e){var b=e.target.closest('button');if(e.target===d||(b&&b.hasAttribute('data-n'))){d.close();d.remove();return}if(!b)return;
       if(b.dataset.ty){typ=b.dataset.ty;[].forEach.call(d.querySelectorAll('[data-ty]'),function(x){x.setAttribute('aria-checked',x.dataset.ty===typ)});return}
       if(b.dataset.pd){var f=d.querySelector('form'),n=f['n_'+b.dataset.pk],c=f['c_'+b.dataset.pk];if(c.disabled)return;n.value=Math.max(0,Math.min(+n.max,(+n.value||0)+(+b.dataset.pd)));c.checked=+n.value>0;return}
-      if(b.dataset.opr){R.poskozOprav(b.dataset.opr,ja.jmeno);KK.zaznam('Rezervace','opraveno / nalezeno z aplikace');A.toast('Hotovo – zase k půjčení.');var f2=d.querySelector('form'),p0=f2?f2.popis.value:'';kresliPo();d.querySelector('[name=popis]').value=p0;kresli()}});
-    d.addEventListener('cancel',function(){d.remove()});d.showModal();var c0=d.querySelector('.ob-po-i input[type=checkbox]:not(:disabled)');if(c0)c0.focus()},
+      if(b.dataset.opr){R.poskozOprav(b.dataset.opr,ja.jmeno);KK.zaznam('Rezervace','opraveno / nalezeno z aplikace');A.toast('Hotovo – zase k půjčení.');var f2=d.querySelector('form'),p0=f2?f2.popis.value:'';kresliPo();d.querySelector('[name=popis]').value=p0;(poHotovo||kresli)()}});
+    d.addEventListener('cancel',function(){d.remove()});d.addEventListener('close',function(){poHotovo=null});d.showModal();var c0=d.querySelector('.ob-po-i input[type=checkbox]:not(:disabled)');if(c0)c0.focus()},
   vydatUpr:function(r){var p=R.lodePotreba(r.lode),pol=Object.keys(p).filter(function(x){return p[x]>0}).map(function(x){return [x,kusN(x,2).replace(/^./,function(c){return c.toUpperCase()}),p[x],999,'podle rezervace '+p[x]]});
     A.pocty('Vydat lodě – '+r.jmeno,(R.lodeMimo(r,'vyd',DNES())?'⚠ Pozor: '+R.lodeMimo(r,'vyd',DNES())+'\n\n':'')+'Upravte počty podle toho, co si host skutečně odnáší.',pol,'Vydat').then(function(k){if(k)AKCE.vydat(r,k)})},
   zpetVyd:function(r){A.ptej('Zrušit výdej lodí?\n\nLodě se vrátí do stavu „rezervované“.',{ok:'Zrušit výdej',ne:'Nechat'}).then(function(a){if(!a)return;var l=Object.assign({},r.lode);delete l.vydano;delete l.vraceno;var z={lode:l};if(R.jenLode(r)&&r.stav==='odj')z.stav='pot';zmen(r,z,'Výdej lodí zrušen',1)})},
@@ -385,6 +385,8 @@ function klik(e){var t=e.target.closest('button,a,input,label,summary,details');
     if((t.dataset.a==='zaloha'||t.dataset.a==='doplaceno')&&!ja.platby)return A.toast('Platby potvrzuje správce.',1);AKCE[t.dataset.a](r)}}
 
 window.KKO={
+  /* dialog poškozených / ztracených věcí i pro plnou administraci (Půjčovna lodí, detail rezervace) */
+  poskozeni:function(r0,api,hotovo){if(!A)A=api;R=window.KKR;ja=KK.auth.meSync()||ja||{};den=den||DNES();poHotovo=hotovo||function(){};AKCE.poskozeni(r0)},
   /* má přihlášený dostat aplikaci místo plné administrace? (obsluha se vzhledem aplikace, nebo správce v náhledu) */
   ma:function(s){return !!s&&(KK.auth.aplikace()||(s.role==='admin'&&!!KK.LS.get('o.nahled',0)))},
   start:function(s,api){A=api;R=window.KKR;ja=KK.auth.meSync()||s;den=DNES();poslSek='-';
