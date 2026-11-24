@@ -1654,3 +1654,7 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .rzm-i b{font-size:14px}.rzm-i small{font-size:12.5px;color:var(--mut,#6b665c);line-height:1.35}
 .rzm-i.nb b{color:var(--err)}
 .pjc-dn{display:block;margin-top:5px;font-size:12.5px;font-weight:600;color:#1f6d77}
+.pk-z .pk-po,.vb-po{color:#b23a2a}
+.vb-po{display:inline-block;margin-left:10px;font-size:13px;font-weight:600;background:none;border:0;padding:4px 0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.pk-pz{margin:8px 0 0;padding:6px 10px;border-radius:9px;background:#fdecea;color:#9b2c1f;font-size:13px;font-weight:600}
+.pk-pz{order:7}

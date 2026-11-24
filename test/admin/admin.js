@@ -805,7 +805,8 @@ function rezervace(m,sekV){
       '<div class="pk-f">'+(r.telefon?'<a href="tel:'+esc(r.telefon.replace(/\s/g,''))+'">'+esc(r.telefon)+'</a>':'<span></span>')+(typ==='vyd'?kUhrade(r):'')+'</div>'+
       (typ==='vyd'&&r.platba&&r.platba.stav==='ceka'&&r.stav==='pop'?'<p class="pk-w">Záloha ještě není zaplacená.</p>':'')+
       (lodBtn(r)?lodBtn(r).replace('btn sm pri','btn pri pk-b').replace('>Vydat lodě<','>Vydat lodě →<').replace('>Vrátit lodě<','>Vrátit lodě ✓<'):'')+
-      (l.vydano?'<div class="pk-z">'+(typ==='vra'||LS(r)==='cast'?'<button type="button" class="lnk" data-lzr="'+r.id+'">Zrušit vrácení</button>':'')+(typ!=='vra'?'<button type="button" class="lnk" data-lzv="'+r.id+'">Zrušit výdej</button>':'')+'</div>':'')+'</article>'};
+      (function(){var P=(r.poskozeno||[]).filter(function(x){return !x.opraveno});return P.length?'<div class="pk-pz">⚠ '+P.map(function(x){return (x.typ==='ztraceno'?'ztraceno ':'poškozeno ')+x.ks+'× '+esc(R.poskozNazev(x.k).toLowerCase())}).join(', ')+'</div>':''})()+
+      (l.vydano?'<div class="pk-z">'+(typ==='vra'||LS(r)==='cast'?'<button type="button" class="lnk" data-lzr="'+r.id+'">Zrušit vrácení</button>':'')+(typ!=='vra'?'<button type="button" class="lnk" data-lzv="'+r.id+'">Zrušit výdej</button>':'')+'<button type="button" class="lnk pk-po" data-posk="'+r.id+'">⚠ Poškozeno / ztraceno</button></div>':'')+'</article>'};
   /* rychlé půjčení na místě: host přijde, vybere lodě, obsluha je rovnou vydá */
   /* rychlé ubytování hosta, který přijel bez rezervace: jen nutné údaje, zapíše se rovnou jako ubytovaný */
   function ubytovat(){
@@ -1019,7 +1020,7 @@ function rezervace(m,sekV){
     if(sLod(r)){var po=(x==='vyd'||x==='cast')&&pd<dnes;
       g.push(sl('Lodě',esc(LK(r)),K('Vydané',x!=='res',x==='res'&&r.lode.den<dnes)+K(x==='cast'?'Vrácená část':'Vrácené',x==='vra',po),
         x==='res'?(r.lode.den===dnes?'výdej dnes':'výdej '+KR(r.lode.den))+' · vrácení '+(pd===dnes?'dnes':KR(pd))+' ('+dniL(r)+' '+pl(dniL(r),'den','dny','dní')+')':x==='vra'?'vše vráceno':(po?'měl vrátit '+KR(pd):pd===dnes?'vrací dnes':'vrátí '+KR(pd))+' ('+dniL(r)+' '+pl(dniL(r),'den','dny','dní')+')',
-        x==='res'&&r.lode.den<=dnes?Bt('data-lv="'+r.id+'"','Vydat lodě'):x==='vyd'||x==='cast'?Bt('data-lr="'+r.id+'"','Vrátit lodě'):'',po,x==='vra'))}
+        (x==='res'&&r.lode.den<=dnes?Bt('data-lv="'+r.id+'"','Vydat lodě'):x==='vyd'||x==='cast'?Bt('data-lr="'+r.id+'"','Vrátit lodě'):'')+(r.lode.vydano&&r.stav!=='zru'?'<button type="button" class="lnk vb-po" data-posk="'+r.id+'">⚠ Poškozeno / ztraceno</button>':''),po,x==='vra'))}
     /* doprava */
     if(r.doprava||r.vyzved){var os2=(r.doprava&&r.doprava.osob)||(r.vyzved&&r.vyzved.osob)||0;
       g.push(sl('Doprava',(r.doprava?'<span class="vb-d"><b>'+esc(r.doprava.cas||'–')+'</b> odvoz '+esc(R.mistoN(r.doprava.misto))+'</span>':'')+(r.vyzved?'<span class="vb-d"><b>'+esc(r.vyzved.cas||'–')+'</b> vyzvednutí '+esc(R.mistoN(r.vyzved.misto))+'</span>':''),(r.doprava?K('Odvezeno',!!r.doprava.hotovo):'')+(r.vyzved?K('Vyzvednuto',!!r.vyzved.hotovo):''),
