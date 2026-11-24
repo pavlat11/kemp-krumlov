@@ -773,3 +773,4 @@ dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid va
 .ob-plx.b.c .ob-plb:has(.zal){flex-direction:row}
 .ob-plx.b.c.ceka{grid-template-areas:"h b" "s b"}
 .ob-plx.b.c .ob-plb:has(.zal){flex-direction:column}
+.ob-plx.b.c.dluh{grid-template-areas:"h b" "s s";row-gap:7px}
