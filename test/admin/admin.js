@@ -1527,7 +1527,7 @@ function rezervace(m,sekV){
       else if(s.a==='qx'){q='';kresli()}
       else if(s.a==='vicf'){vicF=!vicF;kresli()}
       else if(s.zp)zaplat(s.zp,s.zc||'zal');
-      else if(s.zk){var rz=najdi(s.zk);if(rz){var pz=rz.platba||{},dz=pz.stav==='zal'?Math.max(0,(+rz.cena||0)-(+pz.zaloha||0)):+rz.cena||0;ptej('Přijmout platbu?\n\n'+rz.jmeno+' platí '+kc(dz)+(pz.stav==='zal'?' (doplatek po záloze '+kc(+pz.zaloha)+')':pz.stav==='ceka'?' – celou částku, záloha nepřišla':'')+'.\nCelkem '+kc(+rz.cena)+'.',{ok:'Zaplaceno '+kc(dz)}).then(function(a){if(a)zaplat(rz.id,'vse')})}}
+      else if(s.zk){var rz=najdi(s.zk);if(rz){var pz=rz.platba||{},dz=pz.stav==='zal'?Math.max(0,(+rz.cena||0)-(+pz.zaloha||0)):+rz.cena||0;ptej('Zaplatil?\n\n'+rz.jmeno+' platí '+kc(dz)+(pz.stav==='zal'?' (doplatek po záloze '+kc(+pz.zaloha)+')':pz.stav==='ceka'?' – celou částku, záloha nepřišla':'')+'.\nCelkem '+kc(+rz.cena)+'.',{ok:'Zaplaceno '+kc(dz)}).then(function(a){if(a)zaplat(rz.id,'vse')})}}
       else if(s.kdo){var kd=s.kdo.split('|');kdoDlg(kd[0],kd[1])}
       else if('skl' in s){nT='pujc';KK.LS.set('rez.nt','pujc');location.hash='#rez_nastaveni'}
       else if('pujcit' in s)pujcit();
