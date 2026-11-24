@@ -1777,3 +1777,5 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .pk-pl.dl:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
 .pk-z{justify-content:space-between}
 .pk-z:has(> :only-child){justify-content:flex-end}
+.pk-pl.dl,.pk-pl.dl.ne{background:#fdecea;border-color:#e8a196;color:#b3261e}
+.pk-pl.dl:hover,.pk-pl.dl.ne:hover{background:#f9d6d1;border-color:#d9776a}
