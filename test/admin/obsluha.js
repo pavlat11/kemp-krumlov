@@ -87,7 +87,7 @@ function datum(r,st,go){var t=DNES(),d=st==='uby'?r.od:r.do;if(!d||d===t)return 
 function hlidejPlatbu(r,co,go){var d=doplatek(r);if(!d||!(+r.cena))return go({});var nz=cekaZal(r)?'Pozor – host nezaplatil ani zálohu!':'Pozor – host nezaplatil!';
   var bez=function(){A.ptej('Opravdu bez zaplacení?\n\n'+r.jmeno+' dluží '+kc(d)+'. Dluh zůstane u rezervace.',{ok:co+' bez platby',ne:'Zpět',nebezp:1}).then(function(a){if(a)go({})})};
   if(!ja.platby)return A.ptej(nz+'\n\n'+r.jmeno+' dluží '+kc(d)+'. Vyberte peníze, platbu potvrdí správce.',{ok:co+' i tak',ne:'Zpět',nebezp:1}).then(function(a){if(a)go({})});
-  A.ptej(nz+'\n\n'+r.jmeno+' dluží '+kc(d)+'.\n\nZaplatil teď?',{ok:'Zaplatil '+kc(d),ne:'Nezaplatil'}).then(function(a){if(!a)return bez();go({platba:Object.assign({zaloha:0,splatnost:''},r.platba||{},{stav:'vse',kdy:Date.now()})},' · zaplaceno '+kc(d))})}
+  A.ptej(nz+'\n\n'+r.jmeno+' dluží '+kc(d)+'.\n\nZaplatil teď?',{ok:'Zaplaceno '+kc(d),ne:'Nezaplatil'}).then(function(a){if(!a)return bez();go({platba:Object.assign({zaloha:0,splatnost:''},r.platba||{},{stav:'vse',kdy:Date.now()})},' · zaplaceno '+kc(d))})}
 function zmen(r,z,co,tichy){var z0={};Object.keys(z).forEach(function(k){z0[k]=r[k]===undefined?null:JSON.parse(JSON.stringify(r[k]))});
   z.hist=(r.hist||[]).concat([{t:Date.now(),kdo:ja.jmeno,co:co}]).slice(-200);
   try{R.uprav(r.id,z)}catch(x){A.toast(x.message,1);return false}
