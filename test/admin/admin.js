@@ -978,7 +978,7 @@ function rezervace(m,sekV){
     var p=r.platba,ps=p?p.stav:'',ce=+r.cena||0,zp=!p?0:ps==='vse'?ce:ps==='zal'?Math.min(ce,+p.zaloha||0):0,d=ce-zp,zru=r.stav==='zru',
       Bt=function(a,t,pri){return '<button type="button" class="btn sm'+(pri?' pri':'')+'" '+a+'>'+t+'</button>'},
       K=function(t,on,zle){return '<span class="vb-s'+(on?' on':zle?' zle':'')+'">'+(on?'✓':'○')+' '+t+'</span>'},
-      sl=function(nad,hl,stavy,pod,btn,zle,ok){var ik={'Platba':'pl','Ubytování':'ub','Lodě':'lo','Doprava':'dp'}[nad];return '<div class="vb-k '+(ik||'')+(zle?' zle':'')+(ok?' ok':'')+'"><span class="vb-n">'+(ik?SV(RSI[ik],15):'')+nad+'</span><span class="vb-h">'+hl+'</span>'+(stavy?'<span class="vb-ss">'+stavy+'</span>':'')+(pod?'<span class="vb-p">'+pod+'</span>':'')+(btn&&btn!==alB?'<span class="vb-a">'+btn+'</span>':'')+'</div>'};
+      sl=function(nad,hl,stavy,pod,btn,zle,ok){var ik={'Platba':'pl','Ubytování':'ub','Lodě':'lo','Doprava':'dp'}[nad];return '<div class="vb-k '+(ik||'')+(zle?' zle':'')+(ok?' ok':'')+'"><span class="vb-n">'+(ik?SV(RSI[ik],15):'')+nad+'</span><span class="vb-h">'+hl+'</span>'+(stavy?'<span class="vb-ss">'+stavy+'</span>':'')+(pod?'<span class="vb-p">'+pod+'</span>':'')+(btn?'<span class="vb-a">'+btn+'</span>':'')+'</div>'};
     /* co je po termínu → červená lišta s jedním tlačítkem */
     var al=[],alB='',x=sLod(r)?LS(r):'',pd=x?posD(r):'';
     if(!zru&&!b){
