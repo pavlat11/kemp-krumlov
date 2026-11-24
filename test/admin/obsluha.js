@@ -255,8 +255,8 @@ function lodKdy(r,typ){return typ==='vyd'?(r.doprava&&r.doprava.cas?r.doprava.ca
 /* platba přehledně: celkem · záloha (a jestli je zaplacená) · zbývá doplatit + tlačítka pro potvrzení */
 function platbaBox(r,smi){var c=+r.cena||0;if(!c)return '';var p=r.platba||{},z=+p.zaloha||0,st=p.stav||'',dp=doplatek(r),ceka=st==='ceka',zap=st==='vse'?c:st==='zal'?Math.min(z,c):0,pz=Math.round(Math.min(z,c)/c*100),pa=Math.round(zap/c*100);
   /* pruh: kolik z ceny je zaplaceno (zelená = záloha, světlejší = doplatek); chybějící záloha šrafovaně červeně */
-  var bar=st==='vse'?'<i class="z" style="width:100%"></i>':ceka?'<i class="n" style="width:'+Math.max(pz,4)+'%"></i>':'<i class="z" style="width:'+pa+'%"></i>';
-  var lg=st==='vse'?'<span>'+(z?'záloha '+kc(z)+' + doplatek '+kc(c-z):'zaplaceno celé')+'</span>':ceka?'<span class="ne">záloha '+kc(z)+' nepřišla'+(p.splatnost?' · do '+kr(p.splatnost):'')+'</span><span>z <b>'+kc(c)+'</b></span>':'<span>zaplaceno <b>'+kc(zap)+'</b>'+(zap?' (záloha)':'')+'</span><span>z <b>'+kc(c)+'</b></span>';
+  var bar=st==='vse'?'<i class="z" style="width:100%"></i>':ceka?'':'<i class="z" style="width:'+pa+'%"></i>';
+  var lg=st==='vse'?'<span>'+(z?'záloha '+kc(z)+' + doplatek '+kc(c-z):'zaplaceno celé')+'</span>':ceka?'<span class="ne">záloha '+kc(z)+' nepřišla</span>':'<span>zaplaceno <b>'+kc(zap)+'</b>'+(zap?' (záloha)':'')+'</span><span>z <b>'+kc(c)+'</b></span>';
   var bt=!smi||!dp?'':ceka?'<div class="ob-plb"><button type="button" class="ob-pl-b zal" data-a="zaloha" data-id="'+r.id+'">'+sv(IK.ok,15)+'Záloha přišla</button><button type="button" class="ob-pl-b g" data-a="doplaceno" data-id="'+r.id+'">Zaplatil vše</button></div>':'<div class="ob-plb"><button type="button" class="ob-pl-b" data-a="doplaceno" data-id="'+r.id+'">'+sv(IK.ok,15)+'Zaplatil</button></div>';
   return '<div class="ob-plx b '+(!dp?'ok':ceka?'ceka':'dluh')+'"><div class="ob-plt"><span>'+(dp?'Doplatit':'Zaplaceno')+'</span><b>'+(dp?kc(dp):sv(IK.ok,18)+kc(c))+'</b></div><div class="ob-plbar">'+bar+'</div><div class="ob-pllg">'+lg+'</div>'+bt+(!smi&&dp?'<p class="ob-plsp">Platbu potvrzuje správce</p>':'')+'</div>'}
 
