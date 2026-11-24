@@ -1740,3 +1740,7 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .dlg.rdl.nrz-d,.nrz-b{overflow:clip}@media(max-width:900px){.nrz-b{overflow:auto}}
 .nrz .sw,.nrz .rm,.rfst-o{position:relative}
 .nrz-dp .nrz-dpp{display:block;padding:8px 0 0}
+.dp-t .dp-hc{text-align:right;white-space:nowrap;width:1%}
+.dp-ok{background:#e7f4ec;color:#1f7a45;border:1px solid #bfe2cc;border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.dp-ok:hover{background:#fdecea;color:#9b2c1f;border-color:#efc9c3}
+.dp-t th.dp-hc,.dp-t td.dp-hc{width:140px}

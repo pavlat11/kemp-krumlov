@@ -688,3 +688,16 @@ select[data-u=role]{min-width:132px}
 .ob-vo .kv-kb>.kv-kg{display:grid}.ob-vo .kv-sp{width:100%}
 dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid var(--line)}
 @media print{.ob-vo{display:none}}
+/* platba v kartě */
+.ob-plx{margin:10px 0 0;border-radius:14px;border:1px solid rgba(16,36,27,.1);background:#f7f5ef;padding:10px 12px}
+.ob-plx.ceka{background:#fdf1ef;border-color:#f1cdc6}.ob-plx.dluh{background:#fdf6ea;border-color:#f0dcb8}.ob-plx.ok{background:#eef7f1;border-color:#cfe7d8}
+.ob-plg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ob-plg>div{display:grid;gap:1px;align-content:start;min-width:0}
+.ob-plg small{font-size:11.5px;color:#6b766f;line-height:1.3;display:flex;align-items:center;gap:3px}
+.ob-plg>div>small:first-child{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.ob-plg b{font-size:15.5px;font-weight:800;display:flex;align-items:center;gap:4px}
+.ob-plg .ne{color:#b23a2a}.ob-plg .ok{color:#1f7a45}.ob-plg .dl{color:#9a5a0c}
+.ob-plb{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ob-plb .ob-pl-b{flex:1;justify-content:center}
+.ob-kz{display:flex;align-items:center;gap:3px;color:#1f7a45!important;font-weight:600}
+.ob-plb .ob-pl-b{margin-top:0}.ob-plb .ob-pl-b:not(.zal){background:#1f6d77}
