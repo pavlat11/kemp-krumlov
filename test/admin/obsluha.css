@@ -701,3 +701,24 @@ dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid va
 .ob-plb .ob-pl-b{flex:1;justify-content:center}
 .ob-kz{display:flex;align-items:center;gap:3px;color:#1f7a45!important;font-weight:600}
 .ob-plb .ob-pl-b{margin-top:0}.ob-plb .ob-pl-b:not(.zal){background:#1f6d77}
+/* platba – návrh B (ukazatel zaplacení) */
+.ob-plx.b{background:#fff;border:1px solid rgba(16,36,27,.1);padding:11px 13px}
+.ob-plx.b.ok{background:#f4faf6;border-color:#cfe7d8}.ob-plx.b.ceka{background:#fff8f6;border-color:#f1cdc6}.ob-plx.b.dluh{background:#fffcf5;border-color:#f0dcb8}
+.ob-plt{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.ob-plt span{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#6b766f}
+.ob-plt b{font-size:21px;font-weight:800;display:inline-flex;align-items:center;gap:4px}
+.ob-plx.dluh .ob-plt b{color:#9a5a0c}.ob-plx.ceka .ob-plt b{color:#b23a2a}.ob-plx.ok .ob-plt b{color:#1f7a45}
+.ob-plbar{height:10px;border-radius:99px;background:#efe9dd;margin:7px 0 6px;overflow:hidden;display:flex}
+.ob-plbar i{display:block;height:100%}
+.ob-plbar .z{background:#2f9a5c}.ob-plbar .d{background:#7cc79a}.ob-plbar .n{background:repeating-linear-gradient(135deg,#f3b3a8 0 5px,#fbd9d2 5px 10px)}
+.ob-pllg{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:#5b655f}
+.ob-pllg b{color:#14201a}.ob-pllg .ne{color:#b23a2a;font-weight:700}
+.ob-plx.b .ob-plb{margin-top:10px}
+.ob-plx.b .ob-pl-b{min-height:44px;border-radius:12px;font-size:14.5px;background:#1f6d77}
+.ob-plx.b .ob-pl-b.zal{background:#b3461e}
+.ob-plx.b .ob-pl-b.g{background:#fff;color:#14201a;border:1.5px solid #ddd5c5}
+.ob-plsp{margin:8px 0 0;font-size:12px;color:#6b766f}
+/* Ubytování: platba přes celou šířku karty */
+.ob-pan .ob-r.ob-u2{grid-template-areas:"mk t t" "p p p" "a a a"}
+.ob-pan .ob-r.ob-u2>.ob-plx{grid-area:p;margin:0}
+@container (min-width:620px){.ob-pan .ob-r.ob-u2{grid-template-areas:"mk t a" "mk p a"}}

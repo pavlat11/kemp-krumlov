@@ -221,14 +221,14 @@ var IKU={hod:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',zpet:'<pat
 function kartaU(r,typ){var mk=mistoKod(r),hot=typ==='pri'?HOT.pri(r):HOT.odj(r),o=osob(r),n=noci(r),smi=ja.platby,dp=doplatek(r),cz=cekaZal(r),pc=prijCas(r);
   var info=(typ==='pri'?'<b class="ob-cas">'+sv(IKU.hod,15)+(pc||'kdykoliv')+'</b> · ':'')+(typ==='odj'?n+' '+pl(n,'noc','noci','nocí')+' (od '+kr(r.od)+')':n+' '+pl(n,'noc','noci','nocí')+' (do '+kr(r.do)+')')+' · '+o+' '+pl(o,'osoba','osoby','osob')+((r.mista||[]).length>1?' · '+esc(mistaTxt(r)):'');
   var ch=(cz?'<span class="ob-ch zl">Záloha nezaplacena'+(r.platba.splatnost?' (do '+kr(r.platba.splatnost)+')':'')+'</span>':'')+(sLod(r)?'<span class="ob-ch2">'+sv(IK.pujcovna,14)+'lodě</span>':'')+(r.doprava&&r.doprava.misto&&r.doprava.misto!=='kemp'?'<span class="ob-ch2">'+sv(IK.doprava,14)+'doprava</span>':'')+(typ==='odj'&&r.stav!=='uby'&&r.stav!=='odj'?'<span class="ob-ch zl">Nebyl ubytován</span>':'');
-  var b2=!smi?'':cz?'<button type="button" class="ob-pl-b zal" data-a="zaloha" data-id="'+r.id+'" title="Záloha přišla na účet – označit">'+sv(IK.ok,15)+'Potvrdit zálohu</button>':'';
+  var b2='';
   var pz=r.platba||{},zinf=+pz.zaloha&&pz.stav!=='ceka'?'<small class="ob-kz">'+sv(IK.ok,11)+'záloha '+kc(+pz.zaloha)+'</small>':'';
-  var cena=dp?'<span class="ob-kc"><b>'+kc(dp)+'</b><small>doplatit z '+kc(+r.cena)+'</small>'+zinf+(smi&&!cz?'<button type="button" class="ob-pl-b" data-a="doplaceno" data-id="'+r.id+'" title="Host zaplatil – označit jako zaplacené">'+sv(IK.ok,15)+'Přijmout platbu</button>':'')+'</span>':'<span class="ob-kc ok">'+sv(IK.ok,15)+'zaplaceno</span>';
+  var cena='';
   var b='<button type="button" class="ob-go '+(typ==='pri'?'k-pri':'k-odj')+'" data-a="'+(typ==='pri'?'ubytovat':'odhlasit')+'" data-id="'+r.id+'">'+(typ==='pri'?sv(IK.dovnitr,20)+'Ubytovat':sv(IK.klic,20)+'Odhlásit')+'</button>';
   var tl=r.telefon?'<a href="tel:'+esc(String(r.telefon).replace(/\s/g,''))+'" class="ob-tlb" aria-label="Zavolat – '+esc(r.jmeno)+'">'+sv(IK.tel,20)+'</a>':'';
   return '<div class="ob-r ob-u2" data-det="'+r.id+'" data-q="'+qT(r)+'"><span class="ob-mk"><b>'+esc(mk.k)+'</b><small>'+esc(mk.t)+'</small>'+(mk.vic?'<i>+'+mk.vic+'</i>':'')+'</span>'+
    '<div class="ob-u-t"><span class="ob-r-n"><button type="button" class="ob-jm" data-det="'+r.id+'" title="Detail rezervace"><b>'+esc(r.jmeno)+'</b></button>'+jazyk(r)+'</span><small>'+info+'</small>'+
-   (ch||b2?'<span class="ob-r-ch">'+ch+b2+'</span>':'')+(r.zprava?'<span class="ob-r-pz">'+sv(IK.zprava,14)+esc(r.zprava)+'</span>':'')+'</div>'+cena+
+   (ch||b2?'<span class="ob-r-ch">'+ch+b2+'</span>':'')+(r.zprava?'<span class="ob-r-pz">'+sv(IK.zprava,14)+esc(r.zprava)+'</span>':'')+'</div>'+platbaBox(r,smi)+
    '<div class="ob-u-a">'+tl+b+'</div></div>'}
 /* hotové jako kompaktní řádek */
 function radekU(r,typ){var mk=mistoKod(r);return '<li data-det="'+r.id+'" data-q="'+qT(r)+'"><span class="ob-hl-ok">'+sv(IK.ok,15)+'</span><b>'+esc(mk.k)+'</b><span class="ob-hu-j">· '+esc(r.jmeno)+'</span><button type="button" class="ob-hl-z" data-a="'+(typ==='pri'?'zpetUby':'zpetOdj')+'" data-id="'+r.id+'">'+sv(IKU.zpet,15)+'Vrátit</button></li>'}
@@ -253,10 +253,13 @@ var IKL={tuzka:'<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/>',
 function lodKusy(r,typ){var l=r.lode,hot=HOT[typ](r),k=typ==='vra'&&l.vydano?R.lodeVen(r):l.vydano?l.vydano.kusy:R.lodePotreba(l);if(typ==='vra'&&hot)k=l.vydano.kusy;return k}
 function lodKdy(r,typ){return typ==='vyd'?(r.doprava&&r.doprava.cas?r.doprava.cas:''):(r.vyzved&&r.vyzved.cas?r.vyzved.cas:'')}
 /* platba přehledně: celkem · záloha (a jestli je zaplacená) · zbývá doplatit + tlačítka pro potvrzení */
-function platbaBox(r,smi){var c=+r.cena||0;if(!c)return '';var p=r.platba||{},z=+p.zaloha||0,st=p.stav||'',dp=doplatek(r),ceka=st==='ceka',zap=st==='vse'?c:st==='zal'?Math.min(z,c):0;
-  var zt=!z?'<span class="mut">bez zálohy</span>':ceka?'<b class="ne">'+kc(z)+'</b><small class="ne">nezaplacena'+(p.splatnost?' · do '+kr(p.splatnost):'')+'</small>':'<b>'+kc(z)+'</b><small class="ok">'+sv(IK.ok,12)+'zaplacena</small>';
-  var bt=!smi?'':ceka?'<button type="button" class="ob-pl-b zal" data-a="zaloha" data-id="'+r.id+'">'+sv(IK.ok,15)+'Záloha přišla</button><button type="button" class="ob-pl-b" data-a="doplaceno" data-id="'+r.id+'">Zaplatil vše</button>':dp?'<button type="button" class="ob-pl-b" data-a="doplaceno" data-id="'+r.id+'">'+sv(IK.ok,15)+'Přijmout '+kc(dp)+'</button>':'';
-  return '<div class="ob-plx '+(!dp?'ok':ceka?'ceka':'dluh')+'"><div class="ob-plg"><div><small>Celkem</small><b>'+kc(c)+'</b></div><div><small>Záloha</small>'+zt+'</div><div><small>'+(dp?'Doplatit':'Zaplaceno')+'</small>'+(dp?'<b class="dl">'+kc(dp)+'</b>':'<b class="ok">'+sv(IK.ok,14)+'vše</b>')+'</div></div>'+(bt?'<div class="ob-plb">'+bt+(!ja.platby?'':'')+'</div>':(!smi&&dp?'<div class="ob-plb"><small class="mut">Platbu potvrzuje správce</small></div>':''))+'</div>'}
+function platbaBox(r,smi){var c=+r.cena||0;if(!c)return '';var p=r.platba||{},z=+p.zaloha||0,st=p.stav||'',dp=doplatek(r),ceka=st==='ceka',zap=st==='vse'?c:st==='zal'?Math.min(z,c):0,pz=Math.round(Math.min(z,c)/c*100),pa=Math.round(zap/c*100);
+  /* pruh: kolik z ceny je zaplaceno (zelená = záloha, světlejší = doplatek); chybějící záloha šrafovaně červeně */
+  var bar=st==='vse'?'<i class="z" style="width:'+(z?pz:100)+'%"></i>'+(z?'<i class="d" style="width:'+(100-pz)+'%"></i>':''):ceka?'<i class="n" style="width:'+Math.max(pz,4)+'%"></i>':'<i class="z" style="width:'+pa+'%"></i>';
+  var lg=st==='vse'?'<span>'+(z?'záloha '+kc(z)+' + doplatek '+kc(c-z):'zaplaceno celé')+'</span>':ceka?'<span class="ne">záloha '+kc(z)+' nepřišla'+(p.splatnost?' · do '+kr(p.splatnost):'')+'</span><span>z <b>'+kc(c)+'</b></span>':'<span>zaplaceno <b>'+kc(zap)+'</b>'+(zap?' (záloha)':'')+'</span><span>z <b>'+kc(c)+'</b></span>';
+  var bt=!smi||!dp?'':ceka?'<div class="ob-plb"><button type="button" class="ob-pl-b zal" data-a="zaloha" data-id="'+r.id+'">'+sv(IK.ok,15)+'Záloha přišla</button><button type="button" class="ob-pl-b g" data-a="doplaceno" data-id="'+r.id+'">Zaplatil vše</button></div>':'<div class="ob-plb"><button type="button" class="ob-pl-b" data-a="doplaceno" data-id="'+r.id+'">'+sv(IK.ok,15)+'Přijmout '+kc(dp)+'</button></div>';
+  return '<div class="ob-plx b '+(!dp?'ok':ceka?'ceka':'dluh')+'"><div class="ob-plt"><span>'+(dp?'Doplatit':'Zaplaceno')+'</span><b>'+(dp?kc(dp):sv(IK.ok,18)+kc(c))+'</b></div><div class="ob-plbar">'+bar+'</div><div class="ob-pllg">'+lg+'</div>'+bt+(!smi&&dp?'<p class="ob-plsp">Platbu potvrzuje správce</p>':'')+'</div>'}
+
 function kartaL(r,typ){var l=r.lode,ceka=cekaZal(r),smi=ja.platby,dni=Math.max(1,+l.dni||1),pozde=typ==='vra'&&posD(r)<den,pozdeV=typ==='vyd'&&!l.vydano&&l.den<den;
   var k=kusyRoz(lodKusy(r,typ)),kdy=lodKdy(r,typ);
   var b='',b2='';
