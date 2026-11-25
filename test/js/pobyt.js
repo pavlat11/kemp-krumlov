@@ -225,8 +225,8 @@ if(lodW&&LODE.length&&REKA.length>1){lodOk=true;const t=x=>KL.t(x);
  const FA='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',nbK=(k,ico,nad,sl,body,od,kam,cta,cta1)=>`<button type="button" class="rz-nb v3 ${k}" data-nb="${k}" aria-pressed="false"><span class="rz-nb-t"><span class="tag">${k==='lod'?'★ ':''}${t(k==='lod'?'Nejoblíbenější':'Pohodlně')}</span><span class="ck3" aria-hidden="true">${FA}</span><span class="hd"><span class="ic">${ico}</span><span><b class="nd">${t(nad)}</b><small class="sl">${t(sl)}</small></span></span></span><span class="rt" aria-hidden="true"><i>${od}</i><span class="ln ${k}"></span><i>${kam}</i></span><span class="fr"><span class="pr" id="rzNbP-${k}"></span><span class="cn"><small>${t('od')}</small><b id="rzNbC-${k}"></b><i id="rzNbJ-${k}"></i></span></span><ul>${body.map(x=>`<li>${FA}${t(x)}</li>`).join('')}</ul><span class="cta"><span class="a0"><i aria-hidden="true">+</i>${t(cta)}</span><span class="a1">${FA}${t(cta1)} · <u>${t('odebrat')}</u></span></span></button>`;
  lodW.innerHTML=`<div class="rz-nab" id="rzNab">${nbK('lod','<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 28c6 7 32 7 38 0M10 28l5-11h18l5 11M24 17V8M24 8l7 4-7 3M6 40c3 2 6 2 9 0s6-2 9 0 6 2 9 0 6-2 9 0"/></svg>','Den na Vltavě','Ráno vás vyvezeme proti proudu a doplujete až ke stanu.',['Pádla, vesty a barel v ceně','Lodě vám přivezeme na start','Bez starostí s autem'],KL.t(KR.mistoN((REKA[0]||{}).k||'')),'⛺ '+KL.t('Kemp'),'Chci na vodu','Jedeme na vodu')}${nbK('dop','<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 32V14h24v18M28 20h9l7 8v4H28"/><circle cx="13" cy="34" r="4"/><circle cx="35" cy="34" r="4"/><path d="M9 20h6M19 20h4"/></svg>','Odvoz na start','Máte vlastní loď? Auto necháte v kempu, na řeku vás odvezeme my.',['Vyjedeme v čas, který si vyberete','Až 8 osob v jednom autě','Vyzvedneme vás i v cíli'],'⛺ '+KL.t('Kemp'),KL.t('kamkoli na řeku'),'Chci odvézt','Odvezete nás')}</div>
   <div class="rz-lod-l" id="rzLodL"></div><div class="rz-lod-o" id="rzLodO" hidden>
-  <label class="rz-lf"><span>${t('Den vyplutí')}</span><select id="rzLden"></select></label>
-  <label class="rz-lf"><span>${t('Vrácení lodí')}</span><select id="rzLvdo"></select></label>
+  <label class="rz-lf"><span>${t('Den vyplutí')}</span><input type="date" id="rzLden"></label>
+  <label class="rz-lf"><span>${t('Vrácení lodí')}</span><input type="date" id="rzLvdo"><small class="rz-ldn" id="rzLvdoN"></small></label>
   <label class="rz-lf"><span>${t('Odkud poplujete')}</span><select id="rzLod"></select></label>
   <label class="rz-lf"><span>${t('Kde skončíte')}</span><select id="rzLkam"></select></label>
   <div class="rz-lod-i" id="rzLodI"></div></div>`;
@@ -235,8 +235,8 @@ if(lodW&&LODE.length&&REKA.length>1){lodOk=true;const t=x=>KL.t(x);
   p.st=stepper(()=>S.l.kusy[p.k],v=>{const b=S.l.kusy[p.k];if(v>b&&v>Math.max(0,lodFree()[p.k]||0)){warn(t('Víc lodí tohoto typu na tento den už nemáme.'));return}
    S.l.kusy[p.k]=v;if(v>b&&KR.lodeChybi(lodeObj()).length){S.l.kusy[p.k]=b;warn(t('Na tento den už nemáme dost pádel nebo vest. Zavolejte nám, zkusíme to vyřešit.'))}},()=>0,99);
   c.append(p.st);p.el=c;$('rzLodL').append(c)});
- $('rzLvdo').addEventListener('change',e=>{S.l.dni=Math.max(1,Math.min(+e.target.value||1,lodMaxDni()));S.lp=false;render()});
- $('rzLden').addEventListener('change',e=>{S.l.den=e.target.value;render()});
+ $('rzLvdo').addEventListener('change',e=>{const a=(S.l.den||'').split('-'),b=(e.target.value||'').split('-');if(a.length===3&&b.length===3){const n=Math.round((new Date(+b[0],b[1]-1,+b[2])-new Date(+a[0],a[1]-1,+a[2]))/864e5)+1;S.l.dni=Math.max(1,Math.min(n||1,lodMaxDni(),14))}S.lp=false;render()});
+ $('rzLden').addEventListener('change',e=>{const L=lodDays().map(iso),v=e.target.value;if(!v)return render();S.l.den=L.includes(v)?v:(L.find(x=>x>=v)||L[L.length-1]||v);render()});
  $('rzLod').addEventListener('change',e=>{S.l.odkud=e.target.value;render()});
  $('rzLkam').addEventListener('change',e=>{S.l.kam=e.target.value;render()});
  $('rzNab').addEventListener('click',e=>{const b=e.target.closest('[data-nb]');if(!b)return;
@@ -320,8 +320,8 @@ function lodRender(){if(!lodOk)return;if(S.l.pref&&S.l.den){const f=lodFree();if
  if(uby&&!S.l.chci){$('rzLodO').hidden=true;return}
  LODE.forEach(p=>{const q=S.l.kusy[p.k],f=Math.max(0,v[p.k]==null?0:v[p.k]);p.el.classList.toggle('on',q>0);p.el.classList.toggle('busy',f<=0&&!q);p.el.querySelector('.fr').textContent=!S.l.den?'':f<=0?KL.t('vše půjčené'):KL.t('volných')+' '+f;p.st.upd()});
  $('rzLodO').hidden=!n;if(!n)return;
- setOpts($('rzLden'),lodDays().map(d=>`<option value="${iso(d)}">${fD(d)}</option>`).join(''));$('rzLden').value=S.l.den;$('rzLden').disabled=S.mod==='lod';
- {const p=(S.l.den||'').split('-'),d0=p.length===3?new Date(+p[0],p[1]-1,+p[2]):null,mx=Math.min(14,lodMaxDni());setOpts($('rzLvdo'),d0?Array.from({length:mx},(_,i)=>`<option value="${i+1}">${fD(addD(d0,i))} (${i+1} ${plural(i+1,'den','dny','dní')})</option>`).join(''):'');$('rzLvdo').value=String(S.l.dni)}
+ {const L=lodDays().map(iso),e=$('rzLden');e.min=L[0]||'';e.max=L[L.length-1]||'';e.value=S.l.den||'';e.disabled=S.mod==='lod'}
+ {const p=(S.l.den||'').split('-'),d0=p.length===3?new Date(+p[0],p[1]-1,+p[2]):null,mx=Math.min(14,lodMaxDni()),e=$('rzLvdo'),n=Math.max(1,Math.min(+S.l.dni||1,mx));e.disabled=!d0;e.min=d0?iso(d0):'';e.max=d0?iso(addD(d0,mx-1)):'';e.value=d0?iso(addD(d0,n-1)):'';$('rzLvdoN').textContent=d0?(n===1?KL.t('vrácení týž den')+' · ':'')+n+' '+plural(n,'den','dny','dní'):''}
  setOpts($('rzLod'),REKA.slice(0,-1).map(x=>`<option value="${x.k}">${KL.t(x.n)}</option>`).join(''));$('rzLod').value=S.l.odkud;
  setOpts($('rzLkam'),REKA.filter((x,i)=>i>oi).map(x=>`<option value="${x.k}">${KL.t(x.n)}</option>`).join(''));$('rzLkam').value=S.l.kam;
  const lo0=lodeObj(),cl=KR.cenaLodi(lo0),vel=lo0&&KR.lodePocet(lo0)>=10,vic=lo0&&+lo0.dni>1,ZS=KC.kat('doprava').filter(p=>p.skryt!==1&&p.n1!=null),k1=vel?'n10':'n1',k2=vel?'d10':'d1';

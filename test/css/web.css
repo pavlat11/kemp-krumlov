@@ -3661,3 +3661,7 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .kv-rohw{gap:0;border-radius:16px;background:rgba(7,27,19,.58);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 18px 40px -18px rgba(0,0,0,.7);overflow:hidden}
 .kv-rohw .kv-bub{background:none;border:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-radius:0;padding:10px 14px 10px 10px}
 .kv-rohw .kv-bub+.kv-bub{border-top:1px solid rgba(255,255,255,.13)}
+.rz-lf input[type=date]{width:100%;box-sizing:border-box;padding:11px 14px;border:1.5px solid #e2dacb;border-radius:14px;background:#fff;font:inherit;font-size:16px;font-weight:700;color:#0b2419;min-height:50px}
+.rz-lf input[type=date]:focus{outline:none;border-color:#0b2419;box-shadow:0 0 0 4px rgba(244,166,74,.3)}
+.rz-lf input[type=date]:disabled{background:#f6f2ea;color:#55625a}
+.rz-ldn{font-size:13px;color:#55625a;margin-top:-2px}
