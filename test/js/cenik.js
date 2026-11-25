@@ -304,6 +304,10 @@ var R=window.KKR={
  aut:function(osob){return Math.max(1,Math.ceil((+osob||0)/8))},
  cenaDopravy:function(d){if(!d||!d.misto||d.misto==='kemp'||!window.KKC)return 0;var p=KKC.p(d.misto);return p?(+p.a||0)*R.aut(d.osob):0},
  /* období půjčení lodí: „26. 11. → 28. 11. 2026 (3 dny)“ – vždy s datem vrácení */
+ /* doplňky pobytu z ceníku (auto, motocykl, elektřina, pes…): r.doplnky = {k:počet} */
+ doplnkyTypy:function(){return window.KKC?KKC.kat('doplnky').filter(function(p){return p.skryt!==1}):[]},
+ doplnky:function(r){var d=(r&&r.doplnky)||{},o=[];Object.keys(d).forEach(function(k){var n=+d[k]||0;if(!n)return;var p=window.KKC&&KKC.p(k);o.push({k:k,n:(p&&p.n)||k,q:n})});return o},
+ doplnkyTxt:function(r){return R.doplnky(r).map(function(x){return (x.q>1?x.q+'× ':'')+x.n}).join(' · ')},
  lodeObdobi:function(l,j,bezRoku){if(!l||!l.den)return '';var D=R.lodeDny(l),a=D[0].split('-'),b=D[D.length-1].split('-'),n=D.length,W={cs:['den','dny','dní'],en:['day','days','days'],de:['Tag','Tage','Tage']}[j||'cs']||['den','dny','dní'];
   var f=function(x){return (+x[2])+'. '+(+x[1])+'.'};return f(a)+(a[0]!==b[0]&&!bezRoku?' '+a[0]:'')+' → '+f(b)+(bezRoku?'':' '+b[0])+' ('+n+' '+(n===1?W[0]:n<5?W[1]:W[2])+')'},
  lodeTxt:function(l,j){if(!l||!R.lodePocet(l))return '';var a=Object.keys(l.kusy).filter(function(k){return +l.kusy[k]>0}).map(function(k){var p=window.KKC&&KKC.p(k);return l.kusy[k]+'× '+(p?(j&&j!=='cs'&&p['n_'+j])||p.n:k)}),d=l.den.split('-'),dni=Math.max(1,+l.dni||1),W={cs:['den','dny','dní'],en:['day','days','days'],de:['Tag','Tage','Tage']}[j||'cs']||['den','dny','dní'];

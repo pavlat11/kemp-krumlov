@@ -281,3 +281,8 @@ Upravený text s cenou se ukládá se značkou `{price:klic}`, takže se cena d�
 - Server: `GET /api/storno?r&k` → shrnutí rezervace + stav (`ok | zrusena | odjel | pozde | vydano | vypnuto`), `POST /api/storno {r,k,duvod}` → ověří klíč, lhůtu (`nast.storno.dni` dní před příjezdem) a stav, nastaví `stav='zru'`, `stornoHost`, `stornoDuvod`, zapíše historii, uvolní místa/vybavení, pošle hostovi šablonu `zruseno` a kempu `stornoKemp`.
 - Ochrana: limit pokusů na IP, klíč porovnávat v konstantním čase, stránka `noindex`.
 - Nastavení: Rezervace → Nastavení → Rezervování → „Zrušení rezervace hostem“ (`nast.storno` = {zap, dni, pod}).
+
+## Doplňky pobytu (auto, motocykl, elektřina, pes…)
+Rezervace má pole `doplnky` – objekt `{klíč položky z ceníku (kategorie „doplnky“): počet}`, např. `{"auto":2,"elek":1,"pes":1}`.
+Plní ho web (výběr doplňků v rezervaci), Nová rezervace / úprava a Ubytovat hosta v administraci. Cena se počítá za každou noc podle ceníku a je už v `cena`.
+Zobrazuje se v detailu rezervace, na kartách Ubytování (administrace i aplikace obsluhy).

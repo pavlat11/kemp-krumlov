@@ -834,3 +834,4 @@ dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid va
 .ob-plok svg{flex:none;display:block!important;width:16px;height:16px;stroke:currentColor}
 .ob-plok span{margin-left:auto;font-weight:700;color:#1f7a45}
 .ob-pan .ob-r.ob-u2>.ob-plok{grid-area:p;margin:0}
+.ob-ch2.dl{background:#f1ece2;color:#4a4335}
