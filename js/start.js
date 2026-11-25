@@ -31,7 +31,9 @@ document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementByI
    Na serveru: stejná data vrátí GET /api/prepisy a fotky budou běžné URL – soubor zůstane, jen místo localStorage načte JSON. */
 (function(){
 'use strict';
-function get(k){try{var v=localStorage.getItem('kk.'+k);return v?JSON.parse(v):null}catch(e){return null}}
+/* web PE-LA (window.KK_WEB='pela'): vlastní texty, fotky a ikony pod klíčem kkt.pela.…, jazyk určuje adresa stránky, ceny vypisuje web sám */
+var PELA=window.KK_WEB==='pela';
+function get(k){if(PELA&&/^(texty|dtexty|ikony|obrazky|seo|galerie)(\.|$)/.test(k))k='pela.'+k;try{var v=localStorage.getItem('kkt.'+k);return v?JSON.parse(v):null}catch(e){return null}}
 var EDIT=/[?&]edit(=1)?(&|$)/.test(location.search);
 var BASE=(document.currentScript&&document.currentScript.src||location.href).replace(/js\/[^\/]+\.js.*$/,'').replace(/[?#].*$/,'');
 
@@ -39,15 +41,15 @@ var BASE=(document.currentScript&&document.currentScript.src||location.href).rep
 if(EDIT){window.KK_BEZ_ANIMACI=true;document.documentElement.classList.add('kk-bez-animaci')}
 /* jazyk: ?lang=en|de, jinak poslední volba návštěvníka, jinak čeština */
 var JAZYKY=['cs','en','de'],qp=(location.search.match(/[?&]lang=([a-z]{2})/)||[])[1];
-var L=JAZYKY.indexOf(qp)>=0?qp:JAZYKY.indexOf(get('jazyk'))>=0?get('jazyk'):'cs';
-if(qp&&L===qp)try{localStorage.setItem('kk.jazyk',JSON.stringify(L))}catch(e){}
+var L=PELA?(JAZYKY.indexOf(window.KK_LANG_PEVNY)>=0?window.KK_LANG_PEVNY:'cs'):JAZYKY.indexOf(qp)>=0?qp:JAZYKY.indexOf(get('jazyk'))>=0?get('jazyk'):'cs';
+if(!PELA&&qp&&L===qp)try{localStorage.setItem('kkt.jazyk',JSON.stringify(L))}catch(e){}
 window.KK_LANG=L;document.documentElement.lang=L;
 var Tcs=get('dtexty')||{},TL=L==='cs'?{}:(get('dtexty.'+L)||{}),T={};
 Object.keys(Tcs).forEach(function(k){T[k]=Tcs[k]});Object.keys(TL).forEach(function(k){T[k]=TL[k]});
 var O=get('obrazky')||{},I=get('ikony')||{};
 /* výchozí překlady ceníku, rezervace a dopravy (js/preklady.js) – načtou se jen pro EN/DE, přednost mají překlady z administrace */
-if(L!=='cs'&&document.readyState==='loading')document.write('<script src="'+BASE+'js/preklady.js?v=11"><\/script>');
-var PD=L==='cs'?false:null;
+if(!PELA&&L!=='cs'&&document.readyState==='loading')document.write('<script src="'+BASE+'js/preklady.js?v=34"><\/script>');
+var PD=L==='cs'||PELA?false:null;
 function slov(){if(PD!==null)return PD;var d=window.KK_PREKLADY&&window.KK_PREKLADY[L];
   if(d){PD=d;Object.keys(d.dtexty||{}).forEach(function(k){if(!(k in TL))T[k]=d.dtexty[k]});
     PD.vz=(d.vzory||[]).map(function(v){return[new RegExp(v[0]),v[1]]})}
@@ -68,7 +70,7 @@ window.KKL={jazyk:L,loc:LOC,
 };
 /* měna: Kč / €  (cs výchozí Kč, en a de výchozí €). V editačním režimu vždy Kč, aby se do textů neuložila eura. */
 var CEN=get('cenik'),MN=(CEN&&CEN.mena)||{},EUR_OK=MN.eur!==false,KURZ=+MN.kurz||25,ZAOKR=+MN.zaokr||1;
-var MENA=get('mena');if(MENA!=='EUR'&&MENA!=='CZK')MENA=L==='cs'?'CZK':'EUR';if(!EUR_OK||EDIT)MENA='CZK';
+var MENA=get('mena');if(MENA!=='EUR'&&MENA!=='CZK')MENA=L==='cs'?'CZK':'EUR';if(!EUR_OK||EDIT||PELA)MENA='CZK';
 window.KK_MENA=MENA;
 var URLY={};/* cesta → objectURL nahrazené fotky */
 var SKIP='script,style,noscript,textarea,[data-t],[data-c]:not(.gl-i),[data-cena],.kke-ui';
@@ -76,7 +78,7 @@ var norm=function(s){return s.replace(/\s+/g,' ').trim()};
 
 /* ---------- fotky v IndexedDB ---------- */
 var _db=null;
-function db(){if(_db)return _db;_db=new Promise(function(ok,no){if(!window.indexedDB)return no();var r=indexedDB.open('kk-obrazky',1);r.onupgradeneeded=function(){r.result.createObjectStore('o',{keyPath:'id'})};r.onsuccess=function(){ok(r.result)};r.onerror=function(){no(r.error)}});return _db}
+function db(){if(_db)return _db;_db=new Promise(function(ok,no){if(!window.indexedDB)return no();var r=indexedDB.open(PELA?'kkt-pela-obrazky':'kkt-obrazky',1);r.onupgradeneeded=function(){r.result.createObjectStore('o',{keyPath:'id'})};r.onsuccess=function(){ok(r.result)};r.onerror=function(){no(r.error)}});return _db}
 function tx(mode,fn){return db().then(function(d){return new Promise(function(ok,no){var t=d.transaction('o',mode),s=t.objectStore('o'),r=fn(s);t.oncomplete=function(){ok(r&&r.result!==undefined?r.result:r)};t.onerror=function(){no(t.error)}})})}
 
 /* ---------- pomocné ---------- */
@@ -204,7 +206,7 @@ var zapnuto=EDIT||maObr||MENA==='EUR'||L!=='cs'||Object.keys(T).length>0||Object
 
 window.KKP={
   EDIT:EDIT,jazyk:L,mena:function(){return MENA},euraPovolena:EUR_OK,kurz:KURZ,naEura:naEura,
-  nastavMenu:function(m){if(m!=='EUR'&&m!=='CZK'||m===MENA||EDIT)return;MENA=window.KK_MENA=m;try{localStorage.setItem('kk.mena',JSON.stringify(m))}catch(e){}
+  nastavMenu:function(m){if(m!=='EUR'&&m!=='CZK'||m===MENA||EDIT||PELA)return;MENA=window.KK_MENA=m;try{localStorage.setItem('kkt.mena',JSON.stringify(m))}catch(e){}
     if(!mo)zapniSledovani();var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),n,a=[];while((n=w.nextNode()))if(n.__kkSrc!=null)a.push(n);
     a.forEach(function(x){x.data=x.__kkSrc;x.__kkl=undefined});a.forEach(function(x){if(x.__kkl===undefined)text(x)});projdi(document.body);
     document.dispatchEvent(new CustomEvent('kk-mena',{detail:m}))},

@@ -66,40 +66,20 @@ if('IntersectionObserver' in window&&!reduce){
  rs.forEach(function(el){io.observe(el)})}
 else rs.forEach(function(el){el.classList.add('in')});
 
-/* 1 den / vícedenní: ceny se plynule přepočítají */
-var cards=[].slice.call(sec.querySelectorAll('.pp-boat:not([data-skryta])')),multi=false,tw=new WeakMap();
-var hned=false;
-function tween(el,to){var from=+(el.dataset.v||to);el.dataset.v=to;
- if(reduce||hned||from===to){el.textContent=to.toLocaleString('cs-CZ');return}
- var t0=null,dur=420;cancelAnimationFrame(tw.get(el)||0);
- (function f(t){if(!t0)t0=t;var p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);el.textContent=Math.round(from+(to-from)*e).toLocaleString('cs-CZ');if(p<1)tw.set(el,requestAnimationFrame(f))})(performance.now())}
-function render(){
- var best=null,bv=1e9;
- cards.forEach(function(c){var cap=c.querySelectorAll('.pp-pp svg').length,v=(multi?+c.dataset.pm:+c.dataset.p1)/cap;if(v<bv){bv=v;best=c}});
- cards.forEach(function(c){
-  var p1=+c.dataset.p1,pm=+c.dataset.pm;
-  tween(c.querySelector('.pp-price em'),multi?pm:p1);
-  c.querySelector('.pp-price>small').textContent=multi?'cena za den při vícedenním půjčení':'cena za den';
-  c.querySelector('.pp-alt').textContent=multi?'1 den: '+p1.toLocaleString('cs-CZ')+' Kč / den':'vícedenní '+pm.toLocaleString('cs-CZ')+' Kč / den';
-  c.querySelector('.pp-badge').hidden=c!==best;
-  var tx=function(q){var e=c.querySelector(q);return e?e.textContent.trim():''};
-  c.setAttribute('aria-label',tx('.pp-bt')+' '+tx('.pp-bi~b,.pp-bt+b')+', cena od '+Math.min(p1,pm).toLocaleString('cs-CZ')+' Kč za den, otevřít pe-la.cz')})}
-window.KKPela={render:function(){hned=true;render();hned=false}};
-$('ppTg').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;multi=+b.dataset.m>=2;
- [].forEach.call($('ppTg').children,function(x){x.classList.toggle('on',x===b)});render()});
-render();
-
-/* mobil: tečky pod posuvníkem lodí */
-var track=$('ppBoats'),dots=$('ppDots');
-cards.forEach(function(c,i){var d=document.createElement('button');d.type='button';d.setAttribute('aria-label','Loď '+(i+1));
- d.addEventListener('click',function(){track.scrollTo({left:c.offsetLeft-track.offsetLeft-18,behavior:reduce?'auto':'smooth'})});dots.appendChild(d)});
-function dotSync(){var step=(cards[1].offsetLeft-cards[0].offsetLeft)||1,i=Math.max(0,Math.min(cards.length-1,Math.round(track.scrollLeft/step)));
- [].forEach.call(dots.children,function(d,k){d.classList.toggle('on',k===i)})}
-track.addEventListener('scroll',function(){requestAnimationFrame(dotSync)},{passive:true});dotSync();
+/* karty lodí: ceny a nabídka podle ceníku (stejná data jako rezervace a administrace) */
+var T=function(x){return window.KKL&&KKL.t?KKL.t(x):x},DEN=function(){return window.KKL&&KKL.pl?KKL.pl(1,'den','dny','dní'):'den'},fk=function(v){return (+v||0).toLocaleString('cs-CZ')+' Kč'};
+function lodeKarty(){var box=$('pqLode');if(!box||!window.KKC)return;
+ var L=KKC.kat('lode').filter(function(p){return p.skryt!==1&&p.rez!==0});if(!L.length)return;
+ var vz=box.querySelectorAll('.pq-c'),ik={};[].forEach.call(vz,function(c){var b=c.querySelector('[data-rzlod]');if(b)ik[b.dataset.rzlod]=c.querySelector('.pq-ic').innerHTML});
+ var ikona=function(p){if(ik[p.k])return ik[p.k];var o=+p.osob||2;if(o<=3)return ik.kanoe||'';var w=46+Math.min(o,8)*8;return '<svg viewBox="0 0 120 44" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="'+(120-w)/2+'" y="14" width="'+w+'" height="26" rx="13"/><path d="M75 4 60 30" opacity=".85"/><path d="M71 2l8 6" opacity=".85"/></svg>'};
+ var best=null,bv=1e9;L.forEach(function(p){var v=(+p.a||0)/(+p.osob||1);if(p.osob&&v<bv){bv=v;best=p.k}});
+ box.innerHTML=L.map(function(p){var b=p.b==null?p.a:p.b;
+  return '<article class="pq-c'+(p.k===best?' top':'')+'">'+(p.k===best?'<span class="pq-tag">'+T('Nejlevnější na osobu')+'</span>':'')+'<div class="pq-ic">'+ikona(p)+'</div><h4>'+T(p.n)+'</h4><p class="pq-o">'+T(p.pozn||'')+'</p>'+
+   '<div class="pq-p"><span><b>'+fk(p.a)+'</b> / '+DEN()+'</span>'+(b!==p.a?'<small>'+T('od 3 dnů')+' '+fk(b)+' / '+DEN()+'</small>':'')+'</div>'+
+   '<a class="pq-b" href="#rezervace" data-rzlod="'+p.k+'">'+T('Rezervovat')+'</a></article>'}).join('')}
+lodeKarty();window.KKPela={render:lodeKarty};
 
 /* výzva: fotka z webu v pozadí */
-var ph=document.querySelector('img[data-img="kemp-reka"]'),cta=$('ppCta');
-if(ph&&cta&&ph.getAttribute('src'))cta.style.backgroundImage='url("'+ph.getAttribute('src')+'")';
 
 /* jemný posun fotky v úvodu */
 var hero=sec.querySelector('.pl-hero'),img=hero&&hero.querySelector('img');

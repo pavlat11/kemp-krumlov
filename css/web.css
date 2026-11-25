@@ -1107,7 +1107,7 @@ footer.ft{background:var(--deep);color:rgba(255,255,255,.66);padding:0 0 32px;fo
 @media(max-width:760px){.ft .foot-sky svg{height:96px}}
 
 /* ===== KONTAKT: fotka v pozadí ===== */
-.kt{background:#0b2419 url("../img/inl-01.webp") center 38%/cover no-repeat;isolation:isolate;overflow:hidden}
+.kt{background:#0b2419 image-set(url("../img/inl-01-1024.webp") 1x,url("../img/inl-01.webp") 2x) center 38%/cover no-repeat;isolation:isolate;overflow:hidden}
 .kt::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(180deg,rgba(11,36,25,.80) 0%,rgba(11,36,25,.60) 42%,rgba(11,36,25,.88) 100%)}
 .kt::after{content:"";position:absolute;left:0;right:0;bottom:0;height:170px;z-index:-1;background:linear-gradient(180deg,rgba(250,246,238,0),var(--cream) 92%);pointer-events:none}
 .kt .wrap{position:relative;z-index:1}
@@ -1533,7 +1533,7 @@ section#o-kempu.ok2::before,section#o-kempu.ok2::after{display:none!important}
 @media not all{#ubytovani .ub-card,#ubytovani .ub-media img{transition:none!important;transform:none!important;opacity:1!important}}
 
 /* ===== ubytovani-bg ===== */
-#ubytovani.ub-sec{--ub-bg:url("../img/inl-12.webp");background:#0b2419 center 60%/cover no-repeat}
+#ubytovani.ub-sec{--ub-bg:image-set(url("../img/inl-12-1024.webp") 1x,url("../img/inl-12.webp") 2x);background:#0b2419 center 60%/cover no-repeat}
 #ubytovani.ub-sec::before{content:"";position:absolute;inset:0;width:auto;height:auto;border-radius:0;left:0;top:0;z-index:0;
  background:linear-gradient(180deg,rgba(8,24,17,.88) 0%,rgba(8,24,17,.55) 30%,rgba(8,24,17,.45) 65%,rgba(8,24,17,.85) 100%),
  radial-gradient(ellipse at 50% 60%,rgba(8,24,17,0) 0%,rgba(8,24,17,.35) 100%)}
@@ -1564,7 +1564,7 @@ h1 em:not(.hero *),h2 em:not(.hero *),h3 em:not(.hero *){font-style:normal!impor
 .btn,button,.ub-cta,.ub-headbtn{font-weight:700}
 
 /* ===== rezervace-css ===== */
-#rezervace.rz{--rz-bg:url("../img/inl-13.webp")}
+#rezervace.rz{--rz-bg:image-set(url("../img/inl-13-1024.webp") 1x,url("../img/inl-13.webp") 2x)}
 #rezervace.rz{--rz-f:#0b2419;--rz-f2:#123426;--rz-sun:#f4a64a;--rz-sun2:#ffc978;--rz-cream:#f7f2e8;--rz-line:#e7e0d2;--rz-mut:#6b756f;
 position:relative;overflow:clip;color:#0b2419;padding:clamp(80px,9vw,130px) 0 clamp(70px,8vw,110px);background:#0b2419 var(--rz-bg) center 65%/cover no-repeat;scroll-margin-top:70px}
 #rezervace.rz::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,24,17,.94) 0%,rgba(8,24,17,.62) 26%,rgba(8,24,17,.55) 60%,rgba(8,24,17,.94) 100%)}
@@ -3186,3 +3186,482 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 #rezervace .rz-x.ne:hover{border-color:var(--rz-line)}
 #rezervace .rz-x.ne .rz-st{visibility:hidden}
 #rezervace .rz-x.ne .rz-xne{color:#9a3b1e;font-weight:700}
+
+/* rezervace – lodě a doprava (půjčovna) */
+.rz-lod-l{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.rz-lod{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:14px 16px;border:1.5px solid #ece5d7;border-radius:18px;background:#fff;transition:border-color .2s,box-shadow .2s,background .2s}
+.rz-lod.on{border-color:#173b2a;background:#fbf8f2;box-shadow:0 10px 24px -16px #173b2a99}
+.rz-lod.busy{opacity:.55}
+.rz-lod .tx{display:flex;flex-direction:column;gap:2px;min-width:0}
+.rz-lod .tx b{font-size:17px;color:#173b2a}
+.rz-lod .tx small{font-size:13px;color:#6b766f}
+.rz-lod .fr{font-style:normal;font-size:12px;font-weight:800;color:#2f8f5b}
+.rz-lod.busy .fr{color:#9a5a0c}
+.rz-lod .pr{text-align:right;display:flex;flex-direction:column;gap:1px}
+.rz-lod .pr strong{font-size:17px;color:#0b2419}
+.rz-lod .pr small{font-size:12px;color:#6b766f}
+.rz-lod .rz-st{grid-column:1/-1;justify-content:flex-end;margin-top:4px}
+.rz-lod-o{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px;padding:18px;border-radius:18px;background:#f7f3ea;border:1.5px solid #ece5d7}
+.rz-lf{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rz-lf>span{font-size:13px;font-weight:800;color:#0b2419}
+.rz-lf select{width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid #e2dacb;border-radius:14px;background:#fff;font:inherit;font-size:16px;color:#0b2419}
+.rz-lf select:focus{outline:none;border-color:#0b2419;box-shadow:0 0 0 4px rgba(244,166,74,.3)}
+.rz-lf .rz-st{margin-top:0}
+.rz-ldp{grid-column:1/-1;display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:#fff;border:1.5px solid #e2dacb;cursor:pointer}
+.rz-ldp input{width:22px;height:22px;margin:1px 0 0;accent-color:#173b2a;flex:none}
+.rz-ldp span{display:flex;flex-direction:column;gap:2px}
+.rz-ldp b{font-size:15px;color:#0b2419}
+.rz-ldp small{font-size:13px;color:#6b766f}
+.rz-ldp.ne{opacity:.6;cursor:default}
+.rz-lod-i{grid-column:1/-1;margin:0;font-size:13px;color:#6b766f}
+.rz-zal{margin:0 24px 6px;padding:10px 14px;border-radius:12px;background:#fdf0de;color:#7a4708;font-size:13.5px;font-weight:700}
+.rz-zal[hidden]{display:none}
+.rz-quick .rz-q0{border-style:dashed}
+@media(max-width:600px){.rz-lod-o{grid-template-columns:1fr;padding:14px}}
+
+/* rezervace – volba na začátku, nocleh k lodím, doprava jako vlastní krok */
+#rezervace [hidden]{display:none!important}
+.rz-volba{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.rz-vc{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;padding:26px 24px;border:2px solid #ece5d7;border-radius:24px;background:#fff;font:inherit;color:#0b2419;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .2s,background .2s}
+.rz-vc:hover,.rz-vc.on{border-color:#173b2a;background:#fbf8f2;box-shadow:0 16px 30px -20px #173b2a99;transform:translateY(-2px)}
+.rz-vc .ic{display:grid;place-items:center;width:64px;height:64px;border-radius:18px;background:#fff4e4;color:#b56a10}.rz-vc .ic svg{width:34px;height:34px}
+.rz-vc b{font-size:22px;line-height:1.2}.rz-vc small{font-size:14.5px;line-height:1.5;color:#6b766f}
+.rz-vc em{margin-top:8px;font-style:normal;font-weight:800;font-size:15px;color:#fff;background:#f4a64a;border-radius:999px;padding:10px 18px}
+.rz-vc:focus-visible,.rz-dv-c:focus-visible,.rz-nc:focus-visible{outline:3px solid #f4a64a;outline-offset:3px}
+#rezervace.na-volbe .rz-bar{display:none}
+#rezervace.mod-lod .rz-hint{display:none}
+.rz-noci{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.rz-nc{display:flex;flex-direction:column;gap:3px;text-align:left;padding:16px 18px 16px 52px;border:2px solid #ece5d7;border-radius:18px;background:#fff;font:inherit;color:#0b2419;cursor:pointer;position:relative;transition:.2s}
+.rz-nc::before{content:"";position:absolute;left:18px;top:50%;width:22px;height:22px;margin-top:-11px;border-radius:7px;border:2px solid #b9b1a0;background:#fff}
+.rz-nc.on{border-color:#173b2a;background:#fbf8f2}.rz-nc.on::before{background:#173b2a;border-color:#173b2a;box-shadow:inset 0 0 0 4px #fff}
+.rz-nc b{font-size:16px}.rz-nc small{font-size:13px;color:#6b766f}.rz-nc:disabled{opacity:.5;cursor:default}
+.rz-dv-tr{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:14px 18px;border-radius:16px;background:#0b2419;color:#fff;margin-bottom:16px;font-size:15px}
+.rz-dv-tr b{font-size:18px;color:#ffc978}.rz-dv-tr i{font-style:normal;color:#9fc2ad}.rz-dv-tr small{margin-left:auto;color:#9fc2ad;font-size:13.5px}
+.rz-dv-o{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.rz-dv-c{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:22px;border:2px solid #ece5d7;border-radius:22px;background:#fff;font:inherit;color:#0b2419;cursor:pointer;position:relative;transition:border-color .2s,box-shadow .2s,background .2s}
+.rz-dv-c::after{content:"";position:absolute;right:18px;top:18px;width:24px;height:24px;border-radius:50%;border:2px solid #b9b1a0;background:#fff}
+.rz-dv-c.on{border-color:#173b2a;background:#fbf8f2;box-shadow:0 14px 28px -18px #173b2a99}.rz-dv-c.on::after{border-color:#173b2a;background:#173b2a;box-shadow:inset 0 0 0 5px #fff}
+.rz-dv-c.ano.on{border-color:#e08a1e;background:#fff4e4}.rz-dv-c.ano.on::after{border-color:#e08a1e;background:#e08a1e}
+.rz-dv-c .ic{display:grid;place-items:center;width:56px;height:56px;border-radius:16px;background:#f1ece2;color:#173b2a}.rz-dv-c.ano .ic{background:#fff4e4;color:#b56a10}.rz-dv-c .ic svg{width:30px;height:30px}
+.rz-dv-c b{font-size:19px;line-height:1.25}.rz-dv-c small{font-size:14px;color:#6b766f;line-height:1.45}.rz-dv-c em{font-style:normal;font-weight:800;font-size:20px;margin-top:6px}
+.rz-dv-c:disabled{opacity:.55;cursor:default}
+.rz-dv-cas{margin-top:16px;padding:18px;border-radius:18px;background:#fff4e4;border:2px solid #f4a64a}
+.rz-dv-cas>b{display:block;font-size:16px;margin-bottom:10px;color:#0b2419}.rz-dv-cas>div{display:flex;flex-wrap:wrap;gap:8px}
+.rz-dv-cas button{min-width:66px;padding:10px 12px;border:1.5px solid #e2c898;border-radius:12px;background:#fff;font:inherit;font-weight:800;font-size:15px;color:#0b2419;cursor:pointer}
+.rz-dv-cas button.on{background:#0b2419;border-color:#0b2419;color:#fff}
+.rz-dv-n{margin:12px 0 0;font-size:14px;font-weight:700;color:#7a4708}.rz-dv-n:empty{display:none}
+@media(max-width:700px){.rz-volba,.rz-dv-o,.rz-noci{grid-template-columns:1fr}.rz-vc{padding:20px}.rz-vc b{font-size:20px}}
+
+/* nabídka lodí a dopravy (krok 5), nocleh k lodím */
+.rz-nab{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.rz-nb{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;text-align:left;padding:18px 20px;border:2px solid #ece5d7;border-radius:20px;background:#fff;font:inherit;color:#0b2419;cursor:pointer;transition:border-color .2s,background .2s,box-shadow .2s}
+.rz-nb:hover{border-color:#cdbf9f}
+.rz-nb.on{border-color:#e08a1e;background:#fff4e4;box-shadow:0 14px 28px -20px #e08a1eaa}
+.rz-nb .ic{display:grid;place-items:center;width:52px;height:52px;border-radius:15px;background:#f1ece2;color:#173b2a}.rz-nb.on .ic{background:#f4a64a;color:#0b2419}.rz-nb .ic svg{width:28px;height:28px}
+.rz-nb .tx{display:flex;flex-direction:column;gap:4px;min-width:0}.rz-nb b{font-size:18px;line-height:1.25}.rz-nb small{font-size:13.5px;line-height:1.45;color:#5f6b63}
+.rz-nb .ck{width:28px;height:28px;border-radius:9px;border:2px solid #b9b1a0;background:#fff;position:relative}
+.rz-nb.on .ck{background:#0b2419;border-color:#0b2419}.rz-nb.on .ck::after{content:"";position:absolute;left:8px;top:3px;width:7px;height:13px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg)}
+.rz-nb:focus-visible{outline:3px solid #f4a64a;outline-offset:3px}
+.rz-noci{display:block;margin-bottom:16px}.rz-noci .rz-nb{width:100%}
+.rz-nc-d{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px;padding:18px;border-radius:18px;background:#f7f3ea;border:1.5px solid #ece5d7}
+.rz-nc-i{grid-column:1/-1;margin:0;font-weight:800;font-size:14.5px;color:#173b2a}.rz-nc-i.zle{color:#b3261e}
+.rz-dv-kam{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:16px}
+@media(max-width:700px){.rz-nab,.rz-nc-d,.rz-dv-kam{grid-template-columns:1fr}.rz-nb{padding:16px}}
+
+/* nabídka lodí a dopravy – výrazné karty */
+.rz-nab{gap:16px}
+.rz-nab .rz-nb{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;border:0;border-radius:24px;overflow:hidden;background:#fff;box-shadow:0 0 0 2px #ece5d7,0 18px 36px -26px #0b241988;transition:transform .2s,box-shadow .2s}
+.rz-nab .rz-nb:hover{transform:translateY(-3px);box-shadow:0 0 0 2px #cdbf9f,0 24px 40px -24px #0b2419aa;border:0}
+.rz-nab .rz-nb.on{background:#fff;box-shadow:0 0 0 3px #173b2a,0 24px 40px -24px #173b2aaa}
+.rz-nb-t{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 22px;color:#fff}
+.rz-nb.lod .rz-nb-t{background:#12626f}.rz-nb.dop .rz-nb-t{background:#c9741a}
+.rz-nab .rz-nb .ic{width:72px;height:72px;border-radius:20px;background:rgba(255,255,255,.16);color:#fff}.rz-nab .rz-nb.on .ic{background:rgba(255,255,255,.16);color:#fff}.rz-nab .rz-nb .ic svg{width:46px;height:46px}
+.rz-nb .cn{display:flex;flex-direction:column;align-items:flex-end;text-align:right;line-height:1.1}
+.rz-nab .rz-nb .cn small{color:#fff;opacity:.85;font-size:13px;font-weight:700}.rz-nb .cn b{font-size:30px;font-weight:800;color:#fff;white-space:nowrap}.rz-nb .cn i{font-style:normal;font-size:13px;opacity:.9}
+.rz-nb .nd{font-size:22px;line-height:1.2;padding:18px 22px 0;color:#0b2419}
+.rz-nb .pr{padding:4px 22px 0;font-size:14.5px;font-weight:700;color:#5f6b63}
+.rz-nb ul{list-style:none;margin:0;padding:14px 22px 0;display:flex;flex-direction:column;gap:7px;font-size:15px;color:#24382e}
+.rz-nb li{display:flex;align-items:center;gap:9px}.rz-nb li svg{flex:none;width:18px;height:18px;padding:3px;border-radius:50%;background:#e6efe9;color:#173b2a;box-sizing:border-box}
+.rz-nb .cta{margin:18px 22px 22px;padding:14px 18px;border-radius:999px;background:#f4a64a;color:#0b2419;font-weight:800;font-size:16.5px;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;transition:background .2s}
+.rz-nb:hover .cta{background:#ffb866}
+.rz-nb .cta .a1{display:none;align-items:center;gap:8px}.rz-nb .cta .a1 svg{width:20px;height:20px}
+.rz-nb.on .cta{background:#173b2a;color:#fff}.rz-nb.on .cta .a0{display:none}.rz-nb.on .cta .a1{display:inline-flex}
+@media(max-width:700px){.rz-nb .cn b{font-size:26px}.rz-nb .nd{font-size:20px}}
+
+/* PE-LA zjednodušeně: karty lodí podle ceníku + rezervace */
+#pela .pl-hero{margin-bottom:-40px}
+#pela .pq{position:relative;z-index:2;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:22px}
+#pela .pq-c{position:relative;display:flex;flex-direction:column;padding:22px 20px 20px;border-radius:22px;background:#134043;border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 40px -24px rgba(0,0,0,.7);transition:transform .25s,border-color .25s}
+#pela .pq-c:hover{transform:translateY(-3px);border-color:rgba(255,210,63,.55)}
+#pela .pq-c.top{border-color:#ffd23f}
+#pela .pq-tag{position:absolute;top:-11px;left:18px;padding:4px 10px;border-radius:999px;background:#ffd23f;color:#0e2e30;font-size:11.5px;font-weight:800;letter-spacing:.02em}
+#pela .pq-ic{color:#7fd0d4;height:48px;margin-bottom:10px}#pela .pq-ic svg{height:100%;width:auto;max-width:100%}
+#pela .pq-c h4{margin:0;font-size:20px;color:#fff;font-weight:800}
+#pela .pq-o{margin:2px 0 14px;color:rgba(255,255,255,.7);font-size:14.5px}
+#pela .pq-p{margin-top:auto;display:flex;flex-direction:column;gap:2px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
+#pela .pq-p span{color:rgba(255,255,255,.75);font-size:14px}#pela .pq-p b{color:#ffd23f;font-size:24px;font-weight:800}
+#pela .pq-p small{color:rgba(255,255,255,.65);font-size:13px}
+#pela .pq-b{margin-top:14px;display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border-radius:999px;background:#ffd23f;color:#0e2e30;font-weight:800;font-size:15px;text-decoration:none;transition:background .2s,transform .2s}
+#pela .pq-b:hover{background:#ffe06e;transform:translateY(-1px)}#pela .pq-b:focus-visible{outline:3px solid #fff;outline-offset:2px}
+#pela .pq-inc{list-style:none;display:flex;flex-wrap:wrap;gap:10px 26px;margin:22px 0 0;padding:16px 20px;border-radius:18px;background:rgba(255,255,255,.06);font-size:15px;color:rgba(255,255,255,.88)}
+#pela .pq-inc li{display:flex;align-items:center;gap:8px}#pela .pq-inc svg{color:#ffd23f;flex:none}
+#pela .pq-inc .pq-open{margin-left:auto}#pela .pq-inc .pq-open b{color:#fff}
+@media(max-width:700px){#pela .pq-inc .pq-open{margin-left:0}}
+
+/* ubytování jen pro skupiny od X osob */
+.rz-row .bd.mo{background:#fff4e2;color:#8a4f0c}
+.rz-row.mo-ne{opacity:.55}.rz-row.mo-ne .rz-st{pointer-events:none;filter:grayscale(1)}
+.rz-row.mo-ne .bd.mo{opacity:1;font-weight:800}
+
+/* rezervační průvodce v2: spojené kroky, hláška u tlačítek, shrnutí před odesláním */
+#rezervace .rz-main>.rz-warn{margin:0 40px 14px;display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:14.5px;border:1.5px solid #f3c4b3;animation:rzIn .25s ease}
+#rezervace .rz-main>.rz-warn::before{content:"!";flex:none;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#a23b1e;color:#fff;font-weight:800;font-size:13px}
+#rezervace.wiz .rz-step.par{min-height:0}
+#rezervace.wiz .rz-step.sub{padding-top:14px;animation:none}
+#rezervace.wiz .rz-step.sub .rz-num{display:none}
+#rezervace.wiz .rz-step.sub .rz-sh{margin-bottom:16px;padding-top:22px;border-top:1.5px solid var(--rz-line)}
+#rezervace.wiz .rz-step.sub .rz-sh b{font-size:21px}
+#rezervace.wiz .rz-step.par[data-k=kdo]{padding-bottom:6px}
+#rezervace.wiz .rz-step.par[data-k=kdo] .rz-sh{margin-bottom:16px}
+#rezervace.wiz .rz-step.par[data-k=kdo] .rz-pc{flex-direction:row;flex-wrap:wrap;align-items:center;text-align:left;gap:4px 10px;padding:12px 14px;border-radius:16px}
+#rezervace.wiz .rz-step.par[data-k=kdo] .rz-pc .ic{display:none}
+#rezervace.wiz .rz-step.par[data-k=kdo] .rz-pc .tx{flex:1;min-width:90px;display:flex;flex-direction:column}
+#rezervace .rz-row .tg .bd.zle{background:#fde8e4;color:#a23b1e}
+.rz-rek{margin:0 0 22px;padding:18px 20px;border-radius:18px;background:#f8f5ee;border:1.5px solid var(--rz-line)}
+.rz-rek h3{margin:0 0 8px;font-size:15px;font-weight:800;color:#0b2419}
+.rz-rek dl{margin:0}
+.rz-rek dl>div{display:grid;grid-template-columns:130px minmax(0,1fr) auto;gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px solid #e9e2d3;font-size:14.5px}
+.rz-rek dt{color:var(--rz-mut);font-weight:600}.rz-rek dd{margin:0;font-weight:700;color:#0b2419}
+.rz-rek button{border:0;background:none;padding:2px 4px;font:inherit;font-size:13px;font-weight:700;color:#b0661a;text-decoration:underline;cursor:pointer}
+.rz-rek-c{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0 0;font-size:15px;font-weight:700}
+.rz-rek-c b{font-size:24px;font-weight:800;color:#0b2419}.rz-rek-c small{font-weight:600;color:#2f7d4c;margin-left:6px}
+.rz-rek-z{margin:10px 0 0;padding:10px 14px;border-radius:12px;background:#fdf0dc;color:#7a4a0c;font-size:14px;font-weight:600}
+.rz-rek-k{margin:0 0 12px;font-size:17px;font-weight:800;color:#0b2419}
+@media(max-width:900px){#rezervace .rz-main>.rz-warn{margin:0 18px 12px}.rz-rek{padding:14px}.rz-rek dl>div{grid-template-columns:1fr auto}.rz-rek dt{grid-column:1/-1;font-size:12.5px;margin-bottom:-6px}}
+#rezervace .rz-row .rt .pr strong{white-space:nowrap}.rz-rek-c small{white-space:nowrap}
+
+/* nabídka lodí a dopravy v2 – fotka, cena v bublině, výrazné tlačítko */
+.rz-nab .rz-nb.v2{border-radius:26px;box-shadow:0 0 0 1.5px #e6dfd0,0 22px 44px -28px #0b2419aa}
+.rz-nab .rz-nb.v2:hover{transform:translateY(-4px);box-shadow:0 0 0 1.5px #cdbf9f,0 30px 50px -26px #0b2419cc}
+.rz-nab .rz-nb.v2.on{box-shadow:0 0 0 3px #2f7d4c,0 26px 44px -26px #2f7d4caa}
+.rz-nb.v2 .rz-nb-t{position:relative;display:block;height:190px;padding:0;background:#12626f center/cover no-repeat;overflow:hidden}
+.rz-nb.v2.lod .rz-nb-t{background-image:linear-gradient(180deg,rgba(8,40,46,.05) 30%,rgba(8,40,46,.88)),url("../img/inl-02-1024.webp");background-position:center,18% center}
+.rz-nb.v2.dop .rz-nb-t{background-image:linear-gradient(180deg,rgba(74,38,4,.1) 30%,rgba(74,38,4,.9)),image-set(url("../img/inl-01-1024.webp") 1x,url("../img/inl-01.webp") 2x);background-position:center,70% 85%}
+.rz-nb.v2 .rz-nb-t{transition:background-size .5s}
+.rz-nb.v2 .tag{position:absolute;left:14px;top:14px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.94);color:#0b2419;font-size:12.5px;font-weight:800;letter-spacing:.01em}
+.rz-nb.v2 .cn{position:absolute;right:14px;top:14px;flex-direction:row;align-items:baseline;gap:5px;padding:7px 14px;border-radius:16px;background:#f4a64a;color:#0b2419;box-shadow:0 10px 22px -10px #000a}
+.rz-nab .rz-nb.v2 .cn small{color:#0b2419;opacity:.8;font-size:12.5px}
+.rz-nb.v2 .cn b{font-size:22px;color:#0b2419}
+.rz-nb.v2 .cn i{font-size:12px;font-weight:700;opacity:.8;color:#0b2419}
+.rz-nb.v2 .hd{position:absolute;left:18px;right:18px;bottom:16px;display:flex;align-items:center;gap:12px;text-align:left}
+.rz-nab .rz-nb.v2 .ic,.rz-nab .rz-nb.v2.on .ic{flex:none;width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.2);backdrop-filter:blur(6px);color:#fff}
+.rz-nab .rz-nb.v2 .ic svg{width:28px;height:28px}
+.rz-nb.v2 .nd{padding:0;color:#fff;font-size:23px;line-height:1.15;text-shadow:0 2px 12px #0008}
+.rz-nb.v2 .pr{padding:16px 22px 0;font-size:14.5px;color:#0b2419;font-weight:800}
+.rz-nb.v2 .pr:empty{display:none}
+.rz-nb.v2 ul{padding:12px 22px 0;gap:9px;font-size:15px}
+.rz-nb.v2 li svg{background:#dff1e5;color:#2f7d4c;width:20px;height:20px}
+.rz-nb.v2 .cta{margin:20px 18px 18px;padding:15px 18px;font-size:16.5px;box-shadow:0 12px 22px -12px #e08a1e}
+.rz-nb.v2 .cta i{font-style:normal;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#0b2419;color:#f4a64a;font-size:17px;line-height:1}
+.rz-nb.v2.on .cta{background:#e3f3e8;color:#1f6a3d;box-shadow:none}
+.rz-nb.v2.on .cta u{font-weight:600;color:#5f6b63}
+.rz-nb.v2.on .cta .a1 svg{color:#2f7d4c}
+@media(max-width:900px){.rz-nb.v2 .rz-nb-t{height:150px}.rz-nb.v2 .nd{font-size:20px}.rz-nb.v2 .tag{font-size:11.5px;padding:5px 10px}.rz-nb.v2 .cn b{font-size:19px}}
+
+/* stepper osob na střed */
+#rezervace .rz-pc .rz-st{justify-content:center;align-self:center;margin-left:auto;margin-right:auto}
+#rezervace .rz-pc .tx{align-items:center;text-align:center}
+#rezervace .rz-pc{justify-content:space-between}
+@media(max-width:900px){#rezervace .rz-pc .tx{align-items:flex-start;text-align:left}#rezervace .rz-pc .rz-st{margin-right:0}}
+/* nocleh k lodím – mini kalendář */
+.rz-nc-d.v2{display:block;padding:18px 20px}
+.rz-ncq{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.rz-ncq button{padding:9px 14px;border-radius:999px;border:1.5px solid #e2d9c7;background:#fff;font:inherit;font-size:14px;font-weight:700;color:#0b2419;cursor:pointer;transition:.2s}
+.rz-ncq button:hover:not(:disabled){border-color:#0b2419}
+.rz-ncq button.on{background:#f4a64a;border-color:#f4a64a}
+.rz-ncq button:disabled{opacity:.4;cursor:default}
+.rz-ncc{padding:12px;border-radius:16px;background:#fff;border:1.5px solid #ece5d7}
+.rz-ncw,.rz-ncg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.rz-ncw span{text-align:center;font-size:11.5px;font-weight:800;text-transform:uppercase;color:#8a948d;padding:2px 0 6px}
+.rz-ncg button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;height:46px;border:0;border-radius:12px;background:none;font:inherit;color:#0b2419;cursor:pointer;transition:background .15s}
+.rz-ncg button b{font-size:15px;font-weight:700;line-height:1}
+.rz-ncg button small{font-size:10px;font-weight:700;color:#8a948d;line-height:1.2}
+.rz-ncg button:hover:not(:disabled){background:#f4ede0}
+.rz-ncg button:disabled{color:#c6c9c4;cursor:default}
+.rz-ncg button.lod{background:#e2f1f3}
+.rz-ncg button.lod i{position:absolute;bottom:5px;width:14px;height:3px;border-radius:2px;background:#12626f}
+.rz-ncg button.in{background:#fde6c4}
+.rz-ncg button.from,.rz-ncg button.to{background:#0b2419;color:#fff}
+.rz-ncg button.from small,.rz-ncg button.to small{color:#f4c98d}
+.rz-ncg button.from i,.rz-ncg button.to i{background:#f4a64a}
+.rz-ncg button:focus-visible{outline:3px solid #f4a64a;outline-offset:1px}
+.rz-ncl{display:flex;align-items:center;gap:7px;margin:10px 2px 0;font-size:12.5px;color:#6b766f;font-weight:600}
+.rz-ncl i{width:16px;height:10px;border-radius:3px;background:#e2f1f3;box-shadow:inset 0 -3px 0 #12626f}
+.rz-nc-s{display:flex;align-items:center;justify-content:center;gap:18px;margin:14px 0 0}
+.rz-nc-s>div{display:flex;flex-direction:column;min-width:110px}
+.rz-nc-s>div:last-child{text-align:right}
+.rz-nc-s small{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#8a948d}
+.rz-nc-s b{font-size:16px;font-weight:800;color:#0b2419}.rz-nc-s b.wait{color:#e08a1e}
+.rz-nc-d.v2 .rz-nc-i{margin:10px 0 0;text-align:center;color:#b0661a}
+.rz-nc-d.v2 .rz-nc-i[hidden]{display:none}
+@media(max-width:900px){.rz-nc-d.v2{padding:14px}.rz-ncc{padding:8px}.rz-ncg button{height:42px}.rz-nc-s>div{min-width:0}}
+@media(max-width:900px){.rz-ncq{gap:6px}.rz-ncq button{padding:7px 11px;font-size:13px}}
+
+.rz-dlg-x,.gl-x,.gl-p,.gl-n{display:grid!important;place-items:center;padding:0!important;line-height:0!important}
+.rz-dlg-x svg,.gl-x svg,.gl-p svg,.gl-n svg{display:block}
+.am-x{display:grid!important;place-items:center;padding:0!important;line-height:0!important}
+
+/* nocleh k lodím v3 – jednoduše: noci před a po plavbě */
+.rz-nc-d.v3{display:block;padding:18px}
+.rz-ntl{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch}
+.rz-ntb,.rz-ntl-l{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;padding:16px 12px 14px;border-radius:18px;background:#fff;border:2px solid #ece5d7;transition:.2s}
+.rz-ntb.on{border-color:#2f7d4c;background:#f1f8f3}
+.rz-ntb .ic,.rz-ntl-l .ic{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:#f1ece2;color:#173b2a;margin-bottom:2px}
+.rz-ntb.on .ic{background:#2f7d4c;color:#fff}
+.rz-ntb .ic svg,.rz-ntl-l .ic svg{width:22px;height:22px}
+.rz-ntb b,.rz-ntl-l b{font-size:15px;font-weight:800;color:#0b2419}
+.rz-ntb small,.rz-ntl-l small{font-size:13px;color:#6b766f;min-height:18px}
+.rz-ntb .rz-st{display:flex!important;visibility:visible!important;pointer-events:auto!important;filter:none!important;justify-content:center;margin-top:8px}
+.rz-ntl-l{justify-content:center;background:#e2f1f3;border-color:#bfe0e4;min-width:150px}
+.rz-ntl-l .ic{background:#12626f;color:#fff}
+.rz-nts{margin:14px 0 0;text-align:center;font-size:15px;color:#24382e}
+.rz-nts b{color:#0b2419}.rz-nts small{color:#6b766f;font-size:13px}
+.rz-nc-d.v3 .rz-nc-i{margin:8px 0 0;text-align:center}
+.rz-nc-d.v3 .rz-nc-i[hidden]{display:none}
+@media(max-width:700px){.rz-ntl{grid-template-columns:1fr;gap:8px}.rz-ntl-l{flex-direction:row;gap:10px;padding:10px 14px}.rz-ntl-l .ic{margin:0;width:32px;height:32px}.rz-ntl-l small{min-height:0}.rz-ntb{display:grid;grid-template-columns:minmax(0,1fr) auto;text-align:left;align-items:center;gap:2px 10px;padding:12px 14px}.rz-ntb .ic{display:none}.rz-ntb b{grid-column:1}.rz-ntb small{grid-column:1;min-height:0}.rz-ntb .rz-st{grid-column:2;grid-row:1/3;margin:0}}
+
+/* nocleh k lodím v4 – běžný kalendář, klikání nocí */
+.rz-nc-d.v4{display:block;padding:18px 20px}
+.rz-nch{margin:0 0 12px;font-size:15px;font-weight:800;color:#0b2419;display:flex;flex-direction:column;gap:2px}
+.rz-nch small{font-size:13px;font-weight:500;color:#6b766f}
+.rz-ncc4{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;padding:14px;border-radius:16px;background:#fff;border:1.5px solid #ece5d7}
+.rz-ncm-h{display:block;text-align:center;font-size:15px;font-weight:800;color:#0b2419;margin:0 0 8px;text-transform:capitalize}
+.rz-ncw4,.rz-ncg4{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.rz-ncw4 span{text-align:center;font-size:11px;font-weight:800;text-transform:uppercase;color:#8a948d;padding:0 0 4px}
+.rz-ncg4 button{position:relative;height:42px;border:1.5px solid transparent;border-radius:10px;background:none;font:inherit;color:#0b2419;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s}
+.rz-ncg4 button b{font-size:14.5px;font-weight:700}
+.rz-ncg4 button:hover:not(:disabled){border-color:#2f7d4c;background:#f1f8f3}
+.rz-ncg4 button:disabled{color:#cfd2cc;cursor:default}
+.rz-ncg4 button.td b{text-decoration:underline;text-underline-offset:3px}
+.rz-ncg4 button.lod{background:#e2f1f3}
+.rz-ncg4 button i{position:absolute;display:grid;place-items:center;line-height:0}
+.rz-ncg4 button i.lo{right:3px;top:3px;color:#12626f}.rz-ncg4 button i.lo svg{width:12px;height:12px}
+.rz-ncg4 button i.mo{left:4px;top:4px;color:#fff}.rz-ncg4 button i.mo svg{width:10px;height:10px}
+.rz-ncg4 button.sp{background:#2f7d4c;color:#fff;border-color:#2f7d4c}
+.rz-ncg4 button.sp i.lo{color:#bfe6ec}
+.rz-ncg4 button.sp:hover{background:#276b40}
+.rz-ncl4{display:flex;flex-wrap:wrap;gap:16px;margin:10px 2px 0;font-size:13px;color:#5f6b63;font-weight:600}
+.rz-ncl4 span{display:flex;align-items:center;gap:6px}
+.rz-ncl4 i{width:16px;height:16px;border-radius:5px}
+.rz-ncl4 i.s{background:#2f7d4c}.rz-ncl4 i.l{background:#e2f1f3;box-shadow:inset 0 0 0 1.5px #12626f55}
+.rz-nc-d.v4 .rz-nts{margin:14px 0 0;padding:12px 14px;border-radius:14px;background:#fff;border:1.5px solid #ece5d7;text-align:center;font-size:15px}
+.rz-nc-d.v4 .rz-nts b.n{color:#2f7d4c}
+.rz-nc-d.v4 .rz-nc-i{margin:8px 0 0;text-align:center}.rz-nc-d.v4 .rz-nc-i[hidden]{display:none}
+@media(max-width:700px){.rz-nc-d.v4{padding:14px}.rz-ncc4{padding:10px;grid-template-columns:1fr}.rz-ncg4 button{height:40px}}
+.rz-ncg4 button.sp.lod{box-shadow:inset 0 -4px 0 #7fd0db}.rz-ncc4:has(.rz-ncm:only-child){grid-template-columns:minmax(0,420px);justify-content:center}
+/* hláška vždy na očích: drží se u spodního okraje obrazovky, dokud je formulář vidět */
+#rezervace .rz-main>.rz-warn{position:sticky;bottom:16px;z-index:6;box-shadow:0 14px 30px -12px rgba(162,59,30,.55);background:#fff1ec}
+@media(max-width:900px){#rezervace .rz-main>.rz-warn{bottom:96px}}
+/* rezervace – vyzvednutí v cíli (druhý blok dopravy) */
+.rz-dv-z{margin-top:22px;padding-top:22px;border-top:2px dashed #e6dcc8}
+#rzDvA[hidden]+.rz-dv-z{margin-top:0;padding-top:0;border-top:0}
+.rz-dv-tr.zp{background:#1f4f5a}.rz-dv-tr.zp b{color:#bfe9ef}
+.rz-gdpr{margin:14px 0 0;font-size:14px;color:#6b766f}.rz-gdpr a{color:#1f6d77;font-weight:700}
+
+/* ===== Ceník – dialog (přehledné bloky) ===== */
+#rzPrice{width:min(760px,calc(100% - 24px))}
+#rzPrice .rz-dlg-in{padding:24px 28px 22px}
+.ck{display:flex;flex-direction:column;gap:16px}
+.ck-nav{position:sticky;top:-24px;z-index:2;display:flex;gap:6px;overflow-x:auto;margin:0 -28px;padding:10px 28px;background:#faf7f0;scrollbar-width:none}
+.ck-nav::-webkit-scrollbar{display:none}
+.ck-nav a{display:inline-flex;align-items:center;gap:6px;flex:none;padding:8px 13px;border-radius:999px;background:#fff;border:1.5px solid #eee7da;color:#0b2419;font-size:13.5px;font-weight:700;text-decoration:none;white-space:nowrap}
+.ck-nav a svg{width:16px;height:16px;color:#b56a10}
+.ck-nav a:hover{border-color:#f4a64a;background:#fff7ec}
+.ck-sl{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;padding:12px 16px;border-radius:16px;background:linear-gradient(135deg,#fff3df,#ffe8c4);color:#7a4508}
+.ck-sl b{font-size:14.5px;font-weight:800}
+.ck-sl span{display:flex;flex-wrap:wrap;gap:6px}
+.ck-sl i{font-style:normal;padding:4px 10px;border-radius:999px;background:#fff;font-size:13px;font-weight:700;color:#9a560a}
+.ck-s{padding:0!important;margin:0;min-height:0;scroll-margin-top:60px;border-radius:18px;background:#fff;border:1px solid #eee7da;overflow:hidden}
+.ck-h{display:flex;align-items:center;gap:12px;margin:0;padding:14px 18px;background:#f6f1e6;font-size:17px;font-weight:800;letter-spacing:-.01em;color:#0b2419}
+.ck-h small{display:block;font-size:12.5px;font-weight:600;color:#6b756f}
+.ck-ic{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:12px;background:#0b2419;color:#f4a64a}
+.ck-t{padding:4px 18px 8px}
+.ck-r{display:grid;grid-template-columns:minmax(0,1fr) 120px 120px;align-items:center;gap:12px;padding:11px 0;border-top:1px solid #f1ece2}
+.ck-r:first-child{border-top:0}
+.ck-rh{padding:10px 0 6px;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#b56a10}
+.ck-rh span{text-align:right}
+.ck-rh small{display:block;font-size:11.5px;font-weight:600;text-transform:none;letter-spacing:0;color:#6b756f}
+.ck-r .ck-1{grid-column:2/4;text-align:right}
+.ck-n{font-size:15.5px;font-weight:700;color:#0b2419}
+.ck-n small{display:block;margin-top:2px;font-size:12.5px;font-weight:500;color:#6b756f}
+.ck-r b{text-align:right;font-size:16px;font-weight:800;color:#0b2419;font-variant-numeric:tabular-nums}
+.ck-r b+b{color:#2d6a4f}
+.ck-r b.ck-st{color:#0b2419}
+.ck-rs b.ck-1{font-size:14.5px;font-weight:700}
+.ck-sub{margin:8px 0 0;padding:12px 0 2px;border-top:1px dashed #e4dccb;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#b56a10}
+.ck-sub+.ck-r{border-top:0}
+#rzPrice .note{margin:16px 2px 0;font-size:12.5px;color:#6b756f}
+@media (max-width:560px){
+  #rzPrice .rz-dlg-in{padding:18px 16px 18px}
+  .ck-nav{margin:0 -16px;padding:8px 16px;top:-18px}
+  .ck-t{padding:2px 14px 6px}.ck-h{padding:12px 14px;font-size:16px}
+  .ck-r{grid-template-columns:minmax(0,1fr) 78px 78px;gap:8px}
+  .ck-r b{font-size:14.5px}.ck-n{font-size:14.5px}
+}
+
+/* ===== Rezervace – lodě a doprava (v3: zážitek, ne reklama) ===== */
+.rz-nab .rz-nb.v3{position:relative;border:0;border-radius:24px;background:#fff;box-shadow:0 0 0 1.5px #e6dfd0;transition:box-shadow .2s,transform .2s}
+.rz-nab .rz-nb.v3:hover{transform:translateY(-2px);box-shadow:0 0 0 2px #cdbf9f,0 18px 36px -24px #0b2419aa}
+.rz-nab .rz-nb.v3.on{box-shadow:0 0 0 3px #2f7d4c,0 20px 40px -26px #2f7d4caa}
+.rz-nb.v3 .rz-nb-t{position:relative;display:block;height:200px;padding:0;overflow:hidden;background:#12626f center/cover no-repeat}
+.rz-nb.v3.lod .rz-nb-t{background-image:linear-gradient(180deg,rgba(6,30,22,0) 45%,rgba(6,30,22,.85)),url("../img/nab-lode.svg");background-position:center 30%}
+.rz-nb.v3.dop .rz-nb-t{background-image:linear-gradient(180deg,rgba(30,20,6,0) 45%,rgba(30,20,6,.85)),url("../img/nab-doprava.svg");background-position:center 30%}
+.rz-nb.v3 .tag{position:absolute;left:14px;top:14px;padding:5px 11px;border-radius:999px;background:rgba(11,36,25,.72);backdrop-filter:blur(6px);color:#fff;font-size:12px;font-weight:800;letter-spacing:.02em}
+.rz-nb.v3.lod .tag{background:#f4a64a;color:#0b2419}
+.rz-nb.v3 .ck3{position:absolute;right:14px;top:14px;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.25);border:2px solid #fff;backdrop-filter:blur(6px);color:transparent;transition:.2s}
+.rz-nb.v3 .ck3 svg{width:18px;height:18px}
+.rz-nb.v3.on .ck3{background:#2f7d4c;border-color:#2f7d4c;color:#fff;transform:scale(1.08)}
+.rz-nb.v3 .hd{position:absolute;left:18px;right:18px;bottom:16px;display:flex;align-items:flex-end;gap:12px;text-align:left;color:#fff}
+.rz-nab .rz-nb.v3 .ic,.rz-nab .rz-nb.v3.on .ic{flex:none;width:44px;height:44px;border-radius:13px;background:rgba(255,255,255,.18);backdrop-filter:blur(6px);color:#fff}
+.rz-nab .rz-nb.v3 .ic svg{width:26px;height:26px}
+.rz-nb.v3 .nd{display:block;padding:0;color:#fff;font-size:24px;line-height:1.1;letter-spacing:-.02em;text-shadow:0 2px 12px #0007}
+.rz-nb.v3 .sl{display:block;margin-top:4px;font-size:13.5px;font-weight:500;line-height:1.35;color:rgba(255,255,255,.92)}
+.rz-nb.v3 .rt{display:flex;align-items:center;gap:10px;margin:16px 20px 0;font-size:13px;font-weight:700;color:#3d4b43}
+.rz-nb.v3 .rt i{font-style:normal;white-space:nowrap}
+.rz-nb.v3 .rt .ln{position:relative;flex:1;height:10px}
+.rz-nb.v3 .rt .ln::before{content:"";position:absolute;left:0;right:8px;top:4px;height:2px;border-radius:2px;background:repeating-linear-gradient(90deg,#12626f 0 8px,transparent 8px 13px)}
+.rz-nb.v3 .rt .ln.dop::before{background:repeating-linear-gradient(90deg,#c9741a 0 8px,transparent 8px 13px)}
+.rz-nb.v3 .rt .ln::after{content:"";position:absolute;right:0;top:1px;border:4px solid transparent;border-left:7px solid #12626f}
+.rz-nb.v3 .rt .ln.dop::after{border-left-color:#c9741a}
+.rz-nb.v3 .fr{display:flex;flex-direction:column;align-items:flex-start;gap:2px;margin:14px 20px 0;padding:12px 14px;border-radius:14px;background:#f6f2ea}
+.rz-nb.v3 .pr{padding:0;font-size:13px;font-weight:700;color:#5f6b63}
+.rz-nb.v3 .cn{position:static;display:flex;flex-direction:row;align-items:baseline;gap:4px;padding:0;background:none;white-space:nowrap}
+.rz-nab .rz-nb.v3 .cn small{color:#5f6b63;opacity:1;font-size:12.5px}
+.rz-nb.v3 .cn b{font-size:22px;font-weight:800;color:#0b2419}
+.rz-nb.v3 .cn i{font-style:normal;font-size:12px;font-weight:600;color:#5f6b63}
+.rz-nb.v3 ul{padding:14px 20px 0;gap:8px;font-size:14.5px}
+.rz-nb.v3 li svg{background:#e3f3e8;color:#2f7d4c;width:20px;height:20px}
+.rz-nb.v3 .cta{margin:auto 18px 18px;margin-top:18px;padding:14px 18px;border-radius:14px;background:#fff;border:2px solid #0b2419;color:#0b2419;font-size:16px;font-weight:800;box-shadow:none;display:flex;justify-content:center}
+.rz-nb.v3 .cta .a0{display:inline-flex;align-items:center;gap:8px}
+.rz-nb.v3 .cta .a0 i{font-style:normal;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#0b2419;color:#fff;font-size:16px;line-height:1}
+.rz-nb.v3:hover .cta{background:#0b2419;color:#fff}.rz-nb.v3:hover .cta .a0 i{background:#f4a64a;color:#0b2419}
+.rz-nb.v3.on .cta,.rz-nb.v3.on:hover .cta{background:#2f7d4c;border-color:#2f7d4c;color:#fff}
+.rz-nb.v3.on .cta u{font-weight:600;color:#d7efdf}
+.rz-nb.v3.on .cta .a1 svg{color:#fff}
+@media(max-width:700px){.rz-nb.v3 .rz-nb-t{height:170px}.rz-nb.v3 .nd{font-size:21px}.rz-nb.v3 .sl{font-size:13px}}
+.rz-nb.v3.on .cta .a0{display:none}.rz-nb.v3.on .cta .a1{display:inline-flex;align-items:center;gap:8px}
+.rz-nb.v3 .rz-nb-t{height:236px}@media(max-width:700px){.rz-nb.v3 .rz-nb-t{height:200px}}
+.ck-sub small{display:block;margin-top:4px;font-size:12.5px;font-weight:600;text-transform:none;letter-spacing:0;color:#7a4508}
+#rzLines li.rz-mimo em{font-size:.85em;font-weight:700;color:#b56a10}
+#rzLines li.rz-mimo span{opacity:.85}
+
+/* ceník návozu v kroku Lodě */
+.rz-lod-i p{margin:0 0 10px}
+.rz-lod-i p b{color:#9a560a}
+.rz-nvt{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;background:#fff;border:1px solid #eee7da;border-radius:14px;overflow:hidden}
+.rz-nvt caption{caption-side:top;text-align:left;padding:0 2px 6px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#b56a10}
+.rz-nvt th,.rz-nvt td{padding:8px 12px;border-top:1px solid #f1ece2;text-align:right;white-space:nowrap}
+.rz-nvt thead th{border-top:0;font-size:12px;font-weight:700;color:#6b756f;background:#f6f1e6}
+.rz-nvt thead th.on{color:#0b2419}
+.rz-nvt tbody th{text-align:left;font-weight:600;color:#3d4b43;white-space:normal}
+.rz-nvt td{font-weight:700;color:#0b2419;font-variant-numeric:tabular-nums}
+.rz-nvt tr.on{background:#fff7ec}
+.rz-nvt td.me{background:#f4a64a;color:#0b2419;font-weight:800}
+@media(max-width:560px){.rz-nvt th,.rz-nvt td{padding:7px 8px}}
+.rz-nvp{margin:6px 2px 0!important;font-size:12.5px;color:#6b756f}
+.rz-nvt td:nth-child(2):not(.me){background:none}
+
+/* QR platba po odeslání rezervace */
+.rz-qr{display:flex;gap:20px;align-items:center;margin:18px 0;padding:18px;border-radius:20px;background:#fff;border:2px solid #f4a64a;box-shadow:0 14px 30px -22px #0b241999;text-align:left}
+.rz-qr-c{flex:none;width:168px;height:168px;padding:6px;border-radius:12px;background:#fff;border:1px solid #eee7da}
+.rz-qr-c svg{display:block;width:100%;height:100%}
+.rz-qr-t{min-width:0}
+.rz-qr-t>b{display:block;font-size:18px;font-weight:800;color:#0b2419}
+.rz-qr-t>small{display:block;margin:4px 0 10px;font-size:13.5px;color:#5f6b63}
+.rz-qr-t dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0;font-size:14px}
+.rz-qr-t dt{color:#6b756f}.rz-qr-t dd{margin:0;font-weight:800;color:#0b2419;word-break:break-all}
+@media(max-width:560px){.rz-qr{flex-direction:column;text-align:center}.rz-qr-t dl{text-align:left}}
+#rezervace .rz-f select{width:100%;box-sizing:border-box;padding:14px 40px 14px 16px;border:1.5px solid var(--rz-line);border-radius:14px;background:#fcfaf6 url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2714%27 height=%2714%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%230b2419%27 stroke-width=%272.5%27%3E%3Cpath d=%27m6 9 6 6 6-6%27/%3E%3C/svg%3E") no-repeat right 14px center;font:inherit;font-size:16px;color:#0b2419;appearance:none;min-width:0}
+#rezervace .rz-f select:focus{outline:none;border-color:#0b2419;background-color:#fff;box-shadow:0 0 0 4px rgba(244,166,74,.3)}
+.hero .cta .btn-lod{background:rgba(255,255,255,.14);color:#fff;border:1.5px solid rgba(255,255,255,.55);backdrop-filter:blur(8px)}
+.hero .cta .btn-lod:hover{background:#fff;color:#0b2419}
+.hero .cta .btn-lod svg{width:20px;height:20px}
+.rz-nvl{display:inline;padding:0;border:0;background:none;font:inherit;font-weight:800;color:#12626f;text-decoration:underline;cursor:pointer}
+.ck-sub{scroll-margin-top:70px}
+/* stav vody */
+.kv{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px 12px;font-size:13.5px;line-height:1.3}
+.kv-dot{width:10px;height:10px;border-radius:50%;flex:none;box-shadow:0 0 0 4px rgba(47,179,107,.22)}
+.kv-nizky .kv-dot{box-shadow:0 0 0 4px rgba(224,164,58,.25)}.kv-vys .kv-dot,.kv-neb .kv-dot{box-shadow:0 0 0 4px rgba(214,69,69,.25)}
+.kv-q{font-weight:800}.kv-s{font-weight:700}.kv-c,.kv-tr,.kv-t{opacity:.72}
+.kv-hero{margin-top:4px;padding:10px 16px;border-radius:14px;background:rgba(7,27,19,.5);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(10px);color:#fff}
+.kv-hero .kv-l{text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:800;color:#5bd1d8}
+.kv-hero .kv-s{color:#8be0a8}.kv-hero.kv-nizky .kv-s{color:#ffc57a}.kv-hero.kv-vys .kv-s,.kv-hero.kv-neb .kv-s{color:#ff9c8a}
+.kv-hero .kv-c{width:100%;font-size:11.5px;padding-left:22px;margin-top:-2px}
+.kv-rz{display:flex;margin:0 0 12px;padding:10px 14px;border-radius:12px;background:#e2f3f2;color:#10241b}
+.kv-rz .kv-l{font-weight:700}.kv-rz .kv-c{margin-left:auto;font-size:12px}
+@media(max-width:760px){.kv-hero{display:flex}.kv-hero .kv-c{padding-left:0}}
+@media(max-width:760px){.kk2-scope .index-route-transfer .kv-wm{display:none}}
+.kk2-scope .index-route-transfer .kv-wm{position:absolute;left:0;top:0;z-index:4;pointer-events:auto;opacity:0;transform:translate(-26px,calc(-100% - 18px));transition:opacity .5s}
+.kk2-scope .index-route-transfer .kv-wm.on{opacity:1}
+.kv-bub{position:relative;display:flex;align-items:center;gap:10px;padding:8px 12px 8px 8px;border-radius:14px;background:#fff;color:#10241b;box-shadow:0 12px 30px -10px rgba(0,0,0,.55);white-space:nowrap;font-family:"Plus Jakarta Sans",Arial,sans-serif}
+.kv-bub::after{content:"";position:absolute;left:18px;bottom:-7px;width:14px;height:14px;background:#fff;transform:rotate(45deg);border-radius:0 0 3px 0}
+.kv-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:none}
+.kv-bt{display:grid;line-height:1.15}.kv-bt small{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#1aa6b0}
+.kv-bt b{font-size:16px;font-weight:800}.kv-bt b i{font-style:normal;font-weight:600;color:#6b766f;font-size:13px}.kv-bt em{font-style:normal;font-size:12px;font-weight:700}
+.kv-bw{display:grid;justify-items:center;line-height:1.1;padding-left:10px;border-left:1px solid rgba(16,36,27,.12)}.kv-bw b{font-size:16px;font-weight:800}.kv-bw small{font-size:11px;color:#6b766f}
+/* bublina vlevo od Vyššího Brodu, šipka doprava */
+.kk2-scope .index-route-transfer .kv-wm{transform:translate(calc(-100% - 20px),-50%)}
+.kv-bub{padding:10px 16px 10px 10px;gap:12px;border-radius:16px}
+.kv-bub::after{left:auto;right:-6px;bottom:auto;top:50%;margin-top:-7px;border-radius:0 3px 0 0}
+.kv-ic{width:40px;height:40px;border-radius:12px}.kv-ic svg{width:19px;height:19px}
+.kv-bt small{font-size:10.5px}.kv-bt b{font-size:18px}.kv-bt em{font-size:12.5px}
+.kv-bw b{font-size:18px}
+#vodaHero{margin-bottom:34px}#vodaHero[hidden]{display:none}
+/* stav vody – kostka v rohu (když není vidět mapa trasy) */
+.kv-rohw{position:absolute;top:100px;right:max(18px,calc(50% - 600px));z-index:6}
+.kv-rohw[hidden]{display:none}
+.kv-roh{width:92px;padding:10px 8px 8px;border-radius:18px;background:rgba(7,27,19,.55);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff;display:grid;justify-items:center;text-align:center;line-height:1.1;font-family:"Plus Jakarta Sans",Arial,sans-serif;box-shadow:0 14px 30px -14px rgba(0,0,0,.6)}
+.kv-roh small{font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#5bd1d8}
+.kv-roh b{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-top:4px}
+.kv-roh span{font-size:11px;opacity:.75;margin-top:1px}
+.kv-roh em{font-style:normal;font-size:10.5px;font-weight:800;color:#0b2419;padding:3px 7px;border-radius:999px;margin-top:7px;white-space:nowrap}
+@media(max-width:760px){.kv-rohw{top:92px;right:14px}.kv-roh{width:82px}.kv-roh b{font-size:23px}}
+/* stav vody – sladění s hero (tmavé sklo jako štítek sezóny a tlačítka) */
+.kv-bub{background:rgba(7,27,19,.58);color:#fff;border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 18px 40px -18px rgba(0,0,0,.7);padding:9px 14px 9px 9px;border-radius:16px}
+.kv-bub::after{background:rgba(7,27,19,.58);border:1px solid rgba(255,255,255,.18);border-left:0;border-bottom:0;right:-7px;width:12px;height:12px;margin-top:-6px;border-radius:0 3px 0 0;backdrop-filter:blur(12px)}
+.kv-ic{background:rgba(91,209,216,.16)!important;border:1px solid rgba(91,209,216,.35);width:38px;height:38px;border-radius:50%}
+.kv-ic svg{stroke:#5bd1d8}
+.kv-bt small{color:#5bd1d8;font-size:10px}
+.kv-bt b{color:#fff;font-size:18px}.kv-bt b i{color:rgba(255,255,255,.6)}
+.kv-bt em{display:inline-flex;align-items:center;gap:5px;color:rgba(255,255,255,.85)!important;font-weight:700}
+.kv-bt em::before{content:"";width:7px;height:7px;border-radius:50%;background:#2fb36b;box-shadow:0 0 0 3px rgba(47,179,107,.25)}
+.kv-nizky .kv-bt em::before{background:#e0a43a}.kv-vys .kv-bt em::before{background:#e07a2f}.kv-neb .kv-bt em::before{background:#d64545}
+.kv-bw{border-left-color:rgba(255,255,255,.16)}.kv-bw b{color:#fff}.kv-bw small{color:rgba(255,255,255,.6)}
+.kv-roh{background:rgba(7,27,19,.58);border-color:rgba(255,255,255,.18);border-radius:16px;width:96px;padding:11px 8px 9px}
+.kv-roh em{color:#0b2419}
+@media(max-width:760px){.kv-roh{width:80px;padding:9px 6px 8px}.kv-roh b{font-size:22px}.kv-rohw{top:88px;right:12px}}
+/* stav vody – PC vpravo nahoře, mobil pod tlačítky */
+.kv-rohw{top:104px;right:max(28px,calc(50% - 620px))}
+.kv-rohw .kv-bub::after{display:none}
+#vodaHero{display:none}
+@media(max-width:760px){.kv-rohw{display:none}#vodaHero{display:block;margin:4px 0 40px}.kv-hero{display:flex}}
+@media(max-width:760px){html body #top.hero.kk2-part{height:auto!important;max-height:none!important}}
+/* úplně vpravo + kostka s teplotou vody */
+.kv-rohw{right:20px;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.kv-rohw .kv-bw{display:none}
+.kv-tep{width:84px;height:84px;display:grid;place-items:center;align-content:center;gap:1px;border-radius:16px;background:rgba(7,27,19,.58);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff;box-shadow:0 18px 40px -18px rgba(0,0,0,.7);font-family:"Plus Jakarta Sans",Arial,sans-serif;line-height:1.1}
+.kv-tep svg{color:#5bd1d8;margin-bottom:3px}.kv-tep b{font-size:19px;font-weight:800}.kv-tep small{font-size:11px;color:rgba(255,255,255,.65)}
+@media(max-width:760px){.kv-rohw{display:none}}
+/* sjednocení dlaždic vpravo */
+.kv-rohw{align-items:stretch;width:200px}
+.kv-rohw .kv-bub{width:100%}
+.kv-bt em.kv-em0::before{display:none}
+.kv-bt em.kv-em0{color:rgba(255,255,255,.6)!important;font-weight:600}
+/* jeden objekt: obě části v jedné kartě */
+.kv-rohw{gap:0;border-radius:16px;background:rgba(7,27,19,.58);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 18px 40px -18px rgba(0,0,0,.7);overflow:hidden}
+.kv-rohw .kv-bub{background:none;border:0;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;border-radius:0;padding:10px 14px 10px 10px}
+.kv-rohw .kv-bub+.kv-bub{border-top:1px solid rgba(255,255,255,.13)}
+.rz-lf input[type=date]{width:100%;box-sizing:border-box;padding:11px 14px;border:1.5px solid #e2dacb;border-radius:14px;background:#fff;font:inherit;font-size:16px;font-weight:700;color:#0b2419;min-height:50px}
+.rz-lf input[type=date]:focus{outline:none;border-color:#0b2419;box-shadow:0 0 0 4px rgba(244,166,74,.3)}
+.rz-lf input[type=date]:disabled{background:#f6f2ea;color:#55625a}
+.rz-ldn{font-size:13px;color:#55625a;margin-top:-2px}

@@ -15,11 +15,15 @@ var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&
 var pocet=function(){return Object.keys(cekajici).length+Object.keys(pD).length+Object.keys(pI).length+Object.keys(pO).length};
 var tvar=function(n,a,b,c){return n===1?a:n>1&&n<5?b:c};
 document.documentElement.classList.add('kk-edit');
+/* web PE-LA: lišta v barvách PE-LA, zdrojem původních textů je aktuální stránka, ceny v textu jsou značky {price:klic} */
+var PELA=KK.WEB==='pela';if(PELA)document.documentElement.classList.add('kke-pela');
+var GAL=PELA?'#fotogalerie .gitem':'#galerie .gl-i';
+var tokeny=function(h){return String(h).replace(/<span[^>]*data-pc="([^"]+)"[^>]*>[\s\S]*?<\/span>/g,function(a,k){return '{price:'+k+'}'})};
 
 /* původní texty ze zdrojového HTML (pro „vrátit původní“) */
-fetch(BASE+'index.html',{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){
+fetch(window.KK_ZDROJ||BASE+'index.html',{cache:'no-store'}).then(function(r){return r.text()}).then(function(h){
   var d=new DOMParser().parseFromString(h,'text/html');
-  [].forEach.call(d.querySelectorAll('[data-t]'),function(e){orig[e.dataset.t]=KK.cisti(e.innerHTML)});
+  [].forEach.call(d.querySelectorAll('[data-t]'),function(e){orig[e.dataset.t]=KK.cisti(tokeny(e.innerHTML))});
   [].forEach.call(d.querySelectorAll('[data-t-ceny]'),function(e){orig[e.dataset.tCeny]=e.dataset.p1+'|'+e.dataset.pm});
   [].forEach.call(d.querySelectorAll('[data-t-n]'),function(e){orig[e.dataset.tN]=e.dataset.n});
   oznac();
@@ -30,14 +34,14 @@ var SV=function(p,s){return '<svg viewBox="0 0 24 24" width="'+(s||18)+'" height
 /* lišta */
 var bar=document.createElement('div');bar.className='kke-bar kke-ui';bar.setAttribute('role','toolbar');bar.setAttribute('aria-label','Editační režim');
 var JZ=KK.JAZYK||'cs';
-bar.innerHTML='<span class="kke-tit">'+SV('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>')+'Editační režim</span>'+
+bar.innerHTML='<span class="kke-tit">'+SV('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>')+(PELA?'Editační režim · PE-LA':'Editační režim')+'</span>'+
  (JZ!=='cs'?'<span class="kke-jz" title="Upravujete překlad. Co nepřeložíte, zůstane na webu česky.">'+JZ.toUpperCase()+' – překlad</span>':'')+
  '<span class="kke-st" aria-live="polite"></span>'+
  '<button type="button" class="kke-b kke-mode" aria-pressed="false" title="Vypne úpravy, aby šlo klikat na web (přepnout krok rezervace, spustit animaci, otevřít místo na mapě…)">'+SV('<path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51z"/>')+'<span>Procházet</span></button>'+
  '<button type="button" class="kke-b kke-undo" disabled>Zpět</button>'+
  '<button type="button" class="kke-b kke-drop" disabled>Zahodit</button>'+
  '<button type="button" class="kke-b kke-save" disabled>Uložit</button>'+
- (VRAMCI?'':'<a class="kke-b kke-adm" href="'+ADMIN+'#prehled">Administrace</a>'+'<button type="button" class="kke-b kke-end" aria-label="Ukončit editační režim">Ukončit</button>');
+ (VRAMCI?'':'<a class="kke-b kke-adm" href="'+ADMIN+(PELA?'?web=pela':'')+'#prehled">Administrace</a>'+'<button type="button" class="kke-b kke-end" aria-label="Ukončit editační režim">Ukončit</button>');
 document.body.appendChild(bar);
 var vyskaListy=function(){document.documentElement.style.setProperty('--kke-h',(bar.offsetHeight+(innerWidth<700?16:32))+'px')};addEventListener('resize',vyskaListy);setTimeout(vyskaListy,50);
 var st=bar.querySelector('.kke-st'),bUndo=bar.querySelector('.kke-undo'),bDrop=bar.querySelector('.kke-drop'),bSave=bar.querySelector('.kke-save'),bMode=bar.querySelector('.kke-mode');
@@ -69,12 +73,12 @@ function oznac(){
 function zacni(e){
   if(aktivni===e)return;if(aktivni)skonci();
   if(e.hasAttribute('data-cena')){naCenik();return}
-  aktivni=e;predEditaci=e.innerHTML;e.contentEditable='true';e.classList.add('kke-act');e.focus();
+  aktivni=e;predEditaci=e.innerHTML;e.contentEditable='true';[].forEach.call(e.querySelectorAll('[data-pc]'),function(c){c.contentEditable='false'});e.classList.add('kke-act');e.focus();
   var r=document.createRange();r.selectNodeContents(e);r.collapse(false);var s=getSelection();s.removeAllRanges();s.addRange(r);
 }
 function skonci(){
   var e=aktivni;if(!e)return;aktivni=null;e.contentEditable='false';e.classList.remove('kke-act');
-  var k=e.dataset.t,nove=KK.cisti(e.innerHTML),pred=KK.cisti(predEditaci),html=predEditaci;
+  var k=e.dataset.t,nove=KK.cisti(tokeny(e.innerHTML)),pred=KK.cisti(tokeny(predEditaci)),html=predEditaci;
   if(!nove.replace(/<br>/g,'').trim()){e.innerHTML=predEditaci;toast('Text nemůže zůstat prázdný – vrátil jsem předchozí.');return}
   if(nove!==pred){
     var meli=k in cekajici,byl=cekajici[k];
@@ -84,7 +88,7 @@ function skonci(){
   stav();oznac();
 }
 function prepocitejPela(){if(window.KKPela)KKPela.render()}
-function naCenik(){toast('<b>Ceny kempu se mění v Ceníku</b>, aby se změnily všude naráz (i ve výpočtu rezervace).<a href="'+ADMIN+'#cenik" target="_top">Otevřít Ceník</a>','lock')}
+function naCenik(){toast('<b>Ceny se mění v Ceníku</b>, aby se změnily všude naráz – na webu kempu, na PE-LA i ve výpočtu rezervace.<a href="'+ADMIN+(PELA?'?web=pela':'')+'#cenik" target="_top">Otevřít Ceník</a>','lock')}
 
 /* ---------- okénko u prvku ---------- */
 var pop=null,popZpet=null;
@@ -112,7 +116,7 @@ function textUpravitelny(n){
   if(!n||n.nodeType!==3)return false;var p=n.parentElement;if(!p||p.closest('script,style,[data-t],.kke-ui'))return false;
   var t=P.norm(n.data);return t.length>0&&/[A-Za-zÁ-žá-ž]/.test(t);
 }
-function cenovy(n){var p=n.parentElement,t=P.norm(n.data);if(p.closest('#pela'))return false;if(/\d\s*Kč|Kč\b/.test(t)||p.closest('[data-c],[data-cena]'))return true;return JZ==='cs'&&!!p.closest(CENIK)}
+function cenovy(n){var p=n.parentElement,t=P.norm(n.data);if(p.closest('#pela'))return false;if(/\d\s*Kč|Kč\b/.test(t)||p.closest('[data-c],[data-cena],[data-pc]'))return true;return JZ==='cs'&&!!p.closest(CENIK)}
 function textVBode(x,y,cil){
   var r=document.caretRangeFromPoint?document.caretRangeFromPoint(x,y):null,n=r&&r.startContainer;
   if(n&&n.nodeType===3&&n.parentElement&&cil.contains(n.parentElement)||n&&n.nodeType===3&&n.parentElement===cil){
@@ -246,7 +250,7 @@ function najdi(ev){
   var dt=t.closest('[data-t]');if(dt)return{typ:dt.hasAttribute('data-cena')?'cena':'t',el:dt};
   var lod=t.closest('.pp-boat');if(lod&&t.closest('.pp-price')&&!t.closest('.pp-price>small:not(.pp-alt)'))return{typ:'lod',el:lod.querySelector('.pp-price'),karta:lod};
   var cis=t.closest('[data-t-n]');if(cis)return{typ:'cislo',el:cis};
-  if(t.closest('#galerie .gl-i'))return{typ:'galerie',el:t.closest('#galerie .gl-i')};
+  if(t.closest(GAL))return{typ:'galerie',el:t.closest(GAL)};
   if(!t.closest(STAV)){var n=textVBode(x,y,t);
     if(n&&textUpravitelny(n)&&!n.parentElement.closest(STAV))return{typ:cenovy(n)?'cena':'text',el:n.parentElement,node:n}}
   var f=fotkaVBode(x,y);if(f)return{typ:'fotka',el:f.el,f:f};
@@ -277,7 +281,7 @@ function proved(ev,z){
   if(aktivni)skonci();
   ev.preventDefault();ev.stopImmediatePropagation();hl.classList.remove('on');popZpet=document.activeElement;
   if(z.typ==='cena')naCenik();
-  else if(z.typ==='galerie')toast('Fotky v galerii a jejich popisky se spravují v administraci v sekci Galerie.<a href="'+ADMIN+'#galerie" target="_top">Otevřít Galerii</a>');
+  else if(z.typ==='galerie')toast('Fotky v galerii a jejich popisky se spravují v administraci v sekci Galerie.<a href="'+ADMIN+(PELA?'?web=pela':'')+'#galerie" target="_top">Otevřít Galerii</a>');
   else if(z.typ==='text')upravText(z.node);
   else if(z.typ==='fotka')upravFotku(z.f);
   else if(z.typ==='ikona')upravIkonu(z.el);
