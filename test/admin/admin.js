@@ -1233,7 +1233,7 @@ function rezervace(m,sekV){
   /* tisk podle části: Ubytování (příjezdy, odjezdy, úklid), Půjčovna (komu co vydat), Doprava (jízdy, návoz, svoz), Seznam (to, co je vyfiltrované) */
   function tisk(co){co=co||(tab==='lod'||tab==='lodd'?'lod':tab==='dop'?'dop':tab==='sez'&&!q?'sez':'uby');
     var vse=R.vse().filter(function(r){return r.stav!=='zru'&&r.stav!=='blk'}),x=denP,d=D0(x),DL=['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota'],den=DL[d.getDay()]+' '+d.getDate()+'. '+(d.getMonth()+1)+'. '+d.getFullYear();
-    var os=function(r){return KKC.osobyTxt(r.osoby,1)};
+    var os=function(r){var d=R.doplnkyTxt(r);return KKC.osobyTxt(r.osoby,1)+(d?'<br><small class="tk-dl">+ '+esc(d)+'</small>':'')};
     /* poznámka hosta se tiskne na samostatný řádek pod rezervaci, ne do sloupce */
     var TB=function(L,sl,raz){var pz=sl.some(function(c){return c[0]==='Poznámka'});sl=sl.filter(function(c){return c[0]!=='Poznámka'});return L.length?'<table><thead><tr><th style="width:26px"></th>'+sl.map(function(c){return '<th>'+c[0]+'</th>'}).join('')+'</tr></thead><tbody>'+(raz?L.slice().sort(raz):L).map(function(r){var n=pz&&r.zprava&&String(r.zprava).trim();return '<tr'+(n?' class="tk-mp"':'')+'><td><span class="tk-ch"></span></td>'+sl.map(function(c){return '<td>'+c[1](r)+'</td>'}).join('')+'</tr>'+(n?'<tr class="tk-pz"><td></td><td colspan="'+sl.length+'"><b>Poznámka:</b> '+esc(n).replace(/\n/g,' · ')+'</td></tr>':'')}).join('')+'</tbody></table>':'<p class="tk-nic">Nic.</p>'};
     var J=['Host',function(r){return '<b>'+esc(r.jmeno)+'</b>'}],T=['Telefon',function(r){return '<span class="tk-nw">'+esc(r.telefon||'')+'</span>'}],O=['Osoby',os],PZ=['Poznámka',function(r){return esc(r.zprava||'')}];
@@ -1248,7 +1248,7 @@ function rezervace(m,sekV){
         '<h2>Přijíždí ('+pri.length+')</h2>'+TB(pri,[M,JJ,T,O,['Do',function(r){return KR(r.do)}],['Lodě',function(r){return sLod(r)?'ano':''}],PL,PZ],raz)+
         '<h2>Odjíždí ('+odj.length+')</h2>'+TB(odj,[M,JJ,T,O,PZ],raz)+
         '<h2>Úklid po odjezdu ('+ukl.length+')</h2>'+(ukl.length?'<p class="tk-ukl">'+ukl.map(function(u){return '<span><i class="tk-ch"></i>'+esc(u)+'</span>'}).join('')+'</p>':'<p class="tk-nic">Nic.</p>')+
-        '<h2>Zůstávají ('+zus.length+')</h2>'+(zus.length?'<ul class="tk-zus">'+zus.sort(raz).map(function(r){return '<li><b>'+esc(kratM(r))+'</b> '+esc(r.jmeno)+' <small>'+os(r)+' os. · do '+KR(r.do)+'</small></li>'}).join('')+'</ul>':'<p class="tk-nic">Nikdo.</p>')}
+        '<h2>Zůstávají ('+zus.length+')</h2>'+(zus.length?'<ul class="tk-zus">'+zus.sort(raz).map(function(r){return '<li><b>'+esc(kratM(r))+'</b> '+esc(r.jmeno)+' <small>'+KKC.osobyTxt(r.osoby,1)+' os. · do '+KR(r.do)+'</small></li>'}).join('')+'</ul>':'<p class="tk-nic">Nikdo.</p>')}
     else if(co==='chat'){
       /* chatky: kdo v nich ten den bude (spí tu noc) a pod tím kdo z chatek odjíždí */
       var jeCh=function(r){return !JL(r)&&(r.mista||[]).some(function(m){return /^(chatka|podsad|teepee)-/.test(m)})},chT=function(r){return {chatka:0,podsad:1,teepee:2}[(r.mista||[''])[0].split('-')[0]]||0},chR=function(a,b){return chT(a)-chT(b)||kratM(a).localeCompare(kratM(b),'cs',{numeric:true})};
