@@ -828,3 +828,9 @@ dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid va
   .ob-lc.c-hot .ob-hl-t{white-space:nowrap}
   .ob-lc .ob-list{grid-template-columns:repeat(auto-fill,minmax(330px,1fr))}
 }
+.ob-plok{white-space:nowrap;width:max-content;max-width:100%}
+.ob-plok span{font-variant-numeric:tabular-nums}
+.ob-plok{display:flex!important;width:auto;max-width:none;justify-self:stretch;align-self:stretch;box-sizing:border-box;border-radius:12px;padding:8px 12px;gap:8px;border:1px solid #cfe7d8}
+.ob-plok svg{flex:none;display:block!important;width:16px;height:16px;stroke:currentColor}
+.ob-plok span{margin-left:auto;font-weight:700;color:#1f7a45}
+.ob-pan .ob-r.ob-u2>.ob-plok{grid-area:p;margin:0}
