@@ -808,3 +808,10 @@ dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid va
   .ob-lc.c-hot .ob-hl-z{grid-area:z;padding:2px 4px;font-size:13px}
   .ob-lc.c-hot .ob-hl summary{padding:12px 14px;font-size:15px}
 }
+/* Připravit / Vrátí se – kompaktně: lodě na jednom řádku, vybavení pod tím */
+.ob-prip.ob-prip2{display:flex;flex-wrap:nowrap;align-items:baseline;gap:10px;padding:9px 12px;border-width:1.5px;border-radius:12px;margin-bottom:12px}
+.ob-prip2 .ob-prip-h{flex:none;margin:0;font-size:11px}
+.ob-prip2>div{min-width:0;line-height:1.35}
+.ob-prip2 b{display:block;font-size:15.5px;font-weight:800;color:#14324A}
+.ob-prip2 b i{font-style:normal;color:#9aa6ae;margin:0 6px;font-weight:400}
+.ob-prip2 small{display:block;font-size:12.5px;color:#56625A;margin-top:1px}

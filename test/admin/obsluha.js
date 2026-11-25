@@ -285,7 +285,7 @@ function pujcovna(){var t=KK.LS.get('o.tab.l','vyd');if(['vyd','vra','dost'].ind
   var so=function(k){return function(a,b){return cas(lodKdy(a,k)||'99',lodKdy(b,k)||'99')}},sl={};
   ['vyd','vra'].forEach(function(k){sl[k]={T:X[k].filter(function(r){return !HOT[k](r)}).sort(so(k)),H:X[k].filter(function(r){return HOT[k](r)}).sort(so(k))}});
   var prip=function(k){var S={};sl[k].T.forEach(function(r){var x=lodKusy(r,k);Object.keys(x||{}).forEach(function(y){S[y]=(S[y]||0)+(+x[y]||0)})});var sr=kusyRoz(S);
-    return sl[k].T.length?'<div class="ob-prip"><span class="ob-prip-h">'+(k==='vyd'?'Připravit':'Vrátí se')+'</span>'+sr.lode.map(function(x){return '<span class="ob-pl">'+x+'</span>'}).join('')+sr.vyb.map(function(x){return '<span class="ob-pv">'+x+'</span>'}).join('')+'</div>':''};
+    return sl[k].T.length?'<div class="ob-prip ob-prip2"><span class="ob-prip-h">'+(k==='vyd'?'Připravit':'Vrátí se')+'</span><div><b>'+sr.lode.join('<i>·</i>')+'</b>'+(sr.vyb.length?'<small>'+sr.vyb.join(' · ')+'</small>':'')+'</div></div>':''};
   var hot=function(k,cl){var H=sl[k].H;return H.length?'<details class="ob-hl '+cl+'" open><summary>'+(k==='vyd'?'Vydáno':'Vráceno')+' <span>'+H.length+'</span></summary><ul>'+H.map(function(r){return radekL(r,k)}).join('')+'</ul></details>':''};
   var sloupec=function(k,n){var T=sl[k].T;return '<section class="ob-lc c-'+k+(k===t?' akt':'')+'"><h2 class="ob-kh">'+n+' <span>'+T.length+'</span></h2>'+prip(k)+(T.length?'<div class="ob-list">'+T.map(function(r){return kartaL(r,k)}).join('')+'</div>':'<p class="ob-sum">'+(k==='vyd'?(sl.vyd.H.length?'Vše vydáno.':'Žádné lodě k vydání.'):(sl.vra.H.length?'Vše vráceno.':'Žádné lodě k vrácení.'))+'</p>')+hot(k,'uz')+'</section>'};
   var nh=sl.vyd.H.length+sl.vra.H.length;
