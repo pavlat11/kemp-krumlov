@@ -781,3 +781,30 @@ dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid va
 .ob-plx.b.c{grid-template-columns:minmax(0,1fr) auto}
 .ob-plx.b.c>.ob-plh{flex-wrap:wrap;row-gap:0;column-gap:8px;min-width:0}
 .ob-plx.b.c .ob-pl-b{padding:0 11px}
+/* Lodě: tři sloupce jako v administraci (K výdeji · Na vodě · Hotovo); na užší obrazovce jen vybraná záložka */
+.ob-lc:not(.akt){display:none}
+.ob-lc .ob-kh{margin-top:4px}
+@media (min-width:1200px){
+  .ob-seg .ob-jenu{display:none}
+  .ob-lb{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,.72fr);gap:14px;align-items:start}
+  .ob-lc,.ob-lc:not(.akt){display:block;border-radius:18px;padding:12px;min-width:0}
+  .ob-lc.c-vyd{background:#fbeed9}.ob-lc.c-vra{background:#dcebf2}.ob-lc.c-hot{background:#e4ece6}
+  .ob-lc .ob-list{grid-template-columns:1fr}
+  .ob-lc .ob-prip{margin:0 0 10px;background:#fff}
+  .ob-lc .ob-hl.uz{display:none}
+  .ob-lc .ob-hl{margin:0 0 10px}
+  .ob-lc .ob-sum{background:#fff;border-radius:12px;padding:14px;text-align:center;margin:0}
+  .ob-lc.c-hot .ob-hl li{flex-wrap:wrap}
+}
+@media (max-width:1199.98px){.ob-lc.c-hot{display:none!important}}
+@media (min-width:1200px){
+  .ob-lc.c-hot .ob-hl li{grid-template-columns:44px minmax(0,1fr) auto;grid-template-areas:"c n j" "c t t" "c d z";gap:2px 8px;padding:10px 12px}
+  .ob-lc.c-hot .ob-hl-ok{display:none}
+  .ob-lc.c-hot .ob-hl-c{grid-area:c;align-self:start;padding-top:2px}
+  .ob-lc.c-hot .ob-jm{grid-area:n;justify-self:start;min-width:0}
+  .ob-lc.c-hot li>.ob-ch,.ob-lc.c-hot .ob-hl-j{grid-area:j}
+  .ob-lc.c-hot .ob-hl-t{grid-area:t;white-space:normal;font-size:13px}
+  .ob-lc.c-hot .ob-dluh{grid-area:d;justify-self:start}
+  .ob-lc.c-hot .ob-hl-z{grid-area:z;padding:2px 4px;font-size:13px}
+  .ob-lc.c-hot .ob-hl summary{padding:12px 14px;font-size:15px}
+}
