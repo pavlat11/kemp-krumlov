@@ -815,3 +815,16 @@ dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid va
 .ob-prip2 b{display:block;font-size:15.5px;font-weight:800;color:#14324A}
 .ob-prip2 b i{font-style:normal;color:#9aa6ae;margin:0 6px;font-weight:400}
 .ob-prip2 small{display:block;font-size:12.5px;color:#56625A;margin-top:1px}
+/* zaplaceno: jen štítek místo celého pruhu */
+.ob-plok{display:inline-flex;align-items:center;gap:6px;justify-self:start;align-self:start;padding:5px 11px;border-radius:999px;background:#E3F3E8;color:#1f7a45;font-size:13.5px}
+.ob-plok b{font-weight:800}.ob-plok span{color:#3d6b4f}
+/* Lodě na PC: K výdeji a Na vodě po polovině, Hotovo dole přes celou šířku */
+@media (min-width:1200px){
+  .ob-lb{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .ob-lc.c-hot{grid-column:1/-1;display:grid!important;grid-template-columns:1fr 1fr;gap:0 14px;align-items:start}
+  .ob-lc.c-hot>.ob-kh,.ob-lc.c-hot>.ob-sum{grid-column:1/-1}
+  .ob-lc.c-hot .ob-hl li{grid-template-columns:52px auto auto minmax(0,1fr) auto auto;grid-template-areas:none;gap:10px;padding:10px 14px}
+  .ob-lc.c-hot .ob-hl li>*{grid-area:auto!important}
+  .ob-lc.c-hot .ob-hl-t{white-space:nowrap}
+  .ob-lc .ob-list{grid-template-columns:repeat(auto-fill,minmax(330px,1fr))}
+}

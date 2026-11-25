@@ -253,7 +253,7 @@ var IKL={tuzka:'<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/>',
 function lodKusy(r,typ){var l=r.lode,hot=HOT[typ](r),k=typ==='vra'&&l.vydano?R.lodeVen(r):l.vydano?l.vydano.kusy:R.lodePotreba(l);if(typ==='vra'&&hot)k=l.vydano.kusy;return k}
 function lodKdy(r,typ){return typ==='vyd'?(r.doprava&&r.doprava.cas?r.doprava.cas:''):(r.vyzved&&r.vyzved.cas?r.vyzved.cas:'')}
 /* platba přehledně: celkem · záloha (a jestli je zaplacená) · zbývá doplatit + tlačítka pro potvrzení */
-function platbaBox(r,smi){var c=+r.cena||0;if(!c)return '';var p=r.platba||{},z=Math.min(+p.zaloha||0,c),st=p.stav||'',dp=doplatek(r),ceka=st==='ceka',vse=st==='vse'||!dp,zok=vse||st==='zal';
+function platbaBox(r,smi){var c=+r.cena||0;if(!c)return '';var p=r.platba||{},z=Math.min(+p.zaloha||0,c),st=p.stav||'',dp=doplatek(r),_=0;if(!dp)return '<div class="ob-plok">'+sv(IK.ok,16)+'<b>Zaplaceno</b><span>'+kc(c)+'</span></div>';var ceka=st==='ceka',vse=st==='vse'||!dp,zok=vse||st==='zal';
   /* pruh po částech: záloha | doplatek; díl se vybarví až když je opravdu zaplacený */
   var dil=function(w,ok,txt,cl){return '<div style="--w:'+w+'"><i class="s'+(ok?' p':'')+'"></i><small class="'+cl+'">'+txt+'</small></div>'};
   var seg=z&&z<c?dil(z,zok,'záloha <b>'+kc(z)+'</b>'+(zok?' ✓':' ✗'),zok?'grn':ceka?'red':'mut')+dil(c-z,vse,'doplatek <b>'+kc(c-z)+'</b>'+(vse?' ✓':''),vse?'grn':'mut'):dil(1,vse,vse?'zaplaceno <b>'+kc(c)+'</b> ✓':'celá částka <b>'+kc(c)+'</b>',vse?'grn':'mut');
