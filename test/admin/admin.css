@@ -1779,3 +1779,9 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .pk-z:has(> :only-child){justify-content:flex-end}
 .pk-pl.dl,.pk-pl.dl.ne{background:#fdecea;border-color:#e8a196;color:#b3261e}
 .pk-pl.dl:hover,.pk-pl.dl.ne:hover{background:#f9d6d1;border-color:#d9776a}
+/* zarovnání: počítadla vždy dole na stejné výšce, i když má popisek víc řádků */
+.nrz-g{align-items:stretch}
+.nrz-g>label.f{display:flex;flex-direction:column}
+.nrz-g>label.nrz-os>.nrz-st{margin-top:auto}
+.nrz-g>label.nrz-os>small{margin-bottom:6px}
+.nrz-ro{height:44px;box-sizing:border-box;padding:0 14px}
