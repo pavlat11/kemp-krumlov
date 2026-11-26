@@ -256,7 +256,7 @@ const D=[
  {k:'podsad',f:{x:1260,y:170,w:340,h:70},n:'Podsadové stany',c:'#2a7c86',m:[1437,150],
   d:'Řada postavených stanů na dřevěné podsadě podél cesty. Přijedete a rovnou se ubytujete.',
   li:['Stan je postavený, nic nestavíte','Hned u cesty k sociálkám'],price:KKC.t('podsad','a'),unit:'stan / noc + osoby'},
- {k:'teepee',f:{x:1720,y:360,w:140,h:100},n:'Teepee',c:'#d58a2c',m:[1786,418],
+ {k:'teepee',f:{x:1720,y:360,w:140,h:100},n:'Teepee',c:'#d58a2c',m:[1786,352],
   d:'Velké indiánské teepee na louce pod chatkami. Zážitek hlavně pro rodiny s dětmi a party.',
   li:['Stojí volně na louce','Kousek od chatek i sociálek'],price:KKC.t('teepee','a'),unit:'noc + osoby · mimo sezónu '+KKC.t('teepee','b')},
  {k:'chatky',f:{x:540,y:0,w:1400,h:310},n:'Chatky',c:'#b6513e',m:[2010,110],
@@ -476,7 +476,7 @@ const DOCKS=[760,905,1010,1160];
 {const g=zone(Z.podsad);hl(g,'rect',{x:636,y:92,width:160,height:24,rx:6});
  for(let i=0;i<11;i++)ptent(g,651+i*13.5,104);for(let i=0;i<11;i++)cnum(g,651+i*13.5,89,i+1,6,7,'#2a7c86','#fff')}
 // teepee (podle skutečnosti: bílé plátno, dřevěné tyče nahoře, vchod)
-{const g=zone(Z.teepee);hl(g,'circle',{cx:893,cy:208,r:30});
+{const g=zone(Z.teepee);hl(g,'circle',{cx:893,cy:203,r:31});
  const cx=893,by=216,rx=19,ry=7,ay=178;
  // stín na trávě
  E('ellipse',{cx:cx+14,cy:by+3,rx:rx+10,ry:ry+1,fill:'rgba(23,58,34,.32)',filter:'url(#amSoft)'},g);
@@ -734,7 +734,7 @@ if(REAL){sec.classList.add('collapsed');opn.hidden=false;tog.setAttribute('aria-
 /* realistický styl: špendlíky -> bílé štítky s ikonou a názvem, čísla míst -> bílé štítky s tečkou */
 if(REAL){sec.classList.add('am-real');
  svg.querySelectorAll('.am-mk').forEach(g=>{const up=g.querySelector('.up');if(!up)return;const name=(g.querySelector('.mlb text')||{}).textContent||'',ic=g.querySelector('.mc svg');
-  [...up.children].forEach(c=>{if(!c.classList.contains('ring'))c.style.display='none'});
+  [...up.children].forEach(c=>{c.style.display='none'});
   const L=document.createElementNS(NS,'g');L.setAttribute('class','rl');up.append(L);
   L.innerHTML=`<line x1="0" y1="0" x2="0" y2="-16" stroke="#fff" stroke-width="1.6"/><circle r="2.6" fill="#fff"/><rect class="rl-b" y="-40" height="24" rx="7" fill="#fff" filter="url(#amSh)"/>`+(ic?`<g class="rl-i" color="#1d2420">${ic.outerHTML}</g>`:'')+`<text y="-27.5" dominant-baseline="central" font-family="${FONT}" font-weight="700" font-size="11" fill="#1d2420"></text>`;
   const tx=L.querySelector('text');tx.textContent=name;let tw=0;try{tw=tx.getComputedTextLength()}catch(e){}if(!tw)tw=name.length*6.1;const W=tw+32;
@@ -764,7 +764,7 @@ if(M3){sec.classList.add('am-3d');
  const hv=e=>{e.classList.add('am-hv')},skryj=el=>{[...el.children].forEach(c=>{if(c.classList.contains('hl')||c.classList.contains('am-cnum'))return;if(c.querySelector('.hl,.am-cnum'))skryj(c);else hv(c)})};
  const bg=svg.querySelector('.am-bg');if(bg)hv(bg);svg.querySelectorAll('.am-zone').forEach(skryj);svg.querySelectorAll('[data-y]').forEach(t=>{if(!t.closest('.am-mk,.am-fleet'))hv(t)});
  const base=new URL('.',document.baseURI).href;
- import(base+'js/mapa3d.js?v=8').then(m=>m.start({stage,svg,base,styl:REAL?'real':'kresl'})).then(a=>{window.__am3d=a;a.view(vb);if(cur)a.focus(cur.k)})
+ import(base+'js/mapa3d.js?v=12').then(m=>m.start({stage,svg,base,styl:REAL?'real':'kresl'})).then(a=>{window.__am3d=a;a.view(vb);if(cur)a.focus(cur.k)})
   .catch(e=>{console.warn('Mapa: WebGL podklad nejde, zůstává SVG',e);window.__am3d=null;sec.classList.remove('am-3d');if(window.__amBake)window.__amBake()})}
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{legH();if(cur)select(cur);else apply(cover())},120)});
 })();

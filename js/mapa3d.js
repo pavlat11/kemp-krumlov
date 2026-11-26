@@ -21,7 +21,7 @@ export async function start({stage,svg,base,styl}){
   vertexShader:'varying vec2 vUv;varying vec2 vW;void main(){vUv=uv;vec4 w=modelMatrix*vec4(position,1.);vW=vec2(w.x,-w.y);gl_Position=projectionMatrix*viewMatrix*w;}',
   fragmentShader:'uniform sampler2D map;uniform float dim;uniform vec4 rc;varying vec2 vUv;varying vec2 vW;void main(){vec4 c=texture2D(map,vUv);'+
    'float l=dot(c.rgb,vec3(.299,.587,.114));vec3 d=mix(vec3(l),c.rgb,.45);d=mix(d,vec3(.85,.83,.78),.18);'+
-   'float m=step(rc.x,vW.x)*step(vW.x,rc.z)*step(rc.y,vW.y)*step(vW.y,rc.w);gl_FragColor=vec4(mix(c.rgb,d,dim*(1.-m)),1.);'+
+   'vec2 hc=(rc.xy+rc.zw)*.5,hs=(rc.zw-rc.xy)*.5;float dd=length(max(abs(vW-hc)-hs,0.));float m=1.-smoothstep(0.,90.,dd);gl_FragColor=vec4(mix(c.rgb,d,dim*(1.-m)),1.);'+
    '\n#include <colorspace_fragment>\n}'});
  const zem=new THREE.Mesh(new THREE.PlaneGeometry(T.w,T.h),mat);
  zem.position.set(T.x+T.w/2,-(T.y+T.h/2),0);S.add(zem);
@@ -34,7 +34,7 @@ export async function start({stage,svg,base,styl}){
  return {
   view(b){vb={x:b.x,y:b.y,w:b.w,h:b.h};naplanuj()},
   async styl(s){const t=await nacti(s),o=U.map.value;U.map.value=t;if(o)o.dispose();naplanuj()},
-  focus(k){const it=k&&D.items.find(i=>i.k===k);if(it&&it.r){const P=40;U.rc.value.set(it.r[0]-P,it.r[1]-P,it.r[0]+it.r[2]+P,it.r[1]+it.r[3]+P)}
+  focus(k){const it=k&&D.items.find(i=>i.k===k);if(it&&it.r){const P=10;U.rc.value.set(it.r[0]-P,it.r[1]-P,it.r[0]+it.r[2]+P,it.r[1]+it.r[3]+P)}
    const od=U.dim.value,cil=it?1:0,t0=performance.now();const krok=t=>{const k2=Math.min(1,(t-t0)/450);U.dim.value=od+(cil-od)*k2;kresli();if(k2<1)requestAnimationFrame(krok)};requestAnimationFrame(krok)},
   destroy(){R.dispose();cv.remove()}
  }}
