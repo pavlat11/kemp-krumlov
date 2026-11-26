@@ -649,6 +649,8 @@ const legH=()=>sec.style.setProperty('--legH',mob()&&!sec.classList.contains('co
 function setCol(v){sec.classList.toggle('collapsed',v);opn.hidden=!v;tog.setAttribute('aria-expanded',!v);legH();if(cur)select(cur);else go(cover(),500)}
 tog.onclick=()=>setCol(true);opn.onclick=()=>setCol(false);
 legH();
+/* realistický styl má názvy přímo na mapě – seznam míst je schovaný, zůstává jen tlačítko pro zobrazení */
+if(REAL){sec.classList.add('collapsed');opn.hidden=false;tog.setAttribute('aria-expanded',false);legH()}
 /* ===== ŽIVÁ SCÉNA: raft připluje ke kotvišti, lidé ho vynesou na břeh a donesou do půjčovny k boudě ===== */
 {const act=G(S2,{'pointer-events':'none'});
  const ln=(a,b,k)=>a+(b-a)*k,eo=k=>1-Math.pow(1-k,3),ei=k=>k*k*(3-2*k),cl=k=>Math.max(0,Math.min(1,k));
