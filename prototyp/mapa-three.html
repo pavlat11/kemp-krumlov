@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Mapa kempu – prototyp three.js · Kemp Krumlov</title>
+<style>
+@font-face{font-family:"Plus Jakarta Sans";src:url(../fonts/plus-jakarta-sans-latin-wght-normal.woff2) format("woff2");font-weight:200 800;font-display:swap;unicode-range:U+0000-00FF,U+2000-206F,U+20AC}
+@font-face{font-family:"Plus Jakarta Sans";src:url(../fonts/plus-jakarta-sans-latin-ext-wght-normal.woff2) format("woff2");font-weight:200 800;font-display:swap;unicode-range:U+0100-02AF,U+1E00-1EFF}
+html,body{margin:0;height:100%;background:#0b2419;font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#fff;overflow:hidden}
+#mapa{position:fixed;inset:0}
+#mapa canvas{display:block;touch-action:none;cursor:grab}#mapa canvas:active{cursor:grabbing}
+.top{position:fixed;top:14px;left:14px;right:14px;display:flex;gap:10px;align-items:center;z-index:5;pointer-events:none}
+.top>*{pointer-events:auto}
+.styl{display:flex;gap:4px;padding:4px;background:#fff;border-radius:14px;box-shadow:0 6px 22px rgba(0,0,0,.25)}
+.styl button{border:0;background:none;font:inherit;font-weight:700;font-size:14px;color:#3a463f;padding:8px 15px;border-radius:10px;cursor:pointer}
+.styl button[aria-pressed=true]{background:#14201a;color:#fff}
+.zpet{margin-left:auto;background:rgba(11,36,25,.8);color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:10px 16px;border-radius:12px}
+.stat{position:fixed;right:14px;bottom:14px;z-index:5;background:rgba(11,36,25,.82);border-radius:12px;padding:8px 12px;font:600 12px ui-monospace,Menlo,monospace;line-height:1.5;white-space:pre}
+.karta{position:fixed;left:14px;bottom:14px;z-index:6;width:min(360px,calc(100vw - 28px));background:#0f2a1e;border-radius:20px;padding:18px 20px;box-shadow:0 20px 50px rgba(0,0,0,.45);display:none}
+.karta.on{display:block}
+.karta h2{margin:0 0 6px;font-size:22px}.karta p{margin:0 0 10px;font-size:14px;line-height:1.5;color:#cfe0d6}
+.karta ul{margin:0 0 12px;padding-left:18px;font-size:13.5px;color:#e6efe9}
+.karta a{display:inline-block;background:#f4a64a;color:#0b2419;font-weight:800;text-decoration:none;padding:10px 18px;border-radius:999px}
+.karta .x{position:absolute;top:10px;right:12px;background:none;border:0;color:#fff;font-size:22px;cursor:pointer}
+.nap{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:4;background:rgba(11,36,25,.82);border-radius:999px;padding:9px 16px;font-size:13px}
+@media(max-width:700px){.stat{display:none}.nap{display:none}}
+</style>
+<script type="importmap">{"imports":{"three":"../js/vendor/three.module.min.js"}}</script>
+</head>
+<body>
+<div id="mapa" aria-label="Mapa kempu"></div>
+<div class="top">
+ <div class="styl" role="group" aria-label="Styl mapy"><button type="button" data-s="real" aria-pressed="false">Realistická</button><button type="button" data-s="kresl" aria-pressed="true">Kreslená</button></div>
+ <a class="zpet" href="../#areal">← Zpět na web</a>
+</div>
+<div class="karta" id="karta" role="dialog" aria-live="polite"><button class="x" type="button" aria-label="Zavřít">×</button><h2></h2><p></p><ul></ul><a href="../#rezervace">Rezervovat</a></div>
+<div class="nap">Táhni pro posun · kolečko / dva prsty pro přiblížení · pravé tlačítko pro natočení</div>
+<div class="stat" id="stat"></div>
+<script type="module">
+import * as THREE from 'three';
+import {MapControls} from '../js/vendor/three-addons/MapControls.js';
+const IC={
+ chatky:'<path d="M3 11 12 4l9 7M5 10v10h14V10M10 20v-5h4v5"/>',
+ stany:'<path d="M3 20 12 6l9 14zM12 6v14"/>',
+ teepee:'<path d="M12 3 5 21h14zM10 3l2 3 2-3M10 21l2-5 2 5"/>',
+ podsad:'<path d="M3 19 12 6l9 13M2 21h20M9 19l3-5 3 5"/>',
+ kiosek:'<path d="M17 11h1a3 3 0 0 1 0 6h-1M5 8h12v9a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4zM8 2v3M12 2v3"/>',
+ wc:'<path d="M2 7l2.2 10L7 10l2.8 7L12 7M21.5 9.2A4 4 0 0 0 14.5 12a4 4 0 0 0 7 2.8"/>',
+ parking:'<rect x="4" y="3" width="16" height="18" rx="3"/><path d="M10 17V8h3a2.5 2.5 0 0 1 0 5h-3"/>',
+ lode:'<path d="M2 14h20l-3 5H5zM12 3v11M12 4l6 7h-6"/>',
+ recepce:'<path d="M4 18h16M6 18a6 6 0 0 1 12 0M12 8V5M9.5 5h5"/>',
+ kotva:'<circle cx="12" cy="5" r="2.2"/><path d="M12 7.2V21M8 11h8M5 14c0 4 3 7 7 7s7-3 7-7M3 15.5l2-2 2 2M17 15.5l2-2 2 2"/>',
+ hriste:'<path d="M3 21 7 4h10l4 17M7 4h10M10 4v9M14 4v9M9 13h6"/>',
+ pujcovna:'<path d="M3.5 20.5 13.5 10.5M20.5 20.5 10.5 10.5M2.5 18.5l3 3M21.5 18.5l-3 3"/><ellipse cx="16.6" cy="7.4" rx="2.3" ry="4.4" transform="rotate(45 16.6 7.4)"/><ellipse cx="7.4" cy="7.4" rx="2.3" ry="4.4" transform="rotate(-45 7.4 7.4)"/>'
+};
+const D=await (await fetch('mapa3d-data.json')).json();
+const T=D.tex,CX=T.x+T.w/2,CZ=T.y+T.h/2;
+const wx=x=>x-CX,wz=y=>y-CZ;            /* souřadnice mapy -> scéna (rovina XZ, střed v počátku) */
+const box=document.getElementById('mapa');
+const R=new THREE.WebGLRenderer({antialias:true,powerPreference:'low-power'});
+R.setPixelRatio(Math.min(devicePixelRatio,2));R.setSize(innerWidth,innerHeight);R.outputColorSpace=THREE.SRGBColorSpace;box.append(R.domElement);
+const S=new THREE.Scene();S.background=new THREE.Color('#d9d4c6');S.fog=new THREE.Fog('#d9d4c6',3600,7000);
+const C=new THREE.PerspectiveCamera(36,innerWidth/innerHeight,20,12000);
+/* podklad: jedna textura celé mapy */
+let styl=(()=>{try{return localStorage.getItem('kk.mapa.styl')==='real'?'real':'kresl'}catch(e){return 'kresl'}})();
+const malá=Math.min(innerWidth,innerHeight)<700||!(R.capabilities.maxTextureSize>=4096);
+const TL=new THREE.TextureLoader(),tex={};
+const nacti=s=>tex[s]||(tex[s]=new Promise(ok=>TL.load(`../img/mapa3d-${s}${malá?'-2048':''}.webp`,t=>{t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=Math.min(8,R.capabilities.getMaxAnisotropy());ok(t)})));
+const zem=new THREE.Mesh(new THREE.PlaneGeometry(T.w,T.h),new THREE.MeshBasicMaterial({color:'#fff'}));zem.rotation.x=-Math.PI/2;S.add(zem);
+/* štítky a špendlíky jako sprity (kreslí je grafická karta, ne prohlížeč) */
+const IKs=k=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="COL" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg>`;
+const img=src=>new Promise(ok=>{const i=new Image();i.onload=()=>ok(i);i.src=src});
+async function spriteTex(it,s){const cv=document.createElement('canvas'),c=cv.getContext('2d'),dp=2;
+ if(s==='real'){c.font=`700 ${15*dp}px "Plus Jakarta Sans",system-ui`;const tw=c.measureText(it.n).width,W=tw+44*dp,H=(30+18)*dp;cv.width=W;cv.height=H;
+  c.font=`700 ${15*dp}px "Plus Jakarta Sans",system-ui`;c.shadowColor='rgba(0,0,0,.3)';c.shadowBlur=8*dp;c.shadowOffsetY=2*dp;c.fillStyle='#fff';
+  c.beginPath();c.roundRect(2*dp,2*dp,W-4*dp,28*dp,8*dp);c.fill();c.shadowColor='transparent';
+  c.fillRect(W/2-1*dp,30*dp,2*dp,14*dp);c.beginPath();c.arc(W/2,45*dp,3*dp,0,7);c.fill();
+  const i=await img('data:image/svg+xml,'+encodeURIComponent(IKs(it.k).replace('COL','#1d2420')));c.drawImage(i,10*dp,9*dp,16*dp,16*dp);
+  c.fillStyle='#1d2420';c.textBaseline='middle';c.fillText(it.n,32*dp,16.5*dp)}
+ else{const W=64*dp,H=80*dp;cv.width=W;cv.height=H;c.shadowColor='rgba(0,0,0,.35)';c.shadowBlur=6*dp;c.shadowOffsetY=3*dp;
+  c.fillStyle='#fff';c.beginPath();c.arc(W/2,30*dp,26*dp,Math.PI*.82,Math.PI*2.18);c.lineTo(W/2,74*dp);c.closePath();c.fill();c.shadowColor='transparent';
+  c.fillStyle=it.c;c.beginPath();c.arc(W/2,30*dp,21*dp,Math.PI*.8,Math.PI*2.2);c.lineTo(W/2,67*dp);c.closePath();c.fill();
+  const i=await img('data:image/svg+xml,'+encodeURIComponent(IKs(it.k).replace('COL','#fff')));c.drawImage(i,W/2-12*dp,18*dp,24*dp,24*dp)}
+ const t=new THREE.CanvasTexture(cv);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=4;return {t,a:cv.width/cv.height}}
+const pins=[];
+for(const it of D.items){const m=new THREE.SpriteMaterial({depthTest:false,transparent:true});const sp=new THREE.Sprite(m);sp.center.set(.5,0);sp.renderOrder=10;
+ sp.position.set(wx(it.m[0]),0,wz(it.m[1]));sp.userData.it=it;S.add(sp);pins.push(sp)}
+const PX=s=>s;/* velikost spritu v pixelech obrazovky */
+async function nastavStyl(s){styl=s;try{localStorage.setItem('kk.mapa.styl',s)}catch(e){}
+ document.querySelectorAll('.styl button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===s));
+ const t=await nacti(s);zem.material.map=t;zem.material.needsUpdate=true;
+ for(const sp of pins){const {t:st,a}=await spriteTex(sp.userData.it,s);if(sp.material.map)sp.material.map.dispose();sp.material.map=st;sp.material.needsUpdate=true;sp.userData.a=a;sp.userData.h=s==='real'?48:80}
+ velikost();zmena=true}
+/* lodě plující po řece: jednoduché 3D kánoe */
+const LO=[];const cols=['#e8b23a','#d64545','#3a8fb7','#4b8a5a'];
+const kanoeG=(()=>{const sh=new THREE.Shape();sh.moveTo(-24,0);sh.quadraticCurveTo(-10,-8,0,-8);sh.quadraticCurveTo(10,-8,24,0);sh.quadraticCurveTo(10,8,0,8);sh.quadraticCurveTo(-10,8,-24,0);
+ const g=new THREE.ExtrudeGeometry(sh,{depth:5,bevelEnabled:false});g.rotateX(Math.PI/2);g.translate(0,5,0);return g})();
+D.paths.forEach((P,i)=>{const cur=new THREE.CatmullRomCurve3(P.map(p=>new THREE.Vector3(wx(p[0]),2,wz(p[1]))));
+ const m=new THREE.Mesh(kanoeG,new THREE.MeshBasicMaterial({color:cols[i%4]}));m.scale.setScalar(1.5);S.add(m);LO.push({cur,m,off:i*3600})});
+/* kamera a ovládání */
+C.position.set(wx(1000),2150,wz(900)+1900);
+const K=new MapControls(C,R.domElement);K.target.set(wx(1000),0,wz(560));K.enableDamping=true;K.dampingFactor=.12;K.screenSpacePanning=false;
+K.minDistance=500;K.maxDistance=4200;K.minPolarAngle=.15;K.maxPolarAngle=1.05;K.zoomToCursor=true;K.update();
+const MEZ=new THREE.Box3(new THREE.Vector3(-T.w/2+200,0,-T.h/2+200),new THREE.Vector3(T.w/2-200,0,T.h/2-200));
+let zmena=true;K.addEventListener('change',()=>{const t=K.target,c=t.clone();MEZ.clampPoint(t,t);const d=t.clone().sub(c);if(d.lengthSq())C.position.add(d);zmena=true;velikost()});
+/* sprity drží stálou velikost na obrazovce */
+function velikost(){for(const sp of pins){const d=C.position.distanceTo(sp.position),h=(sp.userData.h||80),k=2*Math.tan(C.fov*Math.PI/360)*d/innerHeight*h*(innerWidth<700?.8:1);sp.scale.set(k*(sp.userData.a||.8),k,1)}}
+/* klik: špendlík nebo zóna pod kurzorem */
+const RC=new THREE.Raycaster(),mys=new THREE.Vector2(),karta=document.getElementById('karta');let dolu=null,vybrany=null;
+R.domElement.addEventListener('pointerdown',e=>{dolu=[e.clientX,e.clientY]});
+R.domElement.addEventListener('pointerup',e=>{if(!dolu||Math.hypot(e.clientX-dolu[0],e.clientY-dolu[1])>6)return;
+ mys.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);RC.setFromCamera(mys,C);
+ let it=null;const hp=RC.intersectObjects(pins);if(hp.length)it=hp[0].object.userData.it;
+ if(!it){const hz=RC.intersectObject(zem);if(hz.length){const x=hz[0].point.x+CX,y=hz[0].point.z+CZ;it=D.items.find(i=>i.r&&x>=i.r[0]&&x<=i.r[0]+i.r[2]&&y>=i.r[1]&&y<=i.r[1]+i.r[3])}}
+ ukaz(it)});
+function ukaz(it){vybrany=it;if(!it){karta.classList.remove('on');return}karta.querySelector('h2').textContent=it.n;karta.querySelector('p').textContent=it.d||'';
+ karta.querySelector('ul').innerHTML=(it.li||[]).map(x=>'<li>'+x.replace(/</g,'&lt;')+'</li>').join('');karta.classList.add('on');
+ const p=new THREE.Vector3(wx(it.m[0]),0,wz(it.m[1])),dv=p.clone().sub(K.target);cil={od:K.target.clone(),k:dv,t0:performance.now()}}
+karta.querySelector('.x').onclick=()=>ukaz(null);
+let cil=null;
+document.querySelectorAll('.styl button').forEach(b=>b.onclick=()=>{if(b.dataset.s!==styl)nastavStyl(b.dataset.s)});
+addEventListener('resize',()=>{R.setSize(innerWidth,innerHeight);C.aspect=innerWidth/innerHeight;C.updateProjectionMatrix();velikost();zmena=true});
+/* smyčka: kreslí jen když je mapa vidět; lodě se hýbou, takže ~30 snímků/s stačí */
+let vidi=true;document.addEventListener('visibilitychange',()=>{vidi=!document.hidden});
+const st=document.getElementById('stat');let last=0,fr=0,fs=0,ft=performance.now();
+R.setAnimationLoop(now=>{if(!vidi)return;if(now-last<32&&!zmena&&!cil)return;last=now;
+ if(cil){const k=Math.min(1,(now-cil.t0)/700),e=1-Math.pow(1-k,3),np=cil.od.clone().add(cil.k.clone().multiplyScalar(e)),d=np.clone().sub(K.target);K.target.copy(np);C.position.add(d);if(k>=1)cil=null}
+ K.update();
+ const TT=14400,TR=9000;LO.forEach(o=>{const t=(now+o.off)%TT;let k=Math.min(1,t/TR);k=1-Math.pow(1-k,2.2);const p=o.cur.getPointAt(k),q=o.cur.getTangentAt(Math.min(.999,k));o.m.position.copy(p);o.m.rotation.y=-Math.atan2(q.z,q.x);o.m.visible=t<TT-700});
+ R.render(S,C);zmena=false;fr++;
+ if(now-ft>1000){fs=fr;fr=0;ft=now;const m=R.info.memory,r=R.info.render;st.textContent=`three.js r${THREE.REVISION}\n${fs} snímků/s · ${r.calls} volání · ${r.triangles} trojúhelníků\ntextur ${m.textures} · geometrií ${m.geometries}`}});
+await document.fonts.load('700 15px "Plus Jakarta Sans"').catch(()=>{});await nastavStyl(styl);
+window.__m3={R,S,C,K};
+</script>
+</body>
+</html>

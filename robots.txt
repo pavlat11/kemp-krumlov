@@ -1,4 +1,5 @@
 User-agent: *
 Disallow: /admin/
+Disallow: /prototyp/
 
 Sitemap: https://www.kemp-krumlov.cz/sitemap.xml
