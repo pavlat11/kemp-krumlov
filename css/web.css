@@ -3688,3 +3688,8 @@ html{scroll-snap-type:y proximity}
 #areal{scroll-snap-align:start;scroll-snap-stop:always}
 /* mapa přesně přes celé okno i po kliknutí na „Mapa“ (vyruší odsazení pod hlavičkou) */
 #areal{scroll-margin-top:-96px}
+/* rezervace na mobilu: širší formulář (menší okraje kolem i uvnitř kroků) */
+@media (max-width:600px){
+  #rezervace>.wrap,#rezervace .wrap{margin-left:0!important;margin-right:0!important;padding-left:8px!important;padding-right:8px!important;width:auto!important;max-width:none!important}
+  #rezervace .rz-step{padding-left:14px!important;padding-right:14px!important}
+}
