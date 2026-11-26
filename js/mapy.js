@@ -738,10 +738,16 @@ if(REAL){sec.classList.add('am-real');
   const tx=L.querySelector('text');tx.textContent=name;let tw=0;try{tw=tx.getComputedTextLength()}catch(e){}if(!tw)tw=name.length*6.1;const W=tw+32;
   const rc=L.querySelector('rect');rc.setAttribute('x',-W/2);rc.setAttribute('width',W);tx.setAttribute('x',-W/2+24);
   const gi=L.querySelector('.rl-i');if(gi){gi.setAttribute('transform',`translate(${-W/2+8} -34) scale(.5)`);const sv=gi.querySelector('svg');if(sv)sv.setAttribute('stroke-width','2.6')}});
- svg.querySelectorAll('.am-cnum').forEach(g=>{const c=g.querySelector('circle'),t=g.querySelector('text');if(!c||!t)return;
-  /* štítek se vejde mezi sousední místa (podsadové stany jsou hustě vedle sebe) – číslo uvnitř, zelená tečka nad ním */
-  const x=+c.getAttribute('cx'),y=+c.getAttribute('cy'),r=+c.getAttribute('r'),n=t.textContent,w=(n.length>1?2.15:1.75)*r,h=1.8*r;
-  g.innerHTML=`<rect x="${x-w/2}" y="${y-h/2}" width="${w}" height="${h}" rx="${.45*r}" fill="#fff" stroke="rgba(0,0,0,.18)" stroke-width=".4"/><circle cx="${x}" cy="${y-h/2-.05*r}" r="${.32*r}" fill="#3cb35a" stroke="#fff" stroke-width="${.12*r}"/><text x="${x}" y="${y+.06*r}" dominant-baseline="central" text-anchor="middle" font-family="${FONT}" font-weight="800" font-size="${1.22*r}" fill="#1d2420">${n}</text>`})}
+ {const CN=[...svg.querySelectorAll('.am-cnum')].map(g=>{const c=g.querySelector('circle'),t=g.querySelector('text');return c&&t?{g,x:+c.getAttribute('cx'),y:+c.getAttribute('cy'),r:+c.getAttribute('r'),n:t.textContent,z:g.parentNode}:null}).filter(Boolean);
+  CN.forEach(o=>{/* místo mezi sousedy ve stejné řadě, aby se štítky nepřekrývaly */
+   let sp=1e9;CN.forEach(q=>{if(q!==o&&q.z===o.z&&Math.abs(q.y-o.y)<o.r*2.2)sp=Math.min(sp,Math.hypot(q.x-o.x,q.y-o.y))});
+   const {x,y,r,n}=o,av=sp*.9,siroky=av>=3.1*r,h=1.85*r,fs=1.2*r,dig=n.length>1;
+   const w=siroky?Math.min(av,(dig?3.3:2.8)*r):Math.min(av,(dig?2.2:1.8)*r),rx=h/2;
+   const tx=siroky?x+.42*r:x,ty=y+.05*r;
+   o.g.innerHTML=`<rect x="${x-w/2}" y="${y-h/2+.22*r}" width="${w}" height="${h}" rx="${rx}" fill="rgba(10,30,18,.22)"/>`+
+    `<rect x="${x-w/2}" y="${y-h/2}" width="${w}" height="${h}" rx="${rx}" fill="#fff"/>`+
+    (siroky?`<circle cx="${x-w/2+.78*r}" cy="${y}" r="${.36*r}" fill="#36b25a"/>`:`<circle cx="${x}" cy="${y-h/2}" r="${.34*r}" fill="#36b25a" stroke="#fff" stroke-width="${.14*r}"/>`)+
+    `<text x="${tx}" y="${ty}" dominant-baseline="central" text-anchor="middle" font-family="${FONT}" font-weight="800" font-size="${fs}" letter-spacing="${-.03*r}" fill="#16231c">${n}</text>`})}}
 /* přepínač stylu mapy */
 {const tg=document.createElement('div');tg.className='am-styl';tg.setAttribute('role','group');tg.setAttribute('aria-label','Styl mapy');
  tg.innerHTML=`<button type="button" data-s="real" aria-pressed="${REAL}">Realistická</button><button type="button" data-s="kresl" aria-pressed="${!REAL}">Kreslená</button>`;
@@ -756,7 +762,7 @@ if(M3){sec.classList.add('am-3d');
  const hv=e=>{e.classList.add('am-hv')},skryj=el=>{[...el.children].forEach(c=>{if(c.classList.contains('hl')||c.classList.contains('am-cnum'))return;if(c.querySelector('.hl,.am-cnum'))skryj(c);else hv(c)})};
  const bg=svg.querySelector('.am-bg');if(bg)hv(bg);svg.querySelectorAll('.am-zone').forEach(skryj);svg.querySelectorAll('[data-y]').forEach(t=>{if(!t.closest('.am-mk,.am-fleet'))hv(t)});
  const base=new URL('.',document.baseURI).href;
- import(base+'js/mapa3d.js?v=7').then(m=>m.start({stage,svg,base,styl:REAL?'real':'kresl'})).then(a=>{window.__am3d=a;a.view(vb);if(cur)a.focus(cur.k)})
+ import(base+'js/mapa3d.js?v=8').then(m=>m.start({stage,svg,base,styl:REAL?'real':'kresl'})).then(a=>{window.__am3d=a;a.view(vb);if(cur)a.focus(cur.k)})
   .catch(e=>{console.warn('Mapa: WebGL podklad nejde, zůstává SVG',e);window.__am3d=null;sec.classList.remove('am-3d');if(window.__amBake)window.__amBake()})}
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{legH();if(cur)select(cur);else apply(cover())},120)});
 })();
