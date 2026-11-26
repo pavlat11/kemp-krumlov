@@ -3665,3 +3665,17 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .rz-lf input[type=date]:focus{outline:none;border-color:#0b2419;box-shadow:0 0 0 4px rgba(244,166,74,.3)}
 .rz-lf input[type=date]:disabled{background:#f6f2ea;color:#55625a}
 .rz-ldn{font-size:13px;color:#55625a;margin-top:-2px}
+/* mapa kempu – realistický styl a přepínač */
+.am-real #amSvg>g>g{filter:saturate(.88) contrast(1.06) brightness(.98)}
+.am-real .am-mk .rl{transition:transform .2s}
+.am-real .am-mk:hover .rl,.am-real .am-mk.on .rl{transform:translateY(-3px)}
+.am-real .am-mk.on .rl-b{fill:#14201a}.am-real .am-mk.on .rl text{fill:#fff}.am-real .am-mk.on .rl-i{color:#fff}
+.am-real .am-mk.dim{opacity:.45}
+.am-styl{position:absolute;top:16px;left:16px;z-index:6;display:flex;gap:4px;padding:4px;background:#fff;border-radius:14px;box-shadow:0 6px 22px rgba(0,0,0,.22)}
+.am-styl button{border:0;background:none;font:inherit;font-weight:700;font-size:14px;color:#3a463f;padding:8px 15px;border-radius:10px;cursor:pointer}
+.am-styl button[aria-pressed=true]{background:#14201a;color:#fff}
+.am-styl button:focus-visible{outline:3px solid #f4a64a;outline-offset:1px}
+@media (max-width:700px){.am-styl{top:10px;left:10px}.am-styl button{font-size:12.5px;padding:7px 11px}}
+/* mapa kempu se vykresluje jen když je poblíž obrazovky – mimo ni prohlížeč uvolní paměť pro její vykreslení */
+#areal{content-visibility:auto;contain-intrinsic-size:auto 900px}
+

@@ -189,7 +189,18 @@ select('zamek',false);
 (()=>{const svg=document.getElementById('amSvg');if(!svg)return;
 svg.replaceChildren();
 const NS='http://www.w3.org/2000/svg',sec=document.getElementById('areal'),stage=document.getElementById('amStage'),tip=document.getElementById('amTip');
-const E=(t,a={},p=svg,html)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(html)e.innerHTML=html;p.append(e);return e};
+/* styl mapy: realistická (tlumené přírodní barvy, bílé štítky jako na leteckém snímku) / kreslená */
+const REAL=(()=>{try{return localStorage.getItem('kk.mapa.styl')==='real'}catch(e){return false}})();
+const RC=(()=>{const hx=c=>{c=String(c).trim();if(c[0]==='#'){if(c.length===4)c='#'+[...c.slice(1)].map(x=>x+x).join('');if(c.length!==7)return null;return [1,3,5].map(i=>parseInt(c.substr(i,2),16))}const m=c.match(/^rgba?\(([^)]+)\)$/);if(m){const q=m[1].split(',').map(Number);if(q.length>3&&q[3]<1)return null;return q.slice(0,3)}return null};
+ const hsl=([r,g,b])=>{r/=255;g/=255;b/=255;const M=Math.max(r,g,b),m=Math.min(r,g,b),l=(M+m)/2;let h=0,s=0;if(M!==m){const d=M-m;s=l>.5?d/(2-M-m):d/(M+m);h=M===r?(g-b)/d+(g<b?6:0):M===g?(b-r)/d+2:(r-g)/d+4;h*=60}return[h,s,l]};
+ const rgb=(h,s,l)=>{const f=n=>{const k=(n+h/30)%12,a=s*Math.min(l,1-l);return Math.round(255*(l-a*Math.max(-1,Math.min(k-3,9-k,1))))};return '#'+[f(0),f(8),f(4)].map(v=>v.toString(16).padStart(2,'0')).join('')};
+ const C={};return c=>{if(c in C)return C[c];const v=hx(c);if(!v)return C[c]=c;let [h,s,l]=hsl(v);
+  if((h>=300||h<25)&&s>.35){h=12+((v[0]*7)%9);s=Math.min(s,.48);l=Math.min(.42,l*.85)}
+  else if(h>=250&&h<300&&s>.2){h=14;s=.22;l=Math.min(.45,l*.85)}
+  else if(h>=40&&h<65&&s>.5){s=.42;l=Math.min(l,.55)}
+  else if(h>=75&&h<170){s*=.82;l*=.9}else s*=.85;
+  return C[c]=rgb(h,s,l)}})();
+const E=(t,a={},p=svg,html)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,REAL&&(k==='fill'||k==='stop-color')?RC(a[k]):a[k]);if(html){e.innerHTML=html;if(REAL)e.querySelectorAll('[fill],[stop-color]').forEach(x=>['fill','stop-color'].forEach(k=>{const v=x.getAttribute(k);if(v)x.setAttribute(k,RC(v))}))}p.append(e);return e};
 const G=(p,a={})=>E('g',a,p);
 let seed=5;const R=()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646};
 const FONT='Plus Jakarta Sans,sans-serif';
@@ -570,9 +581,11 @@ function apply(b){vb=b;svg.setAttribute('viewBox',`${b.x} ${b.y} ${b.w} ${b.h}`)
   D.forEach(o=>o.mk.setAttribute('transform',`translate(${o.mx} ${o.my}) scale(${k})`));upright();
   svg.classList.toggle('zoomed',s>base*1.6);
   const kd=Math.min(1.2,1.6/(s/base));DLS.forEach(t=>t.setAttribute('font-size',t.dataset.s*kd))}
-{let vis=true,sig='';const io2=new IntersectionObserver(e=>{vis=e[0].isIntersecting},{threshold:0});io2.observe(sec);
- (function watch(){if(vis&&D[0]&&D[0].pr){const a=D[0].pr[0].getBoundingClientRect(),b=D[0].pr[1].getBoundingClientRect(),
-   t=[a.left,a.top,b.left,b.top].map(v=>v.toFixed(1)).join();if(t!==sig){sig=t;upright()}}requestAnimationFrame(watch)})()}
+{let vis=true,sig='',q=0;const io2=new IntersectionObserver(e=>{vis=e[0].isIntersecting},{threshold:0});io2.observe(sec);
+ /* dřív se to měřilo v každém snímku (vynucené přepočty rozvržení) – teď jen při rolování a občas */
+ const chk=()=>{if(!vis||document.hidden||!D[0]||!D[0].pr)return;const a=D[0].pr[0].getBoundingClientRect(),b=D[0].pr[1].getBoundingClientRect(),
+   t=[a.left,a.top,b.left,b.top].map(v=>v.toFixed(1)).join();if(t!==sig){sig=t;upright()}};
+ addEventListener('scroll',()=>{if(vis&&!q){q=1;requestAnimationFrame(()=>{q=0;chk()})}},{passive:true});setInterval(chk,600);chk()}
 const ez=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 function go(to,ms=900){cancelAnimationFrame(anim);const from={...vb},t0=performance.now();
   if(false)ms=1;
@@ -708,10 +721,30 @@ legH();
  for(const im of df.querySelectorAll('image')){const h=im.getAttribute('href');if(h&&!h.startsWith('data:'))im.setAttribute('href',await toData(h))}
  const X=new XMLSerializer(),str=`<svg xmlns="${NS}" viewBox="${bb.x} ${bb.y} ${bb.width} ${bb.height}" width="${bb.width}" height="${bb.height}">${X.serializeToString(df)}${[...bg.childNodes].map(n=>X.serializeToString(n)).join('')}</svg>`;
  const url=URL.createObjectURL(new Blob([str],{type:'image/svg+xml'}));await new Promise((ok,no)=>{const I=new Image();I.onload=ok;I.onerror=no;I.src=url});
- const im=document.createElementNS(NS,'image');for(const[k,v]of Object.entries({href:url,x:bb.x,y:bb.y,width:bb.width,height:bb.height,preserveAspectRatio:'none'}))im.setAttribute(k,v);bg.replaceChildren(im);bg.dataset.baked=1}catch(e){}};
+ const im=document.createElementNS(NS,'image');for(const[k,v]of Object.entries({href:url,x:bb.x,y:bb.y,width:bb.width,height:bb.height,preserveAspectRatio:'none'}))im.setAttribute(k,v);bg.replaceChildren(im);bg.dataset.baked=1;
+}catch(e){}};
  const go=()=>('requestIdleCallback'in window?requestIdleCallback(bake,{timeout:3000}):setTimeout(bake,800));
  /* zapéct až když se k mapě přiblížíte – na mobilu to jinak blokovalo načtení stránky */
  if('IntersectionObserver' in window){const z=new IntersectionObserver(e=>{if(e[0].isIntersecting){z.disconnect();go()}},{rootMargin:'800px 0px'});z.observe(svg)}else if(document.readyState==='complete')go();else addEventListener('load',go)}
+/* realistický styl: špendlíky -> bílé štítky s ikonou a názvem, čísla míst -> bílé štítky s tečkou */
+if(REAL){sec.classList.add('am-real');
+ svg.querySelectorAll('.am-mk').forEach(g=>{const up=g.querySelector('.up');if(!up)return;const name=(g.querySelector('.mlb text')||{}).textContent||'',ic=g.querySelector('.mc svg');
+  [...up.children].forEach(c=>{if(!c.classList.contains('ring'))c.style.display='none'});
+  const L=document.createElementNS(NS,'g');L.setAttribute('class','rl');up.append(L);
+  L.innerHTML=`<line x1="0" y1="0" x2="0" y2="-16" stroke="#fff" stroke-width="1.6"/><circle r="2.6" fill="#fff"/><rect class="rl-b" y="-40" height="24" rx="7" fill="#fff" filter="url(#amSh)"/>`+(ic?`<g class="rl-i" color="#1d2420">${ic.outerHTML}</g>`:'')+`<text y="-27.5" dominant-baseline="central" font-family="${FONT}" font-weight="700" font-size="11" fill="#1d2420"></text>`;
+  const tx=L.querySelector('text');tx.textContent=name;let tw=0;try{tw=tx.getComputedTextLength()}catch(e){}if(!tw)tw=name.length*6.1;const W=tw+32;
+  const rc=L.querySelector('rect');rc.setAttribute('x',-W/2);rc.setAttribute('width',W);tx.setAttribute('x',-W/2+24);
+  const gi=L.querySelector('.rl-i');if(gi){gi.setAttribute('transform',`translate(${-W/2+8} -34) scale(.5)`);const sv=gi.querySelector('svg');if(sv)sv.setAttribute('stroke-width','2.6')}});
+ svg.querySelectorAll('.am-cnum').forEach(g=>{const c=g.querySelector('circle'),t=g.querySelector('text');if(!c||!t)return;
+  const x=+c.getAttribute('cx'),y=+c.getAttribute('cy'),r=+c.getAttribute('r'),n=t.textContent,k=r/5.8,w=(n.length>1?30:25)*k,h=15*k;
+  g.innerHTML=`<rect x="${x-w/2}" y="${y-h/2}" width="${w}" height="${h}" rx="${4*k}" fill="#fff" stroke="rgba(0,0,0,.15)" stroke-width=".5" filter="url(#amSh)"/><circle cx="${x-w/2+6*k}" cy="${y}" r="${2.4*k}" fill="#3cb35a"/><text x="${x+3*k}" y="${y}" dominant-baseline="central" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-weight="700" font-size="${9*k}" fill="#1d2420">${n}</text>`})}
+/* přepínač stylu mapy */
+{const tg=document.createElement('div');tg.className='am-styl';tg.setAttribute('role','group');tg.setAttribute('aria-label','Styl mapy');
+ tg.innerHTML=`<button type="button" data-s="real" aria-pressed="${REAL}">Realistická</button><button type="button" data-s="kresl" aria-pressed="${!REAL}">Kreslená</button>`;
+ tg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||(b.dataset.s==='real')===REAL)return;try{localStorage.setItem('kk.mapa.styl',b.dataset.s)}catch(_){}
+  try{sessionStorage.setItem('kk.mapa.skok','1')}catch(_){}location.hash='areal';location.reload()});
+ stage.append(tg);
+ try{if(sessionStorage.getItem('kk.mapa.skok')){sessionStorage.removeItem('kk.mapa.skok');setTimeout(()=>sec.scrollIntoView({block:'start'}),60)}}catch(_){}}
 apply(cover());
 window.__am={Z:Z,icon:icon,select:select};
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{legH();if(cur)select(cur);else apply(cover())},120)});
