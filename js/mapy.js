@@ -253,7 +253,7 @@ const D=[
  {k:'stany',f:{x:1190,y:250,w:850,h:520},n:'Louka pro stany',c:'#4f9a58',m:[1560,500],
   d:'Velká travnatá louka mezi řekou a chatkami pro vlastní stany a karavany.',
   li:['Rezervace nutná až pro skupiny 15+ stanů','Elektřina '+KKC.t('elek','a')+' / noc','Karavan '+KKC.t('karavan','a')+' / noc (mimo sezónu '+KKC.t('karavan','b')+')'],price:KKC.t('stan','a'),unit:'stan / noc · v sezóně'},
- {k:'podsad',f:{x:1260,y:170,w:340,h:70},n:'Podsadové stany',c:'#2a7c86',m:[1190,214],
+ {k:'podsad',f:{x:1260,y:170,w:340,h:70},n:'Podsadové stany',c:'#2a7c86',m:[1437,150],
   d:'Řada postavených stanů na dřevěné podsadě podél cesty. Přijedete a rovnou se ubytujete.',
   li:['Stan je postavený, nic nestavíte','Hned u cesty k sociálkám'],price:KKC.t('podsad','a'),unit:'stan / noc + osoby'},
  {k:'teepee',f:{x:1720,y:360,w:140,h:100},n:'Teepee',c:'#d58a2c',m:[1930,480],
