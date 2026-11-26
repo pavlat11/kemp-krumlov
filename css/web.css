@@ -3684,8 +3684,8 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 .am-gl{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
 #areal.am-3d .am-hv{display:none}
 /* mapa kempu: při rolování se zastaví přes celé okno */
-html{scroll-snap-type:y proximity}
-#areal{scroll-snap-align:start;scroll-snap-stop:always}
+/* jen na počítači s myší – na dotykovém displeji zastavování brzdilo setrvačné rolování prstem */
+@media (hover:hover) and (pointer:fine){html{scroll-snap-type:y proximity}#areal{scroll-snap-align:start;scroll-snap-stop:always}}
 /* mapa přesně přes celé okno i po kliknutí na „Mapa“ (vyruší odsazení pod hlavičkou) */
 #areal{scroll-margin-top:-96px}
 /* rezervace na mobilu: širší formulář (menší okraje kolem i uvnitř kroků) */
