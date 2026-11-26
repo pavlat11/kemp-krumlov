@@ -286,3 +286,10 @@ Upravený text s cenou se ukládá se značkou `{price:klic}`, takže se cena d�
 Rezervace má pole `doplnky` – objekt `{klíč položky z ceníku (kategorie „doplnky“): počet}`, např. `{"auto":2,"elek":1,"pes":1}`.
 Plní ho web (výběr doplňků v rezervaci), Nová rezervace / úprava a Ubytovat hosta v administraci. Cena se počítá za každou noc podle ceníku a je už v `cena`.
 Zobrazuje se v detailu rezervace, na kartách Ubytování (administrace i aplikace obsluhy).
+
+
+## Mapa kempu ve WebGL (three.js)
+Na webu se mapa kempu vykresluje přes WebGL (`js/mapa3d.js`, knihovna `js/vendor/three.module.min.js`). Podkladem je jedna textura celé mapy.
+SVG mapa v `js/mapy.js` zůstává: z ní se textura vyrábí, obsluhuje panel se seznamem, kartu místa a úvod, a slouží jako záloha, když prohlížeč WebGL nemá.
+- Po změně SVG mapy (nová chatka, přesun budovy…) je potřeba znovu vygenerovat podklady: `python3 nastroje/mapa3d-export.py` → `img/mapa3d-*.webp`, `js/mapa3d-data.json`.
+- Vypnout WebGL a vrátit SVG jde v prohlížeči přes `localStorage.setItem('kk.mapa.3d','0')`; natrvalo stačí v `js/mapy.js` v bloku „vykreslení přes WebGL“ nastavit `M3=false`.
