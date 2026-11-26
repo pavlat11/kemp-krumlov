@@ -292,3 +292,5 @@ Zobrazuje se v detailu rezervace, na kartách Ubytování (administrace i aplika
 `js/mapa3d.js` umí kreslit statický podklad mapy (terén, budovy, stromy) přes WebGL z jedné textury; pohled, posun, přiblížení, špendlíky a lodě dál řídí SVG v `js/mapy.js`, takže mapa vypadá a chová se stejně.
 Výchozí je zapnuto. Vypnutí jen pro vlastní prohlížeč: `https://www.kemp-krumlov.cz/?mapa3d=0#areal`, zapnutí zpět `?mapa3d=1`. Čísla chatek a stanů se kreslí v SVG (ostrá při přiblížení), v textuře nejsou.
 Po změně SVG mapy znovu vygenerovat textury: `python3 nastroje/mapa3d-export.py`.
+
+Plné 3D (budovy, chatky, stany, auta a stromy jako 3D tělesa se stíny, pohled bez natáčení, stejný jako SVG): zkušebně `?mapa3d=3`. Potřebuje textury `img/mapa3d-teren-*.webp` (jen terén), vyrábí je stejný skript.
