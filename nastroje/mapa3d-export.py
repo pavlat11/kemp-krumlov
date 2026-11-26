@@ -5,6 +5,8 @@
 import json,os,sys
 from playwright.sync_api import sync_playwright
 from PIL import Image
+sys_path=__import__('sys').path;sys_path.insert(0,__import__('os').path.dirname(__import__('os').path.abspath(__file__)))
+from realisticky import realisticky
 import numpy as np
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 U='file://'+ROOT+'/index.html'
@@ -41,6 +43,7 @@ with sync_playwright() as p:
       a=np.asarray(im).astype(int);s=a[:,::64,:].sum(axis=2).mean(axis=1);tm=np.where(s<160)[0];tm=tm[tm>H*0.8]
       vyska=int(tm[0]) if len(tm) else H
     im=im.crop((0,0,W,vyska))
+    if st=='real':im=realisticky(im)
     im.save(ROOT+'/img/mapa3d-%s.webp'%st,quality=84,method=6)
     im.resize((2048,round(vyska/2)),Image.LANCZOS).save(ROOT+'/img/mapa3d-%s-2048.webp'%st,quality=84,method=6)
   d['tex']={'x':-1800,'y':-1064,'w':5497,'h':round(3664*vyska/H,1)}
