@@ -3686,3 +3686,5 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 /* mapa kempu: při rolování se zastaví přes celé okno */
 html{scroll-snap-type:y proximity}
 #areal{scroll-snap-align:start;scroll-snap-stop:always}
+/* mapa přesně přes celé okno i po kliknutí na „Mapa“ (vyruší odsazení pod hlavičkou) */
+#areal{scroll-margin-top:-96px}
