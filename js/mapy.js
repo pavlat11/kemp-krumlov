@@ -200,6 +200,9 @@ const RC=(()=>{const hx=c=>{c=String(c).trim();if(c[0]==='#'){if(c.length===4)c=
   else if(h>=40&&h<65&&s>.5){s=.42;l=Math.min(l,.55)}
   else if(h>=75&&h<170){s*=.82;l*=.9}else s*=.85;
   return C[c]=rgb(h,s,l)}})();
+/* podklad přes WebGL (js/mapa3d.js): zapne ?mapa3d=1 nebo localStorage kk.mapa.3d=1; bez WebGL zůstane čisté SVG */
+const M3=(()=>{try{const q=new URLSearchParams(location.search).get('mapa3d');if(q==='1')localStorage.setItem('kk.mapa.3d','1');if(q==='0')localStorage.removeItem('kk.mapa.3d');
+  if(localStorage.getItem('kk.mapa.3d')!=='1')return false;const c=document.createElement('canvas'),g=c.getContext('webgl2')||c.getContext('webgl');if(!g)return false;const x=g.getExtension('WEBGL_lose_context');if(x)x.loseContext();return true}catch(e){return false}})();
 const E=(t,a={},p=svg,html)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,REAL&&(k==='fill'||k==='stop-color')?RC(a[k]):a[k]);if(html){e.innerHTML=html;if(REAL)e.querySelectorAll('[fill],[stop-color]').forEach(x=>['fill','stop-color'].forEach(k=>{const v=x.getAttribute(k);if(v)x.setAttribute(k,RC(v))}))}p.append(e);return e};
 const G=(p,a={})=>E('g',a,p);
 let seed=5;const R=()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646};
@@ -576,7 +579,7 @@ function upright(){
     const det=ax*by-bx*ay;if(!(Math.abs(det)>1e-6))return;
     const k=Math.hypot(ax,ay);
     o.up.setAttribute('transform',`matrix(${(k*by/det).toFixed(4)} ${(-k*ay/det).toFixed(4)} ${(-k*bx/det).toFixed(4)} ${(k*ax/det).toFixed(4)} 0 0)`)})}
-function apply(b){vb=b;svg.setAttribute('viewBox',`${b.x} ${b.y} ${b.w} ${b.h}`);
+function apply(b){vb=b;svg.setAttribute('viewBox',`${b.x} ${b.y} ${b.w} ${b.h}`);if(window.__am3d)window.__am3d.view(b);
   const {W}=size(),s=W/b.w,base=W/cover().w,k=Math.max(1.15,Math.min(2.8,Math.pow(base/s,.75)*2.5));
   D.forEach(o=>o.mk.setAttribute('transform',`translate(${o.mx} ${o.my}) scale(${k})`));upright();
   svg.classList.toggle('zoomed',s>base*1.6);
@@ -616,7 +619,7 @@ function render(o){if(!o){card.hidden=true;return}
    <div class="am-nav"><button type="button" data-d="-1">${ar('M15 6l-6 6 6 6')}<span>${prev.n}</span></button><button type="button" data-d="1"><span>${next.n}</span>${ar('M9 6l6 6-6 6')}</button></div></div>`;
   card.querySelector('.am-x').onclick=()=>select(null);
   card.querySelectorAll('.am-nav button').forEach(b=>b.onclick=()=>select(+b.dataset.d<0?prev:next))}
-function select(o){cur=o;sec.classList.toggle('focus',!!o);
+function select(o){cur=o;sec.classList.toggle('focus',!!o);if(window.__am3d)window.__am3d.focus(o?o.k:null);
   D.forEach(x=>{const m=x===o;x.g.classList.toggle('on',m);x.mk.classList.toggle('on',m);x.btn.classList.toggle('on',m);x.btn.setAttribute('aria-pressed',m)});
   render(o);
   if(o){mks.append(o.mk);const bb=o.f,pad=60;
@@ -716,14 +719,14 @@ legH();
    d.setAttribute('cx',X.toFixed(2));d.setAttribute('cy',Y.toFixed(2))})}
  })(performance.now())}
 /* zapečení statického pozadí mapy do jednoho vektorového obrázku – plynulejší animace */
-{const bake=async()=>{try{const bg=svg.querySelector('.am-bg');if(!bg||bg.dataset.baked)return;const bb=bg.getBBox(),df=svg.querySelector('defs').cloneNode(true);
+{const bake=async()=>{try{if(sec.classList.contains('am-3d'))return;const bg=svg.querySelector('.am-bg');if(!bg||bg.dataset.baked)return;const bb=bg.getBBox(),df=svg.querySelector('defs').cloneNode(true);
  const toData=async u=>{const b=await (await fetch(u)).blob();return await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)})};
  for(const im of df.querySelectorAll('image')){const h=im.getAttribute('href');if(h&&!h.startsWith('data:'))im.setAttribute('href',await toData(h))}
  const X=new XMLSerializer(),str=`<svg xmlns="${NS}" viewBox="${bb.x} ${bb.y} ${bb.width} ${bb.height}" width="${bb.width}" height="${bb.height}">${X.serializeToString(df)}${[...bg.childNodes].map(n=>X.serializeToString(n)).join('')}</svg>`;
  const url=URL.createObjectURL(new Blob([str],{type:'image/svg+xml'}));await new Promise((ok,no)=>{const I=new Image();I.onload=ok;I.onerror=no;I.src=url});
  const im=document.createElementNS(NS,'image');for(const[k,v]of Object.entries({href:url,x:bb.x,y:bb.y,width:bb.width,height:bb.height,preserveAspectRatio:'none'}))im.setAttribute(k,v);bg.replaceChildren(im);bg.dataset.baked=1;
 }catch(e){}};
- const go=()=>('requestIdleCallback'in window?requestIdleCallback(bake,{timeout:3000}):setTimeout(bake,800));
+ const go=()=>('requestIdleCallback'in window?requestIdleCallback(bake,{timeout:3000}):setTimeout(bake,800));window.__amBake=bake;
  /* zapéct až když se k mapě přiblížíte – na mobilu to jinak blokovalo načtení stránky */
  if('IntersectionObserver' in window){const z=new IntersectionObserver(e=>{if(e[0].isIntersecting){z.disconnect();go()}},{rootMargin:'800px 0px'});z.observe(svg)}else if(document.readyState==='complete')go();else addEventListener('load',go)}
 /* realistický styl: špendlíky -> bílé štítky s ikonou a názvem, čísla míst -> bílé štítky s tečkou */
@@ -747,6 +750,13 @@ if(REAL){sec.classList.add('am-real');
  try{if(sessionStorage.getItem('kk.mapa.skok')){sessionStorage.removeItem('kk.mapa.skok');setTimeout(()=>sec.scrollIntoView({block:'start'}),60)}}catch(_){}}
 apply(cover());
 window.__am={Z:Z,icon:icon,select:select};
+if(M3){sec.classList.add('am-3d');
+ /* statický obsah (terén, budovy, stromy, čísla míst) se schová – kreslí ho WebGL; zvýraznění zón (.hl) zůstává pro klikání */
+ const hv=e=>{e.classList.add('am-hv')},skryj=el=>{[...el.children].forEach(c=>{if(c.classList.contains('hl'))return;if(c.querySelector('.hl'))skryj(c);else hv(c)})};
+ const bg=svg.querySelector('.am-bg');if(bg)hv(bg);svg.querySelectorAll('.am-zone').forEach(skryj);svg.querySelectorAll('[data-y]').forEach(t=>{if(!t.closest('.am-mk,.am-fleet'))hv(t)});
+ const base=new URL('.',document.baseURI).href;
+ import(base+'js/mapa3d.js?v=6').then(m=>m.start({stage,svg,base,styl:REAL?'real':'kresl'})).then(a=>{window.__am3d=a;a.view(vb);if(cur)a.focus(cur.k)})
+  .catch(e=>{console.warn('Mapa: WebGL podklad nejde, zůstává SVG',e);window.__am3d=null;sec.classList.remove('am-3d');if(window.__amBake)window.__amBake()})}
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{legH();if(cur)select(cur);else apply(cover())},120)});
 })();
 ;

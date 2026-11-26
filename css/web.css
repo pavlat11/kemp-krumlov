@@ -2118,9 +2118,9 @@ h2:not(.hero *),.kk2-scope h2:not(.hero *){line-height:1.12!important}
 #areal .am-stage::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 90% at 30% 10%,rgba(255,236,190,.18),rgba(255,236,190,0) 55%),radial-gradient(140% 120% at 50% 60%,transparent 60%,rgba(10,30,20,.28) 100%)}
 /* naklonění mapy – pohled šikmo, ne kolmo shora */
 #areal .am-stage{perspective:1500px;perspective-origin:50% 20%;overflow:hidden}
-#amSvg{transform:rotateX(38deg) scale(1.3);transform-origin:50% 58%;transition:transform .6s ease}
+#amSvg,.am-gl{transform:rotateX(38deg) scale(1.3);transform-origin:50% 58%;transition:transform .6s ease}
 #areal .am-stage::after{content:"";position:absolute;left:0;right:0;top:0;height:18%;pointer-events:none;background:linear-gradient(180deg,rgba(214,232,222,.55),rgba(214,232,222,0))}
-@media(max-width:900px){#amSvg{transform:rotateX(24deg) scale(1.22)}}
+@media(max-width:900px){#amSvg,.am-gl{transform:rotateX(24deg) scale(1.22)}}
 @media not all{#amSvg{transition:none}}
 
 /* ===== vodaci-v2 ===== */
@@ -2763,7 +2763,7 @@ h2:not(.hero *),.kk2-scope h2:not(.hero *){line-height:1.12!important}
  #areal .am-intro,#areal .ai-card{transition-duration:.01s!important}
 }
 /* mapa vždy zakryje celou plochu sekce (nahoře zůstával světlý pruh) */
-@media(min-width:901px){#amSvg{transform:translateY(-6vh) rotateX(38deg) scale(1.3)!important}}
+@media(min-width:901px){#amSvg,.am-gl{transform:translateY(-6vh) rotateX(38deg) scale(1.3)!important}}
 @media(max-width:600px){#areal .ai-dots{display:none}}
 
 /* ===== progress bar: spustí se sám při příchodu na mapu ===== */
@@ -3679,3 +3679,7 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 /* mapa kempu se vykresluje jen když je poblíž obrazovky – mimo ni prohlížeč uvolní paměť pro její vykreslení */
 #areal{content-visibility:auto;contain-intrinsic-size:auto 900px}
 
+
+/* podklad mapy přes WebGL – stejná transformace jako SVG, které leží nad ním */
+.am-gl{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+#areal.am-3d .am-hv{display:none}

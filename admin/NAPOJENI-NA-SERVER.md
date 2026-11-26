@@ -286,3 +286,9 @@ Upravený text s cenou se ukládá se značkou `{price:klic}`, takže se cena d�
 Rezervace má pole `doplnky` – objekt `{klíč položky z ceníku (kategorie „doplnky“): počet}`, např. `{"auto":2,"elek":1,"pes":1}`.
 Plní ho web (výběr doplňků v rezervaci), Nová rezervace / úprava a Ubytovat hosta v administraci. Cena se počítá za každou noc podle ceníku a je už v `cena`.
 Zobrazuje se v detailu rezervace, na kartách Ubytování (administrace i aplikace obsluhy).
+
+
+## Mapa kempu – podklad přes WebGL (zkušebně, vypnuto)
+`js/mapa3d.js` umí kreslit statický podklad mapy (terén, budovy, stromy) přes WebGL z jedné textury; pohled, posun, přiblížení, špendlíky a lodě dál řídí SVG v `js/mapy.js`, takže mapa vypadá a chová se stejně.
+Zapnutí jen pro vlastní prohlížeč: `https://www.kemp-krumlov.cz/?mapa3d=1#areal`, vypnutí `?mapa3d=0`. Výchozí je vypnuto.
+Po změně SVG mapy znovu vygenerovat textury: `python3 nastroje/mapa3d-export.py`.
