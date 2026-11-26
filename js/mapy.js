@@ -256,7 +256,7 @@ const D=[
  {k:'podsad',f:{x:1260,y:170,w:340,h:70},n:'Podsadové stany',c:'#2a7c86',m:[1437,150],
   d:'Řada postavených stanů na dřevěné podsadě podél cesty. Přijedete a rovnou se ubytujete.',
   li:['Stan je postavený, nic nestavíte','Hned u cesty k sociálkám'],price:KKC.t('podsad','a'),unit:'stan / noc + osoby'},
- {k:'teepee',f:{x:1720,y:360,w:140,h:100},n:'Teepee',c:'#d58a2c',m:[1786,352],
+ {k:'teepee',f:{x:1720,y:420,w:140,h:100},n:'Teepee',c:'#d58a2c',m:[1786,412],
   d:'Velké indiánské teepee na louce pod chatkami. Zážitek hlavně pro rodiny s dětmi a party.',
   li:['Stojí volně na louce','Kousek od chatek i sociálek'],price:KKC.t('teepee','a'),unit:'noc + osoby · mimo sezónu '+KKC.t('teepee','b')},
  {k:'chatky',f:{x:540,y:0,w:1400,h:310},n:'Chatky',c:'#b6513e',m:[2010,110],
@@ -476,8 +476,8 @@ const DOCKS=[760,905,1010,1160];
 {const g=zone(Z.podsad);hl(g,'rect',{x:636,y:92,width:160,height:24,rx:6});
  for(let i=0;i<11;i++)ptent(g,651+i*13.5,104);for(let i=0;i<11;i++)cnum(g,651+i*13.5,89,i+1,6,7,'#2a7c86','#fff')}
 // teepee (podle skutečnosti: bílé plátno, dřevěné tyče nahoře, vchod)
-{const g=zone(Z.teepee);hl(g,'circle',{cx:893,cy:203,r:31});
- const cx=893,by=216,rx=19,ry=7,ay=178;
+{const g=zone(Z.teepee);hl(g,'circle',{cx:893,cy:233,r:31});
+ const cx=893,by=246,rx=19,ry=7,ay=208;
  // stín na trávě
  E('ellipse',{cx:cx+14,cy:by+3,rx:rx+10,ry:ry+1,fill:'rgba(23,58,34,.32)',filter:'url(#amSoft)'},g);
  // kolíky a lana
