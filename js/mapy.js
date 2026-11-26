@@ -259,7 +259,7 @@ const D=[
  {k:'teepee',f:{x:1720,y:420,w:140,h:100},n:'Teepee',c:'#d58a2c',m:[1786,412],
   d:'Velké indiánské teepee na louce pod chatkami. Zážitek hlavně pro rodiny s dětmi a party.',
   li:['Stojí volně na louce','Kousek od chatek i sociálek'],price:KKC.t('teepee','a'),unit:'noc + osoby · mimo sezónu '+KKC.t('teepee','b')},
- {k:'chatky',f:{x:540,y:0,w:1400,h:310},n:'Chatky',c:'#b6513e',m:[2010,110],
+ {k:'chatky',f:{x:540,y:0,w:1400,h:310},n:'Chatky',c:'#b6513e',m:[812,100],
   d:'Dřevěné chatky v klidné části kempu pod lesem a menší řada u vjezdu. Každá má kapacitu 7 osob a je včetně lůžkovin.',
   li:['Kapacita 7 osob','Včetně lůžkovin','Platí se chatka + každá osoba','Školní kurzy: 200 Kč / osoba'],price:KKC.t('chatka','a'),unit:'chatka / noc + osoby · mimo sezónu '+KKC.t('chatka','b')}
 ];
