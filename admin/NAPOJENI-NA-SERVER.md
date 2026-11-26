@@ -288,7 +288,7 @@ Plní ho web (výběr doplňků v rezervaci), Nová rezervace / úprava a Ubytov
 Zobrazuje se v detailu rezervace, na kartách Ubytování (administrace i aplikace obsluhy).
 
 
-## Mapa kempu – podklad přes WebGL (zkušebně, vypnuto)
+## Mapa kempu – podklad přes WebGL (zapnuto)
 `js/mapa3d.js` umí kreslit statický podklad mapy (terén, budovy, stromy) přes WebGL z jedné textury; pohled, posun, přiblížení, špendlíky a lodě dál řídí SVG v `js/mapy.js`, takže mapa vypadá a chová se stejně.
-Zapnutí jen pro vlastní prohlížeč: `https://www.kemp-krumlov.cz/?mapa3d=1#areal`, vypnutí `?mapa3d=0`. Výchozí je vypnuto.
+Výchozí je zapnuto. Vypnutí jen pro vlastní prohlížeč: `https://www.kemp-krumlov.cz/?mapa3d=0#areal`, zapnutí zpět `?mapa3d=1`. Čísla chatek a stanů se kreslí v SVG (ostrá při přiblížení), v textuře nejsou.
 Po změně SVG mapy znovu vygenerovat textury: `python3 nastroje/mapa3d-export.py`.

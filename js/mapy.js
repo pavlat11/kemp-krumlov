@@ -200,9 +200,9 @@ const RC=(()=>{const hx=c=>{c=String(c).trim();if(c[0]==='#'){if(c.length===4)c=
   else if(h>=40&&h<65&&s>.5){s=.42;l=Math.min(l,.55)}
   else if(h>=75&&h<170){s*=.82;l*=.9}else s*=.85;
   return C[c]=rgb(h,s,l)}})();
-/* podklad přes WebGL (js/mapa3d.js): zapne ?mapa3d=1 nebo localStorage kk.mapa.3d=1; bez WebGL zůstane čisté SVG */
-const M3=(()=>{try{const q=new URLSearchParams(location.search).get('mapa3d');if(q==='1')localStorage.setItem('kk.mapa.3d','1');if(q==='0')localStorage.removeItem('kk.mapa.3d');
-  if(localStorage.getItem('kk.mapa.3d')!=='1')return false;const c=document.createElement('canvas'),g=c.getContext('webgl2')||c.getContext('webgl');if(!g)return false;const x=g.getExtension('WEBGL_lose_context');if(x)x.loseContext();return true}catch(e){return false}})();
+/* podklad přes WebGL (js/mapa3d.js) – výchozí; vypne ?mapa3d=0 (zapne zpět ?mapa3d=1); bez WebGL zůstane čisté SVG */
+const M3=(()=>{try{const q=new URLSearchParams(location.search).get('mapa3d');if(q==='0')localStorage.setItem('kk.mapa.3d','0');if(q==='1')localStorage.removeItem('kk.mapa.3d');
+  if(localStorage.getItem('kk.mapa.3d')==='0')return false;const c=document.createElement('canvas'),g=c.getContext('webgl2')||c.getContext('webgl');if(!g)return false;const x=g.getExtension('WEBGL_lose_context');if(x)x.loseContext();return true}catch(e){return false}})();
 const E=(t,a={},p=svg,html)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,REAL&&(k==='fill'||k==='stop-color')?RC(a[k]):a[k]);if(html){e.innerHTML=html;if(REAL)e.querySelectorAll('[fill],[stop-color]').forEach(x=>['fill','stop-color'].forEach(k=>{const v=x.getAttribute(k);if(v)x.setAttribute(k,RC(v))}))}p.append(e);return e};
 const G=(p,a={})=>E('g',a,p);
 let seed=5;const R=()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646};
@@ -739,8 +739,9 @@ if(REAL){sec.classList.add('am-real');
   const rc=L.querySelector('rect');rc.setAttribute('x',-W/2);rc.setAttribute('width',W);tx.setAttribute('x',-W/2+24);
   const gi=L.querySelector('.rl-i');if(gi){gi.setAttribute('transform',`translate(${-W/2+8} -34) scale(.5)`);const sv=gi.querySelector('svg');if(sv)sv.setAttribute('stroke-width','2.6')}});
  svg.querySelectorAll('.am-cnum').forEach(g=>{const c=g.querySelector('circle'),t=g.querySelector('text');if(!c||!t)return;
-  const x=+c.getAttribute('cx'),y=+c.getAttribute('cy'),r=+c.getAttribute('r'),n=t.textContent,k=r/5.8,w=(n.length>1?30:25)*k,h=15*k;
-  g.innerHTML=`<rect x="${x-w/2}" y="${y-h/2}" width="${w}" height="${h}" rx="${4*k}" fill="#fff" stroke="rgba(0,0,0,.15)" stroke-width=".5" filter="url(#amSh)"/><circle cx="${x-w/2+6*k}" cy="${y}" r="${2.4*k}" fill="#3cb35a"/><text x="${x+3*k}" y="${y}" dominant-baseline="central" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-weight="700" font-size="${9*k}" fill="#1d2420">${n}</text>`})}
+  /* štítek se vejde mezi sousední místa (podsadové stany jsou hustě vedle sebe) – číslo uvnitř, zelená tečka nad ním */
+  const x=+c.getAttribute('cx'),y=+c.getAttribute('cy'),r=+c.getAttribute('r'),n=t.textContent,w=(n.length>1?2.15:1.75)*r,h=1.8*r;
+  g.innerHTML=`<rect x="${x-w/2}" y="${y-h/2}" width="${w}" height="${h}" rx="${.45*r}" fill="#fff" stroke="rgba(0,0,0,.18)" stroke-width=".4"/><circle cx="${x}" cy="${y-h/2-.05*r}" r="${.32*r}" fill="#3cb35a" stroke="#fff" stroke-width="${.12*r}"/><text x="${x}" y="${y+.06*r}" dominant-baseline="central" text-anchor="middle" font-family="${FONT}" font-weight="800" font-size="${1.22*r}" fill="#1d2420">${n}</text>`})}
 /* přepínač stylu mapy */
 {const tg=document.createElement('div');tg.className='am-styl';tg.setAttribute('role','group');tg.setAttribute('aria-label','Styl mapy');
  tg.innerHTML=`<button type="button" data-s="real" aria-pressed="${REAL}">Realistická</button><button type="button" data-s="kresl" aria-pressed="${!REAL}">Kreslená</button>`;
@@ -752,10 +753,10 @@ apply(cover());
 window.__am={Z:Z,icon:icon,select:select};
 if(M3){sec.classList.add('am-3d');
  /* statický obsah (terén, budovy, stromy, čísla míst) se schová – kreslí ho WebGL; zvýraznění zón (.hl) zůstává pro klikání */
- const hv=e=>{e.classList.add('am-hv')},skryj=el=>{[...el.children].forEach(c=>{if(c.classList.contains('hl'))return;if(c.querySelector('.hl'))skryj(c);else hv(c)})};
+ const hv=e=>{e.classList.add('am-hv')},skryj=el=>{[...el.children].forEach(c=>{if(c.classList.contains('hl')||c.classList.contains('am-cnum'))return;if(c.querySelector('.hl,.am-cnum'))skryj(c);else hv(c)})};
  const bg=svg.querySelector('.am-bg');if(bg)hv(bg);svg.querySelectorAll('.am-zone').forEach(skryj);svg.querySelectorAll('[data-y]').forEach(t=>{if(!t.closest('.am-mk,.am-fleet'))hv(t)});
  const base=new URL('.',document.baseURI).href;
- import(base+'js/mapa3d.js?v=6').then(m=>m.start({stage,svg,base,styl:REAL?'real':'kresl'})).then(a=>{window.__am3d=a;a.view(vb);if(cur)a.focus(cur.k)})
+ import(base+'js/mapa3d.js?v=7').then(m=>m.start({stage,svg,base,styl:REAL?'real':'kresl'})).then(a=>{window.__am3d=a;a.view(vb);if(cur)a.focus(cur.k)})
   .catch(e=>{console.warn('Mapa: WebGL podklad nejde, zůstává SVG',e);window.__am3d=null;sec.classList.remove('am-3d');if(window.__amBake)window.__amBake()})}
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{legH();if(cur)select(cur);else apply(cover())},120)});
 })();

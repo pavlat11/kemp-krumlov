@@ -3683,3 +3683,6 @@ footer.ft .ft-col a,footer.ft .ft-col>span{display:block;width:max-content;max-w
 /* podklad mapy přes WebGL – stejná transformace jako SVG, které leží nad ním */
 .am-gl{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
 #areal.am-3d .am-hv{display:none}
+/* mapa kempu: při rolování se zastaví přes celé okno */
+html{scroll-snap-type:y proximity}
+#areal{scroll-snap-align:start;scroll-snap-stop:always}
