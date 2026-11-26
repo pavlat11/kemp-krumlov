@@ -619,13 +619,12 @@ function render(o){if(!o){card.hidden=true;return}
 function select(o){cur=o;sec.classList.toggle('focus',!!o);
   D.forEach(x=>{const m=x===o;x.g.classList.toggle('on',m);x.mk.classList.toggle('on',m);x.btn.classList.toggle('on',m);x.btn.setAttribute('aria-pressed',m)});
   render(o);
-  if(window.__am3d){window.__am3d.focus(o?o.k:null);if(o&&list.scrollWidth>list.clientWidth+4)list.scrollTo({left:o.btn.offsetLeft-12,behavior:'smooth'});return}
   if(o){mks.append(o.mk);const bb=o.f,pad=60;
     go(fit({x:bb.x-pad,y:bb.y-pad-50,w:bb.w+pad*2,h:bb.h+pad*2+50},true));
     if(list.scrollWidth>list.clientWidth+4)list.scrollTo({left:o.btn.offsetLeft-12,behavior:'smooth'})}
   else go(cover())}
-document.getElementById('amIn').onclick=()=>window.__am3d?window.__am3d.zoom(1.5):zoomBy(1.5);
-document.getElementById('amOut').onclick=()=>window.__am3d?window.__am3d.zoom(1/1.5):zoomBy(1/1.5);
+document.getElementById('amIn').onclick=()=>zoomBy(1.5);
+document.getElementById('amOut').onclick=()=>zoomBy(1/1.5);
 document.getElementById('amAll').onclick=()=>select(null);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&cur)select(null)});
 
@@ -717,14 +716,14 @@ legH();
    d.setAttribute('cx',X.toFixed(2));d.setAttribute('cy',Y.toFixed(2))})}
  })(performance.now())}
 /* zapečení statického pozadí mapy do jednoho vektorového obrázku – plynulejší animace */
-{const bake=async()=>{try{if(sec.classList.contains('am-3d'))return;const bg=svg.querySelector('.am-bg');if(!bg||bg.dataset.baked)return;const bb=bg.getBBox(),df=svg.querySelector('defs').cloneNode(true);
+{const bake=async()=>{try{const bg=svg.querySelector('.am-bg');if(!bg||bg.dataset.baked)return;const bb=bg.getBBox(),df=svg.querySelector('defs').cloneNode(true);
  const toData=async u=>{const b=await (await fetch(u)).blob();return await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)})};
  for(const im of df.querySelectorAll('image')){const h=im.getAttribute('href');if(h&&!h.startsWith('data:'))im.setAttribute('href',await toData(h))}
  const X=new XMLSerializer(),str=`<svg xmlns="${NS}" viewBox="${bb.x} ${bb.y} ${bb.width} ${bb.height}" width="${bb.width}" height="${bb.height}">${X.serializeToString(df)}${[...bg.childNodes].map(n=>X.serializeToString(n)).join('')}</svg>`;
  const url=URL.createObjectURL(new Blob([str],{type:'image/svg+xml'}));await new Promise((ok,no)=>{const I=new Image();I.onload=ok;I.onerror=no;I.src=url});
  const im=document.createElementNS(NS,'image');for(const[k,v]of Object.entries({href:url,x:bb.x,y:bb.y,width:bb.width,height:bb.height,preserveAspectRatio:'none'}))im.setAttribute(k,v);bg.replaceChildren(im);bg.dataset.baked=1;
 }catch(e){}};
- const go=()=>('requestIdleCallback'in window?requestIdleCallback(bake,{timeout:3000}):setTimeout(bake,800));window.__amBake=bake;
+ const go=()=>('requestIdleCallback'in window?requestIdleCallback(bake,{timeout:3000}):setTimeout(bake,800));
  /* zapéct až když se k mapě přiblížíte – na mobilu to jinak blokovalo načtení stránky */
  if('IntersectionObserver' in window){const z=new IntersectionObserver(e=>{if(e[0].isIntersecting){z.disconnect();go()}},{rootMargin:'800px 0px'});z.observe(svg)}else if(document.readyState==='complete')go();else addEventListener('load',go)}
 /* realistický styl: špendlíky -> bílé štítky s ikonou a názvem, čísla míst -> bílé štítky s tečkou */
@@ -742,20 +741,12 @@ if(REAL){sec.classList.add('am-real');
 /* přepínač stylu mapy */
 {const tg=document.createElement('div');tg.className='am-styl';tg.setAttribute('role','group');tg.setAttribute('aria-label','Styl mapy');
  tg.innerHTML=`<button type="button" data-s="real" aria-pressed="${REAL}">Realistická</button><button type="button" data-s="kresl" aria-pressed="${!REAL}">Kreslená</button>`;
- tg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-  if(window.__am3d){try{localStorage.setItem('kk.mapa.styl',b.dataset.s)}catch(_){}tg.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));window.__am3d.styl(b.dataset.s);return}
-  if((b.dataset.s==='real')===REAL)return;try{localStorage.setItem('kk.mapa.styl',b.dataset.s)}catch(_){}
+ tg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||(b.dataset.s==='real')===REAL)return;try{localStorage.setItem('kk.mapa.styl',b.dataset.s)}catch(_){}
   try{sessionStorage.setItem('kk.mapa.skok','1')}catch(_){}location.hash='areal';location.reload()});
  stage.append(tg);
  try{if(sessionStorage.getItem('kk.mapa.skok')){sessionStorage.removeItem('kk.mapa.skok');setTimeout(()=>sec.scrollIntoView({block:'start'}),60)}}catch(_){}}
 apply(cover());
 window.__am={Z:Z,icon:icon,select:select};
-/* vykreslení přes WebGL (three.js) – úspornější než naklopené SVG; když WebGL nejde, zůstane SVG */
-{const M3=(()=>{try{if(localStorage.getItem('kk.mapa.3d')==='0')return false}catch(e){}try{const c=document.createElement('canvas'),g=c.getContext('webgl2');if(!g)return false;const x=g.getExtension('WEBGL_lose_context');if(x)x.loseContext();return true}catch(e){return false}})();
- if(M3){sec.classList.add('am-3d');const base=new URL('.',document.baseURI).href;
-  import(base+'js/mapa3d.js?v=1').then(m=>m.start({stage,sec,base,styl:REAL?'real':'kresl',onPick:k=>select(k&&Z[k]?(cur===Z[k]?null:Z[k]):null)}))
-   .then(a=>{window.__am3d=a;if(cur)a.focus(cur.k)})
-   .catch(e=>{console.warn('Mapa: WebGL nejde, použije se SVG',e);window.__am3d=null;sec.classList.remove('am-3d');if(window.__amBake)window.__amBake()})}}
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{legH();if(cur)select(cur);else apply(cover())},120)});
 })();
 ;

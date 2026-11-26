@@ -55,7 +55,7 @@ const IC={
  hriste:'<path d="M3 21 7 4h10l4 17M7 4h10M10 4v9M14 4v9M9 13h6"/>',
  pujcovna:'<path d="M3.5 20.5 13.5 10.5M20.5 20.5 10.5 10.5M2.5 18.5l3 3M21.5 18.5l-3 3"/><ellipse cx="16.6" cy="7.4" rx="2.3" ry="4.4" transform="rotate(45 16.6 7.4)"/><ellipse cx="7.4" cy="7.4" rx="2.3" ry="4.4" transform="rotate(-45 7.4 7.4)"/>'
 };
-const D=await (await fetch('../js/mapa3d-data.json')).json();
+const D=await (await fetch('mapa3d-data.json')).json();
 const T=D.tex,CX=T.x+T.w/2,CZ=T.y+T.h/2;
 const wx=x=>x-CX,wz=y=>y-CZ;            /* souřadnice mapy -> scéna (rovina XZ, střed v počátku) */
 const box=document.getElementById('mapa');
