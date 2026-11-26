@@ -201,9 +201,8 @@ const RC=(()=>{const hx=c=>{c=String(c).trim();if(c[0]==='#'){if(c.length===4)c=
   else if(h>=75&&h<170){s*=.82;l*=.9}else s*=.85;
   return C[c]=rgb(h,s,l)}})();
 /* podklad přes WebGL (js/mapa3d.js) – výchozí; vypne ?mapa3d=0 (zapne zpět ?mapa3d=1); bez WebGL zůstane čisté SVG */
-const M3=(()=>{try{const q=new URLSearchParams(location.search).get('mapa3d');if(q==='0'||q==='3')localStorage.setItem('kk.mapa.3d',q);if(q==='1')localStorage.removeItem('kk.mapa.3d');
+const M3=(()=>{try{const q=new URLSearchParams(location.search).get('mapa3d');if(q==='0')localStorage.setItem('kk.mapa.3d','0');if(q==='1')localStorage.removeItem('kk.mapa.3d');
   if(localStorage.getItem('kk.mapa.3d')==='0')return false;const c=document.createElement('canvas'),g=c.getContext('webgl2')||c.getContext('webgl');if(!g)return false;const x=g.getExtension('WEBGL_lose_context');if(x)x.loseContext();return true}catch(e){return false}})();
-const M3D=(()=>{try{return localStorage.getItem('kk.mapa.3d')==='3'}catch(e){return false}})();/* plné 3D: budovy, chatky a stromy jako tělesa */
 const E=(t,a={},p=svg,html)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,REAL&&(k==='fill'||k==='stop-color')?RC(a[k]):a[k]);if(html){e.innerHTML=html;if(REAL)e.querySelectorAll('[fill],[stop-color]').forEach(x=>['fill','stop-color'].forEach(k=>{const v=x.getAttribute(k);if(v)x.setAttribute(k,RC(v))}))}p.append(e);return e};
 const G=(p,a={})=>E('g',a,p);
 let seed=5;const R=()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646};
@@ -289,16 +288,16 @@ const S2=G(world,{transform:'scale(2)'});
 const bgp=G(S2,{class:'am-bg'});
 const DLS=[];const dl=(x,y,txt,size=15,rot=0,col='#2c3a30')=>{const t=E('text',{class:'am-dl','data-s':size*2,x,y,'text-anchor':'middle','font-family':FONT,'font-weight':800,'font-size':size*2,fill:col,transform:rot?`rotate(${rot} ${x} ${y})`:'','paint-order':'stroke',stroke:'rgba(255,255,255,.88)','stroke-width':4},world);t.textContent=txt;DLS.push(t);return t};
 const shade=(hex,f)=>{const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;r=Math.round(r*f);g=Math.round(g*f);b=Math.round(b*f);return `rgb(${Math.min(255,r)},${Math.min(255,g)},${Math.min(255,b)})`};
-const TREES=[];const O3=[];/* O3: objekty pro 3D režim (budovy, chatky, stany, auta, stromy) */
-const tree=(p,x,y,r)=>{const g=G(p,{class:'t3 o3'});g.dataset.y=y;TREES.push(g);
+const TREES=[];
+const tree=(p,x,y,r)=>{const g=G(p,{class:'t3'});g.dataset.y=y;TREES.push(g);
   E('ellipse',{cx:x+r*.7,cy:y+r*.2,rx:r*1.2,ry:r*.65,fill:'rgba(15,40,22,.16)'},g);E('ellipse',{cx:x+r*.62,cy:y+r*.18,rx:r*.9,ry:r*.45,fill:'rgba(15,40,22,.22)'},g);
-  if(R()<.32){/* jehličnan */const h=r*2.6,c='url(#cnA)';O3.push({t:'con',g,x,y,r});
+  if(R()<.32){/* jehličnan */const h=r*2.6,c='url(#cnA)';
     E('rect',{x:x-r*.09,y:y-r*.5,width:r*.18,height:r*.55,fill:'#6b4a2e'},g);
     for(let k=0;k<3;k++){const yy=y-r*.35-k*h*.26,ww=r*(1-k*.24);
       E('path',{d:`M${x-ww} ${yy} L${x} ${yy-h*.42} L${x+ww} ${yy}Z`,fill:c},g);
       E('path',{d:`M${x} ${yy-h*.42} L${x+ww} ${yy} L${x} ${yy}Z`,fill:'rgba(0,20,10,.28)'},g)}
     return g}
-  const pal=['url(#trA)','url(#trB)','url(#trC)'][Math.floor(R()*3)];O3.push({t:'dec',g,x,y,r,c:pal.slice(6,9)});
+  const pal=['url(#trA)','url(#trB)','url(#trC)'][Math.floor(R()*3)];
   const cy=y-r*.95;
   E('rect',{x:x-r*.1,y:cy,width:r*.2,height:r*.95,fill:'#6b4a2e'},g);
   E('circle',{cx:x+r*.08,cy:cy+r*.12,r:r*.98,fill:'#1d4428'},g);
@@ -306,7 +305,7 @@ const tree=(p,x,y,r)=>{const g=G(p,{class:'t3 o3'});g.dataset.y=y;TREES.push(g);
   for(let i=0;i<6;i++){const a=i/6*Math.PI*2-.6,rr=r*(.42+R()*.14);E('circle',{cx:x+Math.cos(a)*r*.5,cy:cy+Math.sin(a)*r*.44,r:rr,fill:pal},g)}
   E('circle',{cx:x-r*.15,cy:cy-r*.2,r:r*.55,fill:pal},g);return g};
 const roofB=(p,x,y,w,h,col='#c23b4a',rot=0,H,noWin)=>{H=H??Math.max(9,Math.min(34,Math.min(w,h)*.42));
-  const g=G(p,{transform:`rotate(${rot} ${x+w/2} ${y+h/2})`,class:'o3'});O3.push({t:'b',g,x,y,w,h,H,col});
+  const g=G(p,{transform:`rotate(${rot} ${x+w/2} ${y+h/2})`});
   E('path',{d:`M${x} ${y+h} L${x+w} ${y+h} L${x+w+H*.9} ${y+h-H*.25} L${x+w+H*.9} ${y-H*.2} L${x+w} ${y}Z`,fill:'rgba(15,40,22,.32)',filter:'url(#amSoft)'},g);
   const wy=y+h-H;
   E('rect',{x,y:wy,width:w,height:H,fill:'#e9e3d6'},g);E('rect',{x,y:wy,width:w,height:H,fill:shade(col,.9),opacity:.25},g);
@@ -316,16 +315,16 @@ const roofB=(p,x,y,w,h,col='#c23b4a',rot=0,H,noWin)=>{H=H??Math.max(9,Math.min(3
   else for(let f=0;f<nF;f++)for(let i=0;i<nW;i++)E('rect',{x:x+4+i*(w-6)/nW,y:wy+3+f*(H-4)/nF,width:Math.min(5,(w-6)/nW-2),height:Math.min(5,(H-4)/nF-3),fill:'#7d97a6',opacity:.85},g);
   E('rect',{x,y:y-H,width:w,height:h,fill:col},g);E('rect',{x,y:y-H,width:w,height:h,fill:'url(#roofG)'},g);
   E('line',{x1:x,y1:y-H+h/2,x2:x+w,y2:y-H+h/2,stroke:'rgba(0,0,0,.25)','stroke-width':1},g);return g};
-const cabin=(p,x,y,rot=0)=>{const g=G(p,{transform:`translate(${x} ${y}) rotate(${rot})`,class:'o3'});O3.push({t:'cab',g});
+const cabin=(p,x,y,rot=0)=>{const g=G(p,{transform:`translate(${x} ${y}) rotate(${rot})`});
   E('path',{d:'M-11 13 L11 13 L19 11 L19 -13 L11 -13Z',fill:'rgba(20,45,30,.22)'},g);
   E('rect',{x:-11,y:4,width:22,height:11,fill:'#8a5a36'},g);E('rect',{x:-3,y:7,width:6,height:8,fill:'#5a3a22'},g);E('rect',{x:-9,y:7,width:4,height:4,fill:'#f3d58a'},g);E('rect',{x:5,y:7,width:4,height:4,fill:'#f3d58a'},g);
   E('g',{transform:'translate(0 -9)'},g);const gg=g.lastChild;
   E('rect',{x:-11,y:-13,width:22,height:26,rx:1,fill:'#b9343f'},gg);E('rect',{x:-11,y:-13,width:11,height:26,fill:'#d24753'},gg);
   E('line',{x1:0,y1:-13,x2:0,y2:13,stroke:'#8e2630','stroke-width':1},gg)};
-const ptent=(p,x,y)=>{const g=G(p,{transform:`translate(${x} ${y})`,filter:'url(#amSh)',class:'o3'});O3.push({t:'pt',g});E('rect',{x:-5,y:-6,width:10,height:12,rx:1,fill:'#f4f2ea'},g);E('rect',{x:0,y:-6,width:5,height:12,fill:'#dcd9cd'},g);E('rect',{x:-6,y:5,width:12,height:2.5,fill:'#9a714a'},g)};
-const dome=(p,x,y,c,s=1)=>{const g=G(p,{transform:`translate(${x} ${y}) scale(${s})`,class:'o3'});O3.push({t:'dm',g,c});E('ellipse',{cx:1.5,cy:2,rx:7,ry:5.5,fill:'rgba(23,58,34,.3)'},g);E('ellipse',{rx:6.5,ry:5,fill:c},g);E('path',{d:'M-6.5 0 H6.5 M0 -5 V5',stroke:'rgba(0,0,0,.2)','stroke-width':.8},g);E('ellipse',{cx:-2,cy:-2,rx:2.5,ry:1.6,fill:'rgba(255,255,255,.35)'},g)};
-const car=(p,x,y,c,rot=0)=>{const g=G(p,{transform:`translate(${x} ${y}) rotate(${rot})`,class:'o3'});O3.push({t:'car',g,c});E('rect',{x:-7.5,y:-3.8,width:15,height:7.6,rx:2.2,fill:c,filter:'url(#amSh)'},g);E('rect',{x:-2.5,y:-3,width:5.5,height:6,rx:1,fill:'rgba(30,50,60,.45)'},g)};
-const van=(p,x,y,rot=0,w=16,h=7)=>{const g=G(p,{transform:`translate(${x} ${y}) rotate(${rot})`,filter:'url(#amSh)',class:'o3'});O3.push({t:'van',g,w,h});E('rect',{x:-w/2,y:-h/2,width:w,height:h,rx:1.5,fill:'#f3f3ef'},g);E('rect',{x:w/2-4,y:-h/2+1,width:3,height:h-2,fill:'rgba(30,50,60,.4)'},g)};
+const ptent=(p,x,y)=>{const g=G(p,{transform:`translate(${x} ${y})`,filter:'url(#amSh)'});E('rect',{x:-5,y:-6,width:10,height:12,rx:1,fill:'#f4f2ea'},g);E('rect',{x:0,y:-6,width:5,height:12,fill:'#dcd9cd'},g);E('rect',{x:-6,y:5,width:12,height:2.5,fill:'#9a714a'},g)};
+const dome=(p,x,y,c,s=1)=>{const g=G(p,{transform:`translate(${x} ${y}) scale(${s})`});E('ellipse',{cx:1.5,cy:2,rx:7,ry:5.5,fill:'rgba(23,58,34,.3)'},g);E('ellipse',{rx:6.5,ry:5,fill:c},g);E('path',{d:'M-6.5 0 H6.5 M0 -5 V5',stroke:'rgba(0,0,0,.2)','stroke-width':.8},g);E('ellipse',{cx:-2,cy:-2,rx:2.5,ry:1.6,fill:'rgba(255,255,255,.35)'},g)};
+const car=(p,x,y,c,rot=0)=>{const g=G(p,{transform:`translate(${x} ${y}) rotate(${rot})`});E('rect',{x:-7.5,y:-3.8,width:15,height:7.6,rx:2.2,fill:c,filter:'url(#amSh)'},g);E('rect',{x:-2.5,y:-3,width:5.5,height:6,rx:1,fill:'rgba(30,50,60,.45)'},g)};
+const van=(p,x,y,rot=0,w=16,h=7)=>{const g=G(p,{transform:`translate(${x} ${y}) rotate(${rot})`,filter:'url(#amSh)'});E('rect',{x:-w/2,y:-h/2,width:w,height:h,rx:1.5,fill:'#f3f3ef'},g);E('rect',{x:w/2-4,y:-h/2+1,width:3,height:h-2,fill:'rgba(30,50,60,.4)'},g)};
 const boat=(p,x,y,rot,c,len=9)=>{const g=G(p,{transform:`translate(${x} ${y}) rotate(${rot})`});E('path',{d:`M${-len} 0 Q${-len*.4} -3 0 -3 Q${len*.4} -3 ${len} 0 Q${len*.4} 3 0 3 Q${-len*.4} 3 ${-len} 0Z`,fill:c,stroke:'rgba(0,0,0,.25)','stroke-width':.5},g)};
 const raft=(p,x,y,c,rot=0)=>{const g=G(p,{transform:`translate(${x} ${y}) rotate(${rot})`});E('rect',{x:-8,y:-4,width:16,height:8,rx:4,fill:c,stroke:'rgba(0,0,0,.25)','stroke-width':.5},g);E('rect',{x:-5,y:-2,width:10,height:4,rx:2,fill:'rgba(0,0,0,.18)'},g)};
 const cnum=(p,x,y,n,r,fs,bg,fg)=>{const g=G(p,{class:'am-cnum'});E('circle',{cx:x,cy:y,r,fill:bg,stroke:'#fff','stroke-width':1.2,filter:'url(#amSh)'},g);const t=E('text',{x,y,'dominant-baseline':'central','text-anchor':'middle','font-family':FONT,'font-weight':800,'font-size':fs,fill:fg},g);t.textContent=n};
@@ -478,7 +477,7 @@ const DOCKS=[760,905,1010,1160];
  for(let i=0;i<11;i++)ptent(g,651+i*13.5,104);for(let i=0;i<11;i++)cnum(g,651+i*13.5,89,i+1,6,7,'#2a7c86','#fff')}
 // teepee (podle skutečnosti: bílé plátno, dřevěné tyče nahoře, vchod)
 {const g=zone(Z.teepee);hl(g,'circle',{cx:893,cy:208,r:30});
- const cx=893,by=216,rx=19,ry=7,ay=178;O3.push({t:'tp',g,cx,by,rx,ay});
+ const cx=893,by=216,rx=19,ry=7,ay=178;
  // stín na trávě
  E('ellipse',{cx:cx+14,cy:by+3,rx:rx+10,ry:ry+1,fill:'rgba(23,58,34,.32)',filter:'url(#amSoft)'},g);
  // kolíky a lana
@@ -722,7 +721,7 @@ if(REAL){sec.classList.add('collapsed');opn.hidden=false;tog.setAttribute('aria-
    d.setAttribute('cx',X.toFixed(2));d.setAttribute('cy',Y.toFixed(2))})}
  })(performance.now())}
 /* zapečení statického pozadí mapy do jednoho vektorového obrázku – plynulejší animace */
-{const bake=async()=>{try{if(sec.classList.contains('am-3d')||window.KK_NEBAKE)return;const bg=svg.querySelector('.am-bg');if(!bg||bg.dataset.baked)return;const bb=bg.getBBox(),df=svg.querySelector('defs').cloneNode(true);
+{const bake=async()=>{try{if(sec.classList.contains('am-3d'))return;const bg=svg.querySelector('.am-bg');if(!bg||bg.dataset.baked)return;const bb=bg.getBBox(),df=svg.querySelector('defs').cloneNode(true);
  const toData=async u=>{const b=await (await fetch(u)).blob();return await new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)})};
  for(const im of df.querySelectorAll('image')){const h=im.getAttribute('href');if(h&&!h.startsWith('data:'))im.setAttribute('href',await toData(h))}
  const X=new XMLSerializer(),str=`<svg xmlns="${NS}" viewBox="${bb.x} ${bb.y} ${bb.width} ${bb.height}" width="${bb.width}" height="${bb.height}">${X.serializeToString(df)}${[...bg.childNodes].map(n=>X.serializeToString(n)).join('')}</svg>`;
@@ -760,27 +759,12 @@ if(REAL){sec.classList.add('am-real');
  try{if(sessionStorage.getItem('kk.mapa.skok')){sessionStorage.removeItem('kk.mapa.skok');setTimeout(()=>sec.scrollIntoView({block:'start'}),60)}}catch(_){}}
 apply(cover());
 window.__am={Z:Z,icon:icon,select:select};
-/* objekty pro plné 3D v souřadnicích mapy */
-function obj3d(){const w=world.getCTM(),wi=new DOMMatrix([w.a,w.b,w.c,w.d,w.e,w.f]).inverse();
- const M=g=>{const c=g.getCTM();return wi.multiply(new DOMMatrix([c.a,c.b,c.c,c.d,c.e,c.f]))},P=(m,x,y)=>{const q=m.transformPoint({x,y});return [+q.x.toFixed(1),+q.y.toFixed(1)]},K=m=>Math.hypot(m.a,m.b);
- return O3.map(o=>{const m=M(o.g),k=K(m);
-  switch(o.t){
-   case 'b':return{t:'b',p:[P(m,o.x,o.y),P(m,o.x+o.w,o.y),P(m,o.x+o.w,o.y+o.h),P(m,o.x,o.y+o.h)],h:o.H*k,c:o.col};
-   case 'cab':return{t:'cab',p:[P(m,-11,-12),P(m,11,-12),P(m,11,14),P(m,-11,14)],h:10*k};
-   case 'pt':return{t:'pt',p:[P(m,-5,-6),P(m,5,-6),P(m,5,6),P(m,-5,6)],h:7*k};
-   case 'dm':return{t:'dm',p:[P(m,0,0)],r:6.5*k,c:o.c};
-   case 'car':return{t:'car',p:[P(m,-7.5,-3.8),P(m,7.5,-3.8),P(m,7.5,3.8),P(m,-7.5,3.8)],h:4*k,c:o.c};
-   case 'van':return{t:'van',p:[P(m,-o.w/2,-o.h/2),P(m,o.w/2,-o.h/2),P(m,o.w/2,o.h/2),P(m,-o.w/2,o.h/2)],h:7*k};
-   case 'tp':return{t:'tp',p:[P(m,o.cx,o.by-4)],r:o.rx*k*.85,h:(o.by-o.ay)*k*1.2};
-   case 'con':return{t:'con',p:[P(m,o.x,o.y)],r:o.r*k};
-   case 'dec':return{t:'dec',p:[P(m,o.x,o.y)],r:o.r*k,c:o.c};
-  }}).filter(Boolean)}
-if(M3){const OB=M3D?obj3d():null;sec.classList.add('am-3d');
+if(M3){sec.classList.add('am-3d');
  /* statický obsah (terén, budovy, stromy, čísla míst) se schová – kreslí ho WebGL; zvýraznění zón (.hl) zůstává pro klikání */
  const hv=e=>{e.classList.add('am-hv')},skryj=el=>{[...el.children].forEach(c=>{if(c.classList.contains('hl')||c.classList.contains('am-cnum'))return;if(c.querySelector('.hl,.am-cnum'))skryj(c);else hv(c)})};
  const bg=svg.querySelector('.am-bg');if(bg)hv(bg);svg.querySelectorAll('.am-zone').forEach(skryj);svg.querySelectorAll('[data-y]').forEach(t=>{if(!t.closest('.am-mk,.am-fleet'))hv(t)});
  const base=new URL('.',document.baseURI).href;
- import(base+'js/mapa3d.js?v=11').then(m=>m.start({stage,svg,base,styl:REAL?'real':'kresl',obj:OB,rc:REAL?RC:null})).then(a=>{window.__am3d=a;a.view(vb);if(cur)a.focus(cur.k)})
+ import(base+'js/mapa3d.js?v=8').then(m=>m.start({stage,svg,base,styl:REAL?'real':'kresl'})).then(a=>{window.__am3d=a;a.view(vb);if(cur)a.focus(cur.k)})
   .catch(e=>{console.warn('Mapa: WebGL podklad nejde, zůstává SVG',e);window.__am3d=null;sec.classList.remove('am-3d');if(window.__amBake)window.__amBake()})}
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{legH();if(cur)select(cur);else apply(cover())},120)});
 })();
