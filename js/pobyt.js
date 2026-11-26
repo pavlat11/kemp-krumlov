@@ -636,5 +636,7 @@ if('IntersectionObserver' in window){var io=new IntersectionObserver(function(e)
 /* ===== ubytovani-panely.js ===== */
 (()=>{const w=document.getElementById('ubPanels');if(!w)return;const ps=[...w.querySelectorAll('.ubp')];
 function act(p){ps.forEach(x=>{const o=x===p;x.classList.toggle('on',o);const t=x.querySelector('.ubp-tg');if(t)t.setAttribute('aria-expanded',o)})}
-ps.forEach(p=>{p.addEventListener('click',e=>{if(!p.classList.contains('on')){e.preventDefault();act(p)}});const tg=p.querySelector('.ubp-tg');if(tg)tg.addEventListener('click',e=>{e.stopPropagation();act(p)})})})();
+ps.forEach(p=>{p.addEventListener('click',e=>{if(!p.classList.contains('on')){e.preventDefault();act(p)}});const tg=p.querySelector('.ubp-tg');if(tg)tg.addEventListener('click',e=>{e.stopPropagation();act(p)})});
+ /* na počítači s myší se panel otevře už najetím (krátká prodleva, aby při přejíždění neblikal) */
+ if(matchMedia('(hover:hover) and (pointer:fine)').matches){let tm;ps.forEach(p=>{p.addEventListener('mouseenter',()=>{clearTimeout(tm);if(!p.classList.contains('on'))tm=setTimeout(()=>act(p),140)});p.addEventListener('mouseleave',()=>clearTimeout(tm))})}})();
 ;
