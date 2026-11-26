@@ -232,7 +232,7 @@ const D=[
  {k:'kiosek',f:{x:860,y:500,w:340,h:220},n:'Kiosek a občerstvení',c:'#e0912f',m:[1030,560],
   d:'Občerstvení přímo v kempu s posezením u vody. Kousek odtud vyplouvají lodě z půjčovny.',
   li:['Občerstvení a pití','Posezení s výhledem na řeku','Úschovna bagáže 50 Kč / batoh']},
- {k:'wc',f:{x:850,y:270,w:280,h:190},n:'WC',c:'#5d6fb8',m:[976,330],
+ {k:'wc',f:{x:850,y:270,w:280,h:190},n:'Toalety',c:'#5d6fb8',m:[976,330],
   d:'Nové sociální zařízení s WC a sprchami, pár kroků od louky i chatek.',
   li:['Nové sprchy a WC','Sprcha na mince: 20 Kč / 4 minuty']},
  {k:'pujcovna',f:{x:-200,y:380,w:640,h:760},n:'Půjčovna lodí PE-LA',c:'#1f6f9a',m:[344,862],
@@ -253,7 +253,7 @@ const D=[
  {k:'stany',f:{x:1190,y:250,w:850,h:520},n:'Louka pro stany',c:'#4f9a58',m:[1560,500],
   d:'Velká travnatá louka mezi řekou a chatkami pro vlastní stany a karavany.',
   li:['Rezervace nutná až pro skupiny 15+ stanů','Elektřina '+KKC.t('elek','a')+' / noc','Karavan '+KKC.t('karavan','a')+' / noc (mimo sezónu '+KKC.t('karavan','b')+')'],price:KKC.t('stan','a'),unit:'stan / noc · v sezóně'},
- {k:'podsad',f:{x:1260,y:170,w:340,h:70},n:'Podsadové stany',c:'#2a7c86',m:[1268,212],
+ {k:'podsad',f:{x:1260,y:170,w:340,h:70},n:'Podsadové stany',c:'#2a7c86',m:[1190,214],
   d:'Řada postavených stanů na dřevěné podsadě podél cesty. Přijedete a rovnou se ubytujete.',
   li:['Stan je postavený, nic nestavíte','Hned u cesty k sociálkám'],price:KKC.t('podsad','a'),unit:'stan / noc + osoby'},
  {k:'teepee',f:{x:1720,y:360,w:140,h:100},n:'Teepee',c:'#d58a2c',m:[1930,480],
@@ -506,7 +506,7 @@ const DOCKS=[760,905,1010,1160];
  dl(1780,268,'Chatky',16)}
 const trs=G(S2);
 [[672,232,24],[757,225,24],[928,340,28],[1022,328,28],[1125,318,28],[1188,262,22],[1047,232,24],[1110,205,28],[1180,195,20],[700,62,16],[485,362,20],[548,238,15],[440,437,24],[487,435,22],[535,432,20],[668,430,13],[300,495,20],[1225,322,20],[1240,250,18],[575,85,12]].forEach(([x,y,r])=>tree(trs,x,y,r));
-dl(976,476,'WC',14);
+dl(976,476,'Toalety',14);
 dl(-640,600,'Nový potok',13,30,'#4a4a4a');dl(-900,520,'Na Svahu',12,62,'#4a4a4a');dl(-700,320,'U Trojice',12,8,'#4a4a4a');dl(-590,900,'most Na Svahu',11,90,'#4a4a4a');
 /* hloubkové řazení stromů (vzdálenější dřív) */
 {const byP=new Map();TREES.forEach(t=>{const p=t.parentNode;if(!p)return;if(!byP.has(p))byP.set(p,[]);byP.get(p).push(t)});

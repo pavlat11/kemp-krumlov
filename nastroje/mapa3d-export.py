@@ -27,7 +27,7 @@ with sync_playwright() as p:
   for st in ['kresl','real']:
     b,o=stranka(p,st,{'width':W,'height':H})
     o.evaluate("""(()=>{const svg=document.getElementById('amSvg');const S2=svg.querySelector(':scope>g>g');
-     svg.querySelectorAll('.am-mk,.am-fleet,.am-cnum').forEach(e=>e.style.display='none');
+     svg.querySelectorAll('.am-mk,.am-fleet,.am-cnum,.am-dl').forEach(e=>e.style.display='none');
      [...S2.children].forEach(e=>{if(e.getAttribute('pointer-events')==='none')e.style.display='none'});
      document.querySelectorAll('.am-styl,.am-panel,.am-ctrl,.am-hint,#amIntro,.am-open,.am-card,.am-tip').forEach(e=>e.style.display='none');
      svg.setAttribute('viewBox','-1800 -1064 5497 3664');svg.setAttribute('preserveAspectRatio','none');
