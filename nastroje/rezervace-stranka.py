@@ -18,6 +18,8 @@ html,body{background:transparent}body.kk-vlozeno{margin:0;overflow-x:hidden}
 .kk-vlozeno #rezervace{margin:0!important;padding-top:24px!important;padding-bottom:24px!important}
 .kk-vlozeno .rz-anchor{display:none}
 /* ve vloženém okně (web PE-LA) bez úvodu kempu a bez fotky na pozadí – nadpis má vkládající stránka */
+html.kk-v-ramu,html.kk-v-ramu body{overflow:hidden!important;scrollbar-width:none}
+html.kk-v-ramu::-webkit-scrollbar,html.kk-v-ramu body::-webkit-scrollbar{display:none}
 html.kk-v-ramu .rz-head{display:none}
 html.kk-v-ramu #rezervace,html.kk-v-ramu #rezervace::before,html.kk-v-ramu #rezervace::after{background:none!important}
 html.kk-v-ramu #rezervace>.wrap{max-width:none;padding-left:0;padding-right:0}
@@ -43,7 +45,7 @@ html[data-web=pela] #rezervace .rz-t.on{border-color:#0a2229!important;box-shado
 /* výška pro vkládající web (PE-LA): posílá se rodičovské stránce, ať iframe nemá posuvník */
 (function(){if(/[?&]web=pela(&|$)/.test(location.search))document.documentElement.setAttribute('data-web','pela');if(window.parent===window)return;document.documentElement.classList.add('kk-v-ramu');
 /* posouvání stránky řídí vkládající web: po načtení nic (jinak by schoval nadpis), při přechodu mezi kroky jen když je místo mimo obrazovku */
-var t0=Date.now();Element.prototype.scrollIntoView=function(){if(Date.now()-t0<4000)return;var r=this.getBoundingClientRect();parent.postMessage({kkRezervace:1,skok:Math.round(r.top)},'*')};var p=0;function posli(){var r=document.getElementById('rezervace'),v=Math.ceil(r?r.offsetTop+r.offsetHeight:document.body.scrollHeight);if(v!==p){p=v;parent.postMessage({kkRezervace:1,vyska:v},'*')}}
+var t0=Date.now();Element.prototype.scrollIntoView=function(){if(Date.now()-t0<4000)return;var r=this.getBoundingClientRect();parent.postMessage({kkRezervace:1,skok:Math.round(r.top)},'*')};var p=0;function posli(){var r=document.getElementById('rezervace'),v=Math.ceil(r?r.offsetTop+r.offsetHeight:document.body.scrollHeight);if(Math.abs(v-p)>2){p=v;parent.postMessage({kkRezervace:1,vyska:v},'*')}}
 addEventListener('load',posli);if(window.ResizeObserver)new ResizeObserver(posli).observe(document.documentElement);setInterval(posli,800);
 /* odkazy mimo formulář (GDPR, kontakty) otevřít v novém okně */
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(a&&!/^#|^javascript:/.test(a.getAttribute('href'))&&!a.target)a.target='_blank'},true)})();
