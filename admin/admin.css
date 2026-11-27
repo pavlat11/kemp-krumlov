@@ -1790,3 +1790,4 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .tk-dl{font-size:8.5pt;color:#333}
 .ck-sw{display:inline-flex;align-items:center;gap:7px;margin-left:10px;font-size:13.5px;font-weight:700;cursor:pointer;padding:5px 11px;border:1.5px solid var(--line,#e2dacb);border-radius:999px}
 .ck-sw input{width:18px;height:18px;accent-color:#1f7a45}
+[data-oz$="-m"]{min-width:140px}[data-oz$="-d"]{min-width:76px}
