@@ -497,3 +497,68 @@ function kk_voda() {
   kk_kv_uloz('voda.data', json_encode(['cas' => $cas, 'st' => $st, 'hist' => $hist, 'zdroj' => 'ČHMÚ'], JSON_UNESCAPED_UNICODE), 'ČHMÚ');
   return 'ok';
 }
+
+/* ---------------- lodě a vybavení: stejná pravidla jako KKR.lodeChybi v js/cenik.js ---------------- */
+const KK_SKLAD0 = ['lode' => ['kanoe' => ['ks' => 30, 'padla' => 2, 'vesty' => 3, 'barely' => 1], 'raft4' => ['ks' => 10, 'padla' => 4, 'vesty' => 4, 'barely' => 1],
+  'raft6' => ['ks' => 8, 'padla' => 6, 'vesty' => 6, 'barely' => 2], 'raft8' => ['ks' => 4, 'padla' => 8, 'vesty' => 8, 'barely' => 2], 'baraka' => ['ks' => 6, 'padla' => 2, 'vesty' => 2, 'barely' => 1]],
+  'vyb' => ['padla' => 200, 'vesty' => 230, 'barely' => 70]];
+const KK_LODE0 = ['kanoe' => 3, 'raft4' => 4, 'raft6' => 6, 'raft8' => 8, 'baraka' => 2];
+function kk_sklad($nast) {
+  $s = (array) ($nast['sklad'] ?? []);
+  $typy = KK_LODE0;
+  $c = kk_kv('cenik', null);
+  if (is_array($c) && !empty($c['polozky'])) {
+    $t = [];
+    foreach ($c['polozky'] as $p) if (($p['kat'] ?? '') === 'lode' && ($p['skryt'] ?? 0) !== 1) $t[$p['k']] = (int) ($p['osob'] ?? 2) ?: 2;
+    if ($t) $typy = $t;
+  }
+  $o = ['lode' => [], 'vyb' => array_merge(KK_SKLAD0['vyb'], (array) ($s['vyb'] ?? []))];
+  foreach ($typy as $k => $os) $o['lode'][$k] = array_merge(['ks' => 0, 'padla' => $os, 'vesty' => $os, 'barely' => 1], KK_SKLAD0['lode'][$k] ?? [], (array) ($s['lode'][$k] ?? []));
+  return $o;
+}
+function kk_lode_dny($l) {
+  $r = []; if (empty($l['den'])) return $r;
+  $t = strtotime($l['den']); $n = max(1, (int) ($l['dni'] ?? 1));
+  for ($i = 0; $i < $n && $i < 60; $i++) $r[] = date('Y-m-d', strtotime("+$i day", $t));
+  return $r;
+}
+function kk_lode_pocet($l) { $n = 0; foreach ((array) ($l['kusy'] ?? []) as $v) $n += (int) $v; return $n; }
+function kk_lode_potreba($l, $S) {
+  $o = ['padla' => 0, 'vesty' => 0, 'barely' => 0];
+  foreach ((array) ($l['kusy'] ?? []) as $k => $n) { $n = (int) $n; if (!$n) continue; $o[$k] = ($o[$k] ?? 0) + $n;
+    if (isset($S['lode'][$k])) { $t = $S['lode'][$k]; $o['padla'] += $n * (int) $t['padla']; $o['vesty'] += $n * (int) $t['vesty']; $o['barely'] += $n * (int) $t['barely']; } }
+  return $o;
+}
+function kk_lode_ven($r) {
+  $l = $r['lode'] ?? []; $o = []; if (empty($l['vydano'])) return $o;
+  foreach ((array) ($l['vydano']['kusy'] ?? []) as $k => $v) $o[$k] = (int) $v;
+  foreach ((array) ($l['vraceno'] ?? []) as $v) foreach ((array) ($v['kusy'] ?? []) as $k => $x) $o[$k] = ($o[$k] ?? 0) - (int) $x;
+  return array_filter($o, function ($x) { return $x > 0; });
+}
+/* vrací seznam toho, co chybí (prázdné = je dost) */
+function kk_lode_chybi($l) {
+  if (!is_array($l) || !kk_lode_pocet($l) || empty($l['den'])) return [];
+  $nast = kk_kv('rez.nast', []); $S = kk_sklad($nast);
+  $cel = $S['vyb']; foreach ($S['lode'] as $k => $t) $cel[$k] = (int) $t['ks'];
+  foreach ((array) ($nast['poskozeno'] ?? []) as $x) if (!empty($x['k']) && (int) ($x['ks'] ?? 0) > 0 && isset($cel[$x['k']])) $cel[$x['k']] = max(0, $cel[$x['k']] - (int) $x['ks']);
+  $dny = kk_lode_dny($l); $dnes = date('Y-m-d');
+  $rez = [];
+  $s = kk_db()->prepare("SELECT data FROM kk_rezervace WHERE smazano = 0 AND stav <> 'zru' AND (`do` IS NULL OR `do` >= ?)");
+  $s->execute([date('Y-m-d', strtotime(min($dny[0], $dnes) . ' -70 days'))]);
+  foreach ($s->fetchAll() as $x) { $r = json_decode($x['data'], true); if (!empty($r['lode']) && kk_lode_pocet($r['lode'])) $rez[] = $r; }
+  $volno = $cel;
+  foreach ($dny as $d) {
+    $obs = [];
+    foreach ($rez as $r) {
+      $dn = kk_lode_dny($r['lode']); if (!$dn) continue; $v = !empty($r['lode']['vydano']); $p = null;
+      if ($v && $d === $dnes && $d >= $dn[0]) $p = kk_lode_ven($r);
+      else if (in_array($d, $dn, true)) $p = kk_lode_potreba($r['lode'], $S);
+      else if ($v && $d > end($dn) && $d <= $dnes) $p = kk_lode_ven($r);
+      if ($p) foreach ($p as $k => $n) $obs[$k] = ($obs[$k] ?? 0) + (int) $n;
+    }
+    foreach ($cel as $k => $c) $volno[$k] = min($volno[$k], $c - ($obs[$k] ?? 0));
+  }
+  $ch = [];
+  foreach (kk_lode_potreba($l, $S) as $k => $n) if ($n > ($volno[$k] ?? 0)) $ch[] = $k;
+  return $ch;
+}

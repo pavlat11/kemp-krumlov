@@ -28,7 +28,8 @@
 - **Pravidelné úlohy** (`api/?a=cron`): stav vody z ČHMÚ (Vyšší Brod 0-203-1-109000, Český Krumlov 0-203-1-CB110100)
   a zrušení propadlých záloh. Spouští je web sám nejvýš jednou za hodinu; volitelně cron na hostingu
   `/api/?a=cron&klic=<CRON_KEY>&hned=1`.
-- Zatím chybí: přepočet ceny na serveru a kontrola počtu lodí na serveru (lodě kontroluje prohlížeč těsně před odesláním).
+- Server u rezervací z webu znovu ověří volná místa i lodě a vybavení (sklad, poškozené kusy, vydané a vrácené lodě).
+- Zatím chybí: přepočet ceny na serveru (cenu počítá prohlížeč podle ceníku).
 
 ## Původní popis (náhled bez serveru)
 

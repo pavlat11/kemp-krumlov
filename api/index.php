@@ -254,6 +254,7 @@ try {
     try {
       $k = kk_kolize($r['mista'], $od, $do);
       if ($k) kk_chyba('obsazeno', 409);
+      if (!$ja && !empty($r['lode']) && kk_lode_chybi($r['lode'])) kk_chyba('vybavení', 409);
       $rada = (string) ($nast['rada'] ?? '') !== '' ? (string) $nast['rada'] : date('y');
       $c = (int) kk_kv('rez.cislo', 0);
       $s = $db->prepare("SELECT COUNT(*) FROM kk_rezervace WHERE cislo = ?");

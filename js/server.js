@@ -172,7 +172,7 @@ function vlozMistne(r){var a;try{a=JSON.parse(rget('rezervace')||'[]')||[]}catch
   a=a.filter(function(x){return x&&x.id!==r.id});a.push(r);rset('rezervace',JSON.stringify(a));if(S.prihlasen)snapRez[r.id]=JSON.stringify(r)}
 S.novaRez=function(r){
   try{var d=xhr('POST','rez_nova',{r:r})}catch(e){
-    if(e.kod===409)throw new Error('V tomto termínu je obsazeno.');
+    if(e.kod===409)throw new Error(/vybaven/.test(e.message)?'Na tento termín už není dost vybavení.':'V tomto termínu je obsazeno.');
     throw new Error(e.message||'Rezervaci se nepodařilo uložit.')}
   vlozMistne(d.r);zapsano=Date.now();
   if(!S.prihlasen&&!d.r.spoj){var r2=d.r,mt=d.mt,pl=r2.platba||{};
