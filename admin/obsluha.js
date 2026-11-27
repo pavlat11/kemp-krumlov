@@ -409,6 +409,8 @@ function klik(e){var t=e.target.closest('button,a,input,label,summary,details');
     if((t.dataset.a==='zaloha'||t.dataset.a==='doplaceno')&&!ja.platby)return A.toast('Platby potvrzuje správce.',1);AKCE[t.dataset.a](r)}}
 
 window.KKO={
+  /* platební box (zbývá / pruh záloha | doplatek / tlačítka) i pro karty v administraci */
+  platbaBox:function(r){R=window.KKR;return platbaBox(r,true)},
   /* dialog poškozených / ztracených věcí i pro plnou administraci (Půjčovna lodí, detail rezervace) */
   /* hlídání platby i pro administraci (výdej, vrácení, odhlášení) – go(změny, text do historie) */
   /* přehled pro řidiče k tisku – i z administrace (Doprava) */

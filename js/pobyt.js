@@ -431,7 +431,8 @@ const dvJo=()=>nLodi()>0||S.l.dopr===true;
 const spolu=k=>k==='uby'&&S.mod==='uby'?['kdo']:k==='lode'?(S.mod==='lod'?['kdo']:dvJo()?['doprava']:[]):[];
 const alias=k=>k==='kdo'?(S.mod==='lod'?'lode':'uby'):k==='doprava'&&S.mod==='uby'?'lode':k;
 const maZal=()=>!!(R&&R.zal);
-const seq=()=>!S.mod?['volba']:S.mod==='lod'?['volba','termin','lode','doprava','uby'].concat(SEL().length?['ext']:[],['kontakt']):['volba','termin','uby','ext','lode','kontakt'];
+const sExt=()=>EXTRAS.length?['ext']:[];/* krok Doplňky jen když jsou doplňky v Ceníku zapnuté */
+const seq=()=>!S.mod?['volba']:S.mod==='lod'?['volba','termin','lode','doprava','uby'].concat(SEL().length?sExt():[],['kontakt']):['volba','termin','uby'].concat(sExt(),['lode','kontakt']);
 const progW=root.querySelector('.rz-prog'),mq=matchMedia('(max-width:900px)');let cur='volba';
 const wiz=()=>true;
 const HD0={};['termin','uby','lode'].forEach(k=>{const h=SK[k].querySelector('.rz-sh');HD0[k]=[h.querySelector('b').textContent,h.querySelector('small').textContent]});
