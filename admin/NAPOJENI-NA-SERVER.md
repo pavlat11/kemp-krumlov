@@ -29,7 +29,13 @@
   a zrušení propadlých záloh. Spouští je web sám nejvýš jednou za hodinu; volitelně cron na hostingu
   `/api/?a=cron&klic=<CRON_KEY>&hned=1`.
 - Server u rezervací z webu znovu ověří volná místa i lodě a vybavení (sklad, poškozené kusy, vydané a vrácené lodě).
-- Zatím chybí: přepočet ceny na serveru (cenu počítá prohlížeč podle ceníku).
+- **Cena rezervace z webu se počítá na serveru** (`api/cena.php`, stejná pravidla jako `compute()` v `js/pobyt.js`
+  a `KKR.cenaRez`): ubytování po nocích (hlavní/vedlejší sezóna), osoby podle „Platí pro“, doplňky, lodě, doprava,
+  vyzvednutí a slevy. Server uloží svou cenu, přepočítá zálohu a splatnost a stav (poptávka / rezervace podle
+  Nastavení). Když se cena z webu liší, uloží se `cenaWeb` a záznam do historie rezervace.
+  Ceník = uložený v administraci, jinak `api/cenik-vychozi.json` (po změně výchozího ceníku v `js/cenik.js`
+  spustit `node nastroje/cenik-vychozi.js js/cenik.js api/cenik-vychozi.json`).
+  Rezervace zadané v administraci se nepřepočítávají (obsluha může cenu upravit ručně).
 
 ## Původní popis (náhled bez serveru)
 

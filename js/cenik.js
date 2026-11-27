@@ -306,6 +306,21 @@ var R=window.KKR={
  /* doprava u rezervace lodí jako řádky pro karty: [{t:'odvoz'|'vyzved',txt}] */
  dopRadky:function(r){var o=[],f=function(d){var a=R.aut(d.osob);return (d.cas?d.cas+' · ':'')+R.mistoN(d.misto)+' · '+(+d.osob||0)+' os. ('+a+' '+(a===1?'auto':a<5?'auta':'aut')+')'};
   if(r.doprava&&r.doprava.misto)o.push({t:'odvoz',txt:'Odvoz na start: '+f(r.doprava)});if(r.vyzved&&r.vyzved.misto)o.push({t:'vyzved',txt:'Vyzvednutí v cíli: '+f(r.vyzved)});return o},
+ /* cena rezervace z jejích údajů – stejný výpočet jako kalkulačka na webu (js/pobyt.js compute) a server (api/cena.php).
+    casti = [[od,do],…] u noclehu rozděleného kolem plavby (cena je celá u první části) */
+ cenaRez:function(r){var C=window.KKC;if(!C||!r)return 0;var noci=[];(r.casti&&r.casti.length?r.casti:[[r.od,r.do]]).forEach(function(u){if(u[0]&&u[1])noci=noci.concat(R.noci(u[0],u[1]))});
+  var dm=function(s){return +s.slice(5,7)-1},q={},dl=r.dalsi||{},sk={},qk={},sum=0;
+  (r.mista||[]).forEach(function(m){var t=m.split('-')[0];q[t]=(q[t]||0)+1});['stan','karavan'].forEach(function(t){if(+dl[t]>0)q[t]=(q[t]||0)+(+dl[t])});
+  var add=function(k,n){n=+n||0;if(!n||!C.p(k))return;var v=0;noci.forEach(function(d){v+=(C.hlavni(dm(d))?C.v(k,'a'):C.v(k,'b'))*n});qk[k]=(qk[k]||0)+n;if(v){sum+=v;sk[k]=(sk[k]||0)+v}};
+  var typy=C.kat('ubytovani').filter(function(p){return q[p.k]>0}).map(function(p){return p.k});
+  typy.forEach(function(k){add(k,q[k])});
+  var ok=function(k){return C.osobaPlati?C.osobaPlati(k,typy):true},o=r.osoby||{},vl=C.kat('osoby').filter(function(p){return ['os','dite','zak'].indexOf(p.k)<0&&p.skryt!==1});
+  var ad=(+o.dosp||0)+(ok('dite')?0:+o.dite||0)+(ok('zak')?0:+o.zak||0)+vl.reduce(function(a,p){return a+(ok(p.k)?0:+o[p.k]||0)},0);
+  if(ok('os'))add('os',ad);if(ok('dite'))add('dite',o.dite);if(ok('zak'))add('zak',o.zak);vl.forEach(function(p){if(ok(p.k))add(p.k,o[p.k])});
+  if(R.doplnkyZap())C.kat('doplnky').forEach(function(p){if(p.rez===0||p.skryt===1)return;var n=+((r.doplnky||{})[p.k])||0;if(!n)return;var pro=(p.pro||[]);if(pro.length&&!typy.some(function(t){return pro.indexOf(t)>=0}))return;add(p.k,n)});
+  var lo=r.lode&&R.lodePocet(r.lode)?r.lode:null,cl=lo?R.cenaLodi(lo,r.doprava):{celkem:0},cd=R.cenaDopravy(r.doprava)+R.cenaDopravy(r.vyzved);
+  var SL=C.slevaPobyt({noci:noci.length,q:qk,sumK:sk,od:noci.length?noci[0]:(lo?lo.den:''),lodi:lo?R.lodePocet(lo):0,lode:cl.celkem,dop:cd});
+  return Math.round(sum-SL.kc+cl.celkem+cd)},
  cenaDopravy:function(d){if(!d||!d.misto||d.misto==='kemp'||!window.KKC)return 0;var p=KKC.p(d.misto);return p?(+p.a||0)*R.aut(d.osob):0},
  /* období půjčení lodí: „26. 11. → 28. 11. 2026 (3 dny)“ – vždy s datem vrácení */
  /* doplňky pobytu z ceníku (auto, motocykl, elektřina, pes…): r.doplnky = {k:počet} */

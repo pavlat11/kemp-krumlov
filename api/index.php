@@ -6,6 +6,7 @@
 define('KK_API', 1);
 ini_set('display_errors', '0');
 require __DIR__ . '/lib.php';
+require __DIR__ . '/cena.php';
 
 date_default_timezone_set(kk_env('APP_TIMEZONE', 'Europe/Prague'));
 header('X-Content-Type-Options: nosniff');
@@ -233,7 +234,7 @@ try {
     if (!is_array($r)) kk_chyba('Chybí rezervace.');
     if (!$ja) {
       kk_limit('rez:' . kk_ip(), 20, 3600);
-      $povol = ['od','do','mista','dalsi','osoby','doplnky','lode','doprava','vyzved','platba','jmeno','telefon','email','zprava','prijezd','cena','jazyk','stav','spoj'];
+      $povol = ['od','do','mista','dalsi','osoby','doplnky','lode','doprava','vyzved','platba','jmeno','telefon','email','zprava','prijezd','cena','jazyk','stav','spoj','casti'];
       $r = array_intersect_key($r, array_flip($povol));
       $r['stav'] = in_array($r['stav'] ?? '', ['pop', 'pot'], true) ? $r['stav'] : 'pop';
       $r['zdroj'] = 'web';
@@ -249,6 +250,29 @@ try {
     if (!$ja && $od < date('Y-m-d')) kk_chyba('Termín už začal.');
     $nast = kk_kv('rez.nast', []);
     if (!$ja && $r['mista'] && array_intersect($r['mista'], (array) ($nast['vyp'] ?? []))) kk_chyba('obsazeno', 409);
+    if (!$ja) {
+      /* cenu, zálohu a stav počítá server podle ceníku a nastavení – z webu se jen převezme, co host vybral */
+      if (isset($r['casti'])) { $cc = []; foreach ((array) $r['casti'] as $u) if (is_array($u) && count($u) === 2 && kk_datum($u[0]) && kk_datum($u[1]) && $u[0] < $u[1]) $cc[] = [$u[0], $u[1]];
+        if ($cc && in_array([$od, $do], $cc, true)) $r['casti'] = $cc; else unset($r['casti']); }
+      $druha = false;
+      if (!empty($r['spoj'])) {
+        /* druhá část noclehu kolem plavby: cena je u první části, ta musí být právě vytvořená a tuto část obsahovat */
+        $s1 = $db->prepare("SELECT data FROM kk_rezervace WHERE id = ? AND smazano = 0"); $s1->execute([(string) $r['spoj']]);
+        $p1 = json_decode((string) $s1->fetchColumn(), true);
+        $druha = is_array($p1) && (kk_ms() - (int) ($p1['vytvoreno'] ?? 0)) < 900000 && in_array([$od, $do], (array) ($p1['casti'] ?? []), true);
+        if (!$druha) unset($r['spoj']);
+      }
+      $web = (int) round(kk_n($r['cena'] ?? 0));
+      $cena = $druha ? 0 : kk_cena_rez($r);
+      $r['cena'] = $cena;
+      if (abs($web - $cena) >= 1) {
+        $r['cenaWeb'] = $web;
+        $r['hist'] = [['t' => kk_ms(), 'kdo' => 'Systém', 'co' => 'Cena z webu ' . $web . ' Kč nesouhlasila s ceníkem – uložena cena podle ceníku ' . $cena . ' Kč.']];
+      }
+      $lo = !empty($r['lode']['den']) ? $r['lode']['den'] : '';
+      $pb = $druha ? null : kk_nova_platba($cena, $lo && $lo < $od ? $lo : $od);
+      if ($pb) { $r['platba'] = $pb; $r['stav'] = 'pop'; } else { unset($r['platba']); $r['stav'] = kk_stav_web($r); }
+    }
     $zamek = (int) $db->query("SELECT GET_LOCK('kk_rez', 15)")->fetchColumn();
     if (!$zamek) kk_chyba('Server je zaneprázdněný, zkuste to prosím znovu.', 503);
     try {
@@ -270,6 +294,14 @@ try {
       unset($r['_mt']);
     } finally { $db->query("SELECT RELEASE_LOCK('kk_rez')"); }
     kk_out(['r' => $r, 'mt' => $mt, 'rev' => kk_rev_ted()]);
+
+  /* ---------- kontrola ceny podle ceníku (administrace) ---------- */
+  case 'cena':
+    if (!$POST) kk_chyba('POST', 405);
+    kk_musi(); $V = kk_vstup();
+    $o = [];
+    foreach ((array) ($V['rez'] ?? []) as $r) $o[] = is_array($r) ? kk_cena_rez($r) : null;
+    kk_out(['ceny' => $o]);
 
   /* ---------- zrušení rezervace hostem (storno.html) ---------- */
   case 'storno':

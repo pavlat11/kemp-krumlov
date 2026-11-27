@@ -513,7 +513,7 @@ function submit(){
   const UG=S.mod==='lod'&&S.nc&&useky().length>1?useky():null,st0=pb?'pop':KKR.stavWeb(mista,{stan:S.q.stan||0,karavan:S.q.karavan||0}),zak={dalsi:{stan:S.q.stan||0,karavan:S.q.karavan||0},osoby:Object.assign({dosp:S.dosp,dite:S.dite,zak:S.zak},...OS_VLASTNI.filter(p=>S[p.k]).map(p=>({[p.k]:S[p.k]}))),doplnky:Object.assign({},...EXTRAS.filter(x=>+S[x.k]>0).map(x=>({[x.k]:+S[x.k]}))),jmeno:f.jmeno.value.trim(),telefon:f.telefon.value.trim(),email:f.email.value.trim(),prijezd:S.mod==='lod'?'':(f.cas_prijezdu?f.cas_prijezdu.value:''),zdroj:'web',jazyk:KL.jazyk};
     try{if(UG&&UG.some(u=>KKR.kolize(mista,iso(u[0]),iso(u[1])).length))throw new Error('obsazeno');/* noc před a po plavbě = dvě navazující rezervace; cena, záloha, lodě a doprava jsou u první */
    const u0=UG?UG[0]:null,txU=UG?KL.t('Nocleh rozdělený')+': '+UG.map(u=>fD(u[0])+' – '+fD(u[1])).join(' a '):'';
-   r=KKR.pridej(Object.assign({stav:st0,od:u0?iso(u0[0]):od,do:u0?iso(u0[1]):dk,lode:lo,doprava:dp,vyzved:vyzvObj(),platba:pb,mista,zprava:[f.zprava.value.trim(),txU].filter(Boolean).join('\n'),cena:Math.round(R.total)},zak));
+   r=KKR.pridej(Object.assign({stav:st0,od:u0?iso(u0[0]):od,do:u0?iso(u0[1]):dk,casti:UG?UG.map(u=>[iso(u[0]),iso(u[1])]):undefined,lode:lo,doprava:dp,vyzved:vyzvObj(),platba:pb,mista,zprava:[f.zprava.value.trim(),txU].filter(Boolean).join('\n'),cena:Math.round(R.total)},zak));
    if(UG)UG.slice(1).forEach(u=>{try{KKR.pridej(Object.assign({stav:st0,od:iso(u[0]),do:iso(u[1]),mista,spoj:r.id,zprava:KL.t('Druhá část pobytu k rezervaci')+' '+r.cislo+' – '+KL.t('cena a záloha jsou v ní.'),cena:0},zak))}catch(x){}})}
   catch(x){nactiBusy();drawCal();render();if(/vybavení/.test(x.message)){go('lode');warn(KL.t('Lodě si mezitím půjčil někdo jiný. Upravte prosím počet.'))}else{go('uby');warn(KL.t('Vybrané místo si mezitím zarezervoval někdo jiný. Vyberte prosím jiné.'))}return}
   done(false,r);nactiBusy();drawCal()}
@@ -561,6 +561,7 @@ dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
 
 addEventListener('storage',e=>{if(e.key==='kkt.rezervace'){nactiBusy();drawCal();render()}});
 drawCal();render();navState();
+window.KKPobyt={S:S,compute:compute,iso:iso,lodeObj:lodeObj,doprObj:doprObj,vyzvObj:vyzvObj,MISTA:MISTA,EXTRAS:EXTRAS,OS_VLASTNI:OS_VLASTNI};/* pro kontrolu výpočtu ceny (testy) */
 })();
 ;
 
