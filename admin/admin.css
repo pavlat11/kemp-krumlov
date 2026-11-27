@@ -1828,3 +1828,10 @@ details.kl-d>summary .kl-h{margin:16px 0 6px}
 #tisk:has(.tk-a4) .tk-sum{margin:0 0 4px;font-size:9pt}
 @media print{#tisk:has(.tk-a4){zoom:1}#tisk .tk-pre.tk-a4 tr{break-inside:avoid}}
 #tisk .tk-pre.tk-a4 td:last-child{white-space:nowrap}#tisk .tk-pre.tk-a4 td:last-child small{display:block;font-size:7.5pt}
+/* využít celou A4 */
+#tisk .tk-pre.tk-a4 td,#tisk .tk-pre.tk-a4 th{padding:4px 6px;font-size:10.5pt}
+#tisk .tk-pre.tk-a4 th{font-size:8.5pt}
+#tisk .tk-pre.tk-a4 tr.tk-sk td{padding:4px 6px;font-size:10.5pt}
+#tisk .tk-pre.tk-a4 .tk-ch{width:12px;height:12px}
+#tisk:has(.tk-a4) h1{font-size:17pt}
+#tisk:has(.tk-a4) .tk-sum{font-size:10.5pt;margin:2px 0 8px}
