@@ -33,9 +33,9 @@ document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementByI
 'use strict';
 /* web PE-LA (window.KK_WEB='pela'): vlastní texty, fotky a ikony pod klíčem kkt.pela.…, jazyk určuje adresa stránky, ceny vypisuje web sám */
 var PELA=window.KK_WEB==='pela';
-function get(k){if(PELA&&/^(texty|dtexty|ikony|obrazky|seo|galerie)(\.|$)/.test(k))k='pela.'+k;try{var v=localStorage.getItem('kkt.'+k);return v?JSON.parse(v):null}catch(e){return null}}
+function get(k){if(PELA&&/^(texty|dtexty|ikony|obrazky|seo|galerie)(\.|$)/.test(k))k='pela.'+k;if(window.KK_DATA)return k in KK_DATA?KK_DATA[k]:null;/* ostrý web PE-LA: data vypíše server */try{var v=localStorage.getItem('kkt.'+k);return v?JSON.parse(v):null}catch(e){return null}}
 var EDIT=/[?&]edit(=1)?(&|$)/.test(location.search);
-var BASE=(document.currentScript&&document.currentScript.src||location.href).replace(/js\/[^\/]+\.js.*$/,'').replace(/[?#].*$/,'');
+var BASE=window.KK_START_BASE||(document.currentScript&&document.currentScript.src||location.href).replace(/js\/[^\/]+\.js.*$/,'').replace(/[?#].*$/,'');
 
 /* v editačním režimu bez animací – vše se ukáže rovnou v konečném stavu */
 if(EDIT){window.KK_BEZ_ANIMACI=true;document.documentElement.classList.add('kk-bez-animaci')}

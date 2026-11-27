@@ -1,4 +1,23 @@
 # Kemp Krumlov – nastavení pro server Apache (na GitHub Pages se nepoužije).
+
+# --- WEDOS: další domény na stejném hostingu (pe-la.cz → www/domains/pe-la.cz/) ---
+# Původní pravidla WEDOS – bez nich by se na doméně pe-la.cz zobrazil web kempu.
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^domains/
+RewriteCond %{REQUEST_URI} !^/domains/
+RewriteCond %{HTTP_HOST} ^(www\.)?(.*)$
+RewriteCond %{DOCUMENT_ROOT}/domains/%2 -d
+RewriteRule (.*) domains/%2/$1 [DPI]
+RewriteCond %{REQUEST_URI} !^subdom/
+RewriteCond %{REQUEST_URI} !^/subdom/
+RewriteCond %{HTTP_HOST} ^(www\.)?(.*)\.([^\.]*)\.([^\.]*)$
+RewriteCond %{DOCUMENT_ROOT}/subdom/%2 -d
+RewriteRule (.*) subdom/%2/$1 [DPI]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^domains/[^/]+/(.+[^/])$ /$1/ [R]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^subdom/[^/]+/(.+[^/])$ /$1/ [R]
+
 # Rychlejší opakované návštěvy: prohlížeč si styly, skripty a fotky uloží na dlouho.
 # Skripty a styly mají v adrese ?v=…, takže po každé změně se stáhne nová verze.
 
