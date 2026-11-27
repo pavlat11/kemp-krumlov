@@ -65,6 +65,7 @@ function vzhledU(x){return x&&x.role!=='admin'&&x.vzhled==='aplikace'?'aplikace'
 function verejny(x){return{id:x.id,jmeno:x.jmeno,login:x.login,email:x.email||'',role:x.role,prava:KK.prava.uzivatel(x),vzhled:vzhledU(x),platby:x.platby!==false,souhrny:x.souhrny!==false,aktivni:x.aktivni!==false,vychozi:!!x.vychozi,posledni:x.posledni||null,vytvoren:x.vytvoren||null}}
 function overHeslo(u,heslo){if(u.vychozi&&!u.hash)return Promise.resolve(heslo==='kemp');return otisk(u.sul,heslo).then(function(h){return h===u.hash})}
 function nastavHeslo(u,heslo){u.sul=novaSul();return otisk(u.sul,heslo).then(function(h){u.hash=h;delete u.vychozi;return u})}
+function pelaHned(){if(KK.WEB==='pela'&&window.fetch)try{fetch('https://www.pe-la.cz/?obnovit='+Date.now(),{mode:'no-cors',cache:'no-store'}).catch(function(){})}catch(e){}}
 function zeServeru(d){if(d&&d.uzivatele)KKS.uloz('uzivatele',d.uzivatele);return d}
 function kontrolaHesla(h){if(!h||h.length<8)return 'Heslo musí mít aspoň 8 znaků.';return ''}
 function aktivniSpravci(u){return u.filter(function(x){return x.role==='admin'&&x.aktivni!==false})}
@@ -262,7 +263,7 @@ KK.galerie={
         return zmensi(f,1920,0.82).then(function(velka){return zmensi(f,640,0.78).then(function(mala){
           if(SRV()){var fd=new FormData();fd.append('web',KK.WEB);fd.append('kat',vychoziKat||'');fd.append('popis',popisZNazvu(f.name));fd.append('poradi',start+i);fd.append('puvodni',f.size);
             fd.append('velka',velka.blob,'velka.webp');fd.append('mala',mala.blob,'mala.webp');
-            return KKS.post('fotka',fd).then(function(z){vysledky.push(z);if(prubeh)prubeh(i,'hotovo',z)})}
+            return KKS.post('fotka',fd).then(function(z){vysledky.push(z);pelaHned();if(prubeh)prubeh(i,'hotovo',z)})}
           var z={id:'f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),popis:popisZNazvu(f.name),kat:vychoziKat||'',poradi:start+i,viditelna:true,blob:velka.blob,nahled:mala.blob,w:velka.w,h:velka.h,velikost:velka.blob.size,puvodni:f.size,pridano:Date.now(),zdroj:'nahrano'};
           return tx('readwrite',function(s){s.put(z)}).then(function(){vysledky.push(z);if(prubeh)prubeh(i,'hotovo',z)});
         })}).catch(function(e){if(prubeh)prubeh(i,'chyba',e)});
@@ -270,17 +271,17 @@ KK.galerie={
     }).then(function(){LS.set('galerie',{v:1,zmena:Date.now()});historie('Galerie','nahráno '+vysledky.length+' fotek');return vysledky});
   },
   uprav:function(id,zmena){
-    if(SRV())return KKS.post('fotka_uprav',{id:id,zmena:zmena}).then(function(){LS.set('galerie',{v:1,zmena:Date.now()})});
+    if(SRV())return KKS.post('fotka_uprav',{id:id,zmena:zmena}).then(function(){pelaHned();LS.set('galerie',{v:1,zmena:Date.now()})});
     if(KK.MODE==='server')return api('PATCH','/fotky/'+id,zmena);
     return tx('readwrite',function(s){var r=s.get(id);r.onsuccess=function(){if(r.result)s.put(Object.assign(r.result,zmena))}}).then(function(){LS.set('galerie',{v:1,zmena:Date.now()})});
   },
   smaz:function(ids){
-    if(SRV())return KKS.post('fotka_smaz',{ids:ids}).then(function(){LS.set('galerie',{v:1,zmena:Date.now()});historie('Galerie','smazáno '+ids.length+' fotek')});
+    if(SRV())return KKS.post('fotka_smaz',{ids:ids}).then(function(){pelaHned();LS.set('galerie',{v:1,zmena:Date.now()});historie('Galerie','smazáno '+ids.length+' fotek')});
     if(KK.MODE==='server')return Promise.all(ids.map(function(id){return api('DELETE','/fotky/'+id)}));
     return tx('readwrite',function(s){ids.forEach(function(id){s.delete(id)})}).then(function(){LS.set('galerie',{v:1,zmena:Date.now()});historie('Galerie','smazáno '+ids.length+' fotek')});
   },
   poradi:function(ids){
-    if(SRV())return KKS.post('fotka_poradi',{ids:ids}).then(function(){LS.set('galerie',{v:1,zmena:Date.now()})});
+    if(SRV())return KKS.post('fotka_poradi',{ids:ids}).then(function(){pelaHned();LS.set('galerie',{v:1,zmena:Date.now()})});
     if(KK.MODE==='server')return api('PUT','/fotky/poradi',ids);
     return tx('readwrite',function(s){ids.forEach(function(id,i){var r=s.get(id);r.onsuccess=function(){if(r.result){r.result.poradi=i;s.put(r.result)}}})}).then(function(){LS.set('galerie',{v:1,zmena:Date.now()})});
   },

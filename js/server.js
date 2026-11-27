@@ -161,7 +161,10 @@ function zapis(k,v){
   if(!SYNC.test(k)||k==='voda.data')return;
   if(v!==null&&rget(k)===v)return;
   if(v===null&&rget(k)===null)return;
-  xhr('POST','kv',{klic:k,hodnota:v});zapsano=Date.now()}
+  xhr('POST','kv',{klic:k,hodnota:v});zapsano=Date.now();
+  if(/^pela\.|^cenik$/.test(k))pelaObnov()}
+/* web PE-LA (vlastní hosting) si data z administrace drží 2 minuty – po uložení ho požádat o obnovení hned */
+var pelaT=0;function pelaObnov(){clearTimeout(pelaT);pelaT=setTimeout(function(){try{fetch('https://www.pe-la.cz/?obnovit='+Date.now(),{mode:'no-cors',cache:'no-store'}).catch(function(){})}catch(e){}},1500)}
 function chyt(k,v){
   try{zapis(k,v)}catch(e){
     if(e.kod===401)odhlasen();else S.upozorni('Změnu se nepodařilo uložit na server: '+e.message);

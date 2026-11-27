@@ -57,7 +57,7 @@ if(S&&L==='cs'&&window.KK_PELA_STRANKA==='index'){
 
 /* ---------- 4) galerie z administrace ---------- */
 function nactiSkript(src){return new Promise(function(ok,no){var e=document.createElement('script');e.src=BASE+src;e.onload=ok;e.onerror=no;document.body.appendChild(e)})}
-function nactiData(){return window.KK&&KK.galerie?Promise.resolve():nactiSkript('js/kk-data.js?v=16S1')}
+function nactiData(){return window.KK&&KK.galerie?Promise.resolve():nactiSkript('js/kk-data.js?v=16S6')}
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
 var gal=document.querySelector('#fotogalerie .gallery');
 if(gal&&get('galerie'))nactiData().then(function(){return KK.galerie.seznam()}).then(function(f){
