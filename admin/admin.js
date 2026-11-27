@@ -60,7 +60,7 @@ function zdroj(){
 function login(){
   app.innerHTML='<div class="login"><form novalidate aria-labelledby="lt"><div class="logo"><i>'+(PELA?LOGO_PELA:SV(IC.lode,22))+'</i>'+NAZEV+'</div><h1 id="lt">Administrace</h1><p>Přihlaste se pro správu webu.</p>'+
    '<label class="f">Přihlašovací jméno nebo e-mail<input class="inp" name="u" autocomplete="username" required></label><br>'+
-   '<label class="f">Heslo<input class="inp" name="p" type="password" autocomplete="current-password" required aria-describedby="lh"><small id="lh">První přihlášení v náhledu: <b>admin</b> / <b>kemp</b> – heslo si pak změňte.</small></label>'+
+   '<label class="f">Heslo<input class="inp" name="p" type="password" autocomplete="current-password" required aria-describedby="lh">'+((window.KKS&&KKS.on)?'':'<small id="lh">První přihlášení v náhledu: <b>admin</b> / <b>kemp</b> – heslo si pak změňte.</small>')+'</label>'+
    '<p class="err-msg" role="alert" hidden></p><br><button class="btn pri" style="width:100%">Přihlásit se</button></form></div>';
   var f=$('form',app),er=$('.err-msg',app);
   f.addEventListener('submit',function(e){e.preventDefault();er.hidden=true;
@@ -1204,8 +1204,8 @@ var VD=n.voda||{};h+='<section class="card"><h2>Stav vody na Vltavě</h2><p clas
         '<div class="sb-ty" role="tablist" aria-label="Druh e-mailu">'+R.SABL_TYPY.map(function(x){return '<button type="button" role="tab" data-sb="'+x.k+'" aria-selected="'+(x.k===sbT)+'"><b>'+esc(x.n)+'</b><small>'+(x.kdo==='kemp'?'pro kemp':x.auto?'automaticky · pro hosta':'pro hosta')+'</small></button>'}).join('')+'</div>'+
         '<div id="sbed">'+sbHtml()+'</div></section>';
     if(nT!=='data')return h;
-    return h+'<section class="card"><h2>Testovací data</h2><p class="mut" style="margin:0 0 12px">'+SV(IC.zamek,16)+' V náhledu jsou rezervace uložené jen v tomto prohlížeči. Host na jiném počítači je neuvidí a jeho rezervace se k vám nedostane. Sdílená obsazenost bude fungovat po spuštění na serveru.</p>'+
-      '<div class="row"><button type="button" class="btn gh" data-a="ukazka">Vložit testovací data</button><button type="button" class="btn gh" data-a="vymaz">Smazat všechny rezervace</button></div></section>';
+    return h+'<section class="card"><h2>Testovací data</h2><p class="mut" style="margin:0 0 12px">'+SV(IC.zamek,16)+((window.KKS&&KKS.on)?' Rezervace jsou uložené v databázi na serveru – vidí je všechna zařízení i hosté na webu (jen jako obsazenost). Testovací data vloží ukázkové rezervace i sem, proto je po vyzkoušení smažte tlačítkem <b>Smazat testovací data</b> – skutečné rezervace zůstanou.':' V náhledu jsou rezervace uložené jen v tomto prohlížeči. Host na jiném počítači je neuvidí a jeho rezervace se k vám nedostane. Sdílená obsazenost bude fungovat po spuštění na serveru.')+'</p>'+
+      '<div class="row"><button type="button" class="btn gh" data-a="ukazka">Vložit testovací data</button><button type="button" class="btn gh" data-a="vymazUk">Smazat testovací data</button><button type="button" class="btn gh" data-a="vymaz">Smazat všechny rezervace</button></div></section>';
   }
   /* hromadné akce v seznamu */
   var HA=[['pot','Potvrdit',function(r){return r.stav==='pop'}],['uby','Ubytovat',function(r){return r.stav==='pot'}],['odj','Odhlásit',function(r){return r.stav==='uby'}],['zru','Zrušit',function(r){return r.stav==='pop'||r.stav==='pot'}]];
@@ -1571,6 +1571,7 @@ var VD=n.voda||{};h+='<section class="card"><h2>Stav vody na Vltavě</h2><p clas
       else if(s.a==='blk')form(null,{blk:1});
       else if(s.a==='ukazka')ukazka();
       else if(s.vm){var n=R.nast(),v=R.vyp().slice(),i=v.indexOf(s.vm);if(i<0)v.push(s.vm);else v.splice(i,1);n.vyp=v;R.ulozNast(n);KK.zaznam('Rezervace',R.nazev(s.vm)+(i<0?' vypnuto z rezervace':' zapnuto do rezervace'));toast(R.nazev(s.vm)+(i<0?' vypnuto – hosté si ho nevyberou.':' zapnuto.'));kresli()}
+      else if(s.a==='vymazUk'){var nU=R.vse().filter(function(x){return x.ukazka}).length;if(!nU){toast('Žádná testovací data tu nejsou.');return}ptej('Smazat '+nU+' testovacích rezervací?\n\nSkutečné rezervace zůstanou.',{ok:'Smazat testovací',nebezp:1}).then(function(ok){if(!ok)return;R.obnov(R.vse().filter(function(x){return !x.ukazka}));KK.zaznam('Rezervace','testovací data smazána ('+nU+')');kresli();toast('Smazáno '+nU+' testovacích rezervací.')})}
       else if(s.a==='vymaz')ptej('Smazat všechny rezervace i blokace?\n\nSmaže se úplně všechno včetně historie. Nejde to vrátit.',{ok:'Smazat vše',nebezp:1}).then(function(ok){if(!ok)return;R.vymaz();KK.zaznam('Rezervace','vše smazáno');kresli();toast('Rezervace smazány.')});
       return}
     if(t.closest&&t.closest('.rl-x'))return;
@@ -1675,7 +1676,7 @@ function uzivatele(m){
     m.innerHTML='<div class="ph"><div><h1>Uživatelé</h1><p>Kdo smí do administrace a co tam smí dělat. <b>Správce</b> smí všechno včetně uživatelů, u <b>Obsluhy</b> nastavíte sekce každému zvlášť v Upravit.</p></div><div class="row" style="gap:8px;flex-wrap:wrap"><button type="button" class="btn gh" id="unah" title="Podívejte se, jak vypadá aplikace pro obsluhu">'+SV(IC.lode,18)+' Náhled aplikace obsluhy</button><button type="button" class="btn pri" id="un">+ Přidat uživatele</button></div></div>'+
       (ja.vychozi?'<div class="card" style="border-left:4px solid var(--warn,#e0a100);border-radius:0 var(--r) var(--r) 0;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap"><span style="flex:1"><b>Používáte výchozí heslo „kemp“.</b> Změňte si ho tlačítkem Změnit heslo u svého účtu.</span><button type="button" class="btn pri sm" id="umh">Změnit heslo</button></div>':'')+
       '<section class="card" style="margin-bottom:16px"><div class="tw-wrap"><table class="ct"><thead><tr><th>Uživatel</th><th>Role</th><th>Smí upravovat</th><th class="c">Zapnutý</th><th>Poslední přihlášení</th><th class="c"><span class="sr">Akce</span></th></tr></thead><tbody id="ul">'+U.map(radek).join('')+'</tbody></table></div></section>'+
-      '<div class="card mut" style="font-size:13.5px">'+SV(IC.zamek,16)+' V náhledu jsou účty uložené jen v tomto prohlížeči a chrání jen před omylem. Skutečné zabezpečení (hesla na serveru, přihlášení, práva) bude po spuštění na serveru – účty se přenesou.</div>'+
+      '<div class="card mut" style="font-size:13.5px">'+SV(IC.zamek,16)+((window.KKS&&KKS.on)?' Účty jsou uložené na serveru, hesla zašifrovaně. Přihlášení a práva ověřuje server – po 10 špatných pokusech se přihlašování na chvíli zablokuje.':' V náhledu jsou účty uložené jen v tomto prohlížeči a chrání jen před omylem. Skutečné zabezpečení (hesla na serveru, přihlášení, práva) bude po spuštění na serveru – účty se přenesou.')+'</div>'+
       '<dialog id="ud" class="dlg" aria-labelledby="udt"><form method="dialog" id="uf" novalidate><h2 id="udt"></h2><div class="grid" style="gap:12px">'+
       '<label class="f">Jméno a příjmení<input class="inp" name="jmeno" required autocomplete="off"></label>'+
       '<label class="f">Přihlašovací jméno<small>Bez mezer a diakritiky, např. jana.novakova</small><input class="inp" name="login" required autocomplete="off" autocapitalize="none" spellcheck="false"></label>'+
@@ -1837,7 +1838,7 @@ function kalkulace(m){var R=window.KKR;if(!R||!window.KKC){m.innerHTML='<div cla
 }
 /* ---------- ZÁZNAM AKCÍ: kdo, kdy a co na webu změnil ---------- */
 function zaznam(m){
-  m.innerHTML='<div class="ph"><div><h1>Záznam akcí</h1><p>Kdo, kdy a co na webu změnil. Ukládá se posledních 2000 záznamů v tomto prohlížeči.</p></div></div>'+
+  m.innerHTML='<div class="ph"><div><h1>Záznam akcí</h1><p>Kdo, kdy a co na webu změnil. '+((window.KKS&&KKS.on)?'Ukládá se na serveru, zobrazuje se posledních 2000 záznamů.':'Ukládá se posledních 2000 záznamů v tomto prohlížeči.')+'</p></div></div>'+
   '<div class="card"><label class="f">Hledat<input class="inp" type="search" id="zq" placeholder="jméno, akce, popis…" autocomplete="off"></label><ul class="szn-a" id="zl" style="margin-top:12px"></ul></div>';
   var Z=KK.historie(),R=window.KKR,CIS={};
   if(R)R.vse().forEach(function(r){if(r.cislo)CIS[r.cislo]=r.id});
