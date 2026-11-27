@@ -303,6 +303,9 @@ var R=window.KKR={
   /* ceny u zastávek mají přednost – platí ta dražší ze startu a cíle (návoz je vždy jen jeden) */
   var pk=dni>1?(n>=10?'d10':'d1'):(n>=10?'n10':'n1');o.pk=pk;o.zast='';[pa,pb].forEach(function(p){if(p&&p.kat==='doprava'&&p[pk]!=null&&(o.zast===''||+p[pk]>o.navoz)){o.navoz=+p[pk]||0;o.zast=p.k}});if(dop){o.navoz=0;o.sOsobami=true}o.celkem=o.pujc;return o}/* návoz lodí NENÍ v ceně – platí se na místě, vždy jen jeden (bez ohledu na trasu) */,
  aut:function(osob){return Math.max(1,Math.ceil((+osob||0)/8))},
+ /* doprava u rezervace lodí jako řádky pro karty: [{t:'odvoz'|'vyzved',txt}] */
+ dopRadky:function(r){var o=[],f=function(d){var a=R.aut(d.osob);return (d.cas?d.cas+' · ':'')+R.mistoN(d.misto)+' · '+(+d.osob||0)+' os. ('+a+' '+(a===1?'auto':a<5?'auta':'aut')+')'};
+  if(r.doprava&&r.doprava.misto)o.push({t:'odvoz',txt:'Odvoz na start: '+f(r.doprava)});if(r.vyzved&&r.vyzved.misto)o.push({t:'vyzved',txt:'Vyzvednutí v cíli: '+f(r.vyzved)});return o},
  cenaDopravy:function(d){if(!d||!d.misto||d.misto==='kemp'||!window.KKC)return 0;var p=KKC.p(d.misto);return p?(+p.a||0)*R.aut(d.osob):0},
  /* období půjčení lodí: „26. 11. → 28. 11. 2026 (3 dny)“ – vždy s datem vrácení */
  /* doplňky pobytu z ceníku (auto, motocykl, elektřina, pes…): r.doplnky = {k:počet} */

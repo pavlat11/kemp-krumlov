@@ -795,9 +795,9 @@ function rezervace(m,sekV){
       :ven?(po?'<span class="pk-t zle">měl vrátit '+KR(pd)+'</span>':pd===dnes?'<span class="pk-t dnes">vrací dnes</span>':'<span class="pk-t">vrátí '+KR(pd)+'</span>')
       :typ==='plan'?'<span class="pk-t">'+(pd===denP?'vrací ten den':'vrátí '+KR(pd))+'</span>'
       :'<span class="pk-t">'+((l.vraceno||[]).length?'vráceno '+cas(l.vraceno[l.vraceno.length-1].kdy).split(' ').pop():'')+'</span>';
-    return '<article class="pk-c'+(DRZ[r.id]?' zm'+(Date.now()-DRZ[r.id].t<1500?' zm-n':''):'')+(po?' po':'')+(typ==='vra'?' hot':'')+'"><div class="pk-ch"><button type="button" class="rl-j" data-id="'+r.id+'">'+esc(r.jmeno)+'</button>'+kdy+'</div>'+
+    return '<article class="pk-c'+(R.dopRadky(r).length?' s-dop':'')+(DRZ[r.id]?' zm'+(Date.now()-DRZ[r.id].t<1500?' zm-n':''):'')+(po?' po':'')+(typ==='vra'?' hot':'')+'"><div class="pk-ch"><button type="button" class="rl-j" data-id="'+r.id+'">'+esc(r.jmeno)+'</button>'+kdy+'</div>'+
       '<div class="pk-l">'+esc(kusyTxt(lk)||'—')+'</div><div class="pk-v">'+esc(R.lodeKusyTxt(vk))+(ven&&LS(r)==='cast'?' · <b>část už vrátil</b>':'')+'</div>'+
-      '<div class="pk-m">'+esc(R.mistoN(l.odkud))+' → '+esc(R.mistoN(l.kam))+' · '+R.lodeObdobi(l,0,1)+'</div>'+
+      '<div class="pk-m">'+esc(R.mistoN(l.odkud))+' → '+esc(R.mistoN(l.kam))+' · '+R.lodeObdobi(l,0,1)+'</div>'+(R.dopRadky(r).length?'<div class="pk-dop">'+R.dopRadky(r).map(function(x){return '<span class="'+x.t+'">'+SV('<rect x="3" y="6" width="13" height="10" rx="2"/><path d="M16 9h3l2 3v4h-5"/><circle cx="7" cy="17" r="2"/><circle cx="18" cy="17" r="2"/>',15)+esc(x.txt)+'</span>'}).join('')+'</div>':'')+
       '<div class="pk-f">'+(r.telefon?'<a href="tel:'+esc(r.telefon.replace(/\s/g,''))+'">'+esc(r.telefon)+'</a>':'<span></span>')+(typ!=='vra'?kUhrade(r):'')+'</div>'+
       (typ==='vyd'&&r.platba&&r.platba.stav==='ceka'&&r.stav==='pop'?'<p class="pk-w">Záloha ještě není zaplacená.</p>':'')+
       (lodBtn(r)?lodBtn(r).replace('btn sm pri','btn pri pk-b').replace('>Vydat lodě<','>Vydat lodě →<').replace('>Vrátit lodě<','>Vrátit lodě ✓<'):'')+
@@ -897,7 +897,7 @@ function rezervace(m,sekV){
       lo=LK(r)?'<span class="pk-lo">'+SV(IC.lode,13)+esc(LK(r))+'</span>':'',dp=(r.doprava?'<span class="pk-lo dp">doprava '+esc(R.mistoN(r.doprava.misto))+(r.doprava.cas?' '+esc(r.doprava.cas):'')+'</span>':'')+(r.vyzved?'<span class="pk-lo dp">vyzvednutí '+esc(R.mistoN(r.vyzved.misto))+(r.vyzved.cas?' '+esc(r.vyzved.cas):'')+'</span>':'');
     var uz=typ==='pri'&&(r.stav==='uby'||r.stav==='odj');if(uz)tg='<span class="pk-t ok">✓ ubytován</span>';
     var btn=uz?'<div class="pk-z"><button type="button" class="lnk" data-qs="'+r.id+'" data-st="pot" title="Vrátit ubytování zpět – host bude zase čekat na příjezd">Vrátit</button></div>':typ==='pri'?'<button type="button" class="btn pri pk-b" data-qs="'+r.id+'" data-st="uby">Ubytovat</button>':typ==='odj'?'<button type="button" class="btn pri pk-b" data-qs="'+r.id+'" data-st="odj">Odhlásit</button>':'';
-    return '<article class="pk-c'+(DRZ[r.id]?' zm'+(Date.now()-DRZ[r.id].t<1500?' zm-n':''):'')+(typ==='odj'&&r.do<dnes?' po':'')+(typ==='hot'?' hot':'')+'"><div class="pk-ch"><button type="button" class="rl-j" data-id="'+r.id+'">'+esc(r.jmeno)+'</button>'+tg+'</div>'+
+    return '<article class="pk-c'+(R.dopRadky(r).length?' s-dop':'')+(DRZ[r.id]?' zm'+(Date.now()-DRZ[r.id].t<1500?' zm-n':''):'')+(typ==='odj'&&r.do<dnes?' po':'')+(typ==='hot'?' hot':'')+'"><div class="pk-ch"><button type="button" class="rl-j" data-id="'+r.id+'">'+esc(r.jmeno)+'</button>'+tg+'</div>'+
       '<div class="pk-l">'+esc(kratM(r))+'</div><div class="pk-v">'+esc(KKC.osobyTxt(o))+' · '+KR(r.od)+' – '+KR(r.do)+'</div>'+
       (lo||dp||R.doplnkyTxt(r)?'<div class="pk-m">'+lo+dp+(R.doplnkyTxt(r)?'<span class="pk-lo dl">+ '+esc(R.doplnkyTxt(r))+'</span>':'')+'</div>':'')+
       '<div class="pk-f">'+(r.telefon?'<a href="tel:'+esc(r.telefon.replace(/\s/g,''))+'">'+esc(r.telefon)+'</a>':'<span></span>')+(typ!=='hot'?kUhrade(r):'')+'</div>'+
@@ -1261,7 +1261,7 @@ var VD=n.voda||{};h+='<section class="card"><h2>Stav vody na Vltavě</h2><p clas
             '<td>'+(r?KR(r.od)+' – '+KR(r.do)+(r.od===x?' <small>(přijede)</small>':''):'')+'</td><td>'+(r?esc(r.telefon||''):'')+'</td>'+
             '<td>'+(o?'<b>'+esc(o.jmeno)+'</b>'+(o.telefon?' <small>'+esc(o.telefon)+'</small>':''):'')+'</td></tr>'})});
       h='<h1>Chatky, stany, teepee · '+den+'</h1><p class="tk-sum"><span>Obsazeno: <b>'+obs+'</b></span><span>Hostů: <b>'+nO+'</b></span><span>Odjíždí: <b>'+odj.filter(function(r){return (r.mista||[]).some(function(m){return /^(chatka|podsad|teepee)-/.test(m)})}).length+'</b></span></p>'+
-        '<table class="tk-pre"><thead><tr><th style="width:26px"></th><th>Místo</th><th>Bude ubytován</th><th>Osoby</th><th>Termín</th><th>Telefon</th><th>Odjíždí dnes</th></tr></thead><tbody>'+rad+'</tbody></table>'}
+        '<table class="tk-pre tk-a4"><thead><tr><th style="width:26px"></th><th>Místo</th><th>Bude ubytován</th><th>Osoby</th><th>Termín</th><th>Telefon</th><th>Odjíždí dnes</th></tr></thead><tbody>'+rad+'</tbody></table>'}
     else if(co==='ubyt'){
       /* kdo v kempu spí tu noc: po místech, s osobami, termínem, telefonem a doplatkem; volná místa na konci */
       var nc=vse.filter(function(r){return !JL(r)&&r.od<=x&&x<r.do}),wq=function(r){var m=(r.mista||[])[0];return m?({chatka:0,podsad:1,teepee:2}[m.split('-')[0]]||0):3},rz=function(a,b){return wq(a)-wq(b)||kratM(a).localeCompare(kratM(b),'cs',{numeric:true})},sumO=0;nc.forEach(function(r){sumO+=KKC.osobPocet(r.osoby)});
