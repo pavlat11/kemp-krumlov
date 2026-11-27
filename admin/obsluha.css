@@ -843,7 +843,6 @@ dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid va
 .ob-prc{width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin:-4px 2px 0 10px;transition:transform .2s;opacity:.6;flex:none}
 .ob-pr[open] .ob-prc{transform:rotate(-135deg);margin-top:4px}
 .ob-prs{align-items:start}
-.ob-k.s-dop{box-shadow:inset 5px 0 0 #2b6cb0}
 .ob-dop{display:flex;flex-direction:column;gap:5px;margin:8px 0}
 .ob-dop span{display:flex;align-items:center;gap:8px;background:#e6f0fa;color:#1e4f86;border-radius:10px;padding:8px 11px;font-size:14px;font-weight:700}
 .ob-dop span.vyzved{background:#f6ece1;color:#8a4b12}
