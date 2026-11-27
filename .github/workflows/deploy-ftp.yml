@@ -5,8 +5,9 @@
 #   FTP_SERVER      adresa FTP serveru, např. ftp.kemp-krumlov.cz
 #   FTP_USERNAME    přihlašovací jméno
 #   FTP_PASSWORD    heslo
-#   FTP_SERVER_DIR  (nepovinné) složka webu na serveru, MUSÍ končit lomítkem, např. www/ nebo public_html/
-#                   když chybí, nahrává se do kořene FTP účtu (./)
+#   FTP_SERVER_DIR  (nepovinné) složka webu na serveru, MUSÍ končit lomítkem; na WEDOSu je to www/ (výchozí)
+#   ENV_FILE        (nepovinné) celý obsah souboru .env – nahraje se MIMO web do private/.env
+#                   (vedle složky www, z prohlížeče není dostupný)
 #
 # Nahrávají se jen změněné soubory (stav si akce drží v souboru .ftp-deploy-sync-state.json na serveru).
 # Soubory, které na serveru vznikly jinak (např. .env, nahrané fotky), se nemažou.
@@ -35,7 +36,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR || './' }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR || 'www/' }}
           protocol: ftps
           port: 21
           exclude: |
@@ -47,3 +48,29 @@ jobs:
             nastroje/**
             prototyp/**
             _nahled/**
+
+      # .env s hesly jde mimo veřejnou složku www/ – do private/ v kořeni FTP účtu.
+      - name: Připravit .env (mimo web)
+        id: env
+        env:
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+        run: |
+          if [ -z "$ENV_FILE" ]; then echo "Secret ENV_FILE chybí – .env se nenahraje."; echo "ok=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          mkdir -p "$RUNNER_TEMP/private"
+          printf '%s\n' "$ENV_FILE" > "$RUNNER_TEMP/private/.env"
+          printf 'Require all denied\nDeny from all\n' > "$RUNNER_TEMP/private/.htaccess"
+          echo "ok=true" >> "$GITHUB_OUTPUT"
+
+      - name: Nahrát .env na FTP (private/)
+        if: steps.env.outputs.ok == 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ${{ runner.temp }}/private/
+          server-dir: private/
+          state-name: .ftp-deploy-env-state.json
+          protocol: ftps
+          port: 21
+          exclude: ""

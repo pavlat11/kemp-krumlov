@@ -68,6 +68,19 @@ Hesla a přístupy (databáze, e-mail, klíč aplikace) patří do `.env` – vz
 v `.env.example` v kořeni projektu. Obsah webu (texty, ceny, fotky, rezervace)
 do `.env` nepatří, je v databázi, aby ho šlo měnit v administraci.
 
+Na hostingu (WEDOS) leží `.env` **mimo veřejnou složku**:
+
+```
+/            ← kořen FTP účtu
+├─ private/  ← .env (+ .htaccess „Require all denied“), z webu nedostupné
+├─ session/
+├─ tmp/
+└─ www/      ← veřejný web (sem jde obsah repozitáře)
+```
+
+Z PHP ve `www/` je cesta `dirname(__DIR__) . '/private/.env'`.
+Soubor nahrává GitHub Actions ze secretu `ENV_FILE` (celý obsah `.env`).
+
 ## SEO
 
 Server vypíše `<title>`, `meta description`, `robots`, `canonical`, `og:*`
