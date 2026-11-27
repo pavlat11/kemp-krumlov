@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <script>window.KK_WEB="pela";window.KK_LANG_PEVNY="cs";window.KK_PELA_ROOT="";window.KK_PELA_STRANKA="rafty";window.KK_ZDROJ=location.href.replace(/[?#].*$/,"");</script>
 <script src="../js/server.js?v=6"></script>
-<script src="../js/start.js?v=0feae811"></script>
+<script src="../js/start.js?v=1ea3d173"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Půjčovna raftů Český Krumlov – Colorado, Bajkal | PE-LA</title>
 <meta name="description" content="Půjčení raftů Colorado (6 osob) a Bajkal (4 osoby) na Vltavě v Českém Krumlově. Rafty pro 3–8 osob, doprava osob a vybavení. PE-LA od roku 1993.">
@@ -36,7 +36,7 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=1795815518">
+<link rel="stylesheet" href="assets/css/style.css?v=1795816078">
 <noscript><style>[data-reveal],.fade-up{opacity:1!important;transform:none!important}.clip-reveal{clip-path:none!important}.clip-reveal img{transform:none!important}.split .w>span{transform:none!important}.loader{display:none!important}.gitem.is-hidden{display:block!important}.gallery-more{display:none}.pcard .prow{opacity:1;transform:none}</style></noscript>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Úvod","item":"https://www.pe-la.czindex.html"},{"@type":"ListItem","position":2,"name":"Rafty","item":"https://www.pe-la.czrafty.html"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Půjčení raftu na Vltavě","serviceType":"Půjčovna lodí","provider":{"@id":"https://www.pe-la.cz/#firma"},"areaServed":"Vltava, Český Krumlov","url":"https://www.pe-la.czrafty.html","offers":[{"@type":"Offer","name":"Raft 3–4 osoby – jednodenní","price":"1250","priceCurrency":"CZK"},{"@type":"Offer","name":"Raft 5–6 osob – jednodenní","price":"1600","priceCurrency":"CZK"},{"@type":"Offer","name":"Raft 8 osob – jednodenní","price":"1800","priceCurrency":"CZK"}]}</script>
@@ -170,22 +170,22 @@
       <h2 class="split"><span data-t="rez_online_nadpis">Zarezervujte si</span> <em data-t="rez_online_em">lodě online</em></h2>
       <p class="lead" data-t="rez_online_text">Vyberte den, lodě a dopravu – cenu uvidíte hned a rezervace přijde rovnou k nám. Když se vám to hodí, přidejte i nocleh v Kempu Krumlov.</p>
     </div>
-        <iframe class="rez-online__frame" id="rezFrame" src="../rezervace.html#jen-lode" title="Rezervace online" loading="lazy" allow="clipboard-write"></iframe>
+        <iframe class="rez-online__frame" id="rezFrame" src="../rezervace.html?web=pela#jen-lode" title="Rezervace online" loading="lazy" allow="clipboard-write"></iframe>
     <p class="rez-online__chyba" id="rezChyba" hidden data-t="rez_online_nejde">Rezervační formulář se nepodařilo načíst. Napište nám prosím níže nebo zavolejte na +420 725 336 601.</p>
   </div>
 </section>
 <script>
 /* výška vloženého formuláře podle obsahu (posílá ji stránka rezervace na webu kempu) */
-(function(){var f=document.getElementById('rezFrame'),o=new URL(f.src).origin,ok=false;
+(function(){var f=document.getElementById('rezFrame'),o=new URL(f.src,location.href).origin,ok=false;
  addEventListener('message',function(e){if(e.origin!==o||!e.data||!e.data.kkRezervace)return;ok=true;f.style.height=Math.max(600,+e.data.vyska||0)+'px'});
  setTimeout(function(){if(!ok){var r=f.getBoundingClientRect();if(r.top<innerHeight*3)document.getElementById('rezChyba').hidden=false}},15000)})();
 </script>
-<section class="sec reserve" id="dotaz" style="padding-top:0">
+<section class="sec reserve" id="kontakt" style="padding-top:0">
   <div class="wrap reserve__grid">
     <div>
-      <span class="eyebrow" style="color:var(--sun)" data-t="rez_dotaz">Raději napíšete?</span>
-      <h2 class="split"><span data-t="vyplujte">Vyplujte</span> <em data-t="s_nami">s námi.</em></h2>
-      <p class="lead" data-reveal="up" data-t="napiste_nam_kdy_a">Napište nám, kdy a kam chcete vyrazit. Ozveme se s potvrzením a domluvíme návoz lodí i dopravu osob.</p>
+      <span class="eyebrow" style="color:var(--sun)" data-t="kontakt_eyebrow">Kontakt</span>
+      <h2 class="split"><span data-t="kontakt_h">Máte</span> <em data-t="kontakt_h_em">dotaz?</em></h2>
+      <p class="lead" data-reveal="up" data-t="kontakt_lead">Zeptejte se na cokoli – trasy, stav vody, skupiny nebo firemní akce. Ozveme se co nejdřív.</p>
       <div class="hours" data-reveal="up" style="--d:.1s"><i class="dot"></i><div><b data-t="provozni_doba">Provozní doba</b><span data-t="kveten_zari_denne_9">Květen – září · denně 9:00 – 19:00</span></div></div>
       <div class="contacts" data-stagger>
         <a class="contact" href="tel:+420725336601"><span class="ic"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg></span><span><small data-t="telefon">Telefon</small><strong>+420 725 336 601</strong></span><svg class="icon arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
@@ -194,33 +194,26 @@
       </div>
     </div>
     <div class="form" data-reveal="right">
-      <h3 data-t="nezavazna_rezervace">Nezávazná rezervace</h3>
-      <p data-t="do_zpravy_prosim_uvedte">Do zprávy prosím uveďte datum, místo a čas, typ lodě, počet osob, případně dopravu osob.</p>
+      <h3 data-t="kontakt_form">Napište nám</h3>
+      <p data-t="kontakt_form_p">Odpovíme e-mailem nebo zavoláme, obvykle do druhého dne.</p>
       <form action="forms/contact.php" method="post" novalidate>
         <div class="frow">
           <div class="field"><input type="text" name="name" id="f-name" placeholder=" " autocomplete="name" required><label for="f-name" data-t="vase_jmeno">Vaše jméno</label></div>
           <div class="field"><input type="tel" name="tel" id="f-tel" placeholder=" " autocomplete="tel" required><label for="f-tel" data-t="telefon">Telefon</label></div>
         </div>
         <div class="field"><input type="email" name="email" id="f-email" placeholder=" " autocomplete="email" required><label for="f-email">E-mail</label></div>
-        <div class="field"><textarea name="message" id="f-msg" rows="5" placeholder="Např.: prosím o rezervaci 2× šestimístný raft od 15. 6. do 17. 6. Budeme 3 děti (10–15 let) a 6 dospělých. Návoz na Pískárnu v 10:00, vyzvednutí i s odvozem osob ve Zlaté Koruně mezi 15–17 h." required></textarea><label for="f-msg" data-t="zprava">Zpráva</label></div>
-        <div class="hint" aria-label="Rychlé doplnění">
-          <button type="button" data-add="Typ lodě: " data-t="typ_lode_2">+ typ lodě</button>
-          <button type="button" data-add="Termín: " data-t="termin_2">+ termín</button>
-          <button type="button" data-add="Počet osob: " data-t="pocet_osob_2">+ počet osob</button>
-          <button type="button" data-add="Místo návozu: " data-t="misto_navozu_2">+ místo návozu</button>
-          <button type="button" data-add="Doprava osob: ano" data-t="doprava_osob_2">+ doprava osob</button>
-        </div>
+        <div class="field"><textarea name="message" id="f-msg" rows="5" placeholder="Na co se chcete zeptat?" required></textarea><label for="f-msg" data-t="zprava">Zpráva</label></div>
         <noscript><p class="nojs-note"><span data-t="pro_odeslani_formulare_je">Pro odeslání formuláře je potřeba zapnutý JavaScript. Rezervovat můžete i na</span> <a href="tel:+420725336601">+420 725 336 601</a>.</p></noscript>
         <div class="turnstile" hidden></div>
         <input type="hidden" name="lang" value="cs">
         <div class="hp" aria-hidden="true"><input type="text" name="email_2" tabindex="-1" autocomplete="off"></div>
-        <button class="btn" type="submit"><span class="label" data-t="odeslat_rezervaci">Odeslat rezervaci</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg><i class="spin"></i></button>
+        <button class="btn" type="submit"><span class="label" data-t="odeslat_zpravu">Odeslat zprávu</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg><i class="spin"></i></button>
         <div class="form__msg" role="alert"></div>
       </form>
       <div class="form__done" aria-live="polite">
         <svg class="check" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45"/><path d="M30 52l13 13 27-29"/></svg>
         <h3 data-t="dekujeme">Děkujeme!</h3>
-        <p data-t="vase_rezervace_byla_odeslana">Vaše rezervace byla odeslána. Brzy se vám ozveme.</p>
+        <p data-t="kontakt_odeslano">Zpráva je odeslaná. Ozveme se vám co nejdřív.</p>
         <button class="btn btn--dark btn--sm form__again" type="button" data-t="poslat_dalsi_zpravu">Poslat další zprávu</button>
       </div>
     </div>
@@ -245,7 +238,7 @@
 <button class="totop" aria-label="Nahoru"><svg class="ring" viewBox="0 0 56 56"><circle cx="28" cy="28" r="26"/></svg><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg></button>
 <script>window.PELA_I18N = {};</script>
 <script src="assets/js/main.js?v=1795814010" defer></script>
-<script src="../js/cenik.js?v=0feae811"></script>
-<script src="../js/pela-web.js?v=0feae811"></script>
+<script src="../js/cenik.js?v=1ea3d173"></script>
+<script src="../js/pela-web.js?v=1ea3d173"></script>
 </body>
 </html>

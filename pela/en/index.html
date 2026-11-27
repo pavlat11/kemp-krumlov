@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <script>window.KK_WEB="pela";window.KK_LANG_PEVNY="en";window.KK_PELA_ROOT="../";window.KK_PELA_STRANKA="index";window.KK_ZDROJ=location.href.replace(/[?#].*$/,"");</script>
 <script src="../../js/server.js?v=6"></script>
-<script src="../../js/start.js?v=0feae811"></script>
+<script src="../../js/start.js?v=1ea3d173"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Canoe &amp; Raft Rental Český Krumlov – Vltava River | PE-LA</title>
 <meta name="description" content="PE-LA canoe and raft rental in Český Krumlov – since 1993: canoes, rafts, equipment and shuttle transport on the Vltava from Vyšší Brod to Boršov.">
@@ -38,7 +38,7 @@
 <link rel="preload" href="../assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/img/ui/hero.webp" as="image" fetchpriority="high" media="(min-width: 761px)">
 <link rel="preload" href="../assets/img/ui/hero-m.webp" as="image" fetchpriority="high" media="(max-width: 760px)">
-<link rel="stylesheet" href="../assets/css/style.css?v=1795815518">
+<link rel="stylesheet" href="../assets/css/style.css?v=1795816078">
 <noscript><style>[data-reveal],.fade-up{opacity:1!important;transform:none!important}.clip-reveal{clip-path:none!important}.clip-reveal img{transform:none!important}.split .w>span{transform:none!important}.loader{display:none!important}.gitem.is-hidden{display:block!important}.gallery-more{display:none}.pcard .prow{opacity:1;transform:none}</style></noscript>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","@id":"https://www.pe-la.cz/#firma","name":"PE-LA – Canoe & Raft Rental","alternateName":"PE-LA","description":"Canoe and raft rental on the Vltava in Český Krumlov. Since 1993: canoes, rafts, paddling gear and shuttle transport for family, school and company trips.","url":"https://www.pe-la.cz../en/index.html","telephone":"+420725336601","email":"pelalode@seznam.cz","image":"https://www.pe-la.cz/assets/img/og.jpg","logo":"https://www.pe-la.cz/assets/img/icon-512.png","foundingDate":"1993","priceRange":"€8–€72","currenciesAccepted":"CZK","address":{"@type":"PostalAddress","streetAddress":"Domoradice 107","addressLocality":"Český Krumlov","postalCode":"381 01","addressRegion":"Jihočeský kraj","addressCountry":"CZ"},"areaServed":"Vltava – Vyšší Brod to Boršov","sameAs":["https://www.kemp-krumlov.cz/","https://hamrdivcikamen.cz/"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PE-LA – Boat Rental","url":"https://www.pe-la.cz../en/index.html","inLanguage":"en"}</script>
@@ -339,22 +339,22 @@
       <h2 class="split"><span data-t="rez_online_nadpis">Book your</span> <em data-t="rez_online_em">boats online</em></h2>
       <p class="lead" data-t="rez_online_text">Choose the day, boats and transport – you will see the price right away and the booking comes straight to us. You can also add a stay at Kemp Krumlov.</p>
     </div>
-        <iframe class="rez-online__frame" id="rezFrame" src="../../rezervace.html?lang=en#jen-lode" title="Book online" loading="lazy" allow="clipboard-write"></iframe>
+        <iframe class="rez-online__frame" id="rezFrame" src="../../rezervace.html?web=pela&amp;lang=en#jen-lode" title="Book online" loading="lazy" allow="clipboard-write"></iframe>
     <p class="rez-online__chyba" id="rezChyba" hidden data-t="rez_online_nejde">The booking form could not be loaded. Please write to us below or call +420 725 336 601.</p>
   </div>
 </section>
 <script>
 /* výška vloženého formuláře podle obsahu (posílá ji stránka rezervace na webu kempu) */
-(function(){var f=document.getElementById('rezFrame'),o=new URL(f.src).origin,ok=false;
+(function(){var f=document.getElementById('rezFrame'),o=new URL(f.src,location.href).origin,ok=false;
  addEventListener('message',function(e){if(e.origin!==o||!e.data||!e.data.kkRezervace)return;ok=true;f.style.height=Math.max(600,+e.data.vyska||0)+'px'});
  setTimeout(function(){if(!ok){var r=f.getBoundingClientRect();if(r.top<innerHeight*3)document.getElementById('rezChyba').hidden=false}},15000)})();
 </script>
-<section class="sec reserve" id="dotaz" style="padding-top:0">
+<section class="sec reserve" id="kontakt" style="padding-top:0">
   <div class="wrap reserve__grid">
     <div>
-      <span class="eyebrow" style="color:var(--sun)" data-t="rez_dotaz">Prefer to write?</span>
-      <h2 class="split"><span data-t="vyplujte">Set off</span> <em data-t="s_nami">with us.</em></h2>
-      <p class="lead" data-reveal="up" data-t="napiste_nam_kdy_a">Tell us when and where you&#039;d like to go. We&#039;ll get back to you with a confirmation and arrange boat delivery and shuttle transport.</p>
+      <span class="eyebrow" style="color:var(--sun)" data-t="kontakt_eyebrow">Contact</span>
+      <h2 class="split"><span data-t="kontakt_h">Any</span> <em data-t="kontakt_h_em">questions?</em></h2>
+      <p class="lead" data-reveal="up" data-t="kontakt_lead">Ask us anything – routes, water levels, groups or company events. We will get back to you soon.</p>
       <div class="hours" data-reveal="up" style="--d:.1s"><i class="dot"></i><div><b data-t="provozni_doba">Opening hours</b><span data-t="kveten_zari_denne_9">May – September · daily 9 am – 7 pm</span></div></div>
       <div class="contacts" data-stagger>
         <a class="contact" href="tel:+420725336601"><span class="ic"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg></span><span><small data-t="telefon">Phone</small><strong>+420 725 336 601</strong></span><svg class="icon arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
@@ -363,33 +363,26 @@
       </div>
     </div>
     <div class="form" data-reveal="right">
-      <h3 data-t="nezavazna_rezervace">Booking request</h3>
-      <p data-t="do_zpravy_prosim_uvedte">Please include the date, place and time, type of boat, number of people and whether you need shuttle transport.</p>
+      <h3 data-t="kontakt_form">Write to us</h3>
+      <p data-t="kontakt_form_p">We will reply by e-mail or call you, usually by the next day.</p>
       <form action="../forms/contact.php" method="post" novalidate>
         <div class="frow">
           <div class="field"><input type="text" name="name" id="f-name" placeholder=" " autocomplete="name" required><label for="f-name" data-t="vase_jmeno">Your name</label></div>
           <div class="field"><input type="tel" name="tel" id="f-tel" placeholder=" " autocomplete="tel" required><label for="f-tel" data-t="telefon">Phone</label></div>
         </div>
         <div class="field"><input type="email" name="email" id="f-email" placeholder=" " autocomplete="email" required><label for="f-email">E-mail</label></div>
-        <div class="field"><textarea name="message" id="f-msg" rows="5" placeholder="E.g.: we&#039;d like to book 2× six-person rafts from 15 to 17 June. We are 3 children (10–15) and 6 adults. Drop-off at Pískárna at 10 am, pick-up with shuttle in Zlatá Koruna between 3 and 5 pm." required></textarea><label for="f-msg" data-t="zprava">Message</label></div>
-        <div class="hint" aria-label="Quick add">
-          <button type="button" data-add="Boat type: " data-t="typ_lode_2">+ boat type</button>
-          <button type="button" data-add="Date: " data-t="termin_2">+ date</button>
-          <button type="button" data-add="Number of people: " data-t="pocet_osob_2">+ number of people</button>
-          <button type="button" data-add="Drop-off point: " data-t="misto_navozu_2">+ drop-off point</button>
-          <button type="button" data-add="Shuttle transport: yes" data-t="doprava_osob_2">+ shuttle transport</button>
-        </div>
+        <div class="field"><textarea name="message" id="f-msg" rows="5" placeholder="What would you like to ask?" required></textarea><label for="f-msg" data-t="zprava">Message</label></div>
         <noscript><p class="nojs-note"><span data-t="pro_odeslani_formulare_je">JavaScript is required to send the form. You can also book by phone:</span> <a href="tel:+420725336601">+420 725 336 601</a>.</p></noscript>
         <div class="turnstile" hidden></div>
         <input type="hidden" name="lang" value="en">
         <div class="hp" aria-hidden="true"><input type="text" name="email_2" tabindex="-1" autocomplete="off"></div>
-        <button class="btn" type="submit"><span class="label" data-t="odeslat_rezervaci">Send booking request</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg><i class="spin"></i></button>
+        <button class="btn" type="submit"><span class="label" data-t="odeslat_zpravu">Send message</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg><i class="spin"></i></button>
         <div class="form__msg" role="alert"></div>
       </form>
       <div class="form__done" aria-live="polite">
         <svg class="check" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45"/><path d="M30 52l13 13 27-29"/></svg>
         <h3 data-t="dekujeme">Thank you!</h3>
-        <p data-t="vase_rezervace_byla_odeslana">Your booking request has been sent. We&#039;ll get back to you soon.</p>
+        <p data-t="kontakt_odeslano">Your message has been sent. We will get back to you soon.</p>
         <button class="btn btn--dark btn--sm form__again" type="button" data-t="poslat_dalsi_zpravu">Send another message</button>
       </div>
     </div>
@@ -414,7 +407,7 @@
 <button class="totop" aria-label="Back to top"><svg class="ring" viewBox="0 0 56 56"><circle cx="28" cy="28" r="26"/></svg><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg></button>
 <script>window.PELA_I18N = {"Právě máme otevřeno":"We are open now","Teď je zavřeno, otevíráme v 9:00":"Closed now – we open at 9 am","Mimo sezónu: rezervace přijímáme":"Off season: we are taking bookings","Mám zájem o: ":"I'm interested in: ","Termín: ":"Date: ","Počet osob: ":"Number of people: ","Místo návozu \/ vyzvednutí: ":"Drop-off \/ pick-up point: ","Obnovte prosím stránku, nebo nám zavolejte na 725 336 601.":"Please reload the page or call us on +420 725 336 601.","Ověření „Nejsem robot“ se nepodařilo (kód ":"The \"I am not a robot\" check failed (code ","Vyplňte prosím všechna pole správně.":"Please fill in all fields correctly.","Počkejte prosím na dokončení ověření „Nejsem robot“.":"Please wait for the \"I am not a robot\" check to finish.","Zprávu se nepodařilo odeslat. Zavolejte nám prosím na":"Your message could not be sent. Please call us on","Ověření „Nejsem robot“ se nezdařilo. Zkuste prosím formulář odeslat znovu.":"The \"I am not a robot\" check failed. Please try sending the form again.","E-mail se nepodařilo odeslat. Zkuste to prosím později, nebo nám zavolejte.":"The e-mail could not be sent. Please try again later or give us a call.","Zpráva obsahuje příliš mnoho odkazů.":"The message contains too many links.","Neplatný požadavek.":"Invalid request.","Zavřít":"Close","Předchozí":"Previous","Další":"Next","Fotogalerie":"Photo gallery"};</script>
 <script src="../assets/js/main.js?v=1795814010" defer></script>
-<script src="../../js/cenik.js?v=0feae811"></script>
-<script src="../../js/pela-web.js?v=0feae811"></script>
+<script src="../../js/cenik.js?v=1ea3d173"></script>
+<script src="../../js/pela-web.js?v=1ea3d173"></script>
 </body>
 </html>

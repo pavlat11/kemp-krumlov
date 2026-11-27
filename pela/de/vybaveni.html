@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <script>window.KK_WEB="pela";window.KK_LANG_PEVNY="de";window.KK_PELA_ROOT="../";window.KK_PELA_STRANKA="vybaveni";window.KK_ZDROJ=location.href.replace(/[?#].*$/,"");</script>
 <script src="../../js/server.js?v=6"></script>
-<script src="../../js/start.js?v=0feae811"></script>
+<script src="../../js/start.js?v=1ea3d173"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ausrüstung inklusive – Paddel, Schwimmwesten, Tonnen | PE-LA</title>
 <meta name="description" content="Zu jedem Kanu und Raft verleihen wir Paddel, Schwimmwesten, Tonnen und Pumpen – alles im Mietpreis enthalten. Bootsverleih PE-LA, Český Krumlov, Moldau.">
@@ -36,7 +36,7 @@
 <link rel="manifest" href="../site.webmanifest">
 <link rel="preload" href="../assets/fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/css/style.css?v=1795815518">
+<link rel="stylesheet" href="../assets/css/style.css?v=1795816078">
 <noscript><style>[data-reveal],.fade-up{opacity:1!important;transform:none!important}.clip-reveal{clip-path:none!important}.clip-reveal img{transform:none!important}.split .w>span{transform:none!important}.loader{display:none!important}.gitem.is-hidden{display:block!important}.gallery-more{display:none}.pcard .prow{opacity:1;transform:none}</style></noscript>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Startseite","item":"https://www.pe-la.cz../de/index.html"},{"@type":"ListItem","position":2,"name":"Ausrüstung","item":"https://www.pe-la.cz../de/vybaveni.html"}]}</script>
 </head>
@@ -151,22 +151,22 @@
       <h2 class="split"><span data-t="rez_online_nadpis">Boote</span> <em data-t="rez_online_em">online buchen</em></h2>
       <p class="lead" data-t="rez_online_text">Wählen Sie Tag, Boote und Transport – den Preis sehen Sie sofort und die Buchung kommt direkt zu uns. Auf Wunsch auch mit Übernachtung im Kemp Krumlov.</p>
     </div>
-        <iframe class="rez-online__frame" id="rezFrame" src="../../rezervace.html?lang=de#jen-lode" title="Online buchen" loading="lazy" allow="clipboard-write"></iframe>
+        <iframe class="rez-online__frame" id="rezFrame" src="../../rezervace.html?web=pela&amp;lang=de#jen-lode" title="Online buchen" loading="lazy" allow="clipboard-write"></iframe>
     <p class="rez-online__chyba" id="rezChyba" hidden data-t="rez_online_nejde">Das Buchungsformular konnte nicht geladen werden. Schreiben Sie uns bitte unten oder rufen Sie +420 725 336 601 an.</p>
   </div>
 </section>
 <script>
 /* výška vloženého formuláře podle obsahu (posílá ji stránka rezervace na webu kempu) */
-(function(){var f=document.getElementById('rezFrame'),o=new URL(f.src).origin,ok=false;
+(function(){var f=document.getElementById('rezFrame'),o=new URL(f.src,location.href).origin,ok=false;
  addEventListener('message',function(e){if(e.origin!==o||!e.data||!e.data.kkRezervace)return;ok=true;f.style.height=Math.max(600,+e.data.vyska||0)+'px'});
  setTimeout(function(){if(!ok){var r=f.getBoundingClientRect();if(r.top<innerHeight*3)document.getElementById('rezChyba').hidden=false}},15000)})();
 </script>
-<section class="sec reserve" id="dotaz" style="padding-top:0">
+<section class="sec reserve" id="kontakt" style="padding-top:0">
   <div class="wrap reserve__grid">
     <div>
-      <span class="eyebrow" style="color:var(--sun)" data-t="rez_dotaz">Lieber schreiben?</span>
-      <h2 class="split"><span data-t="vyplujte">Fahren Sie</span> <em data-t="s_nami">mit uns los.</em></h2>
-      <p class="lead" data-reveal="up" data-t="napiste_nam_kdy_a">Schreiben Sie uns, wann und wohin Sie fahren möchten. Wir melden uns mit einer Bestätigung und vereinbaren Bootszustellung und Personentransfer.</p>
+      <span class="eyebrow" style="color:var(--sun)" data-t="kontakt_eyebrow">Kontakt</span>
+      <h2 class="split"><span data-t="kontakt_h">Haben Sie</span> <em data-t="kontakt_h_em">Fragen?</em></h2>
+      <p class="lead" data-reveal="up" data-t="kontakt_lead">Fragen Sie uns alles – Strecken, Wasserstand, Gruppen oder Firmenevents. Wir melden uns so bald wie möglich.</p>
       <div class="hours" data-reveal="up" style="--d:.1s"><i class="dot"></i><div><b data-t="provozni_doba">Öffnungszeiten</b><span data-t="kveten_zari_denne_9">Mai – September · täglich 9:00 – 19:00</span></div></div>
       <div class="contacts" data-stagger>
         <a class="contact" href="tel:+420725336601"><span class="ic"><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg></span><span><small data-t="telefon">Telefon</small><strong>+420 725 336 601</strong></span><svg class="icon arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
@@ -175,33 +175,26 @@
       </div>
     </div>
     <div class="form" data-reveal="right">
-      <h3 data-t="nezavazna_rezervace">Unverbindliche Reservierung</h3>
-      <p data-t="do_zpravy_prosim_uvedte">Bitte geben Sie Datum, Ort und Uhrzeit, Bootstyp, Personenzahl und ggf. Personentransfer an.</p>
+      <h3 data-t="kontakt_form">Schreiben Sie uns</h3>
+      <p data-t="kontakt_form_p">Wir antworten per E-Mail oder rufen Sie an, meist bis zum nächsten Tag.</p>
       <form action="../forms/contact.php" method="post" novalidate>
         <div class="frow">
           <div class="field"><input type="text" name="name" id="f-name" placeholder=" " autocomplete="name" required><label for="f-name" data-t="vase_jmeno">Ihr Name</label></div>
           <div class="field"><input type="tel" name="tel" id="f-tel" placeholder=" " autocomplete="tel" required><label for="f-tel" data-t="telefon">Telefon</label></div>
         </div>
         <div class="field"><input type="email" name="email" id="f-email" placeholder=" " autocomplete="email" required><label for="f-email">E-mail</label></div>
-        <div class="field"><textarea name="message" id="f-msg" rows="5" placeholder="Z. B.: Wir möchten 2× Raft für 6 Personen vom 15. bis 17. 6. reservieren. Wir sind 3 Kinder (10–15 Jahre) und 6 Erwachsene. Einsetzen in Pískárna um 10:00, Abholung mit Transfer in Zlatá Koruna zwischen 15 und 17 Uhr." required></textarea><label for="f-msg" data-t="zprava">Nachricht</label></div>
-        <div class="hint" aria-label="Schnell ergänzen">
-          <button type="button" data-add="Bootstyp: " data-t="typ_lode_2">+ Bootstyp</button>
-          <button type="button" data-add="Termin: " data-t="termin_2">+ Termin</button>
-          <button type="button" data-add="Personenzahl: " data-t="pocet_osob_2">+ Personenzahl</button>
-          <button type="button" data-add="Einsetzstelle: " data-t="misto_navozu_2">+ Einsetzstelle</button>
-          <button type="button" data-add="Personentransfer: ja" data-t="doprava_osob_2">+ Personentransfer</button>
-        </div>
+        <div class="field"><textarea name="message" id="f-msg" rows="5" placeholder="Was möchten Sie wissen?" required></textarea><label for="f-msg" data-t="zprava">Nachricht</label></div>
         <noscript><p class="nojs-note"><span data-t="pro_odeslani_formulare_je">Zum Senden des Formulars wird JavaScript benötigt. Sie können auch telefonisch reservieren:</span> <a href="tel:+420725336601">+420 725 336 601</a>.</p></noscript>
         <div class="turnstile" hidden></div>
         <input type="hidden" name="lang" value="de">
         <div class="hp" aria-hidden="true"><input type="text" name="email_2" tabindex="-1" autocomplete="off"></div>
-        <button class="btn" type="submit"><span class="label" data-t="odeslat_rezervaci">Reservierung senden</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg><i class="spin"></i></button>
+        <button class="btn" type="submit"><span class="label" data-t="odeslat_zpravu">Nachricht senden</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg><i class="spin"></i></button>
         <div class="form__msg" role="alert"></div>
       </form>
       <div class="form__done" aria-live="polite">
         <svg class="check" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45"/><path d="M30 52l13 13 27-29"/></svg>
         <h3 data-t="dekujeme">Vielen Dank!</h3>
-        <p data-t="vase_rezervace_byla_odeslana">Ihre Reservierung wurde gesendet. Wir melden uns in Kürze.</p>
+        <p data-t="kontakt_odeslano">Ihre Nachricht wurde gesendet. Wir melden uns so bald wie möglich.</p>
         <button class="btn btn--dark btn--sm form__again" type="button" data-t="poslat_dalsi_zpravu">Weitere Nachricht senden</button>
       </div>
     </div>
@@ -226,7 +219,7 @@
 <button class="totop" aria-label="Nach oben"><svg class="ring" viewBox="0 0 56 56"><circle cx="28" cy="28" r="26"/></svg><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg></button>
 <script>window.PELA_I18N = {"Právě máme otevřeno":"Jetzt geöffnet","Teď je zavřeno, otevíráme v 9:00":"Jetzt geschlossen – wir öffnen um 9:00","Mimo sezónu: rezervace přijímáme":"Nebensaison: Reservierungen möglich","Mám zájem o: ":"Ich interessiere mich für: ","Termín: ":"Termin: ","Počet osob: ":"Personenzahl: ","Místo návozu \/ vyzvednutí: ":"Einsetz- \/ Abholstelle: ","Obnovte prosím stránku, nebo nám zavolejte na 725 336 601.":"Bitte laden Sie die Seite neu oder rufen Sie uns an: +420 725 336 601.","Ověření „Nejsem robot“ se nepodařilo (kód ":"Die Prüfung „Ich bin kein Roboter“ ist fehlgeschlagen (Code ","Vyplňte prosím všechna pole správně.":"Bitte füllen Sie alle Felder korrekt aus.","Počkejte prosím na dokončení ověření „Nejsem robot“.":"Bitte warten Sie, bis die Prüfung „Ich bin kein Roboter“ abgeschlossen ist.","Zprávu se nepodařilo odeslat. Zavolejte nám prosím na":"Die Nachricht konnte nicht gesendet werden. Bitte rufen Sie uns an:","Ověření „Nejsem robot“ se nezdařilo. Zkuste prosím formulář odeslat znovu.":"Die Prüfung „Ich bin kein Roboter“ ist fehlgeschlagen. Bitte senden Sie das Formular erneut.","E-mail se nepodařilo odeslat. Zkuste to prosím později, nebo nám zavolejte.":"Die E-Mail konnte nicht gesendet werden. Bitte versuchen Sie es später erneut oder rufen Sie uns an.","Zpráva obsahuje příliš mnoho odkazů.":"Die Nachricht enthält zu viele Links.","Neplatný požadavek.":"Ungültige Anfrage.","Zavřít":"Schließen","Předchozí":"Zurück","Další":"Weiter","Fotogalerie":"Fotogalerie"};</script>
 <script src="../assets/js/main.js?v=1795814010" defer></script>
-<script src="../../js/cenik.js?v=0feae811"></script>
-<script src="../../js/pela-web.js?v=0feae811"></script>
+<script src="../../js/cenik.js?v=1ea3d173"></script>
+<script src="../../js/pela-web.js?v=1ea3d173"></script>
 </body>
 </html>

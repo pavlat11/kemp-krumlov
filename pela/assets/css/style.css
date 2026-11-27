@@ -608,6 +608,6 @@ html,body{overflow-x:clip}
 /* online rezervace – formulář z webu kempu (společný ceník a rezervace) */
 .rez-online{padding-bottom:20px}
 .rez-online__head{max-width:760px;margin-bottom:26px}
-.rez-online__frame{display:block;width:100%;height:1300px;border:0;border-radius:28px;background:rgba(255,255,255,.04);transition:height .25s ease}
+.rez-online__frame{display:block;width:100%;height:1300px;border:0;background:transparent;color-scheme:normal;transition:height .25s ease}
 .rez-online__chyba{margin-top:14px;color:rgba(255,255,255,.8)}
-@media(max-width:760px){.rez-online__frame{border-radius:18px;height:1500px}}
+@media(max-width:760px){.rez-online__frame{height:1500px}}
