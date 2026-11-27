@@ -377,12 +377,12 @@ const zal=R.dnes&&R.total&&!nic?`<p class="rz-rek-z">${KL.t('Rezervace na dneše
  $('rzRekK').textContent=KL.t('Kam vám máme odpovědět?')}
 /* texty podle toho, jestli se platí záloha – ať host ví předem, co ho čeká */
 const TX0={};
-function texty(){const Z=KR&&KR.zaloha?KR.zaloha():null,zap=!!(Z&&Z.zap);
+function texty(){if(!EXTRAS.length)root.querySelectorAll('[data-go="ext"]').forEach(e=>e.style.display='none');const Z=KR&&KR.zaloha?KR.zaloha():null,dn=naDnes(),zap=!!(Z&&Z.zap)&&!dn;
  const tx=(k,v)=>{const e=root.querySelector('[data-t="rezervace.'+k+'"]');if(!e)return;if(!(k in TX0))TX0[k]=e.textContent;const n=v==null?TX0[k]:KL.t(v);if(e.dataset.tz!==n||v==null&&e.dataset.tz){if(v==null){if(e.dataset.tz){e.textContent=TX0[k];delete e.dataset.tz}}else{e.textContent=n;e.dataset.tz=n}}};
  const ch=!zap?null:Z.typ==='vse'?'Platba předem převodem':Z.typ==='castka'?KL.t('Záloha')+' '+fmt(Z.hodnota)+', '+KL.t('zbytek na místě'):KL.t('Záloha')+' '+Z.hodnota+' %, '+KL.t('zbytek na místě');
  tx(24,'Zkontrolujte a odešlete');tx(15,S.mod==='lod'?'Vyplutí':null);tx(16,S.mod==='lod'?'Vrácení':null);tx(4,ch);tx(3,zap?'Vyberte termín, ubytování a počet osob – cenu uvidíte hned. Rezervaci potvrdíte zaplacením zálohy, pokyny pošleme e-mailem.':null);
  tx(37,zap?'Cena podle ceníku. Zálohu zaplatíte převodem, zbytek až na místě.':null);
- tx(25,zap?'Na e-mail vám pošleme číslo rezervace a pokyny k zaplacení zálohy.':null);tx(28,zap?'E-mail *':null)}
+ tx(25,zap?'Na e-mail vám pošleme číslo rezervace a pokyny k zaplacení zálohy.':dn?'Na e-mail vám pošleme číslo rezervace. Platí se celá částka na místě.':null);if(dn)tx(37,'Rezervace na dnešek – bez zálohy, celou částku zaplatíte na místě.');tx(28,zap?'E-mail *':null)}
 function render(){{const cw=$("rzCasW");if(cw)cw.hidden=S.mod==="lod"}Object.keys(MISTA).forEach(k=>{S.c[k]=S.c[k].filter(n=>freeU(k,n));if(k in S.q)S.q[k]=S.c[k].length});lodMod();if(denMod()){TYPES.forEach(t=>{S.q[t.k]=0;if(S.c[t.k])S.c[t.k]=[]});EXTRAS.forEach(x=>{S[x.k]=0})}lodFix();xLimit();R=compute();lodRender();dopRender();nocRender();const pending=S.from&&!S.to;if(S.to&&!$('rzWarn').hidden)warn(KL.t(''));
  paintCal();
  $('rzFromT').textContent=S.from?fD(S.from):'vyberte';$('rzFromT').classList.toggle('wait',!S.from);
