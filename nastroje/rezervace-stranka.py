@@ -45,7 +45,15 @@ html[data-web=pela] #rezervace .rz-t.on{border-color:#0a2229!important;box-shado
 /* výška pro vkládající web (PE-LA): posílá se rodičovské stránce, ať iframe nemá posuvník */
 (function(){if(/[?&]web=pela(&|$)/.test(location.search))document.documentElement.setAttribute('data-web','pela');if(window.parent===window)return;document.documentElement.classList.add('kk-v-ramu');
 /* posouvání stránky řídí vkládající web: po načtení nic (jinak by schoval nadpis), při přechodu mezi kroky jen když je místo mimo obrazovku */
-var t0=Date.now();Element.prototype.scrollIntoView=function(){if(Date.now()-t0<4000)return;var r=this.getBoundingClientRect();parent.postMessage({kkRezervace:1,skok:Math.round(r.top)},'*')};var p=0;function posli(){var r=document.getElementById('rezervace'),v=Math.ceil(r?r.offsetTop+r.offsetHeight:document.body.scrollHeight);if(Math.abs(v-p)>2){p=v;parent.postMessage({kkRezervace:1,vyska:v},'*')}}
+var t0=Date.now(),sk=0;Element.prototype.scrollIntoView=function(){if(Date.now()-t0<4000)return;var el=this;clearTimeout(sk);
+  /* nejdřív nová výška okna (krok může být kratší), pak posun – jinak by stránka sjela až pod formulář */
+  sk=setTimeout(function(){posli(true);var r=el.getBoundingClientRect();if(r.height||r.top)parent.postMessage({kkRezervace:1,skok:Math.round(r.top)},'*')},80)};
+/* posun okna (po volbě sjet k dalším údajům) – v rámu nic neudělá, předá se stránce; skript odečítá 110 px na hlavičku */
+/* změna kroku (Termín → Osoby a lodě → Doprava …): ukázat začátek formuláře, když je mimo obrazovku */
+document.addEventListener('DOMContentLoaded',function(){var pg=document.querySelector('.rz-prog'),m=document.querySelector('.rz-main'),kr='';if(!pg||!m||!window.MutationObserver)return;
+  new MutationObserver(function(){var b=pg.querySelector('button.on'),t=b?b.textContent:'';if(t===kr)return;var bylo=kr;kr=t;if(!bylo||Date.now()-t0<4000)return;
+    clearTimeout(sk);sk=setTimeout(function(){posli(true);parent.postMessage({kkRezervace:1,skok:Math.round(m.getBoundingClientRect().top),krok:1},'*')},80)}).observe(pg,{subtree:true,attributes:true,attributeFilter:['class']})});
+window.scrollTo=function(a,b){if(Date.now()-t0<4000)return;var t=a&&typeof a==='object'?+a.top:+b;if(isNaN(t))return;clearTimeout(sk);sk=setTimeout(function(){posli(true);parent.postMessage({kkRezervace:1,skok:Math.max(0,Math.round(t+110))},'*')},80)};var p=0;function posli(){var r=document.getElementById('rezervace'),v=Math.ceil(r?r.offsetTop+r.offsetHeight:document.body.scrollHeight);if(Math.abs(v-p)>2||arguments[0]){p=v;parent.postMessage({kkRezervace:1,vyska:v},'*')}}
 addEventListener('load',posli);if(window.ResizeObserver)new ResizeObserver(posli).observe(document.documentElement);setInterval(posli,800);
 /* odkazy mimo formulář (GDPR, kontakty) otevřít v novém okně */
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(a&&!/^#|^javascript:/.test(a.getAttribute('href'))&&!a.target)a.target='_blank'},true)})();
