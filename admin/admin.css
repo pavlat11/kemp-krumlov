@@ -1788,3 +1788,5 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .nrz-sub{margin:16px 0 8px;font-weight:800;font-size:14px}.nrz-sub small{font-weight:500;color:var(--mut);margin-left:6px}
 .pk-lo.dl{background:#efeae0;color:#4a4335}
 .tk-dl{font-size:8.5pt;color:#333}
+.ck-sw{display:inline-flex;align-items:center;gap:7px;margin-left:10px;font-size:13.5px;font-weight:700;cursor:pointer;padding:5px 11px;border:1.5px solid var(--line,#e2dacb);border-radius:999px}
+.ck-sw input{width:18px;height:18px;accent-color:#1f7a45}
