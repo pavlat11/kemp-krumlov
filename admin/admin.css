@@ -1801,3 +1801,10 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 .pk-c>.pk-f{grid-column:1/-1;display:flex;flex-direction:column;align-items:stretch;gap:6px}
 .pk-c>.pk-f>a,.pk-c>.pk-f>span:not(.pk-pl){align-self:flex-start}
 .pk-c>.pk-b{grid-column:1/-1;justify-self:end;margin-top:10px}
+.kl-d>summary{list-style:none;cursor:pointer}.kl-d>summary::-webkit-details-marker{display:none}
+.kl-d>summary .kl-h{display:flex;align-items:center;gap:6px}
+.kl-dc{margin-left:auto;width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);opacity:.55;transition:transform .2s}
+.kl-d[open] .kl-dc{transform:rotate(-135deg)}
+details.kl-d{display:block;width:100%;flex:1 1 100%}
+details.kl-d>summary{display:block}
+details.kl-d>summary .kl-h{margin:16px 0 6px}
