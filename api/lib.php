@@ -370,7 +370,7 @@ function kk_adresa($email, $jmeno = '') {
   $email = trim(str_replace(["\r", "\n", '<', '>'], '', (string) $email));
   return $jmeno !== '' ? kk_hlavicka($jmeno) . " <$email>" : "<$email>";
 }
-function kk_mail($komu, $predmet, $html, $text, $odpovedet = '', $obrazky = []) {
+function kk_mail($komu, $predmet, $html, $text, $odpovedet = '', $obrazky = [], $odJmeno = '') {
   $komu = trim((string) $komu);
   if (!filter_var($komu, FILTER_VALIDATE_EMAIL)) throw new Exception('Neplatná adresa příjemce.');
   $od = kk_env('MAIL_FROM_ADDRESS', kk_env('MAIL_USERNAME', ''));
@@ -380,7 +380,7 @@ function kk_mail($komu, $predmet, $html, $text, $odpovedet = '', $obrazky = []) 
   $dom = substr(strrchr($od, '@'), 1);
   $h = [
     'Date: ' . date('r'),
-    'From: ' . kk_adresa($od, kk_env('MAIL_FROM_NAME', 'Kemp Krumlov')),
+    'From: ' . kk_adresa($od, $odJmeno !== '' ? $odJmeno : kk_env('MAIL_FROM_NAME', 'Kemp Krumlov')),
     'To: ' . kk_adresa($komu),
     'Subject: ' . kk_hlavicka($predmet),
     'Message-ID: <' . bin2hex(random_bytes(12)) . '@' . $dom . '>',

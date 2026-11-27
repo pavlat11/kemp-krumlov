@@ -174,6 +174,7 @@ function chyt(k,v){
 function vlozMistne(r){var a;try{a=JSON.parse(rget('rezervace')||'[]')||[]}catch(e){a=[]}
   a=a.filter(function(x){return x&&x.id!==r.id});a.push(r);rset('rezervace',JSON.stringify(a));if(S.prihlasen)snapRez[r.id]=JSON.stringify(r)}
 S.novaRez=function(r){
+  if(document.documentElement.getAttribute('data-web')==='pela')r.web='pela';/* rezervace z webu PE-LA – e-maily v grafice PE-LA */
   try{var d=xhr('POST','rez_nova',{r:r})}catch(e){
     if(e.kod===409)throw new Error(/vybaven/.test(e.message)?'Na tento termín už není dost vybavení.':'V tomto termínu je obsazeno.');
     throw new Error(e.message||'Rezervaci se nepodařilo uložit.')}
@@ -193,7 +194,9 @@ S.mail=function(r,druh,mt){
   var kemp=druh==='kemp'||druh==='stornoKemp';if(!kemp&&!r.email)return Promise.resolve(null);
   var j=kemp?'cs':(['cs','en','de'].indexOf(r.jazyk)>=0?r.jazyk:'cs'),t;
   return (druh==='zaloha'?S.qrPlatba(r).catch(function(){return null}):Promise.resolve(null)).then(function(qr){
-  try{var s=R.sablona(druh,j);t={id:r.id,druh:druh,mt:mt||'',predmet:R.dosad(s.predmet,r,j),text:R.dosad(s.text,r,j),html:R.emailHtml(druh,j,s.predmet,s.text,r,qr?qrBlok(qr,j):'')};if(qr)t.qr=qr.data}catch(e){return null}
+  try{var s=R.sablona(druh,j),sp=s.predmet,st=s.text;
+    if(r.web==='pela'){/* podpis a předmět za PE-LA */sp=sp.replace(/\s*[–-]\s*Kemp Krumlov\s*$/,' – PE-LA');st=st.replace(/^Kemp Krumlov\s*$/m,'PE-LA – '+({en:'canoe & raft rental',de:'Boots- & Raftverleih'}[j]||'půjčovna lodí'))}
+    t={id:r.id,druh:druh,mt:mt||'',predmet:R.dosad(sp,r,j),text:R.dosad(st,r,j),html:R.emailHtml(druh,j,sp,st,r,qr?qrBlok(qr,j):'')};if(qr)t.qr=qr.data}catch(e){return null}
   return S.post('mail',t)}).then(function(d){if(!d)return null;
     if(d&&d.ok&&!d.uz&&S.prihlasen&&R.uprav){try{var x=R.vse().filter(function(q){return q.id===r.id})[0];if(x){var m=Object.assign({},x.maily||{});m[druh]=d.kdy||Date.now();
       R.uprav(r.id,{maily:m,hist:(x.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Odeslán e-mail: '+(NAZ[druh]||druh)+(d.komu&&d.komu!=='kemp'?' ('+d.komu+')':' (kemp)')}]).slice(-30)})}}catch(e){}}
@@ -204,7 +207,7 @@ function ibanCZ(u){u=String(u||'').replace(/\s/g,'').toUpperCase();if(/^CZ\d{22}
 function nactiQR(){return window.qrcode?Promise.resolve():new Promise(function(ok,no){var sc=document.createElement('script');sc.src=ROOT+'js/vendor/qrcode.js';sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)})}
 S.qrPlatba=function(r){var R=window.KKR,Z=R&&R.zaloha?R.zaloha():{},ib=ibanCZ(Z.ucet),pl=(r&&r.platba)||{};if(!ib||!(+pl.zaloha))return Promise.resolve(null);
   var vs=String(r.cislo||'').replace(/\D/g,'').slice(-10),am=(+pl.zaloha).toFixed(2),dt=String(pl.splatnost||'').replace(/-/g,''),
-    msg=('KEMP KRUMLOV '+(r.cislo||'')).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\*/g,'').slice(0,60),
+    msg=((r.web==='pela'?'PE-LA ':'KEMP KRUMLOV ')+(r.cislo||'')).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\*/g,'').slice(0,60),
     spd='SPD*1.0*ACC:'+ib+'*AM:'+am+'*CC:CZK'+(vs?'*X-VS:'+vs:'')+(dt?'*DT:'+dt:'')+'*MSG:'+msg;
   return nactiQR().then(function(){var q=qrcode(0,'M');q.addData(spd);q.make();return{data:q.createDataURL(6,3).split(',')[1],castka:Math.round(+pl.zaloha),ucet:Z.ucet,vs:vs}})};
 function qrBlok(qr,j){var T={cs:['QR platba','Naskenujte kód v aplikaci své banky – částka, účet i variabilní symbol se vyplní samy.'],en:['QR payment','Scan the code in your Czech banking app – amount, account and reference are filled in automatically.'],de:['QR-Zahlung','Scannen Sie den Code in Ihrer tschechischen Banking-App – Betrag, Konto und Verwendungszweck werden automatisch ausgefüllt.']}[j]||[];

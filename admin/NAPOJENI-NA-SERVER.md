@@ -37,6 +37,9 @@
   spustit `node nastroje/cenik-vychozi.js js/cenik.js api/cenik-vychozi.json`).
   Rezervace zadané v administraci se nepřepočítávají (obsluha může cenu upravit ručně).
 
+- **Rezervace z webu PE-LA** mají `web: 'pela'`: e-maily v grafice PE-LA (hlavička, barvy, kontakty, podpis),
+  odesílatel „PE-LA půjčovna lodí“, odpovědi hostů jdou na `PELA_EMAIL` (výchozí pelalode@seznam.cz)
+  a upozornění na novou rezervaci / storno chodí kempu i do schránky PE-LA.
 - **Web PE-LA** (repozitář `pavlat11/pela`, vlastní hosting) si data z administrace stahuje z `api/?a=pela`
   (veřejné: texty, SEO, galerie, fotky, ikony webu PE-LA a společný ceník) a drží je 2 minuty v mezipaměti.
   Fotky nahrané v administraci načítá přímo z webu kempu (`data/fotky`, `data/obrazky`).

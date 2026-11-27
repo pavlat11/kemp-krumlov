@@ -245,10 +245,11 @@ try {
     if (!is_array($r)) kk_chyba('Chybí rezervace.');
     if (!$ja) {
       kk_limit('rez:' . kk_ip(), 20, 3600);
-      $povol = ['od','do','mista','dalsi','osoby','doplnky','lode','doprava','vyzved','platba','jmeno','telefon','email','zprava','prijezd','cena','jazyk','stav','spoj','casti'];
+      $povol = ['od','do','mista','dalsi','osoby','doplnky','lode','doprava','vyzved','platba','jmeno','telefon','email','zprava','prijezd','cena','jazyk','stav','spoj','casti','web'];
       $r = array_intersect_key($r, array_flip($povol));
       $r['stav'] = in_array($r['stav'] ?? '', ['pop', 'pot'], true) ? $r['stav'] : 'pop';
       $r['zdroj'] = 'web';
+      if (($r['web'] ?? '') !== 'pela') unset($r['web']);
       if (isset($r['lode']) && is_array($r['lode'])) $r['lode'] = array_intersect_key($r['lode'], array_flip(['den','dni','kusy','odkud','kam','od']));
       if (isset($r['platba']) && is_array($r['platba'])) { $r['platba'] = array_intersect_key($r['platba'], array_flip(['zaloha','splatnost'])); $r['platba']['stav'] = 'ceka'; }
       foreach (['jmeno' => 160, 'telefon' => 40, 'email' => 190, 'zprava' => 2000, 'prijezd' => 40] as $p => $max) if (isset($r[$p])) $r[$p] = mb_substr(trim((string) $r[$p]), 0, $max);
@@ -386,7 +387,14 @@ try {
       $b = base64_decode($V['qr'], true);
       if ($b !== false && (strncmp($b, 'GIF8', 4) === 0 || strncmp($b, "\x89PNG", 4) === 0)) $obr['qrplatba'] = ['data' => $b, 'typ' => $b[0] === 'G' ? 'image/gif' : 'image/png', 'ext' => $b[0] === 'G' ? 'gif' : 'png'];
     }
-    try { kk_mail($komu, $pr, $html, $text, $kemp ? (string) ($r['email'] ?? '') : kk_email_kemp(), $obr); }
+    /* rezervace z webu PE-LA: odpovědi na půjčovnu, upozornění i do schránky PE-LA */
+    $pela = ($r['web'] ?? '') === 'pela';
+    $pelaMail = kk_env('PELA_EMAIL', 'pelalode@seznam.cz');
+    $jm = $pela ? 'PE-LA půjčovna lodí' : '';
+    try {
+      kk_mail($komu, $pr, $html, $text, $kemp ? (string) ($r['email'] ?? '') : ($pela ? $pelaMail : kk_email_kemp()), $obr, $jm);
+      if ($kemp && $pela && filter_var($pelaMail, FILTER_VALIDATE_EMAIL) && strcasecmp($pelaMail, $komu) !== 0) kk_mail($pelaMail, $pr, $html, $text, (string) ($r['email'] ?? ''), $obr, $jm);
+    }
     catch (Exception $e) { error_log('KK mail: ' . $e->getMessage()); kk_chyba('E-mail se nepodařilo odeslat: ' . $e->getMessage(), 502); }
     $r['maily'] = (array) ($r['maily'] ?? []); $r['maily'][$druh] = kk_ms();
     kk_rez_uloz($r);
