@@ -440,6 +440,7 @@ var R=window.KKR={
  stornoMuze:function(r){return !!r&&R.stornoStav(r)==='ok'},
  stornoNajdi:function(id,k){var r=R.vse().filter(function(x){return x.id===id})[0];return r&&k&&r.stok===k?r:null},
  stornoHost:function(id,k,duvod){var r=R.stornoNajdi(id,k);if(!r)throw new Error('nenalezeno');var st=R.stornoStav(r);if(st!=='ok')throw new Error(st);
+  if(window.KKS&&KKS.on&&!(KKS.prihlasen))return KKS.storno(id,k,duvod);
   var t=Date.now();return R.uprav(id,{stav:'zru',stornoHost:t,stornoDuvod:String(duvod||'').slice(0,300),stok:'',hist:(r.hist||[]).concat([{t:t,kdo:'Host',co:'Zrušeno hostem přes odkaz v e-mailu'+(duvod?' – '+String(duvod).slice(0,120):'')}])})},
  /* místa vypnutá z rezervace (personál, oprava) a typy, které se nerezervují */
  vyp:function(){var v=R.nast().vyp;return Array.isArray(v)?v:[]},
@@ -450,6 +451,7 @@ var R=window.KKR={
  kolize:function(mista,od,dk,krome){var o=R.obsazeno(krome),n=R.noci(od,dk);return (mista||[]).filter(function(m){return (o[m]||[]).some(function(d){return n.indexOf(d)>=0})})},
  pridej:function(r){var k=R.kolize(r.mista,r.od,r.do);if(k.length)throw new Error('V tomto termínu je obsazeno: '+k.map(R.nazev).join(', ')+'.');
   var lc=R.lodeChybi(r.lode);if(lc.length)throw new Error('Na tento termín už není dost vybavení: '+lc.join(', ')+'.');
+  if(window.KKS&&KKS.on&&!mem)return KKS.novaRez(r);/* server přidělí číslo a znovu ověří obsazenost */
   var a=R.vse(),c=cti(KC,0)+1;r.id='r'+Date.now().toString(36)+c;r.cislo='R'+(R.nast().rada||String(new Date().getFullYear()).slice(2))+'-'+('000'+c).slice(-4);r.vytvoreno=Date.now();a.push(r);
   if(!pis(K,a))throw new Error('Rezervaci se nepodařilo uložit.');pis(KC,c);return r},
  uprav:function(id,z){var a=R.vse(),r=a.filter(function(x){return x.id===id})[0];if(!r)throw new Error('Rezervace nenalezena.');var n=Object.assign({},r,z);
@@ -556,7 +558,7 @@ var R=window.KKR={
   }finally{mem=null;pis(K,m0[K]);pis(KC,m0[KC])}
   pis('kkt.rez.ukazka',10);return n}
 };
-try{if(cti('kkt.rez.ukazka',0)<10)R.ukazka()}catch(e){}
+try{if(!(window.KKS&&KKS.on)&&cti('kkt.rez.ukazka',0)<10)R.ukazka()}catch(e){}
 })();
 /* Stav vody na Vltavě (KKV). Testovací verze: ukázková data. Naostro: server každou hodinu stáhne data ČHMÚ (opendata.chmi.cz, stanice Vyšší Brod a Český Krumlov) a web je načte z /api/voda – viz NAPOJENI-NA-SERVER.md */
 (function(){

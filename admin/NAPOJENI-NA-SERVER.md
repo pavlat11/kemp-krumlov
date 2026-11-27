@@ -1,6 +1,27 @@
 # Napojení administrace na server
 
-Administrace i web teď běží bez serveru – data se ukládají v prohlížeči
+## Stav: běží na serveru (PHP + MariaDB, složka `api/`)
+
+- `js/server.js` je první skript na každé stránce. Při otevření stáhne data z `api/?a=data`
+  do `localStorage` (stejné klíče `kkt.*`) a každý zápis do nich hned pošle na server.
+  Přihlášená administrace si každých 30 s stáhne změny z jiných zařízení (`api/?a=zmeny`).
+- Návštěvník dostane jen veřejná data: texty, ceník, nastavení bez jmen a rezervace jen jako
+  obsazenost (místa, dny, lodě) – žádné osobní údaje.
+- Novou rezervaci (`KKR.pridej`) i storno hostem dělá server (`rez_nova`, `storno`): přidělí číslo,
+  v zámku znovu ověří obsazenost míst a vrátí uloženou rezervaci.
+- Přihlášení je na serveru (PHP session, hesla bcrypt). První správce: `admin` + `ADMIN_PASSWORD`
+  z `.env` (bez něj se účet nezaloží).
+- Úpravy z doby náhledu (jen v prohlížeči) se při prvním otevření zálohují (`kk-nahled-zaloha`)
+  a administrace po přihlášení nabídne **Nahrát na server** (texty, ceník, nastavení, rezervace bez ukázkových, fotky).
+- Fotky z galerie a nahrazené fotky na webu se ukládají do `www/data/` (na FTP se nenahrává, nemaže).
+- Tabulky `kk_*` si server vytvoří sám při prvním spuštění (`databaze/schema.sql` je jen přehled).
+- Bez serveru (otevření ze souboru, `?lokalne=1`) vše funguje jako dřív jen v prohlížeči.
+- Zatím chybí: odesílání e-mailů, přepočet ceny na serveru, kontrola počtu lodí na serveru
+  (lodě kontroluje prohlížeč těsně před odesláním), noční úlohy (propadlé zálohy, stav vody).
+
+## Původní popis (náhled bez serveru)
+
+Administrace i web běžely bez serveru – data se ukládala v prohlížeči
 (`localStorage` + `IndexedDB`). Veškerá práce s daty jde přes jediný soubor
 `js/kk-data.js`. Při přechodu na server (Laravel + MySQL) se změní jen on:
 

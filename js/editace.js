@@ -185,7 +185,7 @@ function upravFotku(f){
     zavriPop();stav();
   }
   inp.onchange=function(){var s=inp.files[0];if(!s)return;p.querySelector('.kke-file').classList.add('kke-busy');
-    KK.obrazky.nahraj(s).then(function(z){nastav({id:z.id,v:z.v},z.url);toast('Fotka nahrazena – nezapomeňte Uložit.','ok')}).catch(function(e){toast((e&&e.message)||'Fotku se nepodařilo načíst.','err');zavriPop()})};
+    KK.obrazky.nahraj(s).then(function(z){nastav(z.srv?{id:z.id,v:z.v,url:z.url}:{id:z.id,v:z.v},z.url);toast('Fotka nahrazena – nezapomeňte Uložit.','ok')}).catch(function(e){toast((e&&e.message)||'Fotku se nepodařilo načíst.','err');zavriPop()})};
   var rs=p.querySelector('.kke-reset');if(rs)rs.onclick=function(){nastav(null,null)};
 }
 

@@ -1,0 +1,196 @@
+/* =====================================================================
+   Kemp Krumlov – napojení na server (PHP + MariaDB, složka api/)
+   ---------------------------------------------------------------------
+   Načítá se jako PRVNÍ skript na každé stránce (web, PE-LA, administrace).
+   1) Při otevření stránky stáhne data ze serveru a uloží je do localStorage
+      pod stejné klíče kkt.*, se kterými už pracuje celý web i administrace.
+   2) Každý zápis do těchto klíčů (texty, ceník, nastavení, rezervace …)
+      hned pošle na server. Když se zápis nepovede, ukáže se upozornění.
+   3) Přihlášená administrace se každých 30 s podívá, jestli něco nezměnil
+      někdo jiný (jiný počítač, telefon obsluhy).
+   Bez serveru (otevření ze souboru, server nedostupný) zůstane vše jako
+   dřív v prohlížeči. Vynutit náhled bez serveru: ?lokalne=1
+   ===================================================================== */
+(function(){
+'use strict';
+var S=window.KKS={on:false,prihlasen:false,rev:0,chyba:''};
+var me=document.currentScript,src=(me&&me.src)||'';
+var ROOT=src.replace(/js\/server\.js.*$/,'');
+S.root=ROOT;try{S.rootPath=new URL(ROOT).pathname}catch(e){S.rootPath='/'}
+var API=ROOT+'api/';
+var ADMIN=/\/admin\//.test(location.pathname);
+if(!/^https?:$/.test(location.protocol)||/[?&]lokalne=1/.test(location.search)||window.KK_LOKALNE)return;
+
+var P=Storage.prototype,oSet=P.setItem,oDel=P.removeItem,oGet=P.getItem;
+var rset=function(k,v){try{oSet.call(localStorage,'kkt.'+k,v)}catch(e){}},
+    rdel=function(k){try{oDel.call(localStorage,'kkt.'+k)}catch(e){}},
+    rget=function(k){try{return oGet.call(localStorage,'kkt.'+k)}catch(e){return null}};
+S.uloz=function(k,o){rset(k,JSON.stringify(o))};
+/* klíče, které se ukládají na server (bez předpony kkt.) */
+var SYNC=/^(pela\.)?((texty|dtexty)(\.(en|de))?|ikony|obrazky|seo|galerie|galerie\.kat)$|^(cenik|rez\.nast|rez\.archiv|rez\.cislo|prava|voda\.data)$/;
+var SPEC={rezervace:1,historie:1,uzivatele:1,session:1};
+
+/* ---------- požadavky ---------- */
+function xhr(method,a,body,q){
+  var x=new XMLHttpRequest();x.open(method,API+'?a='+a+(q||''),false);x.setRequestHeader('X-KK','1');
+  if(body&&!(body instanceof FormData))x.setRequestHeader('Content-Type','application/json');
+  x.send(body?(body instanceof FormData?body:JSON.stringify(body)):null);
+  var d=null;try{d=JSON.parse(x.responseText)}catch(e){}
+  if(x.status<200||x.status>=300||!d){var er=new Error((d&&d.chyba)||('Server neodpověděl (chyba '+x.status+').'));er.kod=x.status;throw er}
+  return d}
+function af(method,a,body,q){
+  var o={method:method,credentials:'same-origin',headers:{'X-KK':'1'}};
+  if(body!=null){if(body instanceof FormData)o.body=body;else{o.headers['Content-Type']='application/json';o.body=JSON.stringify(body)}}
+  return fetch(API+'?a='+a+(q||''),o).then(function(r){return r.json().catch(function(){return null}).then(function(d){
+    if(!r.ok||d==null){var e=new Error((d&&d.chyba)||('Server neodpověděl (chyba '+r.status+').'));e.kod=r.status;if(r.status===401)odhlasen();throw e}return d})})}
+S.post=function(a,body){return af('POST',a,body||{})};
+S.get=function(a,q){return af('GET',a,null,q)};
+S.postSync=function(a,body){return xhr('POST',a,body||{})};
+
+/* ---------- upozornění dole na stránce ---------- */
+var lista=null;
+S.upozorni=function(text,akce,trvale){
+  var u=function(){if(!document.body)return setTimeout(u,50);
+    if(!lista){lista=document.createElement('div');lista.setAttribute('role','alert');
+      lista.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:2147483000;max-width:min(92vw,640px);background:#b3261e;color:#fff;font:600 14px/1.4 system-ui,sans-serif;padding:12px 16px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.3);display:flex;gap:12px;align-items:center';
+      document.body.appendChild(lista)}
+    lista.innerHTML='';var t=document.createElement('span');t.textContent=text;lista.appendChild(t);
+    if(akce){var b=document.createElement('button');b.type='button';b.textContent=akce[0];b.style.cssText='background:#fff;color:#b3261e;border:0;border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer;white-space:nowrap';b.onclick=akce[1];lista.appendChild(b)}
+    var x=document.createElement('button');x.type='button';x.setAttribute('aria-label','Zavřít');x.textContent='×';x.style.cssText='background:none;border:0;color:#fff;font-size:20px;cursor:pointer;margin-left:auto';x.onclick=function(){lista.remove();lista=null};lista.appendChild(x);
+    clearTimeout(S._t);if(!trvale)S._t=setTimeout(function(){if(lista){lista.remove();lista=null}},9000)};u()};
+function odhlasen(){if(!S.prihlasen)return;S.prihlasen=false;S.upozorni('Přihlášení vypršelo – změny se neuloží. Přihlaste se prosím znovu.',['Přihlásit',function(){location.reload()}],true)}
+
+/* ---------- snímek posledního stavu ze serveru (kvůli posílání jen změn) ---------- */
+var snapRez={},histPrvni='',zapsano=0;
+function snapZ(json){snapRez={};var a;try{a=JSON.parse(json||'[]')||[]}catch(e){a=[]}a.forEach(function(r){if(r&&r.id)snapRez[r.id]=JSON.stringify(r)})}
+function histZ(json){var a;try{a=JSON.parse(json||'[]')||[]}catch(e){a=[]}histPrvni=a.length?JSON.stringify(a[0]):''}
+
+/* ---------- načtení dat při otevření stránky ---------- */
+S.nacti=function(){
+  var q='&web='+(window.KK_WEB==='pela'?'pela':'kemp'),p=new URLSearchParams(location.search);
+  if(/storno\.html$/.test(location.pathname)&&p.get('r'))q+='&r='+encodeURIComponent(p.get('r'))+'&k='+encodeURIComponent(p.get('k')||'');
+  var d=xhr('GET','data',null,q),D=d.data||{};
+  S.on=true;S.prihlasen=!!d.prihlasen;S.rev=d.rev||0;
+  zalohujNahled();
+  var pryc=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('kkt.')===0){var b=k.slice(4);if((SYNC.test(b)||SPEC[b])&&!(b in D))pryc.push(b)}}
+  pryc.forEach(rdel);
+  Object.keys(D).forEach(function(k){rset(k,D[k])});
+  rset('rez.ukazka','10');/* ukázková data na ostrém webu nevznikají */
+  snapZ(D.rezervace);histZ(D.historie);S._D=D;
+  if(S.prihlasen&&ADMIN)setTimeout(nabidniNahled,600);
+  return d};
+
+/* ---------- převzetí úprav z náhledu (data, která byla jen v tomto prohlížeči) ---------- */
+var ZK='kk-nahled-zaloha',ZP='kk-nahled-prevzato';
+function zalohujNahled(){
+  try{if(oGet.call(localStorage,ZK)!=null)return;
+    var o={};for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(!k||k.indexOf('kkt.')!==0)continue;var b=k.slice(4);if(!SYNC.test(b)&&b!=='rezervace')continue;
+      var v=oGet.call(localStorage,k);if(v==null||v==='{}'||v==='[]'||v==='null')continue;
+      if(b==='rezervace'){var a=[];try{a=(JSON.parse(v)||[]).filter(function(r){return r&&!r.ukazka})}catch(e){}if(!a.length)continue;v=JSON.stringify(a)}
+      if(b==='rez.cislo'||b==='voda.data')continue;
+      o[b]=v}
+    oSet.call(localStorage,ZK,JSON.stringify({kdy:Date.now(),data:o}))}catch(e){}}
+S.nahled=function(){try{var z=JSON.parse(oGet.call(localStorage,ZK)||'null');return z&&z.data&&Object.keys(z.data).length?z:null}catch(e){return null}};
+function idb(jm,store){return new Promise(function(ok){if(!window.indexedDB)return ok([]);var r=indexedDB.open(jm,1);
+  r.onupgradeneeded=function(){r.result.createObjectStore(store,{keyPath:'id'})};
+  r.onsuccess=function(){try{var t=r.result.transaction(store,'readonly').objectStore(store).getAll();t.onsuccess=function(){ok(t.result||[])};t.onerror=function(){ok([])}}catch(e){ok([])}};r.onerror=function(){ok([])}})}
+S.prevzit=function(){
+  var z=S.nahled()||{data:{}},Z=z.data,D=S._D||{},hotovo=[];
+  var p=Promise.resolve();
+  /* 1) nahrazené fotky na webu (soubory z IndexedDB) → server, v mapě nové adresy */
+  ['','pela.'].forEach(function(w){var k=w+'obrazky';if(!Z[k]||D[k])return;
+    p=p.then(function(){return idb(w?'kkt-pela-obrazky':'kkt-obrazky','o')}).then(function(soubory){
+      var m={};soubory.forEach(function(s){m[s.id]=s.blob});var mapa=JSON.parse(Z[k]),q=Promise.resolve();
+      Object.keys(mapa).forEach(function(c){var x=mapa[c];if(!x||x.url||!m[x.id])return;
+        q=q.then(function(){var fd=new FormData();fd.append('soubor',m[x.id],'foto.webp');return S.post('obrazek',fd).then(function(r){mapa[c]={id:r.id,v:r.v,url:S.rootPath+r.url}})})});
+      return q.then(function(){Z[k]=JSON.stringify(mapa)})})});
+  /* 2) texty, ceník, nastavení … – jen co na serveru ještě není */
+  p=p.then(function(){Object.keys(Z).forEach(function(k){if(k==='rezervace'||D[k]||!SYNC.test(k))return;xhr('POST','kv',{klic:k,hodnota:Z[k]});hotovo.push(k)})});
+  /* 3) rezervace zadané ručně v náhledu (bez ukázkových) */
+  p=p.then(function(){if(!Z.rezervace)return;var a=JSON.parse(Z.rezervace),je={};(JSON.parse(D.rezervace||'[]')||[]).forEach(function(r){je[r.id]=1});
+    a=a.filter(function(r){return !je[r.id]});if(a.length){xhr('POST','rez',{upsert:a,smaz:[]});hotovo.push(a.length+' rezervací')}});
+  /* 4) galerie obou webů */
+  [['kemp','kkt-admin'],['pela','kkt-pela-admin']].forEach(function(g){
+    p=p.then(function(){return S.get('fotky','&web='+g[0])}).then(function(srv){if(srv&&srv.length)return;
+      return idb(g[1],'fotky').then(function(f){f.sort(function(a,b){return a.poradi-b.poradi});var web=f.filter(function(x){return x.src&&!x.blob}),q=Promise.resolve();
+        if(web.length)q=q.then(function(){return S.post('fotky_web',{web:g[0],polozky:web})});
+        f.filter(function(x){return x.blob}).forEach(function(x){q=q.then(function(){var fd=new FormData();fd.append('web',g[0]);fd.append('kat',x.kat||'');fd.append('popis',x.popis||'');fd.append('poradi',x.poradi||0);fd.append('puvodni',x.puvodni||0);
+          fd.append('velka',x.blob,'velka.webp');if(x.nahled)fd.append('mala',x.nahled,'mala.webp');
+          return S.post('fotka',fd).then(function(r){if(x.viditelna===false)return S.post('fotka_uprav',{id:r.id,zmena:{viditelna:false}})})})});
+        if(f.length)hotovo.push(f.length+' fotek galerie'+(g[0]==='pela'?' PE-LA':''));return q})})});
+  return p.then(function(){try{oSet.call(localStorage,ZP,String(Date.now()))}catch(e){}return hotovo})};
+function nabidniNahled(){
+  try{if(oGet.call(localStorage,ZP))return}catch(e){return}
+  if(!S.nahled())return;
+  S.upozorni('V tomto prohlížeči jsou úpravy z doby před napojením na server (texty, ceník, nastavení, fotky). Nahrát je na server?',['Nahrát na server',function(){
+    S.upozorni('Nahrávám…',null,true);
+    S.prevzit().then(function(h){S.upozorni('Hotovo – nahráno: '+(h.length?h.join(', '):'nic nového')+'.',['Obnovit stránku',function(){location.reload()}],true)},
+      function(e){S.upozorni('Nahrání se nepovedlo: '+e.message,['Zkusit znovu',nabidniNahled],true)})}],true);
+  /* zavření křížkem = už nenabízet */
+  var x=lista&&lista.querySelector('button[aria-label="Zavřít"]');if(x){var o=x.onclick;x.onclick=function(){try{oSet.call(localStorage,ZP,'ne')}catch(e){}o()}}}
+
+/* ---------- zápis změn na server ---------- */
+function rezDiff(v){
+  var a;try{a=JSON.parse(v||'[]')||[]}catch(e){return}
+  var nove={},up=[],sm=[];
+  a.forEach(function(r){if(!r||!r.id)return;var j=JSON.stringify(r);nove[r.id]=j;if(snapRez[r.id]!==j)up.push(r)});
+  Object.keys(snapRez).forEach(function(id){if(!(id in nove))sm.push(id)});
+  if(!up.length&&!sm.length)return;
+  xhr('POST','rez',{upsert:up,smaz:sm});snapRez=nove;zapsano=Date.now()}
+function histDiff(v){
+  var a;try{a=JSON.parse(v||'[]')||[]}catch(e){return}
+  var n=0;if(histPrvni){while(n<a.length&&n<50&&JSON.stringify(a[n])!==histPrvni)n++;if(n>=a.length)n=Math.min(a.length,5)}else n=Math.min(a.length,5);
+  if(!n)return;var nov=a.slice(0,n).reverse();histPrvni=JSON.stringify(a[0]);
+  S.post('hist',{polozky:nov}).catch(function(){})}
+function zapis(k,v){
+  if(!S.prihlasen)return;
+  if(k==='rezervace')return rezDiff(v);
+  if(k==='historie')return histDiff(v);
+  if(!SYNC.test(k)||k==='voda.data')return;
+  if(v!==null&&rget(k)===v)return;
+  if(v===null&&rget(k)===null)return;
+  xhr('POST','kv',{klic:k,hodnota:v});zapsano=Date.now()}
+function chyt(k,v){
+  try{zapis(k,v)}catch(e){
+    if(e.kod===401)odhlasen();else S.upozorni('Změnu se nepodařilo uložit na server: '+e.message);
+    throw e}}
+
+/* ---------- nová rezervace a storno (web i administrace) ---------- */
+function vlozMistne(r){var a;try{a=JSON.parse(rget('rezervace')||'[]')||[]}catch(e){a=[]}
+  a=a.filter(function(x){return x&&x.id!==r.id});a.push(r);rset('rezervace',JSON.stringify(a));if(S.prihlasen)snapRez[r.id]=JSON.stringify(r)}
+S.novaRez=function(r){
+  try{var d=xhr('POST','rez_nova',{r:r})}catch(e){
+    if(e.kod===409)throw new Error('V tomto termínu je obsazeno.');
+    throw new Error(e.message||'Rezervaci se nepodařilo uložit.')}
+  vlozMistne(d.r);zapsano=Date.now();return d.r};
+S.storno=function(id,k,duvod){
+  var d=xhr('POST','storno',{r:id,k:k,duvod:duvod||''});vlozMistne(d.r);return d.r};
+
+/* ---------- změny z jiných zařízení (jen přihlášení) ---------- */
+function obnov(){
+  if(!S.prihlasen||document.hidden)return;var start=Date.now();
+  S.get('zmeny','&rev='+S.rev).then(function(d){
+    if(!d||zapsano>start)return;/* mezitím jsme sami něco zapsali – zkusí se příště */
+    var zm=false;
+    Object.keys(d.kv||{}).forEach(function(k){var v=d.kv[k];if(v==null){if(rget(k)!=null){rdel(k);zm=true}}else if(rget(k)!==v){rset(k,v);zm=true}});
+    if((d.rez&&d.rez.length)||(d.smaz&&d.smaz.length)){
+      var a;try{a=JSON.parse(rget('rezervace')||'[]')||[]}catch(e){a=[]}
+      var m={};a.forEach(function(r){if(r&&r.id)m[r.id]=r});
+      (d.rez||[]).forEach(function(r){var j=JSON.stringify(r);if(!m[r.id]||JSON.stringify(m[r.id])!==j){m[r.id]=r;zm=true}snapRez[r.id]=j});
+      (d.smaz||[]).forEach(function(id){if(m[id]){delete m[id];zm=true}delete snapRez[id]});
+      if(zm)rset('rezervace',JSON.stringify(Object.keys(m).map(function(id){return m[id]})))}
+    S.rev=d.rev;
+    if(zm){try{window.dispatchEvent(new CustomEvent('kk-zmeny'))}catch(e){}
+      if(ADMIN)S.upozorni('Někdo jiný mezitím změnil data. Obnovte stránku, ať vidíte aktuální stav.',['Obnovit',function(){location.reload()}],true)}
+  }).catch(function(){})}
+
+/* ---------- start ---------- */
+try{S.nacti()}catch(e){
+  S.on=false;S.chyba=e.message;
+  if(ADMIN)S.upozorni('Server není dostupný ('+e.message+'). Změny se teď ukládají jen v tomto prohlížeči.',null,true);
+  return}
+P.setItem=function(k,v){if(this===localStorage&&S.on&&typeof k==='string'&&k.indexOf('kkt.')===0)chyt(k.slice(4),String(v));return oSet.apply(this,arguments)};
+P.removeItem=function(k){if(this===localStorage&&S.on&&typeof k==='string'&&k.indexOf('kkt.')===0)chyt(k.slice(4),null);return oDel.apply(this,arguments)};
+setInterval(obnov,30000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)obnov()});
+})();
