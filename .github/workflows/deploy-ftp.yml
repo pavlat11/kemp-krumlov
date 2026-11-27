@@ -48,6 +48,7 @@ jobs:
             nastroje/**
             prototyp/**
             _nahled/**
+            databaze/**
 
       # .env s hesly jde mimo veřejnou složku www/ – do private/ v kořeni FTP účtu.
       - name: Připravit .env (mimo web)
