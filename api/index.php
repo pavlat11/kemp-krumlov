@@ -66,6 +66,17 @@ try {
     $o['rezervace'] = json_encode($rez, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     kk_out(['ok' => true, 'rev' => kk_rev_ted(), 'prihlasen' => (bool) $ja, 'cron' => kk_cron_due(), 'data' => $o]);
 
+  /* ---------- data pro web PE-LA (jiný hosting si je stáhne a uloží do mezipaměti) ---------- */
+  case 'pela':
+    header('Access-Control-Allow-Origin: *');
+    $kv = [];
+    foreach ($db->query("SELECT klic, hodnota FROM kk_kv WHERE hodnota IS NOT NULL AND (klic LIKE 'pela.%' OR klic = 'cenik')")->fetchAll() as $r) {
+      $v = json_decode($r['hodnota'], true); if ($v !== null) $kv[$r['klic']] = $v;
+    }
+    $f = [];
+    foreach ($db->query("SELECT data FROM kk_fotky WHERE web = 'pela' ORDER BY poradi, id")->fetchAll() as $r) { $x = json_decode($r['data'], true); if ($x && ($x['viditelna'] ?? true) !== false) $f[] = $x; }
+    kk_out(['ok' => true, 'rev' => kk_rev_ted(), 'kv' => (object) $kv, 'fotky' => $f]);
+
   /* ---------- pravidelné úlohy ---------- */
   case 'cron':
     if (isset($_GET['klic'])) { if (!kk_env('CRON_KEY') || !hash_equals(kk_env('CRON_KEY'), (string) $_GET['klic'])) kk_chyba('Špatný klíč.', 403); $GLOBALS['KK_CRON_VZDY'] = !empty($_GET['hned']); }

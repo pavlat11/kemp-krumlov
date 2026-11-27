@@ -37,6 +37,10 @@
   spustit `node nastroje/cenik-vychozi.js js/cenik.js api/cenik-vychozi.json`).
   Rezervace zadané v administraci se nepřepočítávají (obsluha může cenu upravit ručně).
 
+- **Web PE-LA** (repozitář `pavlat11/pela`, vlastní hosting) si data z administrace stahuje z `api/?a=pela`
+  (veřejné: texty, SEO, galerie, fotky, ikony webu PE-LA a společný ceník) a drží je 2 minuty v mezipaměti.
+  Fotky nahrané v administraci načítá přímo z webu kempu (`data/fotky`, `data/obrazky`).
+
 ## Původní popis (náhled bez serveru)
 
 Administrace i web běžely bez serveru – data se ukládala v prohlížeči
