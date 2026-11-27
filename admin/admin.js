@@ -795,10 +795,10 @@ function rezervace(m,sekV){
       :ven?(po?'<span class="pk-t zle">měl vrátit '+KR(pd)+'</span>':pd===dnes?'<span class="pk-t dnes">vrací dnes</span>':'<span class="pk-t">vrátí '+KR(pd)+'</span>')
       :typ==='plan'?'<span class="pk-t">'+(pd===denP?'vrací ten den':'vrátí '+KR(pd))+'</span>'
       :'<span class="pk-t">'+((l.vraceno||[]).length?'vráceno '+cas(l.vraceno[l.vraceno.length-1].kdy).split(' ').pop():'')+'</span>';
-    return '<article class="pk-c'+(R.dopRadky(r).length?' s-dop':'')+(DRZ[r.id]?' zm'+(Date.now()-DRZ[r.id].t<1500?' zm-n':''):'')+(po?' po':'')+(typ==='vra'?' hot':'')+'"><div class="pk-ch"><button type="button" class="rl-j" data-id="'+r.id+'">'+esc(r.jmeno)+'</button>'+kdy+'</div>'+
-      '<div class="pk-l">'+esc(kusyTxt(lk)||'—')+'</div><div class="pk-v">'+esc(R.lodeKusyTxt(vk))+(ven&&LS(r)==='cast'?' · <b>část už vrátil</b>':'')+'</div>'+
+    return '<article class="pk-c'+(R.dopRadky(r).length?' s-dop':'')+(DRZ[r.id]?' zm'+(Date.now()-DRZ[r.id].t<1500?' zm-n':''):'')+(po?' po':'')+(typ==='vra'?' hot':'')+'"><div class="pk-ch"><span class="pk-jt"><button type="button" class="rl-j" data-id="'+r.id+'">'+esc(r.jmeno)+'</button>'+(r.telefon?'<a class="pk-tel" href="tel:'+esc(r.telefon.replace(/\s/g,''))+'">'+esc(r.telefon)+'</a>':'')+'</span>'+kdy+'</div>'+
+      '<div class="pk-l">'+esc(kusyTxt(lk)||'—')+'<span class="pk-v">'+esc(R.lodeKusyTxt(vk))+(ven&&LS(r)==='cast'?' · <b>část už vrátil</b>':'')+'</span></div>'+
       '<div class="pk-m">'+esc(R.mistoN(l.odkud))+' → '+esc(R.mistoN(l.kam))+' · '+R.lodeObdobi(l,0,1)+'</div>'+(R.dopRadky(r).length?'<div class="pk-dop">'+R.dopRadky(r).map(function(x){return '<span class="'+x.t+'">'+SV('<rect x="3" y="6" width="13" height="10" rx="2"/><path d="M16 9h3l2 3v4h-5"/><circle cx="7" cy="17" r="2"/><circle cx="18" cy="17" r="2"/>',15)+esc(x.txt)+'</span>'}).join('')+'</div>':'')+
-      '<div class="pk-f">'+(r.telefon?'<a href="tel:'+esc(r.telefon.replace(/\s/g,''))+'">'+esc(r.telefon)+'</a>':'<span></span>')+(typ!=='vra'?kUhrade(r):'')+'</div>'+
+      (typ!=='vra'&&kUhrade(r)?'<div class="pk-f">'+kUhrade(r)+'</div>':'')+
       (typ==='vyd'&&r.platba&&r.platba.stav==='ceka'&&r.stav==='pop'?'<p class="pk-w">Záloha ještě není zaplacená.</p>':'')+
       (lodBtn(r)?lodBtn(r).replace('btn sm pri','btn pri pk-b').replace('>Vydat lodě<','>Vydat lodě →<').replace('>Vrátit lodě<','>Vrátit lodě ✓<'):'')+
       (function(){var P=(r.poskozeno||[]).filter(function(x){return !x.opraveno});return P.length?'<div class="pk-pz">⚠ '+P.map(function(x){return (x.typ==='ztraceno'?'ztraceno ':'poškozeno ')+x.ks+'× '+esc(R.poskozNazev(x.k).toLowerCase())}).join(', ')+'</div>':''})()+

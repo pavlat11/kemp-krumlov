@@ -1842,3 +1842,6 @@ details.kl-d>summary .kl-h{margin:16px 0 6px}
 .pk-c>.pk-z a,.pk-c>.pk-z button{font-size:12.5px}
 .pk-c:not(:has(>.pk-z))>.pk-b{grid-column:1/-1}
 .pk-c>.pk-b{order:9}.pk-c>.pk-pz{order:7}
+.pk-jt{display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap;min-width:0}
+.pk-tel{font-size:12.5px;font-weight:500;color:#8a4b12;white-space:nowrap}
+.pk-l .pk-v{display:inline;font-size:13px;font-weight:500;color:#4d5a52;margin:0 0 0 8px}
