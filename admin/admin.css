@@ -1835,3 +1835,10 @@ details.kl-d>summary .kl-h{margin:16px 0 6px}
 #tisk .tk-pre.tk-a4 .tk-ch{width:12px;height:12px}
 #tisk:has(.tk-a4) h1{font-size:17pt}
 #tisk:has(.tk-a4) .tk-sum{font-size:10.5pt;margin:2px 0 8px}
+/* spodek karty: drobné odkazy vlevo pod sebou, hlavní tlačítko vpravo – v jednom řádku */
+.pk-c>.pk-b{grid-column:2;order:8;justify-self:end;align-self:center;margin-top:12px}
+.pk-c>.pk-z{grid-column:1;order:8;align-self:center;margin-top:12px;padding-top:0;border-top:0;display:flex;flex-direction:column;align-items:flex-start;gap:5px;justify-content:center}
+.pk-c>.pk-z:has(> :only-child){justify-content:center}
+.pk-c>.pk-z a,.pk-c>.pk-z button{font-size:12.5px}
+.pk-c:not(:has(>.pk-z))>.pk-b{grid-column:1/-1}
+.pk-c>.pk-b{order:9}.pk-c>.pk-pz{order:7}
