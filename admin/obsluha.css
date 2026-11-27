@@ -835,3 +835,11 @@ dialog .ob-vo,.ob-dlg .ob-vo{margin:0 0 12px;box-shadow:none;border:1px solid va
 .ob-plok span{margin-left:auto;font-weight:700;color:#1f7a45}
 .ob-pan .ob-r.ob-u2>.ob-plok{grid-area:p;margin:0}
 .ob-ch2.dl{background:#f1ece2;color:#4a4335}
+/* návoz / svoz lodí: rozbalovací */
+.ob-pr>summary{list-style:none;cursor:pointer}
+.ob-pr>summary::-webkit-details-marker{display:none}
+.ob-pr>summary h3{margin:0}
+.ob-pr[open]>summary h3{margin-bottom:10px}
+.ob-prc{width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin:-4px 2px 0 10px;transition:transform .2s;opacity:.6;flex:none}
+.ob-pr[open] .ob-prc{transform:rotate(-135deg);margin-top:4px}
+.ob-prs{align-items:start}
