@@ -60,7 +60,13 @@ function kk_vstup() {
   return $V;
 }
 function kk_ms() { return (int) round(microtime(true) * 1000); }
-function kk_ip() { return substr((string) ($_SERVER['REMOTE_ADDR'] ?? ''), 0, 45); }
+/* návštěvník; u požadavků přes web PE-LA (rez.php) jeho adresa z X-Forwarded-For */
+function kk_proxy() { return ($_SERVER['HTTP_X_KK_PROXY'] ?? '') === 'pela'; }
+function kk_ip() {
+  $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? '');
+  if (kk_proxy() && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) $ip = 'pela:' . trim(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]);
+  return substr($ip, 0, 60);
+}
 
 /* ---------------- databáze ---------------- */
 function kk_pdo($admin = false) {
@@ -163,6 +169,8 @@ function kk_rev_ted() { return (int) kk_db()->query("SELECT r FROM kk_rev WHERE 
 
 /* ---------------- ochrana proti zkoušení (počet pokusů za okno) ---------------- */
 function kk_limit($klic, $max, $okno) {
+  /* přes web PE-LA navíc společný strop, ať ho nejde obejít podvrženou adresou */
+  if (kk_proxy() && strpos($klic, 'pela-celkem:') !== 0) kk_limit('pela-celkem:' . explode(':', $klic)[0], $max * 15, $okno);
   $db = kk_db(); $t = time();
   $db->prepare("DELETE FROM kk_limity WHERE do_kdy < ?")->execute([$t]);
   $db->prepare("INSERT INTO kk_limity (klic, pocet, do_kdy) VALUES (?, 1, ?) ON DUPLICATE KEY UPDATE pocet = pocet + 1")
