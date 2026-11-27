@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <script>window.KK_WEB="pela";window.KK_LANG_PEVNY="cs";window.KK_PELA_ROOT="";window.KK_PELA_STRANKA="rafty";window.KK_ZDROJ=location.href.replace(/[?#].*$/,"");</script>
 <script src="../js/server.js?v=6"></script>
-<script src="../js/start.js?v=1ea3d173"></script>
+<script src="../js/start.js?v=ed58c38e"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Půjčovna raftů Český Krumlov – Colorado, Bajkal | PE-LA</title>
 <meta name="description" content="Půjčení raftů Colorado (6 osob) a Bajkal (4 osoby) na Vltavě v Českém Krumlově. Rafty pro 3–8 osob, doprava osob a vybavení. PE-LA od roku 1993.">
@@ -91,6 +91,7 @@
       <a href="index.html#cenik" data-t="cenik">Ceník</a>
       <a href="index.html#doprava" data-t="doprava">Doprava</a>
       <a href="index.html#fotogalerie" data-t="fotogalerie">Fotogalerie</a>
+      <a href="#rezervace" data-t="rezervace">Rezervace</a>
       <div class="dd">
         <button aria-expanded="false" aria-haspopup="true"><span data-t="ubytovani">Ubytování</span> <svg class="icon chev" aria-hidden="true"><use href="#i-chev"/></svg></button>
         <div class="dd__menu">
@@ -170,14 +171,20 @@
       <h2 class="split"><span data-t="rez_online_nadpis">Zarezervujte si</span> <em data-t="rez_online_em">lodě online</em></h2>
       <p class="lead" data-t="rez_online_text">Vyberte den, lodě a dopravu – cenu uvidíte hned a rezervace přijde rovnou k nám. Když se vám to hodí, přidejte i nocleh v Kempu Krumlov.</p>
     </div>
-        <iframe class="rez-online__frame" id="rezFrame" src="../rezervace.html?web=pela#jen-lode" title="Rezervace online" loading="lazy" allow="clipboard-write"></iframe>
+        <iframe class="rez-online__frame" id="rezFrame" src="../rezervace.html?web=pela#jen-lode" title="Rezervace online" loading="lazy" scrolling="no" allow="clipboard-write"></iframe>
     <p class="rez-online__chyba" id="rezChyba" hidden data-t="rez_online_nejde">Rezervační formulář se nepodařilo načíst. Napište nám prosím níže nebo zavolejte na +420 725 336 601.</p>
   </div>
 </section>
 <script>
 /* výška vloženého formuláře podle obsahu (posílá ji stránka rezervace na webu kempu) */
 (function(){var f=document.getElementById('rezFrame'),o=new URL(f.src,location.href).origin,ok=false;
- addEventListener('message',function(e){if(e.origin!==o||!e.data||!e.data.kkRezervace)return;ok=true;f.style.height=Math.max(600,+e.data.vyska||0)+'px'});
+ addEventListener('message',function(e){if(e.origin!==o||!e.data||!e.data.kkRezervace)return;ok=true;var d=e.data,hl=document.querySelector('.header,header'),o2=(hl?hl.getBoundingClientRect().bottom:0)+20;
+  /* změna kroku: výška i posun v jednom kroku (bez poskočení); začátek formuláře nad obrazovkou → hned pod menu */
+  var y=d.skok!=null?f.getBoundingClientRect().top+(+d.skok):null;
+  if(d.vyska)f.style.height=Math.max(600,+d.vyska)+'px';
+  if(y==null)return;
+  if(y<o2)scrollTo({top:scrollY+y-o2,behavior:d.krok?'instant':'smooth'});
+  else if(y>innerHeight*(d.krok?.5:1)-120)scrollTo({top:scrollY+y-o2,behavior:'smooth'})});
  setTimeout(function(){if(!ok){var r=f.getBoundingClientRect();if(r.top<innerHeight*3)document.getElementById('rezChyba').hidden=false}},15000)})();
 </script>
 <section class="sec reserve" id="kontakt" style="padding-top:0">
@@ -238,7 +245,7 @@
 <button class="totop" aria-label="Nahoru"><svg class="ring" viewBox="0 0 56 56"><circle cx="28" cy="28" r="26"/></svg><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg></button>
 <script>window.PELA_I18N = {};</script>
 <script src="assets/js/main.js?v=1795814010" defer></script>
-<script src="../js/cenik.js?v=1ea3d173"></script>
-<script src="../js/pela-web.js?v=1ea3d173"></script>
+<script src="../js/cenik.js?v=ed58c38e"></script>
+<script src="../js/pela-web.js?v=ed58c38e"></script>
 </body>
 </html>

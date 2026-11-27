@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <script>window.KK_WEB="pela";window.KK_LANG_PEVNY="en";window.KK_PELA_ROOT="../";window.KK_PELA_STRANKA="vybaveni";window.KK_ZDROJ=location.href.replace(/[?#].*$/,"");</script>
 <script src="../../js/server.js?v=6"></script>
-<script src="../../js/start.js?v=1ea3d173"></script>
+<script src="../../js/start.js?v=ed58c38e"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Paddling Gear Included – Paddles, Life Jackets, Dry Barrels | PE-LA</title>
 <meta name="description" content="With every canoe and raft we lend paddles, life jackets, dry barrels and pumps – all included in the rental price. PE-LA boat rental, Český Krumlov, Vltava.">
@@ -90,6 +90,7 @@
       <a href="../en/index.html#cenik" data-t="cenik">Prices</a>
       <a href="../en/index.html#doprava" data-t="doprava">Transport</a>
       <a href="../en/index.html#fotogalerie" data-t="fotogalerie">Gallery</a>
+      <a href="#rezervace" data-t="rezervace">Booking</a>
       <div class="dd">
         <button aria-expanded="false" aria-haspopup="true"><span data-t="ubytovani">Accommodation</span> <svg class="icon chev" aria-hidden="true"><use href="#i-chev"/></svg></button>
         <div class="dd__menu">
@@ -151,14 +152,20 @@
       <h2 class="split"><span data-t="rez_online_nadpis">Book your</span> <em data-t="rez_online_em">boats online</em></h2>
       <p class="lead" data-t="rez_online_text">Choose the day, boats and transport – you will see the price right away and the booking comes straight to us. You can also add a stay at Kemp Krumlov.</p>
     </div>
-        <iframe class="rez-online__frame" id="rezFrame" src="../../rezervace.html?web=pela&amp;lang=en#jen-lode" title="Book online" loading="lazy" allow="clipboard-write"></iframe>
+        <iframe class="rez-online__frame" id="rezFrame" src="../../rezervace.html?web=pela&amp;lang=en#jen-lode" title="Book online" loading="lazy" scrolling="no" allow="clipboard-write"></iframe>
     <p class="rez-online__chyba" id="rezChyba" hidden data-t="rez_online_nejde">The booking form could not be loaded. Please write to us below or call +420 725 336 601.</p>
   </div>
 </section>
 <script>
 /* výška vloženého formuláře podle obsahu (posílá ji stránka rezervace na webu kempu) */
 (function(){var f=document.getElementById('rezFrame'),o=new URL(f.src,location.href).origin,ok=false;
- addEventListener('message',function(e){if(e.origin!==o||!e.data||!e.data.kkRezervace)return;ok=true;f.style.height=Math.max(600,+e.data.vyska||0)+'px'});
+ addEventListener('message',function(e){if(e.origin!==o||!e.data||!e.data.kkRezervace)return;ok=true;var d=e.data,hl=document.querySelector('.header,header'),o2=(hl?hl.getBoundingClientRect().bottom:0)+20;
+  /* změna kroku: výška i posun v jednom kroku (bez poskočení); začátek formuláře nad obrazovkou → hned pod menu */
+  var y=d.skok!=null?f.getBoundingClientRect().top+(+d.skok):null;
+  if(d.vyska)f.style.height=Math.max(600,+d.vyska)+'px';
+  if(y==null)return;
+  if(y<o2)scrollTo({top:scrollY+y-o2,behavior:d.krok?'instant':'smooth'});
+  else if(y>innerHeight*(d.krok?.5:1)-120)scrollTo({top:scrollY+y-o2,behavior:'smooth'})});
  setTimeout(function(){if(!ok){var r=f.getBoundingClientRect();if(r.top<innerHeight*3)document.getElementById('rezChyba').hidden=false}},15000)})();
 </script>
 <section class="sec reserve" id="kontakt" style="padding-top:0">
@@ -219,7 +226,7 @@
 <button class="totop" aria-label="Back to top"><svg class="ring" viewBox="0 0 56 56"><circle cx="28" cy="28" r="26"/></svg><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg></button>
 <script>window.PELA_I18N = {"Právě máme otevřeno":"We are open now","Teď je zavřeno, otevíráme v 9:00":"Closed now – we open at 9 am","Mimo sezónu: rezervace přijímáme":"Off season: we are taking bookings","Mám zájem o: ":"I'm interested in: ","Termín: ":"Date: ","Počet osob: ":"Number of people: ","Místo návozu \/ vyzvednutí: ":"Drop-off \/ pick-up point: ","Obnovte prosím stránku, nebo nám zavolejte na 725 336 601.":"Please reload the page or call us on +420 725 336 601.","Ověření „Nejsem robot“ se nepodařilo (kód ":"The \"I am not a robot\" check failed (code ","Vyplňte prosím všechna pole správně.":"Please fill in all fields correctly.","Počkejte prosím na dokončení ověření „Nejsem robot“.":"Please wait for the \"I am not a robot\" check to finish.","Zprávu se nepodařilo odeslat. Zavolejte nám prosím na":"Your message could not be sent. Please call us on","Ověření „Nejsem robot“ se nezdařilo. Zkuste prosím formulář odeslat znovu.":"The \"I am not a robot\" check failed. Please try sending the form again.","E-mail se nepodařilo odeslat. Zkuste to prosím později, nebo nám zavolejte.":"The e-mail could not be sent. Please try again later or give us a call.","Zpráva obsahuje příliš mnoho odkazů.":"The message contains too many links.","Neplatný požadavek.":"Invalid request.","Zavřít":"Close","Předchozí":"Previous","Další":"Next","Fotogalerie":"Photo gallery"};</script>
 <script src="../assets/js/main.js?v=1795814010" defer></script>
-<script src="../../js/cenik.js?v=1ea3d173"></script>
-<script src="../../js/pela-web.js?v=1ea3d173"></script>
+<script src="../../js/cenik.js?v=ed58c38e"></script>
+<script src="../../js/pela-web.js?v=ed58c38e"></script>
 </body>
 </html>

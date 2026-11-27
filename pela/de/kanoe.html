@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <script>window.KK_WEB="pela";window.KK_LANG_PEVNY="de";window.KK_PELA_ROOT="../";window.KK_PELA_STRANKA="kanoe";window.KK_ZDROJ=location.href.replace(/[?#].*$/,"");</script>
 <script src="../../js/server.js?v=6"></script>
-<script src="../../js/start.js?v=1ea3d173"></script>
+<script src="../../js/start.js?v=ed58c38e"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kanuverleih Český Krumlov – Pálava, Vydra, Tukan | PE-LA</title>
 <meta name="description" content="Verleih der Schlauchkanus Pálava, Vydra und Tukan für 2–3 Personen auf der Moldau in Český Krumlov. Ab 20 € pro Tag, Paddel und Schwimmwesten inklusive. PE-LA seit 1993.">
@@ -91,6 +91,7 @@
       <a href="../de/index.html#cenik" data-t="cenik">Preise</a>
       <a href="../de/index.html#doprava" data-t="doprava">Transfer</a>
       <a href="../de/index.html#fotogalerie" data-t="fotogalerie">Galerie</a>
+      <a href="#rezervace" data-t="rezervace">Reservierung</a>
       <div class="dd">
         <button aria-expanded="false" aria-haspopup="true"><span data-t="ubytovani">Unterkunft</span> <svg class="icon chev" aria-hidden="true"><use href="#i-chev"/></svg></button>
         <div class="dd__menu">
@@ -185,14 +186,20 @@
       <h2 class="split"><span data-t="rez_online_nadpis">Boote</span> <em data-t="rez_online_em">online buchen</em></h2>
       <p class="lead" data-t="rez_online_text">Wählen Sie Tag, Boote und Transport – den Preis sehen Sie sofort und die Buchung kommt direkt zu uns. Auf Wunsch auch mit Übernachtung im Kemp Krumlov.</p>
     </div>
-        <iframe class="rez-online__frame" id="rezFrame" src="../../rezervace.html?web=pela&amp;lang=de#jen-lode" title="Online buchen" loading="lazy" allow="clipboard-write"></iframe>
+        <iframe class="rez-online__frame" id="rezFrame" src="../../rezervace.html?web=pela&amp;lang=de#jen-lode" title="Online buchen" loading="lazy" scrolling="no" allow="clipboard-write"></iframe>
     <p class="rez-online__chyba" id="rezChyba" hidden data-t="rez_online_nejde">Das Buchungsformular konnte nicht geladen werden. Schreiben Sie uns bitte unten oder rufen Sie +420 725 336 601 an.</p>
   </div>
 </section>
 <script>
 /* výška vloženého formuláře podle obsahu (posílá ji stránka rezervace na webu kempu) */
 (function(){var f=document.getElementById('rezFrame'),o=new URL(f.src,location.href).origin,ok=false;
- addEventListener('message',function(e){if(e.origin!==o||!e.data||!e.data.kkRezervace)return;ok=true;f.style.height=Math.max(600,+e.data.vyska||0)+'px'});
+ addEventListener('message',function(e){if(e.origin!==o||!e.data||!e.data.kkRezervace)return;ok=true;var d=e.data,hl=document.querySelector('.header,header'),o2=(hl?hl.getBoundingClientRect().bottom:0)+20;
+  /* změna kroku: výška i posun v jednom kroku (bez poskočení); začátek formuláře nad obrazovkou → hned pod menu */
+  var y=d.skok!=null?f.getBoundingClientRect().top+(+d.skok):null;
+  if(d.vyska)f.style.height=Math.max(600,+d.vyska)+'px';
+  if(y==null)return;
+  if(y<o2)scrollTo({top:scrollY+y-o2,behavior:d.krok?'instant':'smooth'});
+  else if(y>innerHeight*(d.krok?.5:1)-120)scrollTo({top:scrollY+y-o2,behavior:'smooth'})});
  setTimeout(function(){if(!ok){var r=f.getBoundingClientRect();if(r.top<innerHeight*3)document.getElementById('rezChyba').hidden=false}},15000)})();
 </script>
 <section class="sec reserve" id="kontakt" style="padding-top:0">
@@ -253,7 +260,7 @@
 <button class="totop" aria-label="Nach oben"><svg class="ring" viewBox="0 0 56 56"><circle cx="28" cy="28" r="26"/></svg><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg></button>
 <script>window.PELA_I18N = {"Právě máme otevřeno":"Jetzt geöffnet","Teď je zavřeno, otevíráme v 9:00":"Jetzt geschlossen – wir öffnen um 9:00","Mimo sezónu: rezervace přijímáme":"Nebensaison: Reservierungen möglich","Mám zájem o: ":"Ich interessiere mich für: ","Termín: ":"Termin: ","Počet osob: ":"Personenzahl: ","Místo návozu \/ vyzvednutí: ":"Einsetz- \/ Abholstelle: ","Obnovte prosím stránku, nebo nám zavolejte na 725 336 601.":"Bitte laden Sie die Seite neu oder rufen Sie uns an: +420 725 336 601.","Ověření „Nejsem robot“ se nepodařilo (kód ":"Die Prüfung „Ich bin kein Roboter“ ist fehlgeschlagen (Code ","Vyplňte prosím všechna pole správně.":"Bitte füllen Sie alle Felder korrekt aus.","Počkejte prosím na dokončení ověření „Nejsem robot“.":"Bitte warten Sie, bis die Prüfung „Ich bin kein Roboter“ abgeschlossen ist.","Zprávu se nepodařilo odeslat. Zavolejte nám prosím na":"Die Nachricht konnte nicht gesendet werden. Bitte rufen Sie uns an:","Ověření „Nejsem robot“ se nezdařilo. Zkuste prosím formulář odeslat znovu.":"Die Prüfung „Ich bin kein Roboter“ ist fehlgeschlagen. Bitte senden Sie das Formular erneut.","E-mail se nepodařilo odeslat. Zkuste to prosím později, nebo nám zavolejte.":"Die E-Mail konnte nicht gesendet werden. Bitte versuchen Sie es später erneut oder rufen Sie uns an.","Zpráva obsahuje příliš mnoho odkazů.":"Die Nachricht enthält zu viele Links.","Neplatný požadavek.":"Ungültige Anfrage.","Zavřít":"Schließen","Předchozí":"Zurück","Další":"Weiter","Fotogalerie":"Fotogalerie"};</script>
 <script src="../assets/js/main.js?v=1795814010" defer></script>
-<script src="../../js/cenik.js?v=1ea3d173"></script>
-<script src="../../js/pela-web.js?v=1ea3d173"></script>
+<script src="../../js/cenik.js?v=ed58c38e"></script>
+<script src="../../js/pela-web.js?v=ed58c38e"></script>
 </body>
 </html>
