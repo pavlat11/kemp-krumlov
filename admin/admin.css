@@ -1808,3 +1808,7 @@ html.w-pela .logo i{background:var(--sun);color:var(--deep)}
 details.kl-d{display:block;width:100%;flex:1 1 100%}
 details.kl-d>summary{display:block}
 details.kl-d>summary .kl-h{margin:16px 0 6px}
+#tisk .tk-pre td,#tisk .tk-pre th{padding:4px 6px;border-bottom:1px solid #bbb;font-size:9.5pt;vertical-align:top}
+#tisk .tk-pre tr.tk-pr td{height:20px}
+#tisk .tk-pre tr.tk-sk td{background:#eee;font-weight:800;font-size:10pt;padding:5px 6px;border-bottom:1.5px solid #333}
+#tisk .tk-pre td:nth-child(2){white-space:nowrap}
