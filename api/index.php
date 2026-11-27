@@ -338,7 +338,12 @@ try {
     $html = (string) ($V['html'] ?? ''); $text = (string) ($V['text'] ?? ''); $pr = mb_substr((string) ($V['predmet'] ?? ''), 0, 250);
     if (strlen($html) > 300000 || strlen($text) > 100000) kk_chyba('E-mail je moc dlouhý.', 413);
     if (!$ja && ($r['cislo'] ?? '') !== '' && strpos($pr . $text, (string) $r['cislo']) === false) kk_chyba('E-mail neodpovídá rezervaci.', 400);
-    try { kk_mail($komu, $pr, $html, $text, $kemp ? (string) ($r['email'] ?? '') : kk_email_kemp()); }
+    $obr = [];
+    if (!empty($V['qr']) && is_string($V['qr']) && strlen($V['qr']) < 200000) {
+      $b = base64_decode($V['qr'], true);
+      if ($b !== false && (strncmp($b, 'GIF8', 4) === 0 || strncmp($b, "\x89PNG", 4) === 0)) $obr['qrplatba'] = ['data' => $b, 'typ' => $b[0] === 'G' ? 'image/gif' : 'image/png', 'ext' => $b[0] === 'G' ? 'gif' : 'png'];
+    }
+    try { kk_mail($komu, $pr, $html, $text, $kemp ? (string) ($r['email'] ?? '') : kk_email_kemp(), $obr); }
     catch (Exception $e) { error_log('KK mail: ' . $e->getMessage()); kk_chyba('E-mail se nepodařilo odeslat: ' . $e->getMessage(), 502); }
     $r['maily'] = (array) ($r['maily'] ?? []); $r['maily'][$druh] = kk_ms();
     kk_rez_uloz($r);

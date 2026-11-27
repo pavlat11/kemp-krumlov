@@ -362,7 +362,7 @@ function kk_adresa($email, $jmeno = '') {
   $email = trim(str_replace(["\r", "\n", '<', '>'], '', (string) $email));
   return $jmeno !== '' ? kk_hlavicka($jmeno) . " <$email>" : "<$email>";
 }
-function kk_mail($komu, $predmet, $html, $text, $odpovedet = '') {
+function kk_mail($komu, $predmet, $html, $text, $odpovedet = '', $obrazky = []) {
   $komu = trim((string) $komu);
   if (!filter_var($komu, FILTER_VALIDATE_EMAIL)) throw new Exception('Neplatná adresa příjemce.');
   $od = kk_env('MAIL_FROM_ADDRESS', kk_env('MAIL_USERNAME', ''));
@@ -380,9 +380,17 @@ function kk_mail($komu, $predmet, $html, $text, $odpovedet = '') {
     'Content-Type: multipart/alternative; boundary="' . $hr . '"',
   ];
   if ($odpovedet && filter_var($odpovedet, FILTER_VALIDATE_EMAIL)) $h[] = 'Reply-To: ' . kk_adresa($odpovedet);
-  $telo = "--$hr\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode((string) $text))
+  $alt = "--$hr\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode((string) $text))
         . "--$hr\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode((string) $html))
         . "--$hr--\r\n";
+  if ($obrazky) {
+    /* obrázky vložené do e-mailu (QR platba): multipart/related, v HTML jako cid:<id> */
+    $hrR = 'kr' . bin2hex(random_bytes(8));
+    foreach ($h as $i => $x) if (strpos($x, 'Content-Type:') === 0) $h[$i] = 'Content-Type: multipart/related; boundary="' . $hrR . '"';
+    $telo = "--$hrR\r\nContent-Type: multipart/alternative; boundary=\"$hr\"\r\n\r\n" . $alt;
+    foreach ($obrazky as $cid => $o) $telo .= "--$hrR\r\nContent-Type: {$o['typ']}; name=\"$cid.{$o['ext']}\"\r\nContent-Transfer-Encoding: base64\r\nContent-ID: <$cid>\r\nContent-Disposition: inline; filename=\"$cid.{$o['ext']}\"\r\n\r\n" . chunk_split(base64_encode($o['data']));
+    $telo .= "--$hrR--\r\n";
+  } else $telo = $alt;
   if (kk_env('MAIL_MAILER', 'smtp') === 'mail' || !kk_env('MAIL_HOST')) {
     $hh = array_values(array_filter($h, function ($x) { return strpos($x, 'To: ') !== 0 && strpos($x, 'Subject: ') !== 0; }));
     if (!mail($komu, kk_hlavicka($predmet), $telo, implode("\r\n", $hh), '-f' . $od)) throw new Exception('Odeslání přes mail() selhalo.');
