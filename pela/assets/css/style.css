@@ -604,3 +604,10 @@ html,body{overflow-x:clip}
 .camp__steps span{font-size:13.5px;color:rgba(255,255,255,.65)}
 .camp__cta{display:flex;flex-wrap:wrap;gap:12px}
 @media(max-width:900px){.camp__grid{grid-template-columns:1fr}.camp__media{max-width:520px;margin:0 auto 20px;width:100%}.camp__steps{grid-template-columns:1fr}}
+
+/* online rezervace – formulář z webu kempu (společný ceník a rezervace) */
+.rez-online{padding-bottom:20px}
+.rez-online__head{max-width:760px;margin-bottom:26px}
+.rez-online__frame{display:block;width:100%;height:1300px;border:0;border-radius:28px;background:rgba(255,255,255,.04);transition:height .25s ease}
+.rez-online__chyba{margin-top:14px;color:rgba(255,255,255,.8)}
+@media(max-width:760px){.rez-online__frame{border-radius:18px;height:1500px}}

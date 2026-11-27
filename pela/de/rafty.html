@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <script>window.KK_WEB="pela";window.KK_LANG_PEVNY="de";window.KK_PELA_ROOT="../";window.KK_PELA_STRANKA="rafty";window.KK_ZDROJ=location.href.replace(/[?#].*$/,"");</script>
 <script src="../../js/server.js?v=6"></script>
-<script src="../../js/start.js?v=ea1da9d0S5"></script>
+<script src="../../js/start.js?v=0feae811"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Raftverleih Český Krumlov – Colorado, Bajkal | PE-LA</title>
 <meta name="description" content="Verleih der Rafts Colorado (6 Personen) und Bajkal (4 Personen) auf der Moldau in Český Krumlov. Rafts für 3–8 Personen, Personentransfer und Ausrüstung. PE-LA seit 1993.">
@@ -36,7 +36,7 @@
 <link rel="manifest" href="../site.webmanifest">
 <link rel="preload" href="../assets/fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/css/style.css?v=1794917515">
+<link rel="stylesheet" href="../assets/css/style.css?v=1795815518">
 <noscript><style>[data-reveal],.fade-up{opacity:1!important;transform:none!important}.clip-reveal{clip-path:none!important}.clip-reveal img{transform:none!important}.split .w>span{transform:none!important}.loader{display:none!important}.gitem.is-hidden{display:block!important}.gallery-more{display:none}.pcard .prow{opacity:1;transform:none}</style></noscript>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Startseite","item":"https://www.pe-la.cz../de/index.html"},{"@type":"ListItem","position":2,"name":"Rafts","item":"https://www.pe-la.cz../de/rafty.html"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"Raftverleih auf der Moldau","serviceType":"Bootsverleih","provider":{"@id":"https://www.pe-la.cz/#firma"},"areaServed":"Moldau, Český Krumlov","url":"https://www.pe-la.cz../de/rafty.html","offers":[{"@type":"Offer","name":"Raft 3–4 Personen – Tagesmiete","price":"50","priceCurrency":"EUR"},{"@type":"Offer","name":"Raft 5–6 Personen – Tagesmiete","price":"64","priceCurrency":"EUR"},{"@type":"Offer","name":"Raft 8 Personen – Tagesmiete","price":"72","priceCurrency":"EUR"}]}</script>
@@ -163,10 +163,27 @@
 </section><section class="sec" style="padding-bottom:clamp(80px,10vw,130px)">
   <div class="wrap"><div class="sec-head"><div><span class="eyebrow c-teal" data-t="pujcovna">Verleih</span><h2 class="split"><span data-t="mohlo_by_vas">Das könnte Sie</span> <em data-t="zajimat">interessieren</em></h2></div><p data-reveal="up" data-t="podivejte_se_i_na">Sehen Sie sich auch unsere anderen Boote und Ausrüstung an.</p></div>
   <div class="others" data-stagger><a class="card" href="../de/kanoe.html"><img src="../assets/img/ui/kanoe.webp" alt="Kanus" loading="lazy"><span class="card__go"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span><div class="card__body"><h3 data-t="kanoe">Kanus</h3><p data-t="palava_vydra_a_tukan">Pálava, Vydra und Tukan – für 2–3 Personen.</p></div></a><a class="card" href="../de/vybaveni.html"><img src="../assets/img/ui/padla.webp" alt="Ausrüstung" loading="lazy"><span class="card__go"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span><div class="card__body"><h3 data-t="vybaveni">Ausrüstung</h3><p data-t="padla_vesty_barely_a">Paddel, Schwimmwesten, Tonnen und Pumpen inklusive.</p></div></a></div></div>
-</section><section class="sec reserve" id="rezervace">
+</section><section class="sec reserve rez-online" id="rezervace">
+  <div class="wrap">
+    <div class="rez-online__head">
+      <span class="eyebrow" style="color:var(--sun)" data-t="rez_online">Online buchen</span>
+      <h2 class="split"><span data-t="rez_online_nadpis">Boote</span> <em data-t="rez_online_em">online buchen</em></h2>
+      <p class="lead" data-t="rez_online_text">Wählen Sie Tag, Boote und Transport – den Preis sehen Sie sofort und die Buchung kommt direkt zu uns. Auf Wunsch auch mit Übernachtung im Kemp Krumlov.</p>
+    </div>
+        <iframe class="rez-online__frame" id="rezFrame" src="../../rezervace.html?lang=de#jen-lode" title="Online buchen" loading="lazy" allow="clipboard-write"></iframe>
+    <p class="rez-online__chyba" id="rezChyba" hidden data-t="rez_online_nejde">Das Buchungsformular konnte nicht geladen werden. Schreiben Sie uns bitte unten oder rufen Sie +420 725 336 601 an.</p>
+  </div>
+</section>
+<script>
+/* výška vloženého formuláře podle obsahu (posílá ji stránka rezervace na webu kempu) */
+(function(){var f=document.getElementById('rezFrame'),o=new URL(f.src).origin,ok=false;
+ addEventListener('message',function(e){if(e.origin!==o||!e.data||!e.data.kkRezervace)return;ok=true;f.style.height=Math.max(600,+e.data.vyska||0)+'px'});
+ setTimeout(function(){if(!ok){var r=f.getBoundingClientRect();if(r.top<innerHeight*3)document.getElementById('rezChyba').hidden=false}},15000)})();
+</script>
+<section class="sec reserve" id="dotaz" style="padding-top:0">
   <div class="wrap reserve__grid">
     <div>
-      <span class="eyebrow" style="color:var(--sun)" data-t="rezervace">Reservierung</span>
+      <span class="eyebrow" style="color:var(--sun)" data-t="rez_dotaz">Lieber schreiben?</span>
       <h2 class="split"><span data-t="vyplujte">Fahren Sie</span> <em data-t="s_nami">mit uns los.</em></h2>
       <p class="lead" data-reveal="up" data-t="napiste_nam_kdy_a">Schreiben Sie uns, wann und wohin Sie fahren möchten. Wir melden uns mit einer Bestätigung und vereinbaren Bootszustellung und Personentransfer.</p>
       <div class="hours" data-reveal="up" style="--d:.1s"><i class="dot"></i><div><b data-t="provozni_doba">Öffnungszeiten</b><span data-t="kveten_zari_denne_9">Mai – September · täglich 9:00 – 19:00</span></div></div>
@@ -227,8 +244,8 @@
 </footer>
 <button class="totop" aria-label="Nach oben"><svg class="ring" viewBox="0 0 56 56"><circle cx="28" cy="28" r="26"/></svg><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg></button>
 <script>window.PELA_I18N = {"Právě máme otevřeno":"Jetzt geöffnet","Teď je zavřeno, otevíráme v 9:00":"Jetzt geschlossen – wir öffnen um 9:00","Mimo sezónu: rezervace přijímáme":"Nebensaison: Reservierungen möglich","Mám zájem o: ":"Ich interessiere mich für: ","Termín: ":"Termin: ","Počet osob: ":"Personenzahl: ","Místo návozu \/ vyzvednutí: ":"Einsetz- \/ Abholstelle: ","Obnovte prosím stránku, nebo nám zavolejte na 725 336 601.":"Bitte laden Sie die Seite neu oder rufen Sie uns an: +420 725 336 601.","Ověření „Nejsem robot“ se nepodařilo (kód ":"Die Prüfung „Ich bin kein Roboter“ ist fehlgeschlagen (Code ","Vyplňte prosím všechna pole správně.":"Bitte füllen Sie alle Felder korrekt aus.","Počkejte prosím na dokončení ověření „Nejsem robot“.":"Bitte warten Sie, bis die Prüfung „Ich bin kein Roboter“ abgeschlossen ist.","Zprávu se nepodařilo odeslat. Zavolejte nám prosím na":"Die Nachricht konnte nicht gesendet werden. Bitte rufen Sie uns an:","Ověření „Nejsem robot“ se nezdařilo. Zkuste prosím formulář odeslat znovu.":"Die Prüfung „Ich bin kein Roboter“ ist fehlgeschlagen. Bitte senden Sie das Formular erneut.","E-mail se nepodařilo odeslat. Zkuste to prosím později, nebo nám zavolejte.":"Die E-Mail konnte nicht gesendet werden. Bitte versuchen Sie es später erneut oder rufen Sie uns an.","Zpráva obsahuje příliš mnoho odkazů.":"Die Nachricht enthält zu viele Links.","Neplatný požadavek.":"Ungültige Anfrage.","Zavřít":"Schließen","Předchozí":"Zurück","Další":"Weiter","Fotogalerie":"Fotogalerie"};</script>
-<script src="../assets/js/main.js?v=1794917966" defer></script>
-<script src="../../js/cenik.js?v=ea1da9d0defNXZdS4"></script>
-<script src="../../js/pela-web.js?v=ea1da9d0S6"></script>
+<script src="../assets/js/main.js?v=1795814010" defer></script>
+<script src="../../js/cenik.js?v=0feae811"></script>
+<script src="../../js/pela-web.js?v=0feae811"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <script>window.KK_WEB="pela";window.KK_LANG_PEVNY="cs";window.KK_PELA_ROOT="";window.KK_PELA_STRANKA="vybaveni";window.KK_ZDROJ=location.href.replace(/[?#].*$/,"");</script>
 <script src="../js/server.js?v=6"></script>
-<script src="../js/start.js?v=ea1da9d0S5"></script>
+<script src="../js/start.js?v=0feae811"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vodácké vybavení v ceně lodi – pádla, vesty, barely | PE-LA</title>
 <meta name="description" content="Ke každé lodi a raftu zapůjčíme pádla, plovací vesty, barely a pumpy – vše v ceně plavidla. Půjčovna lodí PE-LA, Český Krumlov, Vltava.">
@@ -36,7 +36,7 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="preload" href="assets/fonts/bricolage-grotesque-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=1794917515">
+<link rel="stylesheet" href="assets/css/style.css?v=1795815518">
 <noscript><style>[data-reveal],.fade-up{opacity:1!important;transform:none!important}.clip-reveal{clip-path:none!important}.clip-reveal img{transform:none!important}.split .w>span{transform:none!important}.loader{display:none!important}.gitem.is-hidden{display:block!important}.gallery-more{display:none}.pcard .prow{opacity:1;transform:none}</style></noscript>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Úvod","item":"https://www.pe-la.czindex.html"},{"@type":"ListItem","position":2,"name":"Vodácké vybavení","item":"https://www.pe-la.czvybaveni.html"}]}</script>
 </head>
@@ -144,10 +144,27 @@
 </section><section class="sec" style="padding-bottom:clamp(80px,10vw,130px)">
   <div class="wrap"><div class="sec-head"><div><span class="eyebrow c-teal" data-t="pujcovna">Půjčovna</span><h2 class="split"><span data-t="mohlo_by_vas">Mohlo by vás</span> <em data-t="zajimat">zajímat</em></h2></div><p data-reveal="up" data-t="podivejte_se_i_na">Podívejte se i na další plavidla a vybavení, které u nás půjčujeme.</p></div>
   <div class="others" data-stagger><a class="card" href="kanoe.html"><img src="assets/img/ui/kanoe.webp" alt="Kanoe" loading="lazy"><span class="card__go"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span><div class="card__body"><h3 data-t="kanoe">Kanoe</h3><p data-t="palava_vydra_a_tukan">Pálava, Vydra a Tukan – pro 2–3 osoby.</p></div></a><a class="card" href="rafty.html"><img src="assets/img/ui/raft.webp" alt="Rafty" loading="lazy"><span class="card__go"><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></span><div class="card__body"><h3 data-t="rafty">Rafty</h3><p data-t="colorado_a_bajkal_pro">Colorado a Bajkal – pro 3 až 8 osob.</p></div></a></div></div>
-</section><section class="sec reserve" id="rezervace">
+</section><section class="sec reserve rez-online" id="rezervace">
+  <div class="wrap">
+    <div class="rez-online__head">
+      <span class="eyebrow" style="color:var(--sun)" data-t="rez_online">Rezervace online</span>
+      <h2 class="split"><span data-t="rez_online_nadpis">Zarezervujte si</span> <em data-t="rez_online_em">lodě online</em></h2>
+      <p class="lead" data-t="rez_online_text">Vyberte den, lodě a dopravu – cenu uvidíte hned a rezervace přijde rovnou k nám. Když se vám to hodí, přidejte i nocleh v Kempu Krumlov.</p>
+    </div>
+        <iframe class="rez-online__frame" id="rezFrame" src="../rezervace.html#jen-lode" title="Rezervace online" loading="lazy" allow="clipboard-write"></iframe>
+    <p class="rez-online__chyba" id="rezChyba" hidden data-t="rez_online_nejde">Rezervační formulář se nepodařilo načíst. Napište nám prosím níže nebo zavolejte na +420 725 336 601.</p>
+  </div>
+</section>
+<script>
+/* výška vloženého formuláře podle obsahu (posílá ji stránka rezervace na webu kempu) */
+(function(){var f=document.getElementById('rezFrame'),o=new URL(f.src).origin,ok=false;
+ addEventListener('message',function(e){if(e.origin!==o||!e.data||!e.data.kkRezervace)return;ok=true;f.style.height=Math.max(600,+e.data.vyska||0)+'px'});
+ setTimeout(function(){if(!ok){var r=f.getBoundingClientRect();if(r.top<innerHeight*3)document.getElementById('rezChyba').hidden=false}},15000)})();
+</script>
+<section class="sec reserve" id="dotaz" style="padding-top:0">
   <div class="wrap reserve__grid">
     <div>
-      <span class="eyebrow" style="color:var(--sun)" data-t="rezervace">Rezervace</span>
+      <span class="eyebrow" style="color:var(--sun)" data-t="rez_dotaz">Raději napíšete?</span>
       <h2 class="split"><span data-t="vyplujte">Vyplujte</span> <em data-t="s_nami">s námi.</em></h2>
       <p class="lead" data-reveal="up" data-t="napiste_nam_kdy_a">Napište nám, kdy a kam chcete vyrazit. Ozveme se s potvrzením a domluvíme návoz lodí i dopravu osob.</p>
       <div class="hours" data-reveal="up" style="--d:.1s"><i class="dot"></i><div><b data-t="provozni_doba">Provozní doba</b><span data-t="kveten_zari_denne_9">Květen – září · denně 9:00 – 19:00</span></div></div>
@@ -208,8 +225,8 @@
 </footer>
 <button class="totop" aria-label="Nahoru"><svg class="ring" viewBox="0 0 56 56"><circle cx="28" cy="28" r="26"/></svg><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg></button>
 <script>window.PELA_I18N = {};</script>
-<script src="assets/js/main.js?v=1794917966" defer></script>
-<script src="../js/cenik.js?v=ea1da9d1defNXZdS4"></script>
-<script src="../js/pela-web.js?v=ea1da9d0S6"></script>
+<script src="assets/js/main.js?v=1795814010" defer></script>
+<script src="../js/cenik.js?v=0feae811"></script>
+<script src="../js/pela-web.js?v=0feae811"></script>
 </body>
 </html>

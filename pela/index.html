@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <script>window.KK_WEB="pela";window.KK_LANG_PEVNY="cs";window.KK_PELA_ROOT="";window.KK_PELA_STRANKA="index";window.KK_ZDROJ=location.href.replace(/[?#].*$/,"");</script>
 <script src="../js/server.js?v=6"></script>
-<script src="../js/start.js?v=ea1da9d0S5"></script>
+<script src="../js/start.js?v=0feae811"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Půjčovna lodí a raftů Český Krumlov – Vltava | PE-LA</title>
 <meta name="description" content="Půjčovna lodí a raftů PE-LA v Českém Krumlově – od roku 1993 kanoe, rafty, vybavení a doprava osob na Vltavě od Vyššího Brodu po Boršov.">
@@ -38,7 +38,7 @@
 <link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/img/ui/hero.webp" as="image" fetchpriority="high" media="(min-width: 761px)">
 <link rel="preload" href="assets/img/ui/hero-m.webp" as="image" fetchpriority="high" media="(max-width: 760px)">
-<link rel="stylesheet" href="assets/css/style.css?v=1794917515">
+<link rel="stylesheet" href="assets/css/style.css?v=1795815518">
 <noscript><style>[data-reveal],.fade-up{opacity:1!important;transform:none!important}.clip-reveal{clip-path:none!important}.clip-reveal img{transform:none!important}.split .w>span{transform:none!important}.loader{display:none!important}.gitem.is-hidden{display:block!important}.gallery-more{display:none}.pcard .prow{opacity:1;transform:none}</style></noscript>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","@id":"https://www.pe-la.cz/#firma","name":"PE-LA – Půjčovna lodí a raftů","alternateName":"PE-LA","description":"Půjčovna lodí a raftů na Vltavě v Českém Krumlově. Od roku 1993 kanoe, rafty, vodácké vybavení a doprava osob pro rodinné, školní i firemní výlety.","url":"https://www.pe-la.czindex.html","telephone":"+420725336601","email":"pelalode@seznam.cz","image":"https://www.pe-la.cz/assets/img/og.jpg","logo":"https://www.pe-la.cz/assets/img/icon-512.png","foundingDate":"1993","priceRange":"190 Kč–1 800 Kč","currenciesAccepted":"CZK","address":{"@type":"PostalAddress","streetAddress":"Domoradice 107","addressLocality":"Český Krumlov","postalCode":"381 01","addressRegion":"Jihočeský kraj","addressCountry":"CZ"},"areaServed":"Vltava – Vyšší Brod až Boršov","sameAs":["https://www.kemp-krumlov.cz/","https://hamrdivcikamen.cz/"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PE-LA – Půjčovna lodí","url":"https://www.pe-la.czindex.html","inLanguage":"cs"}</script>
@@ -332,10 +332,27 @@
     </div>
   </div>
 </section>
-<section class="sec reserve" id="rezervace">
+<section class="sec reserve rez-online" id="rezervace">
+  <div class="wrap">
+    <div class="rez-online__head">
+      <span class="eyebrow" style="color:var(--sun)" data-t="rez_online">Rezervace online</span>
+      <h2 class="split"><span data-t="rez_online_nadpis">Zarezervujte si</span> <em data-t="rez_online_em">lodě online</em></h2>
+      <p class="lead" data-t="rez_online_text">Vyberte den, lodě a dopravu – cenu uvidíte hned a rezervace přijde rovnou k nám. Když se vám to hodí, přidejte i nocleh v Kempu Krumlov.</p>
+    </div>
+        <iframe class="rez-online__frame" id="rezFrame" src="../rezervace.html#jen-lode" title="Rezervace online" loading="lazy" allow="clipboard-write"></iframe>
+    <p class="rez-online__chyba" id="rezChyba" hidden data-t="rez_online_nejde">Rezervační formulář se nepodařilo načíst. Napište nám prosím níže nebo zavolejte na +420 725 336 601.</p>
+  </div>
+</section>
+<script>
+/* výška vloženého formuláře podle obsahu (posílá ji stránka rezervace na webu kempu) */
+(function(){var f=document.getElementById('rezFrame'),o=new URL(f.src).origin,ok=false;
+ addEventListener('message',function(e){if(e.origin!==o||!e.data||!e.data.kkRezervace)return;ok=true;f.style.height=Math.max(600,+e.data.vyska||0)+'px'});
+ setTimeout(function(){if(!ok){var r=f.getBoundingClientRect();if(r.top<innerHeight*3)document.getElementById('rezChyba').hidden=false}},15000)})();
+</script>
+<section class="sec reserve" id="dotaz" style="padding-top:0">
   <div class="wrap reserve__grid">
     <div>
-      <span class="eyebrow" style="color:var(--sun)" data-t="rezervace">Rezervace</span>
+      <span class="eyebrow" style="color:var(--sun)" data-t="rez_dotaz">Raději napíšete?</span>
       <h2 class="split"><span data-t="vyplujte">Vyplujte</span> <em data-t="s_nami">s námi.</em></h2>
       <p class="lead" data-reveal="up" data-t="napiste_nam_kdy_a">Napište nám, kdy a kam chcete vyrazit. Ozveme se s potvrzením a domluvíme návoz lodí i dopravu osob.</p>
       <div class="hours" data-reveal="up" style="--d:.1s"><i class="dot"></i><div><b data-t="provozni_doba">Provozní doba</b><span data-t="kveten_zari_denne_9">Květen – září · denně 9:00 – 19:00</span></div></div>
@@ -396,8 +413,8 @@
 </footer>
 <button class="totop" aria-label="Nahoru"><svg class="ring" viewBox="0 0 56 56"><circle cx="28" cy="28" r="26"/></svg><svg class="icon" aria-hidden="true"><use href="#i-up"/></svg></button>
 <script>window.PELA_I18N = {};</script>
-<script src="assets/js/main.js?v=1794917966" defer></script>
-<script src="../js/cenik.js?v=ea1da9d1defNXZdS4"></script>
-<script src="../js/pela-web.js?v=ea1da9d0S6"></script>
+<script src="assets/js/main.js?v=1795814010" defer></script>
+<script src="../js/cenik.js?v=0feae811"></script>
+<script src="../js/pela-web.js?v=0feae811"></script>
 </body>
 </html>
