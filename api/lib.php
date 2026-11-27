@@ -265,7 +265,7 @@ function kk_klic_ok($k) {
       || in_array($k, ['cenik', 'rez.nast', 'rez.archiv', 'rez.cislo', 'prava'], true);
 }
 /* klíče, které návštěvník webu nedostane */
-function kk_klic_soukromy($k) { return in_array($k, ['rez.archiv', 'rez.cislo', 'prava'], true); }
+function kk_klic_soukromy($k) { return in_array($k, ['rez.archiv', 'rez.cislo', 'prava', 'cron', 'voda.dny'], true); }
 function kk_kv($klic, $vychozi = null) {
   $s = kk_db()->prepare("SELECT hodnota FROM kk_kv WHERE klic = ?");
   $s->execute([$klic]);
@@ -355,3 +355,145 @@ function kk_obrazek($pole, $max = 10485760) {
   return ['tmp' => $f['tmp_name'], 'ext' => $typy[$i['mime']], 'w' => $i[0], 'h' => $i[1], 'size' => $f['size']];
 }
 function kk_id($p) { return $p . base_convert((string) kk_ms(), 10, 36) . bin2hex(random_bytes(3)); }
+
+/* ---------------- e-maily (SMTP z .env, bez dalších knihoven) ---------------- */
+function kk_hlavicka($t) { return '=?UTF-8?B?' . base64_encode($t) . '?='; }
+function kk_adresa($email, $jmeno = '') {
+  $email = trim(str_replace(["\r", "\n", '<', '>'], '', (string) $email));
+  return $jmeno !== '' ? kk_hlavicka($jmeno) . " <$email>" : "<$email>";
+}
+function kk_mail($komu, $predmet, $html, $text, $odpovedet = '') {
+  $komu = trim((string) $komu);
+  if (!filter_var($komu, FILTER_VALIDATE_EMAIL)) throw new Exception('Neplatná adresa příjemce.');
+  $od = kk_env('MAIL_FROM_ADDRESS', kk_env('MAIL_USERNAME', ''));
+  if (!filter_var($od, FILTER_VALIDATE_EMAIL)) throw new Exception('Chybí MAIL_FROM_ADDRESS v .env.');
+  $predmet = trim(preg_replace('/[\r\n]+/', ' ', (string) $predmet));
+  $hr = 'kk' . bin2hex(random_bytes(8));
+  $dom = substr(strrchr($od, '@'), 1);
+  $h = [
+    'Date: ' . date('r'),
+    'From: ' . kk_adresa($od, kk_env('MAIL_FROM_NAME', 'Kemp Krumlov')),
+    'To: ' . kk_adresa($komu),
+    'Subject: ' . kk_hlavicka($predmet),
+    'Message-ID: <' . bin2hex(random_bytes(12)) . '@' . $dom . '>',
+    'MIME-Version: 1.0',
+    'Content-Type: multipart/alternative; boundary="' . $hr . '"',
+  ];
+  if ($odpovedet && filter_var($odpovedet, FILTER_VALIDATE_EMAIL)) $h[] = 'Reply-To: ' . kk_adresa($odpovedet);
+  $telo = "--$hr\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode((string) $text))
+        . "--$hr\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n" . chunk_split(base64_encode((string) $html))
+        . "--$hr--\r\n";
+  if (kk_env('MAIL_MAILER', 'smtp') === 'mail' || !kk_env('MAIL_HOST')) {
+    $hh = array_values(array_filter($h, function ($x) { return strpos($x, 'To: ') !== 0 && strpos($x, 'Subject: ') !== 0; }));
+    if (!mail($komu, kk_hlavicka($predmet), $telo, implode("\r\n", $hh), '-f' . $od)) throw new Exception('Odeslání přes mail() selhalo.');
+    return true;
+  }
+  kk_smtp($od, $komu, implode("\r\n", $h) . "\r\n\r\n" . $telo);
+  return true;
+}
+function kk_smtp($od, $komu, $zprava) {
+  $host = kk_env('MAIL_HOST'); $port = (int) kk_env('MAIL_PORT', '587');
+  $sif = strtolower(kk_env('MAIL_ENCRYPTION', $port === 465 ? 'ssl' : 'tls'));
+  $ctx = stream_context_create(['ssl' => ['verify_peer' => true, 'verify_peer_name' => true, 'SNI_enabled' => true, 'peer_name' => $host]]);
+  $s = @stream_socket_client(($sif === 'ssl' ? 'ssl://' : 'tcp://') . "$host:$port", $en, $es, 20, STREAM_CLIENT_CONNECT, $ctx);
+  if (!$s) throw new Exception("SMTP: nelze se připojit k $host:$port ($es)");
+  stream_set_timeout($s, 20);
+  $cti = function () use ($s) { $o = ''; while (($r = fgets($s, 1024)) !== false) { $o .= $r; if (strlen($r) < 4 || $r[3] !== '-') break; } return $o; };
+  $pis = function ($c, $ok) use ($s, $cti) { if ($c !== null) fwrite($s, $c . "\r\n"); $r = $cti(); if (!in_array(substr($r, 0, 3), (array) $ok, true)) throw new Exception('SMTP: ' . trim($r)); return $r; };
+  try {
+    $pis(null, '220');
+    $ja = 'kemp-krumlov.cz';
+    $pis("EHLO $ja", '250');
+    if ($sif === 'tls') {
+      $pis('STARTTLS', '220');
+      if (!stream_socket_enable_crypto($s, true, STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT | (defined('STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT') ? STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT : 0))) throw new Exception('SMTP: TLS se nepodařilo zapnout.');
+      $pis("EHLO $ja", '250');
+    }
+    if (kk_env('MAIL_USERNAME')) {
+      $pis('AUTH LOGIN', '334');
+      $pis(base64_encode(kk_env('MAIL_USERNAME')), '334');
+      $pis(base64_encode(kk_env('MAIL_PASSWORD', '')), '235');
+    }
+    $pis("MAIL FROM:<$od>", '250');
+    $pis("RCPT TO:<$komu>", ['250', '251']);
+    $pis('DATA', '354');
+    $z = preg_replace('/^\./m', '..', preg_replace("/\r\n|\r|\n/", "\r\n", $zprava));
+    $pis($z . "\r\n.", '250');
+    $pis('QUIT', ['221', '250']);
+  } finally { fclose($s); }
+}
+/* adresa kempu pro upozornění: Nastavení rezervací → e-mail kempu, jinak KEMP_NOTIFY_EMAIL z .env */
+function kk_email_kemp() {
+  $n = kk_kv('rez.nast', []);
+  $e = trim((string) ($n['emailKemp'] ?? ''));
+  return filter_var($e, FILTER_VALIDATE_EMAIL) ? $e : kk_env('KEMP_NOTIFY_EMAIL', kk_env('MAIL_FROM_ADDRESS', ''));
+}
+
+/* ---------------- pravidelné úlohy (stav vody, propadlé zálohy) ----------------
+   Spouští je samy stránky webu (nejvýš jednou za hodinu, na pozadí),
+   případně cron na hostingu: /api/?a=cron&klic=<CRON_KEY z .env> */
+function kk_cron_due() { $c = kk_kv('cron', []); return (time() - (int) ($c['kdy'] ?? 0)) > 3000; }
+function kk_cron() {
+  $db = kk_db();
+  if (!(int) $db->query("SELECT GET_LOCK('kk_cron', 0)")->fetchColumn()) return ['bezi' => true];
+  if (!kk_cron_due() && empty($GLOBALS['KK_CRON_VZDY'])) return ['brzy' => true];
+  kk_kv_uloz('cron', json_encode(['kdy' => time()]), 'Systém');
+  $o = [];
+  try { $o['voda'] = kk_voda(); } catch (Throwable $e) { $o['voda'] = 'chyba: ' . $e->getMessage(); error_log('KK voda: ' . $e->getMessage()); }
+  try { $o['propadle'] = kk_propadle(); } catch (Throwable $e) { $o['propadle'] = 'chyba'; error_log('KK propadle: ' . $e->getMessage()); }
+  return $o;
+}
+/* rezervace se zálohou, která nepřišla do splatnosti → zrušit (e-mail „Rezervace propadla“ pošle administrace) */
+function kk_propadle() {
+  $db = kk_db(); $dnes = date('Y-m-d'); $n = 0;
+  foreach ($db->query("SELECT data FROM kk_rezervace WHERE smazano = 0 AND stav = 'pop'")->fetchAll() as $x) {
+    $r = json_decode($x['data'], true);
+    $p = $r['platba'] ?? [];
+    if (($p['stav'] ?? '') !== 'ceka' || empty($p['splatnost']) || $p['splatnost'] >= $dnes) continue;
+    $r['stav'] = 'zru';
+    $r['hist'] = array_slice(array_merge((array) ($r['hist'] ?? []), [['t' => kk_ms(), 'kdo' => 'Systém', 'co' => 'Propadla – záloha nepřišla do ' . $p['splatnost']]]), -30);
+    kk_rez_uloz($r); $n++;
+  }
+  return $n;
+}
+/* ČHMÚ – operativní data (opendata.chmi.cz/hydrology/now/data/), uloží se jako kkt.voda.data pro web */
+const KK_VODA_STANICE = [['0-203-1-109000', 'Vyšší Brod'], ['0-203-1-CB110100', 'Český Krumlov']];
+function kk_stahni($url) {
+  if (function_exists('curl_init')) {
+    $c = curl_init($url);
+    curl_setopt_array($c, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 10, CURLOPT_CONNECTTIMEOUT => 5, CURLOPT_FOLLOWLOCATION => true, CURLOPT_USERAGENT => 'kemp-krumlov.cz']);
+    $t = curl_exec($c); $k = curl_getinfo($c, CURLINFO_HTTP_CODE); curl_close($c);
+    return $k === 200 ? $t : false;
+  }
+  return @file_get_contents($url, false, stream_context_create(['http' => ['timeout' => 10, 'header' => "User-Agent: kemp-krumlov.cz\r\n"]]));
+}
+function kk_voda() {
+  $st = []; $dny = kk_kv('voda.dny', []); $cas = '';
+  foreach (KK_VODA_STANICE as $i => $s) {
+    $t = kk_stahni((getenv('KK_VODA_URL') ?: 'https://opendata.chmi.cz/hydrology/now/data/') . $s[0] . '.json');
+    if (!$t) continue;
+    $j = json_decode($t, true);
+    $ts = [];
+    foreach ((array) ($j['objList'][0]['tsList'] ?? []) as $x) $ts[$x['tsConID'] ?? ''] = (array) ($x['tsData'] ?? []);
+    $Q = $ts['Q'] ?? []; $H = $ts['H'] ?? []; $T = $ts['TH'] ?? [];
+    $posl = function ($a) { for ($k = count($a) - 1; $k >= 0; $k--) if (isset($a[$k]['value']) && $a[$k]['value'] !== null) return $a[$k]; return null; };
+    $q = $posl($Q); $h = $posl($H); $tt = $posl($T);
+    if (!$q && !$h) continue;
+    $tr = 0;
+    if ($q && count($Q) > 18) { $pred = $Q[count($Q) - 19]['value'] ?? null; if ($pred) { $d = ($q['value'] - $pred) / max(0.1, $pred); $tr = $d > 0.03 ? 1 : ($d < -0.03 ? -1 : 0); } }
+    $st[] = ['n' => $s[1], 'q' => $q ? round($q['value'], 1) : null, 'h' => $h ? (int) round($h['value']) : null, 't' => $tt ? round($tt['value'], 1) : null, 'tr' => $tr];
+    if ($i === 0 && $q) {
+      $cas = date('H:i', strtotime($q['dt']));
+      $sum = 0; $n = 0; foreach ($Q as $x) if (isset($x['value'])) { $sum += $x['value']; $n++; }
+      if ($n) $dny[date('Y-m-d', strtotime($q['dt']))] = round($sum / $n, 1);
+    }
+  }
+  if (!$st || $st[0]['q'] === null) return 'bez dat';
+  ksort($dny); $dny = array_slice($dny, -7, 7, true);
+  kk_kv_uloz('voda.dny', json_encode($dny), 'ČHMÚ');
+  $hist = [];
+  foreach ($dny as $d => $q) { $t = strtotime($d); $hist[] = ['d' => date('j', $t) . '. ' . date('n', $t) . '.', 'q' => $q]; }
+  if (count($hist) < 2) array_unshift($hist, $hist[0]);
+  kk_kv_uloz('voda.data', json_encode(['cas' => $cas, 'st' => $st, 'hist' => $hist, 'zdroj' => 'ČHMÚ'], JSON_UNESCAPED_UNICODE), 'ČHMÚ');
+  return 'ok';
+}

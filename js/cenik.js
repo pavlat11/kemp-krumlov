@@ -403,7 +403,7 @@ var R=window.KKR={
   /* řádek „Popisek: {pole}“ se vynechá, když je pole prázdné (rezervace bez lodí, bez ubytování…) */
   return String(txt||'').split('\n').filter(function(ln){var m=/^[^:{}\n]{1,40}:\s*\{(\w+)\}\s*$/.exec(ln);return !(m&&m[1] in h&&h[m[1]]==='')}).join('\n').replace(/\{(\w+)\}/g,function(a,k){return k in h?h[k]:a})},
  /* grafická podoba e-mailu (HTML, inline styly kvůli e-mailovým klientům). Server ji použije stejně – text šablony se jen vloží do rámu. */
- KONTAKT:{adresa:'Domoradice 107, 381 01 Český Krumlov',tel:['+420 720 514 943','+420 725 336 601'],email:'kempkrumlov2017@gmail.com',web:'https://pavlat11.github.io/kemp-krumlov/'},
+ KONTAKT:{adresa:'Domoradice 107, 381 01 Český Krumlov',tel:['+420 720 514 943','+420 725 336 601'],email:'kempkrumlov2017@gmail.com',web:'https://www.kemp-krumlov.cz/'},
  emailHtml:function(t,j,predmet,text,r){
   var e=function(x){return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')},K=R.KONTAKT;
   var TIT={poptavka:{cs:'Poptávka přijata',en:'Inquiry received',de:'Anfrage erhalten'},rezervace:{cs:'Rezervace potvrzena',en:'Booking confirmed',de:'Reservierung bestätigt'},zruseno:{cs:'Rezervace zrušena',en:'Booking cancelled',de:'Reservierung storniert'},zaloha:{cs:'Zaplaťte prosím zálohu',en:'Please pay the deposit',de:'Bitte Anzahlung leisten'},zaplaceno:{cs:'Záloha přijata',en:'Deposit received',de:'Anzahlung erhalten'},propadla:{cs:'Rezervace propadla',en:'Booking expired',de:'Reservierung verfallen'},kemp:{cs:r&&r.stav==='pop'?'Nová poptávka':'Nová rezervace'},stornoKemp:{cs:'Host zrušil rezervaci'}}[t]||{};

@@ -56,14 +56,19 @@ try {
         $x = $s->fetch();
         if ($x && $x['stok'] && hash_equals($x['stok'], $rk)) {
           $vl = json_decode($x['data'], true);
-          unset($vl['hist'], $vl['telefon'], $vl['zprava'], $vl['maily']);
+          unset($vl['hist'], $vl['telefon'], $vl['zprava'], $vl['maily'], $vl['_mt']);
           $rez = array_values(array_filter($rez, function ($y) use ($rid) { return $y['id'] !== $rid; }));
           $rez[] = $vl;
         }
       }
     }
     $o['rezervace'] = json_encode($rez, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    kk_out(['ok' => true, 'rev' => kk_rev_ted(), 'prihlasen' => (bool) $ja, 'data' => $o]);
+    kk_out(['ok' => true, 'rev' => kk_rev_ted(), 'prihlasen' => (bool) $ja, 'cron' => kk_cron_due(), 'data' => $o]);
+
+  /* ---------- pravidelné úlohy ---------- */
+  case 'cron':
+    if (isset($_GET['klic'])) { if (!kk_env('CRON_KEY') || !hash_equals(kk_env('CRON_KEY'), (string) $_GET['klic'])) kk_chyba('Špatný klíč.', 403); $GLOBALS['KK_CRON_VZDY'] = !empty($_GET['hned']); }
+    kk_out(kk_cron());
 
   /* ---------- změny od posledního načtení (administrace se sama obnovuje) ---------- */
   case 'zmeny':
@@ -206,7 +211,16 @@ try {
     kk_musi(); $V = kk_vstup();
     $db->beginTransaction();
     $rev = kk_rev();
-    foreach ((array) ($V['upsert'] ?? []) as $r) kk_rez_uloz($r, $rev);
+    $st = $db->prepare("SELECT data FROM kk_rezervace WHERE id = ?");
+    foreach ((array) ($V['upsert'] ?? []) as $r) {
+      if (!is_array($r) || empty($r['id'])) continue;
+      /* záznam odeslaných e-mailů drží server – ze starší kopie v prohlížeči se nesmaže */
+      $st->execute([(string) $r['id']]); $byl = $st->fetchColumn();
+      if ($byl) { $byl = json_decode($byl, true) ?: [];
+        if (!empty($byl['maily'])) $r['maily'] = array_merge((array) $byl['maily'], (array) ($r['maily'] ?? []));
+        if (!empty($byl['_mt'])) $r['_mt'] = $byl['_mt']; }
+      kk_rez_uloz($r, $rev);
+    }
     $s = $db->prepare("UPDATE kk_rezervace SET smazano = 1, rev = ?, updated_at = NOW() WHERE id = ?");
     foreach ((array) ($V['smaz'] ?? []) as $id) $s->execute([$rev, (string) $id]);
     $db->commit();
@@ -249,9 +263,12 @@ try {
       $r['cislo'] = $cislo;
       $r['vytvoreno'] = kk_ms();
       if (empty($r['stok'])) $r['stok'] = bin2hex(random_bytes(8));
+      $mt = bin2hex(random_bytes(12));
+      $r['_mt'] = ['t' => $mt, 'do' => time() + 900, 'druhy' => $ja ? [] : ['poptavka', 'rezervace', 'zaloha', 'kemp']];
       kk_rez_uloz($r);
+      unset($r['_mt']);
     } finally { $db->query("SELECT RELEASE_LOCK('kk_rez')"); }
-    kk_out(['r' => $r, 'rev' => kk_rev_ted()]);
+    kk_out(['r' => $r, 'mt' => $mt, 'rev' => kk_rev_ted()]);
 
   /* ---------- zrušení rezervace hostem (storno.html) ---------- */
   case 'storno':
@@ -277,9 +294,12 @@ try {
     $t = kk_ms(); $duv = mb_substr(trim((string) ($V['duvod'] ?? '')), 0, 300);
     $r['stav'] = 'zru'; $r['stornoHost'] = $t; $r['stornoDuvod'] = $duv; $r['stok'] = '';
     $r['hist'] = array_merge((array) ($r['hist'] ?? []), [['t' => $t, 'kdo' => 'Host', 'co' => 'Zrušeno hostem přes odkaz v e-mailu' . ($duv !== '' ? ' – ' . mb_substr($duv, 0, 120) : '')]]);
+    $mt = bin2hex(random_bytes(12));
+    $r['_mt'] = ['t' => $mt, 'do' => time() + 900, 'druhy' => ['zruseno', 'stornoKemp']];
     kk_rez_uloz($r);
-    unset($r['hist'], $r['telefon'], $r['zprava'], $r['maily']);
-    kk_out(['r' => $r]);
+    $tel = $r['telefon'] ?? '';
+    unset($r['hist'], $r['zprava'], $r['maily'], $r['_mt']);
+    kk_out(['r' => $r, 'mt' => $mt]);
 
   /* ---------- záznam akcí ---------- */
   case 'hist':
@@ -289,6 +309,48 @@ try {
     foreach (array_slice((array) ($V['polozky'] ?? []), 0, 100) as $p) if (is_array($p)) $s->execute([(int) ($p['kdy'] ?? kk_ms()), json_encode($p, JSON_UNESCAPED_UNICODE)]);
     if (mt_rand(1, 50) === 1) $db->exec("DELETE FROM kk_historie WHERE id < (SELECT id FROM (SELECT id FROM kk_historie ORDER BY id DESC LIMIT 1 OFFSET 5000) t)");
     kk_out(['ok' => true]);
+
+  /* ---------- e-mail k rezervaci: text a vzhled připraví prohlížeč ze šablon, příjemce určí server ---------- */
+  case 'mail':
+    if (!$POST) kk_chyba('POST', 405);
+    $ja = kk_ja(); $V = kk_vstup();
+    $druh = (string) ($V['druh'] ?? '');
+    $DRUHY = ['poptavka','rezervace','zaloha','zaplaceno','propadla','zruseno','predPrijezdem','plavba','recenze','kemp','stornoKemp'];
+    $AUTO = ['predPrijezdem','plavba','recenze','poptavka','rezervace','zaloha','kemp','stornoKemp','propadla','zaplaceno'];
+    if (!in_array($druh, $DRUHY, true)) kk_chyba('Neznámý druh e-mailu.');
+    if (!$ja) kk_limit('mail:' . kk_ip(), 30, 3600);
+    $zamek = (int) $db->query("SELECT GET_LOCK('kk_mail', 20)")->fetchColumn();
+    $s = $db->prepare("SELECT data FROM kk_rezervace WHERE id = ? AND smazano = 0");
+    $s->execute([(string) ($V['id'] ?? '')]);
+    $r = $s->fetchColumn(); if (!$r) kk_chyba('Rezervace nenalezena.', 404);
+    $r = json_decode($r, true);
+    if (!$ja) {
+      $m = $r['_mt'] ?? [];
+      if (empty($m['t']) || !hash_equals($m['t'], (string) ($V['mt'] ?? '')) || ($m['do'] ?? 0) < time() || !in_array($druh, (array) ($m['druhy'] ?? []), true)) kk_chyba('E-mail už nejde poslat.', 403);
+      $r['_mt']['druhy'] = array_values(array_diff($m['druhy'], [$druh]));
+    }
+    /* každý druh se k jedné rezervaci pošle jen jednou (zrušení může přijít znovu po obnovení) */
+    if (in_array($druh, $AUTO, true) && !empty($r['maily'][$druh]) && empty($V['znovu'])) kk_out(['ok' => true, 'uz' => true]);
+    $kemp = $druh === 'kemp' || $druh === 'stornoKemp';
+    $komu = $kemp ? kk_email_kemp() : (string) ($r['email'] ?? '');
+    if (!filter_var($komu, FILTER_VALIDATE_EMAIL)) kk_out(['ok' => false, 'bez' => true]);
+    $html = (string) ($V['html'] ?? ''); $text = (string) ($V['text'] ?? ''); $pr = mb_substr((string) ($V['predmet'] ?? ''), 0, 250);
+    if (strlen($html) > 300000 || strlen($text) > 100000) kk_chyba('E-mail je moc dlouhý.', 413);
+    if (!$ja && ($r['cislo'] ?? '') !== '' && strpos($pr . $text, (string) $r['cislo']) === false) kk_chyba('E-mail neodpovídá rezervaci.', 400);
+    try { kk_mail($komu, $pr, $html, $text, $kemp ? (string) ($r['email'] ?? '') : kk_email_kemp()); }
+    catch (Exception $e) { error_log('KK mail: ' . $e->getMessage()); kk_chyba('E-mail se nepodařilo odeslat: ' . $e->getMessage(), 502); }
+    $r['maily'] = (array) ($r['maily'] ?? []); $r['maily'][$druh] = kk_ms();
+    kk_rez_uloz($r);
+    kk_out(['ok' => true, 'komu' => $kemp ? 'kemp' : $komu, 'kdy' => $r['maily'][$druh]]);
+
+  /* ---------- zkušební e-mail (Nastavení) ---------- */
+  case 'mail_test':
+    if (!$POST) kk_chyba('POST', 405);
+    $ja = kk_spravce();
+    $komu = (string) (kk_vstup()['komu'] ?? '') ?: kk_email_kemp();
+    try { kk_mail($komu, 'Zkušební e-mail – Kemp Krumlov', '<p>Odesílání e-mailů z webu funguje.</p>', 'Odesílání e-mailů z webu funguje.'); }
+    catch (Exception $e) { kk_chyba('Nepodařilo se: ' . $e->getMessage(), 502); }
+    kk_out(['ok' => true, 'komu' => $komu]);
 
   /* ---------- galerie ---------- */
   case 'fotky':

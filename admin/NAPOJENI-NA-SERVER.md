@@ -16,8 +16,19 @@
 - Fotky z galerie a nahrazené fotky na webu se ukládají do `www/data/` (na FTP se nenahrává, nemaže).
 - Tabulky `kk_*` si server vytvoří sám při prvním spuštění (`databaze/schema.sql` je jen přehled).
 - Bez serveru (otevření ze souboru, `?lokalne=1`) vše funguje jako dřív jen v prohlížeči.
-- Zatím chybí: odesílání e-mailů, přepočet ceny na serveru, kontrola počtu lodí na serveru
-  (lodě kontroluje prohlížeč těsně před odesláním), noční úlohy (propadlé zálohy, stav vody).
+- **E-maily** (SMTP z `.env`): text a vzhled připraví prohlížeč ze šablon (`KKR.sablona/dosad/emailHtml`),
+  server (`api/?a=mail`) určí příjemce (host = e-mail z rezervace, kemp = `emailKemp` / `KEMP_NOTIFY_EMAIL`),
+  každý druh pošle k rezervaci jen jednou a zapíše `maily[druh]`. Návštěvník smí poslat jen e-maily ke své
+  právě vytvořené / zrušené rezervaci (jednorázový token na 15 min).
+  - z webu: `poptavka` / `rezervace` / `zaloha` + `kemp`; storno hostem: `zruseno` + `stornoKemp`
+  - z administrace podle změny stavu: pop→pot `rezervace`, záloha zaplacena `zaplaceno`, zrušení `zruseno`, propadnutí `propadla`
+  - automatické (`predPrijezdem`, `plavba`, `recenze`, `propadla`): posílá otevřená administrace / aplikace obsluhy
+    (kontrola každých 10 min), server hlídá, aby odešly jen jednou.
+  - Zkušební e-mail: Rezervace → Nastavení → E-maily.
+- **Pravidelné úlohy** (`api/?a=cron`): stav vody z ČHMÚ (Vyšší Brod 0-203-1-109000, Český Krumlov 0-203-1-CB110100)
+  a zrušení propadlých záloh. Spouští je web sám nejvýš jednou za hodinu; volitelně cron na hostingu
+  `/api/?a=cron&klic=<CRON_KEY>&hned=1`.
+- Zatím chybí: přepočet ceny na serveru a kontrola počtu lodí na serveru (lodě kontroluje prohlížeč těsně před odesláním).
 
 ## Původní popis (náhled bez serveru)
 

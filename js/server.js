@@ -54,6 +54,7 @@ S.upozorni=function(text,akce,trvale){
     if(!lista){lista=document.createElement('div');lista.setAttribute('role','alert');
       lista.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:2147483000;max-width:min(92vw,640px);background:#b3261e;color:#fff;font:600 14px/1.4 system-ui,sans-serif;padding:12px 16px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.3);display:flex;gap:12px;align-items:center';
       document.body.appendChild(lista)}
+    lista.style.background=trvale==='ok'?'#1f6d77':'#b3261e';
     lista.innerHTML='';var t=document.createElement('span');t.textContent=text;lista.appendChild(t);
     if(akce){var b=document.createElement('button');b.type='button';b.textContent=akce[0];b.style.cssText='background:#fff;color:#b3261e;border:0;border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer;white-space:nowrap';b.onclick=akce[1];lista.appendChild(b)}
     var x=document.createElement('button');x.type='button';x.setAttribute('aria-label','Zavřít');x.textContent='×';x.style.cssText='background:none;border:0;color:#fff;font-size:20px;cursor:pointer;margin-left:auto';x.onclick=function(){lista.remove();lista=null};lista.appendChild(x);
@@ -77,7 +78,8 @@ S.nacti=function(){
   Object.keys(D).forEach(function(k){rset(k,D[k])});
   rset('rez.ukazka','10');/* ukázková data na ostrém webu nevznikají */
   snapZ(D.rezervace);histZ(D.historie);S._D=D;
-  if(S.prihlasen&&ADMIN)setTimeout(nabidniNahled,600);
+  if(d.cron&&!S._cron){S._cron=1;setTimeout(function(){fetch(API+'?a=cron',{credentials:'same-origin'}).catch(function(){})},3000)}
+  if(S.prihlasen&&ADMIN){setTimeout(nabidniNahled,600);setTimeout(S.autoMaily,8000)}
   return d};
 
 /* ---------- převzetí úprav z náhledu (data, která byla jen v tomto prohlížeči) ---------- */
@@ -136,7 +138,17 @@ function rezDiff(v){
   a.forEach(function(r){if(!r||!r.id)return;var j=JSON.stringify(r);nove[r.id]=j;if(snapRez[r.id]!==j)up.push(r)});
   Object.keys(snapRez).forEach(function(id){if(!(id in nove))sm.push(id)});
   if(!up.length&&!sm.length)return;
-  xhr('POST','rez',{upsert:up,smaz:sm});snapRez=nove;zapsano=Date.now()}
+  var stare=snapRez;
+  xhr('POST','rez',{upsert:up,smaz:sm});snapRez=nove;zapsano=Date.now();
+  setTimeout(function(){up.forEach(function(r){var o=null;try{o=stare[r.id]?JSON.parse(stare[r.id]):null}catch(e){}if(o)prechod(o,r)})},0)}
+/* e-mail hostovi podle změny stavu (stejně jako v Rezervace → Nastavení → Šablony e-mailů) */
+function prechod(o,r){
+  if(!r.email||r.stav==='blk'||r.spoj)return;
+  var op=(o.platba||{}).stav,np=(r.platba||{}).stav;
+  if(op==='ceka'&&(np==='zal'||np==='vse'))S.mail(r,'zaplaceno');
+  else if(o.stav==='pop'&&r.stav==='pot')S.mail(r,'rezervace');
+  if(o.stav!=='zru'&&r.stav==='zru'&&!r.stornoHost){var h=(r.hist||[]).slice(-1)[0]||{},co=String(h.co||'');
+    if(/^Propadla/.test(co))S.mail(r,'propadla');else if(!/^Automaticky zrušena/.test(co))S.mail(r,'zruseno')}}
 function histDiff(v){
   var a;try{a=JSON.parse(v||'[]')||[]}catch(e){return}
   var n=0;if(histPrvni){while(n<a.length&&n<50&&JSON.stringify(a[n])!==histPrvni)n++;if(n>=a.length)n=Math.min(a.length,5)}else n=Math.min(a.length,5);
@@ -162,13 +174,47 @@ S.novaRez=function(r){
   try{var d=xhr('POST','rez_nova',{r:r})}catch(e){
     if(e.kod===409)throw new Error('V tomto termínu je obsazeno.');
     throw new Error(e.message||'Rezervaci se nepodařilo uložit.')}
-  vlozMistne(d.r);zapsano=Date.now();return d.r};
+  vlozMistne(d.r);zapsano=Date.now();
+  if(!S.prihlasen&&!d.r.spoj){var r2=d.r,mt=d.mt,pl=r2.platba||{};
+    setTimeout(function(){S.mail(r2,+pl.zaloha>0?'zaloha':r2.stav==='pot'?'rezervace':'poptavka',mt).then(function(){return S.mail(r2,'kemp',mt)})},0)}
+  return d.r};
 S.storno=function(id,k,duvod){
-  var d=xhr('POST','storno',{r:id,k:k,duvod:duvod||''});vlozMistne(d.r);return d.r};
+  var d=xhr('POST','storno',{r:id,k:k,duvod:duvod||''});vlozMistne(d.r);
+  var r2=d.r,mt=d.mt;setTimeout(function(){S.mail(r2,'zruseno',mt).then(function(){return S.mail(r2,'stornoKemp',mt)})},0);
+  return d.r};
+
+/* ---------- e-maily: text a vzhled ze šablon (KKR), odešle server ---------- */
+var NAZ={poptavka:'Poptávka přijata',rezervace:'Rezervace potvrzena',zaloha:'Výzva k zaplacení zálohy',zaplaceno:'Záloha přijata',propadla:'Rezervace propadla',zruseno:'Rezervace zrušena',predPrijezdem:'Den před příjezdem',plavba:'Ráno v den plavby',recenze:'Prosba o recenzi',kemp:'Upozornění pro kemp',stornoKemp:'Host zrušil rezervaci'};
+S.mail=function(r,druh,mt){
+  var R=window.KKR;if(!R||!R.sablona||!r)return Promise.resolve(null);
+  var kemp=druh==='kemp'||druh==='stornoKemp';if(!kemp&&!r.email)return Promise.resolve(null);
+  var j=kemp?'cs':(['cs','en','de'].indexOf(r.jazyk)>=0?r.jazyk:'cs'),t;
+  try{var s=R.sablona(druh,j);t={id:r.id,druh:druh,mt:mt||'',predmet:R.dosad(s.predmet,r,j),text:R.dosad(s.text,r,j),html:R.emailHtml(druh,j,s.predmet,s.text,r)}}catch(e){return Promise.resolve(null)}
+  return S.post('mail',t).then(function(d){
+    if(d&&d.ok&&!d.uz&&S.prihlasen&&R.uprav){try{var x=R.vse().filter(function(q){return q.id===r.id})[0];if(x){var m=Object.assign({},x.maily||{});m[druh]=d.kdy||Date.now();
+      R.uprav(r.id,{maily:m,hist:(x.hist||[]).concat([{t:Date.now(),kdo:'Systém',co:'Odeslán e-mail: '+(NAZ[druh]||druh)+(d.komu&&d.komu!=='kemp'?' ('+d.komu+')':' (kemp)')}]).slice(-30)})}}catch(e){}}
+    return d},function(e){if(ADMIN)S.upozorni('E-mail „'+(NAZ[druh]||druh)+'“ se nepodařilo odeslat: '+e.message);return null})};
+S.testMail=function(komu){return S.post('mail_test',{komu:komu||''})};
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#kk-test-mail');if(!b)return;var em=document.getElementById('sbem');b.disabled=true;
+  S.testMail(em?em.value.trim():'').then(function(d){S.upozorni('Zkušební e-mail odeslán na '+d.komu+'. Zkontrolujte schránku (i spam).',null,'ok')},function(er){S.upozorni(er.message,null,true)}).then(function(){b.disabled=false})});
+/* automatické e-maily (den před příjezdem, ráno v den plavby, recenze) – posílá otevřená administrace / aplikace obsluhy,
+   server hlídá, aby každý odešel jen jednou, i když je administrace otevřená na více zařízeních */
+var autoKdy=0;
+function den(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+S.autoMaily=function(){
+  var R=window.KKR;if(!S.prihlasen||!ADMIN||!R||!R.vse||Date.now()-autoKdy<600000)return;autoKdy=Date.now();
+  var n=R.nast(),am=n.autoMail||{},t=new Date(),h=t.getHours(),dnes=den(t),z=new Date(t);z.setDate(z.getDate()+1);var zitra=den(z);z=new Date(t);z.setDate(z.getDate()-4);var pred4=den(z);
+  var fronta=[];
+  R.vse().forEach(function(r){if(!r||!r.email||r.spoj)return;var m=r.maily||{},ub=(r.mista||[]).length||+(r.dalsi||{}).stan||+(r.dalsi||{}).karavan;
+    if(am.predPrijezdem!==false&&!m.predPrijezdem&&r.stav==='pot'&&ub&&r.od===zitra&&h>=10)fronta.push([r,'predPrijezdem']);
+    if(am.plavba!==false&&!m.plavba&&(r.stav==='pot'||r.stav==='uby')&&r.lode&&R.lodePocet(r.lode)&&r.lode.den===dnes&&h>=7&&h<15)fronta.push([r,'plavba']);
+    var ph=(r.hist||[]).slice(-1)[0]||{};if(r.stav==='zru'&&!m.propadla&&/^Propadla/.test(String(ph.co||''))&&Date.now()-(+ph.t||0)<3*864e5)fronta.push([r,'propadla']);
+        if(am.recenze!==false&&!m.recenze&&n.recenzeUrl&&r.do&&r.do<dnes&&r.do>pred4&&h>=11&&(r.stav==='odj'||r.stav==='uby'||r.stav==='pot'))fronta.push([r,'recenze'])});
+  fronta.slice(0,8).reduce(function(p,x){return p.then(function(){return S.mail(x[0],x[1])})},Promise.resolve())};
 
 /* ---------- změny z jiných zařízení (jen přihlášení) ---------- */
 function obnov(){
-  if(!S.prihlasen||document.hidden)return;var start=Date.now();
+  if(!S.prihlasen||document.hidden)return;var start=Date.now();S.autoMaily();
   S.get('zmeny','&rev='+S.rev).then(function(d){
     if(!d||zapsano>start)return;/* mezitím jsme sami něco zapsali – zkusí se příště */
     var zm=false;
